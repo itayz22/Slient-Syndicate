@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Silent Syndicate — Master Hub</title>
+  <meta name="robots" content="noindex, nofollow">
+  <link rel="stylesheet" href="css/design-system.css">
+  <style>
+    /* ── Layout ── */
+    .hub-header {
+      background: var(--card);
+      border-bottom: 1px solid var(--border);
+      padding: 16px 0;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      backdrop-filter: blur(20px);
+    }
+
+    .hub-header-inner {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 0 32px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .ss-logo {
+      font-family: 'Orbitron', monospace;
+      font-weight: 900;
+      font-size: 1.25rem;
+      letter-spacing: 0.08em;
+      background: linear-gradient(135deg, var(--pg), var(--pink));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .private-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 16px;
+      background: rgba(239, 68, 68, 0.12);
+      border: 1px solid rgba(239, 68, 68, 0.35);
+      border-radius: var(--radius-full);
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 0.7rem;
+      color: var(--red);
+      letter-spacing: 0.12em;
+      animation: pulse-red 2.5s ease-in-out infinite;
+    }
+
+    @keyframes pulse-red {
+      0%, 100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.0); }
+      50%       { box-shadow: 0 0 12px 4px rgba(239, 68, 68, 0.18); }
+    }
+
+    .private-dot {
+      width: 7px;
+      height: 7px;
+      background: var(--red);
+      border-radius: 50%;
+      animation: blink 1.2s step-start infinite;
+    }
+
+    @keyframes blink {
+      0%, 100% { opacity: 1; }
+      50%       { opacity: 0.2; }
+    }
+
+    /* ── Hero ── */
+    .hub-hero {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 60px 32px 32px;
+      text-align: center;
+    }
+
+    .hub-title {
+      font-family: 'Orbitron', monospace;
+      font-size: clamp(1.6rem, 4vw, 2.8rem);
+      font-weight: 900;
+      letter-spacing: 0.06em;
+      background: linear-gradient(135deg, var(--white) 30%, var(--pg));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 10px;
+    }
+
+    .hub-subtitle {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 0.85rem;
+      color: var(--dim);
+      letter-spacing: 0.1em;
+      margin-bottom: 32px;
+    }
+
+    .warning-banner {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 24px;
+      background: rgba(239, 68, 68, 0.08);
+      border: 1px solid rgba(239, 68, 68, 0.25);
+      border-radius: var(--radius);
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 0.78rem;
+      color: var(--red);
+      letter-spacing: 0.08em;
+      margin-bottom: 48px;
+    }
+
+    /* ── Main content ── */
+    .hub-main {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 0 32px 80px;
+    }
+
+    /* ── Section labels ── */
+    .section-label {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 0.7rem;
+      letter-spacing: 0.18em;
+      color: var(--pg);
+      text-transform: uppercase;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .section-label::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--border);
+    }
+
+    /* ── Card grid ── */
+    .card-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 16px;
+      margin-bottom: 48px;
+    }
+
+    .hub-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 24px;
+      text-decoration: none;
+      display: block;
+      transition: border-color 0.25s, transform 0.2s, box-shadow 0.25s;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hub-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, var(--pm), var(--pb));
+      opacity: 0;
+      transition: opacity 0.25s;
+    }
+
+    .hub-card:hover {
+      border-color: rgba(168, 85, 247, 0.45);
+      transform: translateY(-3px);
+      box-shadow: 0 8px 32px rgba(124, 58, 237, 0.2);
+    }
+
+    .hub-card:hover::before {
+      opacity: 1;
+    }
+
+    .card-icon {
+      font-size: 1.6rem;
+      margin-bottom: 12px;
+      display: block;
+    }
+
+    .card-name {
+      font-family: 'Orbitron', monospace;
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: var(--white);
+      letter-spacing: 0.06em;
+      margin-bottom: 6px;
+    }
+
+    .card-desc {
+      font-size: 0.8rem;
+      color: var(--dim);
+      line-height: 1.5;
+      margin-bottom: 14px;
+    }
+
+    .card-url {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 0.68rem;
+      color: var(--pg);
+      opacity: 0.7;
+    }
+
+    .card-tag {
+      display: inline-block;
+      padding: 2px 10px;
+      border-radius: var(--radius-full);
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 0.62rem;
+      letter-spacing: 0.08em;
+      margin-bottom: 12px;
+    }
+
+    .tag-public  { background: rgba(74, 222, 128, 0.12); color: var(--green); border: 1px solid rgba(74,222,128,0.25); }
+    .tag-private { background: rgba(251,191,36,0.12); color: var(--amber); border: 1px solid rgba(251,191,36,0.25); }
+    .tag-resource{ background: rgba(34,211,238,0.10); color: var(--cyan); border: 1px solid rgba(34,211,238,0.22); }
+
+    /* ── Status section ── */
+    .status-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 12px;
+      margin-bottom: 48px;
+    }
+
+    .status-item {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 16px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .status-name {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 0.72rem;
+      color: var(--muted);
+      letter-spacing: 0.06em;
+    }
+
+    .status-dot {
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      background: var(--green);
+      box-shadow: 0 0 8px var(--green);
+      animation: pulse-green 2s ease-in-out infinite;
+    }
+
+    @keyframes pulse-green {
+      0%, 100% { box-shadow: 0 0 4px var(--green); }
+      50%       { box-shadow: 0 0 14px var(--green); }
+    }
+
+    .status-label {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 0.65rem;
+      color: var(--green);
+      letter-spacing: 0.08em;
+    }
+
+    .status-right {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    /* ── Stats section ── */
+    .stats-bar {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 28px 32px;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 24px;
+      margin-bottom: 48px;
+    }
+
+    .stat-block {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .stat-block-label {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 0.65rem;
+      color: var(--dim);
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    .stat-block-value {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 1.4rem;
+      font-weight: 400;
+      color: var(--pg);
+    }
+
+    .stat-block-sub {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 0.62rem;
+      color: var(--dim);
+    }
+
+    /* ── Footer note ── */
+    .hub-footer {
+      text-align: center;
+      padding: 32px;
+      border-top: 1px solid var(--border);
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 0.7rem;
+      color: var(--dim);
+      letter-spacing: 0.08em;
+    }
+
+    /* ── Responsive ── */
+    @media (max-width: 768px) {
+      .hub-header-inner { padding: 0 16px; }
+      .hub-hero { padding: 40px 16px 24px; }
+      .hub-main { padding: 0 16px 60px; }
+      .stats-bar { padding: 20px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <header class="hub-header">
+    <div class="hub-header-inner">
+      <div class="ss-logo">SS</div>
+      <div style="display:flex;align-items:center;gap:16px;">
+        <span style="font-family:'Share Tech Mono',monospace;font-size:0.7rem;color:var(--dim);" id="live-clock"></span>
+        <div class="private-badge">
+          <div class="private-dot"></div>
+          PRIVATE — Do not share this URL
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- HERO -->
+  <div class="hub-hero">
+    <h1 class="hub-title">SILENT SYNDICATE — MASTER HUB</h1>
+    <p class="hub-subtitle">Private Operations Centre — Not Public</p>
+    <div class="warning-banner">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+      PRIVATE — Do not share this URL with leads or the public
+    </div>
+  </div>
+
+  <main class="hub-main">
+
+    <!-- QUICK STATS -->
+    <div class="section-label">Quick Stats</div>
+    <div class="stats-bar">
+      <div class="stat-block">
+        <span class="stat-block-label">Active Pages</span>
+        <span class="stat-block-value">09</span>
+        <span class="stat-block-sub">In production</span>
+      </div>
+      <div class="stat-block">
+        <span class="stat-block-label">API Endpoints</span>
+        <span class="stat-block-value">04</span>
+        <span class="stat-block-sub">/subscribe /apply /score /webhook</span>
+      </div>
+      <div class="stat-block">
+        <span class="stat-block-label">Funnel Stages</span>
+        <span class="stat-block-value">04</span>
+        <span class="stat-block-sub">Index → Manifesto → Apply → Offer</span>
+      </div>
+      <div class="stat-block">
+        <span class="stat-block-label">Email Sequence</span>
+        <span class="stat-block-value">07</span>
+        <span class="stat-block-sub">Days (automated)</span>
+      </div>
+      <div class="stat-block">
+        <span class="stat-block-label">Lead Score Range</span>
+        <span class="stat-block-value">0–100</span>
+        <span class="stat-block-sub">HOT / WARM / COLD</span>
+      </div>
+      <div class="stat-block">
+        <span class="stat-block-label">Commission Range</span>
+        <span class="stat-block-value">$2.4k+</span>
+        <span class="stat-block-sub">Per closed sale</span>
+      </div>
+    </div>
+
+    <!-- SYSTEM STATUS -->
+    <div class="section-label">System Status</div>
+    <div class="status-grid">
+      <div class="status-item">
+        <span class="status-name">Netlify Deploy</span>
+        <div class="status-right"><div class="status-dot"></div><span class="status-label">LIVE</span></div>
+      </div>
+      <div class="status-item">
+        <span class="status-name">Subscribe API</span>
+        <div class="status-right"><div class="status-dot"></div><span class="status-label">LIVE</span></div>
+      </div>
+      <div class="status-item">
+        <span class="status-name">Apply API</span>
+        <div class="status-right"><div class="status-dot"></div><span class="status-label">LIVE</span></div>
+      </div>
+      <div class="status-item">
+        <span class="status-name">Score API</span>
+        <div class="status-right"><div class="status-dot"></div><span class="status-label">LIVE</span></div>
+      </div>
+      <div class="status-item">
+        <span class="status-name">Webhook API</span>
+        <div class="status-right"><div class="status-dot"></div><span class="status-label">LIVE</span></div>
+      </div>
+      <div class="status-item">
+        <span class="status-name">Email Sequences</span>
+        <div class="status-right"><div class="status-dot"></div><span class="status-label">LIVE</span></div>
+      </div>
+      <div class="status-item">
+        <span class="status-name">Lead Scoring</span>
+        <div class="status-right"><div class="status-dot"></div><span class="status-label">LIVE</span></div>
+      </div>
+      <div class="status-item">
+        <span class="status-name">AIOS Dashboard</span>
+        <div class="status-right"><div class="status-dot"></div><span class="status-label">LIVE</span></div>
+      </div>
+    </div>
+
+    <!-- CONSUMER FUNNEL -->
+    <div class="section-label">Consumer Funnel</div>
+    <div class="card-grid">
+      <a href="index.html" class="hub-card">
+        <span class="card-icon">🏠</span>
+        <div class="card-tag tag-public">PUBLIC</div>
+        <div class="card-name">Landing Page</div>
+        <div class="card-desc">Top of funnel. Email capture with AI Income Blueprint lead magnet. Triggers Day 0 email.</div>
+        <div class="card-url">index.html</div>
+      </a>
+      <a href="page2-manifesto.html" class="hub-card">
+        <span class="card-icon">📜</span>
+        <div class="card-tag tag-public">PUBLIC</div>
+        <div class="card-name">The Manifesto</div>
+        <div class="card-desc">Conviction builder. Details the model, commissions, and automation philosophy. Warms leads.</div>
+        <div class="card-url">page2-manifesto.html</div>
+      </a>
+      <a href="page3-apply.html" class="hub-card">
+        <span class="card-icon">📋</span>
+        <div class="card-tag tag-public">PUBLIC</div>
+        <div class="card-name">Application</div>
+        <div class="card-desc">Multi-step qualifying application. Triggers AI lead scoring. Routes HOT → Offer, WARM/COLD → nurture.</div>
+        <div class="card-url">page3-apply.html</div>
+      </a>
+      <a href="page4-offer.html" class="hub-card">
+        <span class="card-icon">💎</span>
+        <div class="card-tag tag-public">PUBLIC</div>
+        <div class="card-name">The Offer</div>
+        <div class="card-desc">Final conversion page for HOT leads. Enagic registration CTA with full compensation breakdown.</div>
+        <div class="card-url">page4-offer.html</div>
+      </a>
+    </div>
+
+    <!-- DISTRIBUTOR -->
+    <div class="section-label">Distributor</div>
+    <div class="card-grid">
+      <a href="distributors.html" class="hub-card">
+        <span class="card-icon">🤝</span>
+        <div class="card-tag tag-private">PRIVATE</div>
+        <div class="card-name">Distributor Onboarding</div>
+        <div class="card-desc">Resources, training, and setup guide for new Silent Syndicate operators joining the network.</div>
+        <div class="card-url">distributors.html</div>
+      </a>
+    </div>
+
+    <!-- DASHBOARD -->
+    <div class="section-label">Dashboard</div>
+    <div class="card-grid">
+      <a href="aios-dashboard.html" class="hub-card">
+        <span class="card-icon">🖥️</span>
+        <div class="card-tag tag-private">PRIVATE</div>
+        <div class="card-name">AIOS Dashboard</div>
+        <div class="card-desc">AI Operating System. 7-view mission control: Morning Briefing, Pipeline, Email, Chatbot, Commissions, Network, Content.</div>
+        <div class="card-url">aios-dashboard.html</div>
+      </a>
+      <a href="aios-sales.html" class="hub-card">
+        <span class="card-icon">⚙️</span>
+        <div class="card-tag tag-public">PUBLIC</div>
+        <div class="card-name">AIOS Product Page</div>
+        <div class="card-desc">Public-facing page explaining what AIOS is and how it works. Drives traffic to dashboard sign-up.</div>
+        <div class="card-url">aios-sales.html</div>
+      </a>
+    </div>
+
+    <!-- RESOURCES -->
+    <div class="section-label">Resources & Documentation</div>
+    <div class="card-grid">
+      <a href="tech-stack-guide.html" class="hub-card">
+        <span class="card-icon">🔧</span>
+        <div class="card-tag tag-resource">RESOURCE</div>
+        <div class="card-name">Tech Stack Guide</div>
+        <div class="card-desc">Complete breakdown of the tools, integrations, and infrastructure powering the funnel.</div>
+        <div class="card-url">tech-stack-guide.html</div>
+      </a>
+      <a href="traffic-strategy.html" class="hub-card">
+        <span class="card-icon">📈</span>
+        <div class="card-tag tag-resource">RESOURCE</div>
+        <div class="card-name">Traffic Strategy</div>
+        <div class="card-desc">Organic and paid traffic playbook. Content channels, posting cadence, and audience targeting.</div>
+        <div class="card-url">traffic-strategy.html</div>
+      </a>
+      <a href="chatbot-script.html" class="hub-card">
+        <span class="card-icon">🤖</span>
+        <div class="card-tag tag-resource">RESOURCE</div>
+        <div class="card-name">Chatbot Script</div>
+        <div class="card-desc">Full AI chatbot conversation flows, objection handling scripts, and qualifying question sequences.</div>
+        <div class="card-url">chatbot-script.html</div>
+      </a>
+      <a href="funnel-flow-diagram.html" class="hub-card">
+        <span class="card-icon">🗺️</span>
+        <div class="card-tag tag-resource">RESOURCE</div>
+        <div class="card-name">Funnel Flow Diagram</div>
+        <div class="card-desc">Interactive visual map of the entire funnel. Clickable nodes, API call indicators, email sequence timeline.</div>
+        <div class="card-url">funnel-flow-diagram.html</div>
+      </a>
+    </div>
+
+  </main>
+
+  <footer class="hub-footer">
+    SILENT SYNDICATE — PRIVATE OPERATIONS CENTRE &nbsp;|&nbsp; DO NOT SHARE THIS URL
+    &nbsp;|&nbsp; <span id="footer-date"></span>
+  </footer>
+
+  <script>
+    // Live clock
+    function updateClock() {
+      const now = new Date();
+      const ts = now.toISOString().replace('T', ' ').slice(0, 19) + ' UTC';
+      document.getElementById('live-clock').textContent = ts;
+    }
+    updateClock();
+    setInterval(updateClock, 1000);
+
+    // Footer date
+    document.getElementById('footer-date').textContent = new Date().toLocaleDateString('en-GB', {
+      day: '2-digit', month: 'short', year: 'numeric'
+    }).toUpperCase();
+  </script>
+
+</body>
+</html>
