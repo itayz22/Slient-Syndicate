@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Silent Syndicate — Apply To Join</title>
+  <link rel="stylesheet" href="css/design-system.css">
+  <style>
+    body { padding-top: 80px; }
+
+    .apply-layout {
+      display: grid;
+      grid-template-columns: 1fr 480px;
+      gap: 60px;
+      align-items: start;
+    }
+
+    .trust-section { position: sticky; top: 100px; }
+
+    .trust-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 16px;
+      padding: 20px 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .trust-item:last-child { border-bottom: none; }
+
+    .trust-icon {
+      width: 44px; height: 44px;
+      border-radius: 50%;
+      background: rgba(124,58,237,0.12);
+      border: 1px solid rgba(168,85,247,0.2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.1rem;
+      flex-shrink: 0;
+    }
+
+    .trust-title {
+      font-family: 'Orbitron', monospace;
+      font-size: var(--text-sm);
+      font-weight: 700;
+      color: var(--pg);
+      margin-bottom: 4px;
+    }
+
+    .testimonial-card {
+      background: var(--card2);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 20px;
+      margin-bottom: 16px;
+    }
+
+    .testimonial-quote {
+      font-family: 'Cormorant Garamond', serif;
+      font-style: italic;
+      font-size: var(--text-base);
+      color: var(--muted);
+      line-height: 1.6;
+      margin-bottom: 12px;
+    }
+
+    .testimonial-author {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 0.7rem;
+      color: var(--dim);
+      letter-spacing: 0.08em;
+    }
+
+    .form-card-apply {
+      background: var(--card);
+      border: 1px solid rgba(168,85,247,0.2);
+      border-radius: var(--radius-xl);
+      padding: 40px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .form-card-apply::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, var(--pm), var(--pink), var(--cyan));
+    }
+
+    .scarcity-bar {
+      background: rgba(239,68,68,0.08);
+      border: 1px solid rgba(239,68,68,0.2);
+      border-radius: var(--radius);
+      padding: 12px 16px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 24px;
+    }
+
+    .scarcity-dot {
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      background: var(--red);
+      box-shadow: 0 0 8px rgba(239,68,68,0.6);
+      animation: pulse 1.5s ease-in-out infinite;
+      flex-shrink: 0;
+    }
+
+    .hero-apply {
+      padding: 60px 0 40px;
+    }
+
+    @media (max-width: 900px) {
+      .apply-layout { grid-template-columns: 1fr; }
+      .trust-section { position: static; }
+    }
+  </style>
+</head>
+<body>
+  <div class="orb orb-1"></div>
+  <div class="orb orb-2"></div>
+
+  <nav class="nav">
+    <a href="index.html" class="nav-brand">
+      <div class="hex-logo hex-logo-sm"><span>SS</span></div>
+      <span class="nav-brand-text">SILENT SYNDICATE</span>
+    </a>
+    <div class="step-progress">
+      <div class="step-dot complete"></div>
+      <div class="step-line"></div>
+      <div class="step-dot complete"></div>
+      <div class="step-line"></div>
+      <div class="step-dot active"></div>
+      <div class="step-line"></div>
+      <div class="step-dot"></div>
+    </div>
+    <span class="font-mono" style="font-size:0.7rem;color:var(--dim);">STEP 3 OF 4</span>
+  </nav>
+
+  <div class="page-wrap">
+    <section class="hero-apply">
+      <div class="container">
+        <div class="text-center mb-8 reveal">
+          <div style="display:inline-flex;align-items:center;gap:8px;padding:6px 14px;background:rgba(168,85,247,0.1);border:1px solid rgba(168,85,247,0.25);border-radius:9999px;font-family:'Share Tech Mono',monospace;font-size:0.7rem;color:var(--pg);letter-spacing:0.1em;margin-bottom:20px;">
+            APPLICATION FORM — STEP 3 OF 4
+          </div>
+          <h1 style="font-family:'Orbitron',monospace;font-size:clamp(1.75rem,4vw,2.75rem);font-weight:900;line-height:1.15;margin-bottom:16px;">
+            You've Seen The System.<br>
+            <span class="gradient-text">Now Apply To Join It.</span>
+          </h1>
+          <p style="color:var(--muted);font-size:var(--text-lg);max-width:560px;margin:0 auto;line-height:1.65;">
+            3 minutes. 7 questions. We'll review your application and route you to the right next step.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section style="padding:0 0 80px;">
+      <div class="container">
+        <div class="apply-layout">
+          <!-- LEFT — TRUST BUILDERS -->
+          <div class="trust-section reveal">
+            <h3 style="font-family:'Orbitron',monospace;font-size:var(--text-xl);font-weight:700;margin-bottom:24px;">
+              Who This Is For
+            </h3>
+
+            <div class="trust-item">
+              <div class="trust-icon">💼</div>
+              <div>
+                <div class="trust-title">Experienced Sellers & Closers</div>
+                <p style="color:var(--muted);font-size:var(--text-sm);line-height:1.6;">
+                  You understand sales. You've sold something. You're not afraid of a high-ticket conversation.
+                </p>
+              </div>
+            </div>
+
+            <div class="trust-item">
+              <div class="trust-icon">💰</div>
+              <div>
+                <div class="trust-title">Capital-Ready Operators</div>
+                <p style="color:var(--muted);font-size:var(--text-sm);line-height:1.6;">
+                  You have $8,500–$20,000 accessible. You're treating this like a business investment, not a gamble.
+                </p>
+              </div>
+            </div>
+
+            <div class="trust-item">
+              <div class="trust-icon">📈</div>
+              <div>
+                <div class="trust-title">Income Goal Driven</div>
+                <p style="color:var(--muted);font-size:var(--text-sm);line-height:1.6;">
+                  You want $5,000–$20,000+/month. You know that requires a system, not just hustle.
+                </p>
+              </div>
+            </div>
+
+            <div class="trust-item">
+              <div class="trust-icon">🚫</div>
+              <div>
+                <div class="trust-title">Not For Everyone</div>
+                <p style="color:var(--muted);font-size:var(--text-sm);line-height:1.6;">
+                  If you don't have capital, aren't ready to drive traffic, or need guaranteed income — this isn't for you right now.
+                </p>
+              </div>
+            </div>
+
+            <div style="margin-top:32px;">
+              <div class="testimonial-card">
+                <div class="testimonial-quote">
+                  "I was sceptical. The transparency about the investment actually made me trust it more.
+                  First sale was Day 19. Month 3 I cleared $14,200."
+                </div>
+                <div class="testimonial-author">SARAH K. — BRISBANE, LAUNCHER TIER</div>
+              </div>
+
+              <div class="testimonial-card">
+                <div class="testimonial-quote">
+                  "The AI funnel genuinely works. I get 2–3 pre-qualified applications per week without any manual outreach."
+                </div>
+                <div class="testimonial-author">MARCUS V. — SYDNEY, NUKE TIER</div>
+              </div>
+
+              <div class="testimonial-card">
+                <div class="testimonial-quote">
+                  "The Enagic model was foreign to me. The education sequence made it crystal clear before I committed."
+                </div>
+                <div class="testimonial-author">MICHELLE T. — PERTH, STRIKER TIER</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- RIGHT — FORM -->
+          <div class="reveal">
+            <div class="scarcity-bar">
+              <div class="scarcity-dot"></div>
+              <span style="font-size:var(--text-sm);color:var(--muted);">
+                <strong style="color:var(--red);">5 spots available</strong> in this cohort — applications reviewed weekly.
+              </span>
+            </div>
+
+            <div class="form-card-apply">
+              <h3 style="font-family:'Orbitron',monospace;font-size:var(--text-lg);font-weight:700;margin-bottom:6px;">
+                Your Application
+              </h3>
+              <p style="font-size:var(--text-sm);color:var(--dim);margin-bottom:28px;">
+                All fields required. Honest answers get you the right response faster.
+              </p>
+
+              <form id="apply-form">
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
+                  <div class="form-group">
+                    <label class="form-label" for="firstName">First Name</label>
+                    <input class="form-input" type="text" id="firstName" name="firstName" placeholder="First" required>
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label" for="lastName">Last Name</label>
+                    <input class="form-input" type="text" id="lastName" name="lastName" placeholder="Last" required>
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label class="form-label" for="email">Email Address</label>
+                  <input class="form-input" type="email" id="email" name="email" placeholder="your@email.com" required>
+                </div>
+
+                <div class="form-group">
+                  <label class="form-label" for="phone">Phone Number</label>
+                  <input class="form-input" type="tel" id="phone" name="phone" placeholder="+61 400 000 000" required>
+                </div>
+
+                <div class="form-group">
+                  <label class="form-label" for="situation">Current Situation</label>
+                  <select class="form-select" id="situation" name="situation" required>
+                    <option value="" disabled selected>Select your current situation</option>
+                    <option value="employed">Employed full-time</option>
+                    <option value="employed-pt">Employed part-time</option>
+                    <option value="sales">Working in sales</option>
+                    <option value="business">Own my own business</option>
+                    <option value="freelance">Freelance / consulting</option>
+                    <option value="other">Other</option>
+                  </select>
+                </div>
+
+                <div class="form-group">
+                  <label class="form-label" for="incomeGoal">Monthly Income Goal</label>
+                  <select class="form-select" id="incomeGoal" name="incomeGoal" required>
+                    <option value="" disabled selected>Select your income goal</option>
+                    <option value="2400-5000">$2,400–$5,000/month</option>
+                    <option value="5000-10000">$5,000–$10,000/month</option>
+                    <option value="10000-20000">$10,000–$20,000/month</option>
+                    <option value="20000+">$20,000+/month</option>
+                  </select>
+                </div>
+
+                <div class="form-group">
+                  <label class="form-label" for="investmentReady">Investment Readiness</label>
+                  <select class="form-select" id="investmentReady" name="investmentReady" required>
+                    <option value="" disabled selected>Select your readiness level</option>
+                    <option value="yes-ready">Yes — I have the capital ready and I'm serious</option>
+                    <option value="close-2-4-weeks">I'm close — need 2–4 weeks</option>
+                    <option value="need-to-understand">Need to understand model better before committing</option>
+                    <option value="no-capital">I don't have the capital currently</option>
+                  </select>
+                </div>
+
+                <div class="form-group">
+                  <label class="form-label" for="whyJoin">Why do you want to join?</label>
+                  <textarea class="form-textarea" id="whyJoin" name="whyJoin"
+                    placeholder="Tell us what brought you here and what you're looking to build..." required></textarea>
+                </div>
+
+                <button type="submit" class="btn btn-primary btn-full btn-lg" id="apply-btn">
+                  Submit Application →
+                </button>
+
+                <p style="text-align:center;font-size:0.75rem;color:var(--dim);margin-top:12px;line-height:1.5;">
+                  By submitting you'll be added to the Silent Syndicate contact list.
+                  We review every application personally.
+                </p>
+              </form>
+
+              <div id="apply-success" style="display:none;text-align:center;padding:32px 0;">
+                <div style="font-size:3rem;margin-bottom:16px;">✅</div>
+                <h3 style="font-family:'Orbitron',monospace;font-size:var(--text-xl);font-weight:700;margin-bottom:8px;color:var(--green);">
+                  Application Received
+                </h3>
+                <p style="color:var(--muted);font-size:var(--text-sm);line-height:1.6;">
+                  We're reviewing your answers now. Redirecting you to the next step...
+                </p>
+                <div style="margin-top:20px;">
+                  <div style="width:100%;height:4px;background:rgba(168,85,247,0.1);border-radius:2px;overflow:hidden;">
+                    <div id="progress-bar" style="width:0%;height:100%;background:linear-gradient(90deg,var(--pm),var(--pink));border-radius:2px;transition:width 2s ease;"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <footer style="padding:40px 0;border-top:1px solid var(--border);">
+      <div class="container" style="text-align:center;">
+        <div class="income-disclaimer" style="max-width:700px;margin:0 auto;">
+          Income disclaimer: Results are not typical. Commission amounts shown are gross figures before expenses.
+          The investment required ($8,500–$20,000) must be recovered from commission earnings before profit is achieved.
+          Most distributors earn $0–$2,400 in their first month. Income figures shown are illustrations, not guarantees.
+          Silent Syndicate is an authorised Enagic distributor network.
+        </div>
+      </div>
+    </footer>
+  </div>
+
+  <script>
+    // Scroll reveal
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+    }, { threshold: 0.1 });
+    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+    // Application form submission
+    document.getElementById('apply-form').addEventListener('submit', async function(e) {
+      e.preventDefault();
+      const btn = document.getElementById('apply-btn');
+      btn.textContent = 'Submitting...';
+      btn.disabled = true;
+
+      const data = {
+        firstName: document.getElementById('firstName').value,
+        lastName: document.getElementById('lastName').value,
+        email: document.getElementById('email').value,
+        phone: document.getElementById('phone').value,
+        situation: document.getElementById('situation').value,
+        incomeGoal: document.getElementById('incomeGoal').value,
+        investmentReady: document.getElementById('investmentReady').value,
+        whyJoin: document.getElementById('whyJoin').value
+      };
+
+      try {
+        const res = await fetch('/api/apply', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(data)
+        });
+        const result = await res.json();
+
+        // Show success state
+        document.getElementById('apply-form').style.display = 'none';
+        document.getElementById('apply-success').style.display = 'block';
+        setTimeout(() => {
+          document.getElementById('progress-bar').style.width = '100%';
+        }, 100);
+
+        // Redirect based on score
+        const redirect = result.redirect || '/page4-offer.html';
+        setTimeout(() => {
+          window.location.href = redirect;
+        }, 2500);
+
+      } catch (err) {
+        // Score client-side on API failure and redirect
+        const score = scoreLeadClientSide(data);
+        document.getElementById('apply-form').style.display = 'none';
+        document.getElementById('apply-success').style.display = 'block';
+        setTimeout(() => {
+          document.getElementById('progress-bar').style.width = '100%';
+        }, 100);
+        setTimeout(() => {
+          if (score === 'HOT') window.location.href = '/page4-offer.html';
+          else if (score === 'WARM') window.location.href = '/page2-manifesto.html';
+          else window.location.href = '/index.html';
+        }, 2500);
+      }
+    });
+
+    function scoreLeadClientSide(data) {
+      if (data.investmentReady === 'yes-ready') return 'HOT';
+      if (data.incomeGoal === '10000-20000' || data.incomeGoal === '20000+') return 'HOT';
+      if (data.investmentReady === 'close-2-4-weeks') return 'WARM';
+      if (data.situation === 'sales' || data.situation === 'business') return 'WARM';
+      return 'COLD';
+    }
+  </script>
+</body>
+</html>

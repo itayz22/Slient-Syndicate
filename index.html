@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Silent Syndicate — AI-Automated High-Ticket Distribution</title>
+  <meta name="description" content="$2,400–$6,330 per sale. AI-automated Enagic distributor funnel. Get the free AI Income Blueprint and see exactly how the model works.">
+  <link rel="stylesheet" href="css/design-system.css">
+  <style>
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      padding: 120px 0 80px;
+    }
+
+    .hero-eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 14px;
+      background: rgba(168,85,247,0.1);
+      border: 1px solid rgba(168,85,247,0.25);
+      border-radius: var(--radius-full);
+      font-family: 'Share Tech Mono', monospace;
+      font-size: var(--text-xs);
+      color: var(--pg);
+      letter-spacing: 0.1em;
+      margin-bottom: 24px;
+    }
+
+    .hero-headline {
+      font-family: 'Orbitron', monospace;
+      font-size: clamp(2rem, 5vw, 3.5rem);
+      font-weight: 900;
+      line-height: 1.1;
+      margin-bottom: 20px;
+      letter-spacing: -0.02em;
+    }
+
+    .hero-sub {
+      font-size: var(--text-xl);
+      color: var(--muted);
+      max-width: 520px;
+      line-height: 1.65;
+      margin-bottom: 32px;
+    }
+
+    .hero-stats {
+      display: flex;
+      gap: 32px;
+      margin-bottom: 48px;
+    }
+
+    .stat-item { display: flex; flex-direction: column; }
+    .stat-value {
+      font-family: 'Orbitron', monospace;
+      font-size: var(--text-2xl);
+      font-weight: 700;
+      color: var(--pg);
+    }
+    .stat-label {
+      font-size: var(--text-xs);
+      color: var(--dim);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .form-card {
+      background: var(--card);
+      border: 1px solid rgba(168,85,247,0.2);
+      border-radius: var(--radius-xl);
+      padding: 40px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .form-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, var(--pm), var(--pink), var(--cyan));
+    }
+
+    .form-card-title {
+      font-family: 'Orbitron', monospace;
+      font-size: var(--text-lg);
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+
+    .form-card-sub {
+      font-size: var(--text-sm);
+      color: var(--dim);
+      margin-bottom: 28px;
+    }
+
+    .blueprint-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-bottom: 28px;
+    }
+
+    .blueprint-list li {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      font-size: var(--text-sm);
+      color: var(--muted);
+      line-height: 1.5;
+    }
+
+    .blueprint-list li::before {
+      content: '▸';
+      color: var(--pm);
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+
+    .pain-section { background: rgba(5,2,14,0.6); }
+
+    .pain-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 28px;
+    }
+
+    .pain-icon {
+      font-size: 2rem;
+      margin-bottom: 12px;
+    }
+
+    .pain-title {
+      font-family: 'Orbitron', monospace;
+      font-size: var(--text-base);
+      font-weight: 700;
+      color: var(--red);
+      margin-bottom: 8px;
+    }
+
+    .inside-section { }
+
+    .inside-card {
+      background: var(--card2);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 28px;
+      position: relative;
+    }
+
+    .inside-number {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 3rem;
+      font-weight: 700;
+      color: rgba(124,58,237,0.15);
+      position: absolute;
+      top: 16px;
+      right: 20px;
+      line-height: 1;
+    }
+
+    .inside-title {
+      font-family: 'Orbitron', monospace;
+      font-size: var(--text-base);
+      font-weight: 700;
+      color: var(--pg);
+      margin-bottom: 10px;
+    }
+
+    .social-proof {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 16px 24px;
+      background: rgba(74,222,128,0.06);
+      border: 1px solid rgba(74,222,128,0.15);
+      border-radius: var(--radius);
+      margin-bottom: 32px;
+    }
+
+    .social-proof-text {
+      font-size: var(--text-sm);
+      color: var(--muted);
+    }
+
+    .commission-bar {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 32px;
+      margin-bottom: 32px;
+    }
+
+    .commission-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .commission-row:last-child { border-bottom: none; }
+
+    .comm-tier { font-family: 'Share Tech Mono', monospace; font-size: var(--text-sm); color: var(--dim); }
+    .comm-amount { font-family: 'Orbitron', monospace; font-weight: 700; color: var(--pg); font-size: var(--text-lg); }
+    .comm-invest { font-size: var(--text-sm); color: var(--dim); }
+
+    @media (max-width: 768px) {
+      .hero { padding-top: 100px; }
+      .hero-layout { flex-direction: column; }
+      .hero-stats { flex-wrap: wrap; gap: 20px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="orb orb-1"></div>
+  <div class="orb orb-2"></div>
+  <div class="orb orb-3"></div>
+
+  <nav class="nav">
+    <a href="index.html" class="nav-brand">
+      <div class="hex-logo hex-logo-sm"><span>SS</span></div>
+      <span class="nav-brand-text">SILENT SYNDICATE</span>
+    </a>
+    <div style="display:flex;align-items:center;gap:8px;">
+      <div class="status-dot live"></div>
+      <span class="font-mono" style="font-size:0.7rem;color:var(--dim);">SYSTEM LIVE</span>
+    </div>
+  </nav>
+
+  <div class="page-wrap">
+    <!-- HERO -->
+    <section class="hero">
+      <div class="container">
+        <div style="display:grid;grid-template-columns:1fr 440px;gap:80px;align-items:center;">
+          <div>
+            <div class="hero-eyebrow">
+              <div class="status-dot live"></div>
+              ENAGIC DISTRIBUTION NETWORK — AU &amp; NZ
+            </div>
+            <h1 class="hero-headline">
+              High-Ticket Commissions.<br>
+              <span class="gradient-text">AI-Automated</span><br>
+              Distribution.
+            </h1>
+            <p class="hero-sub">
+              Built on Enagic's proven commission structure — $2,400 to $6,330 per sale.
+              An AI funnel handles education, qualification, and conversion.
+              No cold calls. No hard pitches.
+            </p>
+
+            <div class="social-proof">
+              <div class="status-dot live"></div>
+              <span class="social-proof-text">
+                <strong style="color:var(--green);">2,400+ active operators</strong> across AU &amp; NZ —
+                average first sale within 21 days of system launch.
+              </span>
+            </div>
+
+            <div class="hero-stats">
+              <div class="stat-item">
+                <span class="stat-value">$2,400</span>
+                <span class="stat-label">Entry Commission</span>
+              </div>
+              <div class="stat-item">
+                <span class="stat-value">$4,300</span>
+                <span class="stat-label">Mid Commission</span>
+              </div>
+              <div class="stat-item">
+                <span class="stat-value">$6,330</span>
+                <span class="stat-label">Top Commission</span>
+              </div>
+            </div>
+
+            <!-- Commission transparency bar -->
+            <div class="commission-bar reveal">
+              <div style="font-family:'Orbitron',monospace;font-size:0.75rem;color:var(--dim);letter-spacing:0.1em;margin-bottom:16px;">COMMISSION STRUCTURE — ENAGIC TIERS</div>
+              <div class="commission-row">
+                <div>
+                  <div class="comm-tier">STRIKER / D3</div>
+                  <div class="comm-invest">Investment: $8,500</div>
+                </div>
+                <div class="comm-amount">$2,400 / sale</div>
+              </div>
+              <div class="commission-row">
+                <div>
+                  <div class="comm-tier">LAUNCHER / 6A</div>
+                  <div class="comm-invest">Investment: $15,000</div>
+                </div>
+                <div class="comm-amount">$4,300 / sale</div>
+              </div>
+              <div class="commission-row">
+                <div>
+                  <div class="comm-tier">NUKE / 6A-2</div>
+                  <div class="comm-invest">Investment: $20,000</div>
+                </div>
+                <div class="comm-amount">$6,330 / sale</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- FORM -->
+          <div>
+            <div class="form-card reveal">
+              <div class="form-card-title">Get the Free AI Income Blueprint</div>
+              <div class="form-card-sub">
+                The honest breakdown of the Enagic model — commission structure, investment range,
+                realistic timelines, and how the AI funnel works.
+              </div>
+
+              <ul class="blueprint-list">
+                <li>What Enagic is and exactly how the commission structure works</li>
+                <li>The $2,400–$6,330 per-sale breakdown from the comp plan</li>
+                <li>How the AI funnel replaces cold calling and manual follow-up</li>
+                <li>The network structure and how team overrides compound</li>
+                <li>Investment range, break-even timeline, realistic expectations</li>
+              </ul>
+
+              <form id="opt-in-form">
+                <div class="form-group">
+                  <label class="form-label" for="firstName">First Name</label>
+                  <input class="form-input" type="text" id="firstName" name="firstName" placeholder="Your first name" required>
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="email">Email Address</label>
+                  <input class="form-input" type="email" id="email" name="email" placeholder="your@email.com" required>
+                </div>
+                <button type="submit" class="btn btn-primary btn-full btn-lg" id="submit-btn">
+                  Send Me The Blueprint →
+                </button>
+                <p style="text-align:center;font-size:0.75rem;color:var(--dim);margin-top:12px;">
+                  No spam. Unsubscribe anytime. This is built on Enagic's model — real investment required.
+                </p>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- PAIN SECTION -->
+    <section class="pain-section section">
+      <div class="container">
+        <div class="text-center mb-8 reveal">
+          <div class="hero-eyebrow" style="display:inline-flex;margin-bottom:16px;">THE PROBLEM WITH OTHER MODELS</div>
+          <h2 style="font-family:'Orbitron',monospace;font-size:var(--text-3xl);font-weight:700;">
+            Why Most People Stay <span class="gradient-text">Stuck</span>
+          </h2>
+        </div>
+        <div class="grid-3">
+          <div class="pain-card reveal">
+            <div class="pain-icon">📉</div>
+            <div class="pain-title">The Content Trap</div>
+            <p style="color:var(--muted);font-size:var(--text-sm);line-height:1.7;">
+              Build an audience for years. Convert at 1–2%. Earn $27 per sale.
+              You need 10,000 followers to make $3,000/month. The math never works.
+            </p>
+          </div>
+          <div class="pain-card reveal reveal-delay-1">
+            <div class="pain-icon">⏱️</div>
+            <div class="pain-title">The Time-For-Money Prison</div>
+            <p style="color:var(--muted);font-size:var(--text-sm);line-height:1.7;">
+              Freelancing and services pay well but cap at your working hours.
+              You can't scale you. When you stop working, income stops.
+            </p>
+          </div>
+          <div class="pain-card reveal reveal-delay-2">
+            <div class="pain-icon">🏚️</div>
+            <div class="pain-title">The Low-Ticket Ceiling</div>
+            <p style="color:var(--muted);font-size:var(--text-sm);line-height:1.7;">
+              Selling $97 courses or $297 programs. You need hundreds of sales
+              monthly to build real income. High volume requires massive traffic.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- INSIDE THE BLUEPRINT -->
+    <section class="inside-section section">
+      <div class="container">
+        <div class="text-center mb-8 reveal">
+          <h2 style="font-family:'Orbitron',monospace;font-size:var(--text-3xl);font-weight:700;">
+            Inside the <span class="gradient-text">Blueprint</span>
+          </h2>
+          <p style="color:var(--muted);margin-top:12px;max-width:560px;margin-left:auto;margin-right:auto;">
+            Four modules. All the information you need to make a real decision — including the parts most people hide.
+          </p>
+        </div>
+        <div class="grid-2">
+          <div class="inside-card reveal">
+            <div class="inside-number">01</div>
+            <div class="inside-title">The Enagic Model</div>
+            <p style="color:var(--muted);font-size:var(--text-sm);line-height:1.7;">
+              Founded 1974. Operating in 190 countries. Direct-sales model with certified health products.
+              We name every number — commission tiers, investment amounts, distributor ranks. No hidden costs.
+            </p>
+          </div>
+          <div class="inside-card reveal reveal-delay-1">
+            <div class="inside-number">02</div>
+            <div class="inside-title">The AI Funnel</div>
+            <p style="color:var(--muted);font-size:var(--text-sm);line-height:1.7;">
+              How the 4-stage automated system works: opt-in → education → qualification → conversion.
+              The tools involved, the traffic required, what you actually have to do manually.
+            </p>
+          </div>
+          <div class="inside-card reveal reveal-delay-1">
+            <div class="inside-number">03</div>
+            <div class="inside-title">The Network Layer</div>
+            <p style="color:var(--muted);font-size:var(--text-sm);line-height:1.7;">
+              How Enagic's distributor structure creates compounding team overrides.
+              How this is different from a pyramid scheme. What you actually earn from referrals vs. direct sales.
+            </p>
+          </div>
+          <div class="inside-card reveal reveal-delay-2">
+            <div class="inside-number">04</div>
+            <div class="inside-title">The 30-Day Plan</div>
+            <p style="color:var(--muted);font-size:var(--text-sm);line-height:1.7;">
+              Week-by-week: setup, traffic, first leads, first application, first close.
+              Realistic timelines. What goes wrong and how to handle it. Break-even math included.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- DISCLOSURE -->
+    <section class="section-sm">
+      <div class="container-sm">
+        <div class="disclosure-banner reveal">
+          <strong>Full Transparency:</strong> Silent Syndicate is an Enagic distributor network.
+          Enagic is a Japanese direct-sales company that manufactures Kangen water ionisation machines.
+          Becoming a distributor requires a real capital investment ($8,500–$20,000 depending on tier selected),
+          which purchases your distributor licence and product unit. Commissions are earned on direct sales only —
+          this is not a passive income system. Results vary significantly. Most distributors earn $0–$2,400 in their
+          first month while learning the system. Income projections shown are illustrative, not guaranteed.
+        </div>
+      </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer style="padding:40px 0;border-top:1px solid var(--border);">
+      <div class="container" style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:16px;">
+        <div style="display:flex;align-items:center;gap:12px;">
+          <div class="hex-logo hex-logo-sm"><span>SS</span></div>
+          <span style="font-family:'Share Tech Mono',monospace;font-size:0.75rem;color:var(--dim);">
+            SILENT SYNDICATE © 2024
+          </span>
+        </div>
+        <div style="font-size:0.75rem;color:var(--dim);">
+          An authorised Enagic distributor network — AU &amp; NZ
+        </div>
+      </div>
+    </footer>
+  </div>
+
+  <script>
+    // Scroll reveal
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+    }, { threshold: 0.1 });
+    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+    // Form submission
+    document.getElementById('opt-in-form').addEventListener('submit', async function(e) {
+      e.preventDefault();
+      const btn = document.getElementById('submit-btn');
+      const firstName = document.getElementById('firstName').value;
+      const email = document.getElementById('email').value;
+
+      btn.textContent = 'Sending...';
+      btn.disabled = true;
+
+      try {
+        const res = await fetch('/api/subscribe', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ firstName, email })
+        });
+        const data = await res.json();
+        if (data.success) {
+          window.location.href = '/page2-manifesto.html';
+        } else {
+          // Still redirect on API failure — don't block the funnel
+          window.location.href = '/page2-manifesto.html';
+        }
+      } catch (err) {
+        // Network error — still proceed
+        window.location.href = '/page2-manifesto.html';
+      }
+    });
+  </script>
+</body>
+</html>

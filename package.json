@@ -1,0 +1,22 @@
+{
+  "name": "silent-syndicate",
+  "version": "1.0.0",
+  "description": "Silent Syndicate - AI-powered Enagic distributor funnel system",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "netlify dev",
+    "build": "echo 'Static site - no build required'",
+    "test": "node scripts/test-funnel.js"
+  },
+  "dependencies": {
+    "node-fetch": "^2.7.0",
+    "dotenv": "^16.3.1"
+  },
+  "devDependencies": {
+    "netlify-cli": "^17.0.0"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

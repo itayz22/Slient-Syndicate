@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Silent Syndicate — The System Manifesto</title>
+  <link rel="stylesheet" href="css/design-system.css">
+  <style>
+    body { padding-top: 80px; }
+
+    .chapter-label {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 0.7rem;
+      letter-spacing: 0.2em;
+      color: var(--pm);
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+
+    .chapter-title {
+      font-family: 'Orbitron', monospace;
+      font-size: var(--text-3xl);
+      font-weight: 700;
+      line-height: 1.2;
+      margin-bottom: 20px;
+    }
+
+    .manifesto-pull {
+      font-family: 'Cormorant Garamond', serif;
+      font-style: italic;
+      font-size: var(--text-2xl);
+      color: var(--muted);
+      line-height: 1.5;
+      border-left: 3px solid var(--pm);
+      padding-left: 24px;
+      margin: 32px 0;
+    }
+
+    /* Ring diagram */
+    .ring-diagram {
+      position: relative;
+      width: 360px;
+      height: 360px;
+      margin: 0 auto;
+    }
+
+    .ring-center {
+      position: absolute;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      width: 100px; height: 100px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--pm), var(--pink));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      text-align: center;
+      box-shadow: 0 0 40px rgba(124,58,237,0.5);
+      z-index: 2;
+    }
+
+    .ring-node {
+      position: absolute;
+      width: 80px; height: 80px;
+      border-radius: 50%;
+      background: var(--card2);
+      border: 2px solid rgba(168,85,247,0.3);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      text-align: center;
+      transition: all 0.3s ease;
+      animation: nodePulse 4s ease-in-out infinite;
+    }
+
+    .ring-node:hover {
+      border-color: var(--pb);
+      transform: scale(1.1);
+      background: rgba(124,58,237,0.15);
+    }
+
+    @keyframes nodePulse {
+      0%, 100% { box-shadow: 0 0 0 rgba(124,58,237,0); }
+      50% { box-shadow: 0 0 20px rgba(124,58,237,0.3); }
+    }
+
+    .ring-node:nth-child(2) { top: 10px; left: 50%; transform: translateX(-50%); }
+    .ring-node:nth-child(3) { top: 50%; right: 0; transform: translateY(-50%); }
+    .ring-node:nth-child(4) { bottom: 50px; right: 40px; }
+    .ring-node:nth-child(5) { bottom: 50px; left: 40px; }
+    .ring-node:nth-child(6) { top: 50%; left: 0; transform: translateY(-50%); }
+
+    .ring-line {
+      position: absolute;
+      top: 50%; left: 50%;
+      width: 130px; height: 1px;
+      background: linear-gradient(90deg, rgba(124,58,237,0.4), transparent);
+      transform-origin: left center;
+    }
+
+    .node-label {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 0.55rem;
+      color: var(--pg);
+      letter-spacing: 0.05em;
+      text-align: center;
+      padding: 2px;
+    }
+
+    /* Stage rows */
+    .stage-row {
+      display: grid;
+      grid-template-columns: 80px 1fr;
+      gap: 24px;
+      align-items: start;
+      margin-bottom: 32px;
+    }
+
+    .stage-num {
+      width: 72px; height: 72px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, rgba(124,58,237,0.2), rgba(236,72,153,0.1));
+      border: 2px solid rgba(168,85,247,0.3);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Orbitron', monospace;
+      font-size: var(--text-xl);
+      font-weight: 700;
+      color: var(--pb);
+      flex-shrink: 0;
+    }
+
+    .stage-content-title {
+      font-family: 'Orbitron', monospace;
+      font-size: var(--text-base);
+      font-weight: 700;
+      color: var(--pg);
+      margin-bottom: 6px;
+    }
+
+    /* Vertical flow */
+    .flow-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0;
+    }
+
+    .flow-box {
+      background: var(--card2);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 16px 24px;
+      text-align: center;
+      width: 100%;
+      max-width: 400px;
+    }
+
+    .flow-box.highlight {
+      border-color: rgba(168,85,247,0.35);
+      background: rgba(124,58,237,0.08);
+    }
+
+    .flow-arrow {
+      color: var(--pm);
+      font-size: 1.2rem;
+      line-height: 1;
+      padding: 4px 0;
+    }
+
+    .flow-amount {
+      font-family: 'Orbitron', monospace;
+      font-size: var(--text-xl);
+      font-weight: 700;
+      color: var(--pg);
+    }
+
+    .cta-bridge {
+      background: linear-gradient(135deg, rgba(124,58,237,0.12) 0%, rgba(236,72,153,0.08) 100%);
+      border: 1px solid rgba(168,85,247,0.25);
+      border-radius: var(--radius-xl);
+      padding: 60px;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <div class="orb orb-1"></div>
+  <div class="orb orb-2"></div>
+
+  <nav class="nav">
+    <a href="index.html" class="nav-brand">
+      <div class="hex-logo hex-logo-sm"><span>SS</span></div>
+      <span class="nav-brand-text">SILENT SYNDICATE</span>
+    </a>
+    <div class="step-progress">
+      <div class="step-dot complete"></div>
+      <div class="step-line"></div>
+      <div class="step-dot active"></div>
+      <div class="step-line"></div>
+      <div class="step-dot"></div>
+      <div class="step-line"></div>
+      <div class="step-dot"></div>
+    </div>
+    <span class="font-mono" style="font-size:0.7rem;color:var(--dim);">STEP 2 OF 4</span>
+  </nav>
+
+  <div class="page-wrap">
+    <!-- DISCLOSURE BANNER -->
+    <div style="padding:24px 0 0;">
+      <div class="container-sm">
+        <div class="disclosure-banner">
+          <strong>Full Disclosure:</strong> Silent Syndicate is an authorised Enagic distributor network.
+          Enagic is a legitimate Japanese direct-sales company (founded 1974) with operations in 190 countries.
+          Joining requires a capital investment of $8,500–$20,000. Commissions are earned per direct sale — $2,400,
+          $4,300, or $6,330 depending on your tier. This is not a guaranteed income model. Results depend on your
+          effort, traffic, and sales ability.
+        </div>
+      </div>
+    </div>
+
+    <!-- CHAPTER 01 — PHILOSOPHY -->
+    <section class="section">
+      <div class="container-sm">
+        <div class="chapter-label reveal">CHAPTER 01</div>
+        <h2 class="chapter-title reveal">
+          Systems Beat <span class="gradient-text">Hustle</span>
+        </h2>
+        <div class="manifesto-pull reveal">
+          "The loudest operator in the room is rarely the most profitable one.
+          Quiet systems run while you sleep. Noise is a distraction from building."
+        </div>
+        <div style="color:var(--muted);line-height:1.8;font-size:var(--text-base);" class="reveal">
+          <p style="margin-bottom:16px;">
+            The hustle model says work harder, post more, grind longer. It rewards activity, not outcomes.
+            Most people who follow it burn out, plateau, and blame themselves.
+          </p>
+          <p style="margin-bottom:16px;">
+            The system model is different. You build once, then run traffic. The funnel educates.
+            The email sequence qualifies. The chatbot handles objections. You close the leads the system pre-warmed for you.
+          </p>
+          <p>
+            Silent Syndicate isn't about working less. It's about working on the right things —
+            traffic, content, and optimisation — instead of manually chasing every lead.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <div class="divider"></div>
+
+    <!-- CHAPTER 02 — THE AI SYSTEM -->
+    <section class="section">
+      <div class="container">
+        <div class="container-sm" style="max-width:100%;">
+          <div class="chapter-label text-center reveal">CHAPTER 02</div>
+          <h2 class="chapter-title text-center reveal">
+            The <span class="gradient-text">AI System</span>
+          </h2>
+          <p style="color:var(--muted);text-align:center;max-width:500px;margin:0 auto 48px;line-height:1.7;" class="reveal">
+            Five automation nodes running in sequence — from first impression to final conversion.
+          </p>
+
+          <!-- Ring Diagram -->
+          <div class="ring-diagram reveal" style="position:relative;">
+            <!-- Connecting lines -->
+            <svg style="position:absolute;inset:0;width:100%;height:100%;z-index:0;" viewBox="0 0 360 360">
+              <circle cx="180" cy="180" r="130" fill="none" stroke="rgba(124,58,237,0.15)" stroke-width="1" stroke-dasharray="4 4"/>
+              <line x1="180" y1="50" x2="180" y2="130" stroke="rgba(124,58,237,0.3)" stroke-width="1"/>
+              <line x1="310" y1="180" x2="230" y2="180" stroke="rgba(124,58,237,0.3)" stroke-width="1"/>
+              <line x1="265" y1="260" x2="215" y2="220" stroke="rgba(124,58,237,0.3)" stroke-width="1"/>
+              <line x1="95" y1="260" x2="145" y2="220" stroke="rgba(124,58,237,0.3)" stroke-width="1"/>
+              <line x1="50" y1="180" x2="130" y2="180" stroke="rgba(124,58,237,0.3)" stroke-width="1"/>
+            </svg>
+            <!-- Center -->
+            <div class="ring-center" style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);">
+              <div style="font-family:'Orbitron',monospace;font-weight:900;font-size:0.6rem;color:white;line-height:1.3;text-align:center;">
+                SILENT<br>SYNDICATE<br>CORE
+              </div>
+            </div>
+            <!-- Nodes -->
+            <div class="ring-node" style="position:absolute;top:10px;left:50%;transform:translateX(-50%);">
+              <div style="font-size:1.2rem;">📡</div>
+              <div class="node-label">OPT-IN<br>CAPTURE</div>
+            </div>
+            <div class="ring-node" style="position:absolute;top:50%;right:-10px;transform:translateY(-50%);">
+              <div style="font-size:1.2rem;">📧</div>
+              <div class="node-label">EMAIL<br>NURTURE</div>
+            </div>
+            <div class="ring-node" style="position:absolute;bottom:30px;right:30px;">
+              <div style="font-size:1.2rem;">🤖</div>
+              <div class="node-label">AI CHAT<br>QUALIFY</div>
+            </div>
+            <div class="ring-node" style="position:absolute;bottom:30px;left:30px;">
+              <div style="font-size:1.2rem;">💰</div>
+              <div class="node-label">OFFER<br>CONVERT</div>
+            </div>
+            <div class="ring-node" style="position:absolute;top:50%;left:-10px;transform:translateY(-50%);">
+              <div style="font-size:1.2rem;">📊</div>
+              <div class="node-label">SCORE<br>&amp; ROUTE</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="divider"></div>
+
+    <!-- CHAPTER 03 — HOW IT WORKS -->
+    <section class="section">
+      <div class="container-sm">
+        <div class="chapter-label reveal">CHAPTER 03</div>
+        <h2 class="chapter-title reveal">
+          How It <span class="gradient-text">Works</span>
+        </h2>
+
+        <div class="stage-row reveal">
+          <div class="stage-num">01</div>
+          <div>
+            <div class="stage-content-title">ATTRACTION — Drive traffic to the opt-in page</div>
+            <p style="color:var(--muted);font-size:var(--text-sm);line-height:1.7;">
+              Short-form content on TikTok and Instagram (60-second reels) drives cold traffic.
+              The hook: transparent, numbers-first, no hype. Honest attracts serious people.
+              Opt-in gate: free AI Income Blueprint. Collected: first name + email.
+            </p>
+          </div>
+        </div>
+
+        <div class="stage-row reveal">
+          <div class="stage-num">02</div>
+          <div>
+            <div class="stage-content-title">EDUCATION — 7-day email sequence</div>
+            <p style="color:var(--muted);font-size:var(--text-sm);line-height:1.7;">
+              ActiveCampaign automation delivers 7 emails over 7 days. Day 0: blueprint + full disclosure.
+              Days 1–6: Enagic model, the funnel, the product, social proof, objections, mindset.
+              Day 7: application CTA. Designed to qualify and filter, not just sell.
+            </p>
+          </div>
+        </div>
+
+        <div class="stage-row reveal">
+          <div class="stage-num">03</div>
+          <div>
+            <div class="stage-content-title">QUALIFICATION — Application + AI scoring</div>
+            <p style="color:var(--muted);font-size:var(--text-sm);line-height:1.7;">
+              7-field application form scores leads automatically. HOT (investment ready) → offer page.
+              WARM (close but unsure) → extended nurture. COLD (not capital-ready) → back to education.
+              The chatbot handles real-time objections on the offer page.
+            </p>
+          </div>
+        </div>
+
+        <div class="stage-row reveal">
+          <div class="stage-num">04</div>
+          <div>
+            <div class="stage-content-title">CONVERSION — Tiered offer + Enagic registration</div>
+            <p style="color:var(--muted);font-size:var(--text-sm);line-height:1.7;">
+              Three tier options with live ROI calculator. Leads pre-educated on investment before they reach
+              this page. Conversion happens via Enagic's official registration process.
+              You earn your commission when the payment clears.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="divider"></div>
+
+    <!-- CHAPTER 04 — THE ENAGIC BACKEND -->
+    <section class="section">
+      <div class="container-sm">
+        <div class="chapter-label reveal">CHAPTER 04</div>
+        <h2 class="chapter-title reveal">
+          The <span class="gradient-text">Enagic Backend</span>
+        </h2>
+        <p style="color:var(--muted);line-height:1.7;margin-bottom:40px;" class="reveal">
+          This system is built on Enagic's distributor commission structure. Here's exactly how the money works.
+        </p>
+
+        <!-- Vertical flow diagram -->
+        <div style="display:flex;flex-direction:column;align-items:center;gap:0;" class="reveal">
+          <div class="flow-box">
+            <div style="font-size:0.7rem;letter-spacing:0.1em;color:var(--dim);text-transform:uppercase;font-family:'Share Tech Mono',monospace;">Lead Converts — Selects Tier</div>
+          </div>
+          <div class="flow-arrow">↓</div>
+          <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px;width:100%;">
+            <div class="flow-box" style="background:rgba(124,58,237,0.06);">
+              <div style="font-family:'Share Tech Mono',monospace;font-size:0.65rem;color:var(--dim);margin-bottom:4px;">STRIKER / D3</div>
+              <div class="flow-amount">$2,400</div>
+              <div style="font-size:0.75rem;color:var(--dim);">per direct sale</div>
+            </div>
+            <div class="flow-box highlight">
+              <div style="font-family:'Share Tech Mono',monospace;font-size:0.65rem;color:var(--pm);margin-bottom:4px;">LAUNCHER / 6A ★</div>
+              <div class="flow-amount" style="color:var(--pink);">$4,300</div>
+              <div style="font-size:0.75rem;color:var(--dim);">per direct sale</div>
+            </div>
+            <div class="flow-box" style="background:rgba(124,58,237,0.06);">
+              <div style="font-family:'Share Tech Mono',monospace;font-size:0.65rem;color:var(--dim);margin-bottom:4px;">NUKE / 6A-2</div>
+              <div class="flow-amount">$6,330</div>
+              <div style="font-size:0.75rem;color:var(--dim);">per direct sale</div>
+            </div>
+          </div>
+          <div class="flow-arrow">↓</div>
+          <div class="flow-box" style="background:rgba(74,222,128,0.06);border-color:rgba(74,222,128,0.2);width:100%;">
+            <div style="font-size:0.7rem;letter-spacing:0.1em;color:var(--green);text-transform:uppercase;font-family:'Share Tech Mono',monospace;margin-bottom:8px;">Team Override Layer</div>
+            <p style="font-size:var(--text-sm);color:var(--muted);line-height:1.6;">
+              When your network recruits their own distributors, you earn a compounding override on each transaction
+              in your downline. This is Enagic's 6A-2 structure. Not required to earn — it's a bonus layer.
+            </p>
+          </div>
+          <div class="flow-arrow">↓</div>
+          <div class="flow-box" style="width:100%;">
+            <div style="font-size:0.7rem;letter-spacing:0.1em;color:var(--dim);text-transform:uppercase;font-family:'Share Tech Mono',monospace;margin-bottom:8px;">Payment via Enagic Direct</div>
+            <p style="font-size:var(--text-sm);color:var(--muted);">
+              Enagic handles all payment processing and commission distribution directly to your registered account.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CTA BRIDGE -->
+    <section class="section-sm">
+      <div class="container-sm">
+        <div class="cta-bridge reveal">
+          <div style="font-family:'Share Tech Mono',monospace;font-size:0.75rem;color:var(--pm);letter-spacing:0.15em;margin-bottom:16px;">
+            YOU'VE SEEN HOW THE SYSTEM WORKS
+          </div>
+          <h2 style="font-family:'Orbitron',monospace;font-size:var(--text-3xl);font-weight:700;margin-bottom:16px;">
+            Ready to Apply?
+          </h2>
+          <p style="color:var(--muted);max-width:440px;margin:0 auto 32px;line-height:1.7;">
+            The application takes 3 minutes. We review your answers, score your readiness,
+            and route you to the right next step — no calls required.
+          </p>
+          <a href="page3-apply.html" class="btn btn-primary btn-lg">
+            Submit My Application →
+          </a>
+          <p style="margin-top:16px;font-size:0.75rem;color:var(--dim);">
+            Not ready yet? Keep reading your email sequence — more detail on the way.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <footer style="padding:40px 0;border-top:1px solid var(--border);">
+      <div class="container" style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:16px;">
+        <div style="display:flex;align-items:center;gap:12px;">
+          <div class="hex-logo hex-logo-sm"><span>SS</span></div>
+          <span style="font-family:'Share Tech Mono',monospace;font-size:0.75rem;color:var(--dim);">SILENT SYNDICATE © 2024</span>
+        </div>
+        <div class="income-disclaimer" style="max-width:600px;padding:12px 16px;">
+          Income disclaimer: Results are not typical. Commission amounts shown are gross figures before costs.
+          Most distributors earn significantly less. This is not a guaranteed income opportunity.
+        </div>
+      </div>
+    </footer>
+  </div>
+
+  <script>
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+    }, { threshold: 0.1 });
+    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+  </script>
+</body>
+</html>

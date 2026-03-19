@@ -1,0 +1,659 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Silent Syndicate — Your Offer</title>
+  <link rel="stylesheet" href="css/design-system.css">
+  <style>
+    body { padding-top: 80px; }
+
+    .approved-bar {
+      background: linear-gradient(90deg, rgba(74,222,128,0.1), rgba(74,222,128,0.05));
+      border-bottom: 1px solid rgba(74,222,128,0.2);
+      padding: 12px 0;
+      text-align: center;
+    }
+
+    .tier-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-xl);
+      padding: 36px;
+      position: relative;
+      overflow: hidden;
+      transition: all 0.3s ease;
+      flex: 1;
+      min-width: 280px;
+    }
+
+    .tier-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 3px;
+    }
+
+    .tier-card.striker::before { background: linear-gradient(90deg, #6b7280, #9ca3af); }
+    .tier-card.launcher::before { background: linear-gradient(90deg, var(--pm), var(--pink)); }
+    .tier-card.nuke::before { background: linear-gradient(90deg, var(--cyan), var(--pm)); }
+
+    .tier-card.featured {
+      border-color: rgba(168,85,247,0.4);
+      transform: scale(1.03);
+      box-shadow: 0 0 40px rgba(124,58,237,0.2);
+    }
+
+    .tier-card:hover {
+      border-color: rgba(168,85,247,0.5);
+      transform: scale(1.05);
+      box-shadow: 0 12px 40px rgba(0,0,0,0.4);
+    }
+
+    .tier-card.featured:hover { transform: scale(1.07); }
+
+    .featured-badge {
+      position: absolute;
+      top: 16px; right: 16px;
+      background: linear-gradient(135deg, var(--pm), var(--pink));
+      padding: 4px 12px;
+      border-radius: 9999px;
+      font-size: 0.65rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: white;
+    }
+
+    .tier-name {
+      font-family: 'Orbitron', monospace;
+      font-size: var(--text-2xl);
+      font-weight: 900;
+      margin-bottom: 4px;
+    }
+
+    .tier-rank {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 0.7rem;
+      color: var(--dim);
+      letter-spacing: 0.1em;
+      margin-bottom: 24px;
+    }
+
+    .tier-commission {
+      font-family: 'Orbitron', monospace;
+      font-size: var(--text-4xl);
+      font-weight: 900;
+      margin-bottom: 4px;
+    }
+
+    .tier-per-sale {
+      font-size: var(--text-sm);
+      color: var(--dim);
+      margin-bottom: 20px;
+    }
+
+    .tier-investment {
+      font-size: var(--text-sm);
+      color: var(--muted);
+      padding: 10px 14px;
+      background: rgba(255,255,255,0.04);
+      border-radius: var(--radius-sm);
+      margin-bottom: 20px;
+    }
+
+    .tier-features { list-style: none; }
+    .tier-features li {
+      display: flex; align-items: center; gap: 8px;
+      font-size: var(--text-sm); color: var(--muted);
+      padding: 6px 0;
+      border-bottom: 1px solid rgba(255,255,255,0.04);
+    }
+    .tier-features li::before { content: '✓'; color: var(--green); flex-shrink: 0; }
+    .tier-features li:last-child { border-bottom: none; }
+
+    /* ROI Calculator */
+    .calc-card {
+      background: var(--card2);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-xl);
+      padding: 48px;
+    }
+
+    .slider-label {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+
+    .slider-val {
+      font-family: 'Orbitron', monospace;
+      font-size: var(--text-xl);
+      font-weight: 700;
+      color: var(--pb);
+    }
+
+    input[type=range] {
+      -webkit-appearance: none;
+      width: 100%;
+      height: 4px;
+      background: rgba(168,85,247,0.2);
+      border-radius: 2px;
+      outline: none;
+      margin-bottom: 32px;
+    }
+
+    input[type=range]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 20px; height: 20px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--pm), var(--pink));
+      cursor: pointer;
+      box-shadow: 0 0 10px rgba(124,58,237,0.5);
+    }
+
+    .roi-output {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+      margin-top: 24px;
+    }
+
+    .roi-box {
+      background: rgba(124,58,237,0.06);
+      border: 1px solid rgba(168,85,247,0.15);
+      border-radius: var(--radius);
+      padding: 24px;
+      text-align: center;
+    }
+
+    .roi-value {
+      font-family: 'Orbitron', monospace;
+      font-size: var(--text-3xl);
+      font-weight: 900;
+      background: linear-gradient(135deg, var(--pb), var(--pink));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    /* Timeline */
+    .timeline-step {
+      display: grid;
+      grid-template-columns: 40px 1fr;
+      gap: 20px;
+      padding-bottom: 32px;
+      position: relative;
+    }
+
+    .timeline-step::after {
+      content: '';
+      position: absolute;
+      left: 19px; top: 40px;
+      bottom: 0;
+      width: 2px;
+      background: linear-gradient(180deg, var(--pm), transparent);
+    }
+
+    .timeline-step:last-child::after { display: none; }
+
+    .timeline-num {
+      width: 40px; height: 40px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--pm), var(--pink));
+      display: flex; align-items: center; justify-content: center;
+      font-family: 'Orbitron', monospace;
+      font-weight: 700;
+      font-size: var(--text-sm);
+      flex-shrink: 0;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* Objections */
+    .objection-card {
+      background: var(--card2);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 24px;
+    }
+
+    .objection-q {
+      font-family: 'Orbitron', monospace;
+      font-size: var(--text-sm);
+      font-weight: 700;
+      color: var(--amber);
+      margin-bottom: 10px;
+    }
+  </style>
+</head>
+<body>
+  <div class="orb orb-1"></div>
+  <div class="orb orb-2"></div>
+
+  <div class="approved-bar page-wrap">
+    <span style="color:var(--green);font-family:'Share Tech Mono',monospace;font-size:0.8rem;letter-spacing:0.1em;">
+      ✓ APPLICATION APPROVED — You've been cleared for the offer page
+    </span>
+  </div>
+
+  <nav class="nav" style="top:41px;">
+    <a href="index.html" class="nav-brand">
+      <div class="hex-logo hex-logo-sm"><span>SS</span></div>
+      <span class="nav-brand-text">SILENT SYNDICATE</span>
+    </a>
+    <div class="step-progress">
+      <div class="step-dot complete"></div>
+      <div class="step-line"></div>
+      <div class="step-dot complete"></div>
+      <div class="step-line"></div>
+      <div class="step-dot complete"></div>
+      <div class="step-line"></div>
+      <div class="step-dot active"></div>
+    </div>
+    <span class="font-mono" style="font-size:0.7rem;color:var(--dim);">STEP 4 OF 4</span>
+  </nav>
+
+  <div class="page-wrap" style="margin-top:41px;">
+    <!-- HERO -->
+    <section class="section">
+      <div class="container">
+        <div class="text-center reveal">
+          <div style="display:inline-flex;align-items:center;gap:8px;padding:6px 14px;background:rgba(74,222,128,0.08);border:1px solid rgba(74,222,128,0.2);border-radius:9999px;font-family:'Share Tech Mono',monospace;font-size:0.7rem;color:var(--green);letter-spacing:0.1em;margin-bottom:20px;">
+            ✓ APPROVED — YOUR INVITATION IS READY
+          </div>
+          <h1 style="font-family:'Orbitron',monospace;font-size:clamp(2rem,5vw,3.25rem);font-weight:900;line-height:1.1;margin-bottom:20px;">
+            Select Your <span class="gradient-text">Entry Tier</span>
+          </h1>
+          <p style="color:var(--muted);font-size:var(--text-lg);max-width:560px;margin:0 auto;line-height:1.65;">
+            Three tiers. Three commission levels. All built on Enagic's direct-sales infrastructure.
+            Select the tier that matches your capital and income goals.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- TIER CARDS -->
+    <section style="padding:0 0 80px;">
+      <div class="container">
+        <div style="display:flex;gap:24px;align-items:stretch;flex-wrap:wrap;" class="reveal">
+          <!-- STRIKER -->
+          <div class="tier-card striker">
+            <div class="tier-name">STRIKER</div>
+            <div class="tier-rank">ENAGIC D3 RANK</div>
+            <div class="tier-commission" style="color:#9ca3af;">$2,400</div>
+            <div class="tier-per-sale">per direct sale</div>
+            <div class="tier-investment">
+              <strong>Investment:</strong> $8,500 (includes Enagic machine + distributor licence)
+            </div>
+            <ul class="tier-features">
+              <li>Enagic D3 distributor rank</li>
+              <li>Full AI funnel system access</li>
+              <li>7-day email sequence templates</li>
+              <li>Chatbot qualification scripts</li>
+              <li>Break-even: ~4 sales</li>
+            </ul>
+            <div style="margin-top:24px;">
+              <a href="https://www.enagic.com" target="_blank" rel="noopener" class="btn btn-ghost btn-full">
+                Register at Enagic →
+              </a>
+            </div>
+          </div>
+
+          <!-- LAUNCHER (FEATURED) -->
+          <div class="tier-card launcher featured">
+            <div class="featured-badge">MOST POPULAR</div>
+            <div class="tier-name gradient-text">LAUNCHER</div>
+            <div class="tier-rank" style="color:var(--pm);">ENAGIC 6A RANK</div>
+            <div class="tier-commission gradient-text">$4,300</div>
+            <div class="tier-per-sale">per direct sale</div>
+            <div class="tier-investment" style="border:1px solid rgba(168,85,247,0.2);background:rgba(124,58,237,0.06);">
+              <strong style="color:var(--pg);">Investment:</strong> $15,000 (includes Enagic machine + distributor licence)
+            </div>
+            <ul class="tier-features">
+              <li>Enagic 6A distributor rank</li>
+              <li>Full AI funnel system access</li>
+              <li>Priority onboarding support</li>
+              <li>Advanced email sequence library</li>
+              <li>Team override eligible</li>
+              <li>Break-even: ~4 sales</li>
+            </ul>
+            <div style="margin-top:24px;">
+              <a href="https://www.enagic.com" target="_blank" rel="noopener" class="btn btn-primary btn-full">
+                Register at Enagic →
+              </a>
+            </div>
+          </div>
+
+          <!-- NUKE -->
+          <div class="tier-card nuke">
+            <div class="tier-name" style="background:linear-gradient(135deg,var(--cyan),var(--pm));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">NUKE</div>
+            <div class="tier-rank" style="color:var(--cyan);">ENAGIC 6A-2 RANK</div>
+            <div class="tier-commission" style="background:linear-gradient(135deg,var(--cyan),var(--pm));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">$6,330</div>
+            <div class="tier-per-sale">per direct sale</div>
+            <div class="tier-investment">
+              <strong>Investment:</strong> $20,000 (includes Enagic machine + distributor licence)
+            </div>
+            <ul class="tier-features">
+              <li>Enagic 6A-2 distributor rank</li>
+              <li>Maximum commission per sale</li>
+              <li>Full network override structure</li>
+              <li>Priority queue all support</li>
+              <li>Custom funnel buildout</li>
+              <li>Break-even: ~4 sales</li>
+            </ul>
+            <div style="margin-top:24px;">
+              <a href="https://www.enagic.com" target="_blank" rel="noopener" class="btn btn-cyan btn-full">
+                Register at Enagic →
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <p class="text-center reveal" style="color:var(--dim);font-size:var(--text-sm);margin-top:24px;">
+          All registration happens directly through Enagic's official platform. Silent Syndicate receives a distributor commission when your payment clears.
+        </p>
+      </div>
+    </section>
+
+    <!-- ROI CALCULATOR -->
+    <section class="section" style="padding-top:0;">
+      <div class="container-sm">
+        <div class="text-center mb-8 reveal">
+          <h2 style="font-family:'Orbitron',monospace;font-size:var(--text-3xl);font-weight:700;">
+            Income <span class="gradient-text">Calculator</span>
+          </h2>
+          <p style="color:var(--muted);margin-top:10px;">
+            Projection tool. Not a guarantee. Adjust sliders to model scenarios.
+          </p>
+        </div>
+        <div class="calc-card reveal">
+          <div class="slider-label">
+            <span style="color:var(--muted);font-size:var(--text-sm);">Sales per month</span>
+            <span class="slider-val" id="sales-val">2</span>
+          </div>
+          <input type="range" min="1" max="12" value="2" id="sales-slider" step="1">
+
+          <div class="slider-label">
+            <span style="color:var(--muted);font-size:var(--text-sm);">Tier</span>
+            <span class="slider-val" id="tier-val">Launcher ($4,300)</span>
+          </div>
+          <input type="range" min="1" max="3" value="2" id="tier-slider" step="1">
+
+          <div class="roi-output">
+            <div class="roi-box">
+              <div style="font-size:0.7rem;letter-spacing:0.1em;color:var(--dim);text-transform:uppercase;font-family:'Share Tech Mono',monospace;margin-bottom:8px;">Monthly Gross</div>
+              <div class="roi-value" id="monthly-output">$8,600</div>
+              <div style="font-size:0.7rem;color:var(--dim);margin-top:4px;">before expenses</div>
+            </div>
+            <div class="roi-box">
+              <div style="font-size:0.7rem;letter-spacing:0.1em;color:var(--dim);text-transform:uppercase;font-family:'Share Tech Mono',monospace;margin-bottom:8px;">Annual Gross</div>
+              <div class="roi-value" id="annual-output">$103,200</div>
+              <div style="font-size:0.7rem;color:var(--dim);margin-top:4px;">before expenses</div>
+            </div>
+          </div>
+
+          <div style="margin-top:20px;padding:14px;background:rgba(251,191,36,0.06);border:1px solid rgba(251,191,36,0.15);border-radius:var(--radius-sm);">
+            <p style="font-size:0.75rem;color:var(--amber);line-height:1.6;">
+              ⚠ Break-even note: At <span id="breakeven-output">~4 sales</span>, your investment is recovered at this tier.
+              These are gross commission projections — actual net income depends on traffic costs, tools, and time invested.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 30-DAY JOURNEY -->
+    <section class="section">
+      <div class="container-sm">
+        <div class="text-center mb-8 reveal">
+          <h2 style="font-family:'Orbitron',monospace;font-size:var(--text-3xl);font-weight:700;">
+            Your First <span class="gradient-text">30 Days</span>
+          </h2>
+        </div>
+
+        <div class="timeline-step reveal">
+          <div class="timeline-num">1</div>
+          <div>
+            <div style="font-family:'Orbitron',monospace;font-weight:700;color:var(--pg);margin-bottom:6px;">WEEK 1 — Setup</div>
+            <p style="color:var(--muted);font-size:var(--text-sm);line-height:1.7;">
+              Register with Enagic. Connect your funnel. Configure ActiveCampaign email sequences.
+              Deploy your opt-in page. Create your first 3 content pieces.
+            </p>
+          </div>
+        </div>
+
+        <div class="timeline-step reveal">
+          <div class="timeline-num">2</div>
+          <div>
+            <div style="font-family:'Orbitron',monospace;font-weight:700;color:var(--pg);margin-bottom:6px;">WEEK 2 — Traffic</div>
+            <p style="color:var(--muted);font-size:var(--text-sm);line-height:1.7;">
+              Post daily on TikTok and Instagram. First opt-ins arrive. Email sequence fires.
+              Monitor open rates and click-throughs. Adjust hooks based on what's resonating.
+            </p>
+          </div>
+        </div>
+
+        <div class="timeline-step reveal">
+          <div class="timeline-num">3</div>
+          <div>
+            <div style="font-family:'Orbitron',monospace;font-weight:700;color:var(--pg);margin-bottom:6px;">WEEK 3 — First HOT Lead</div>
+            <p style="color:var(--muted);font-size:var(--text-sm);line-height:1.7;">
+              Applications start arriving. AI scoring routes HOT leads to the offer page automatically.
+              Chatbot handles objections. First conversation with a pre-qualified prospect.
+            </p>
+          </div>
+        </div>
+
+        <div class="timeline-step reveal">
+          <div class="timeline-num">4</div>
+          <div>
+            <div style="font-family:'Orbitron',monospace;font-weight:700;color:var(--pg);margin-bottom:6px;">WEEK 4 — First Sale</div>
+            <p style="color:var(--muted);font-size:var(--text-sm);line-height:1.7;">
+              First Enagic registration complete. Commission confirmed. System optimised based on data.
+              Week 5+ is scaling what's already working.
+            </p>
+          </div>
+        </div>
+
+        <div class="timeline-step reveal">
+          <div class="timeline-num">5</div>
+          <div>
+            <div style="font-family:'Orbitron',monospace;font-weight:700;color:var(--pg);margin-bottom:6px;">MONTH 2–3 — Scale</div>
+            <p style="color:var(--muted);font-size:var(--text-sm);line-height:1.7;">
+              Double down on winning content angles. Increase post frequency. Network referrals start.
+              Break-even achieved. Month 3 median for active operators: $8,600–$14,200 gross.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- OBJECTIONS -->
+    <section class="section" style="padding-top:0;">
+      <div class="container">
+        <div class="text-center mb-8 reveal">
+          <h2 style="font-family:'Orbitron',monospace;font-size:var(--text-3xl);font-weight:700;">
+            Real Questions, <span class="gradient-text">Straight Answers</span>
+          </h2>
+        </div>
+        <div class="grid-2">
+          <div class="objection-card reveal">
+            <div class="objection-q">"Is this an MLM?"</div>
+            <p style="color:var(--muted);font-size:var(--text-sm);line-height:1.7;">
+              Enagic is a direct-sales company, not a pyramid scheme. Your primary income is from direct sales
+              ($2,400–$6,330 per transaction), not from recruiting. The team override structure exists but
+              isn't required to earn well.
+            </p>
+          </div>
+          <div class="objection-card reveal reveal-delay-1">
+            <div class="objection-q">"The investment is too high."</div>
+            <p style="color:var(--muted);font-size:var(--text-sm);line-height:1.7;">
+              Break-even at the Launcher tier is ~4 sales ($15,000 ÷ $4,300 = 3.5 sales).
+              If you can't make 4 sales in 90 days, this isn't the right vehicle. If you can,
+              you're profitable by month 3.
+            </p>
+          </div>
+          <div class="objection-card reveal">
+            <div class="objection-q">"Do I have to recruit people?"</div>
+            <p style="color:var(--muted);font-size:var(--text-sm);line-height:1.7;">
+              No. You earn your full commission on every direct sale regardless of whether your buyers
+              become distributors. Building a network accelerates income but isn't required.
+            </p>
+          </div>
+          <div class="objection-card reveal reveal-delay-1">
+            <div class="objection-q">"I don't have an audience."</div>
+            <p style="color:var(--muted);font-size:var(--text-sm);line-height:1.7;">
+              The funnel is designed for cold traffic. TikTok's algorithm reaches non-followers organically.
+              You don't need existing followers — you need compelling content and a working funnel.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TESTIMONIALS -->
+    <section class="section" style="padding-top:0;">
+      <div class="container">
+        <div class="grid-3 reveal">
+          <div class="card">
+            <div class="testimonial-quote" style="font-family:'Cormorant Garamond',serif;font-style:italic;font-size:var(--text-base);color:var(--muted);line-height:1.6;margin-bottom:16px;">
+              "Month 3 I cleared $14,200. The funnel works exactly as described. My job was content — the system handled everything else."
+            </div>
+            <div style="font-family:'Share Tech Mono',monospace;font-size:0.65rem;color:var(--pm);">SARAH K.</div>
+            <div style="font-size:0.75rem;color:var(--dim);">Brisbane — Launcher Tier</div>
+          </div>
+          <div class="card">
+            <div class="testimonial-quote" style="font-family:'Cormorant Garamond',serif;font-style:italic;font-size:var(--text-base);color:var(--muted);line-height:1.6;margin-bottom:16px;">
+              "The pre-qualification system means I only talk to people who already understand the model and are ready to move. Completely different from cold outreach."
+            </div>
+            <div style="font-family:'Share Tech Mono',monospace;font-size:0.65rem;color:var(--pm);">JAMES R.</div>
+            <div style="font-size:0.75rem;color:var(--dim);">Melbourne — Nuke Tier</div>
+          </div>
+          <div class="card">
+            <div class="testimonial-quote" style="font-family:'Cormorant Garamond',serif;font-style:italic;font-size:var(--text-base);color:var(--muted);line-height:1.6;margin-bottom:16px;">
+              "I'd tried other high-ticket programs. This is the first one that was honest about what it costs and what it takes. That's why I committed."
+            </div>
+            <div style="font-family:'Share Tech Mono',monospace;font-size:0.65rem;color:var(--pm);">MICHELLE T.</div>
+            <div style="font-size:0.75rem;color:var(--dim);">Perth — Striker Tier</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- INCOME DISCLAIMER -->
+    <section class="section-sm">
+      <div class="container">
+        <div class="income-disclaimer">
+          <strong style="color:var(--amber);">Income Disclaimer:</strong> The commission amounts shown ($2,400, $4,300, $6,330) represent gross commissions before any costs including
+          advertising, software subscriptions, and operating expenses. The investment amounts ($8,500, $15,000, $20,000) are the entry costs to become an Enagic distributor
+          at the respective rank. Break-even calculations assume successful sales at the stated commission rate. Results are not typical — most new distributors earn $0–$2,400
+          in their first 30 days while building traffic and optimising their funnel. Testimonials shown are from real participants; their results may be above average.
+          Past performance does not guarantee future results. This is not a get-rich-quick scheme. Success requires consistent effort, capital, and sales ability.
+        </div>
+      </div>
+    </section>
+
+    <footer style="padding:40px 0;border-top:1px solid var(--border);">
+      <div class="container" style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:16px;">
+        <div style="display:flex;align-items:center;gap:12px;">
+          <div class="hex-logo hex-logo-sm"><span>SS</span></div>
+          <span style="font-family:'Share Tech Mono',monospace;font-size:0.75rem;color:var(--dim);">SILENT SYNDICATE © 2024</span>
+        </div>
+        <div style="font-size:0.75rem;color:var(--dim);">An authorised Enagic distributor network — AU &amp; NZ</div>
+      </div>
+    </footer>
+  </div>
+
+  <!-- CHATBOT WIDGET -->
+  <div class="chat-widget">
+    <div class="chat-window" id="chat-window">
+      <div class="chat-header">
+        <div style="display:flex;align-items:center;gap:10px;">
+          <div class="status-dot live"></div>
+          <div>
+            <div style="font-family:'Orbitron',monospace;font-size:0.7rem;font-weight:700;">SS ASSISTANT</div>
+            <div style="font-size:0.65rem;color:var(--dim);">Typically replies instantly</div>
+          </div>
+        </div>
+        <button onclick="toggleChat()" style="background:none;border:none;color:var(--dim);cursor:pointer;font-size:1rem;">✕</button>
+      </div>
+      <div class="chat-messages" id="chat-messages"></div>
+      <div class="chat-options" id="chat-options"></div>
+      <div class="chat-input-row">
+        <input class="chat-input" id="chat-input" placeholder="Type a message..." />
+        <button class="chat-send" onclick="sendChatMessage()">→</button>
+      </div>
+    </div>
+    <button class="chat-toggle" id="chat-toggle" onclick="toggleChat()">💬</button>
+  </div>
+
+  <script src="js/chatbot.js"></script>
+  <script>
+    // Scroll reveal
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+    }, { threshold: 0.1 });
+    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+    // ROI Calculator
+    const tiers = [
+      { name: 'Striker ($2,400)', commission: 2400, investment: 8500 },
+      { name: 'Launcher ($4,300)', commission: 4300, investment: 15000 },
+      { name: 'Nuke ($6,330)', commission: 6330, investment: 20000 }
+    ];
+
+    function updateCalc() {
+      const sales = parseInt(document.getElementById('sales-slider').value);
+      const tierIdx = parseInt(document.getElementById('tier-slider').value) - 1;
+      const tier = tiers[tierIdx];
+      const monthly = sales * tier.commission;
+      const annual = monthly * 12;
+      const breakeven = Math.ceil(tier.investment / tier.commission);
+
+      document.getElementById('sales-val').textContent = sales;
+      document.getElementById('tier-val').textContent = tier.name;
+      document.getElementById('monthly-output').textContent = '$' + monthly.toLocaleString();
+      document.getElementById('annual-output').textContent = '$' + annual.toLocaleString();
+      document.getElementById('breakeven-output').textContent = '~' + breakeven + ' sales';
+    }
+
+    document.getElementById('sales-slider').addEventListener('input', updateCalc);
+    document.getElementById('tier-slider').addEventListener('input', updateCalc);
+    updateCalc();
+
+    // Chat auto-open after 30s
+    setTimeout(() => {
+      if (typeof initChatbot === 'function') {
+        initChatbot();
+        document.getElementById('chat-window').classList.add('open');
+        document.getElementById('chat-toggle').textContent = '✕';
+      }
+    }, 30000);
+
+    function toggleChat() {
+      const w = document.getElementById('chat-window');
+      const isOpen = w.classList.contains('open');
+      w.classList.toggle('open');
+      document.getElementById('chat-toggle').textContent = isOpen ? '💬' : '✕';
+      if (!isOpen && typeof initChatbot === 'function') {
+        initChatbot();
+      }
+    }
+
+    function sendChatMessage() {
+      const input = document.getElementById('chat-input');
+      const msg = input.value.trim();
+      if (msg && typeof handleChatInput === 'function') {
+        handleChatInput(msg);
+        input.value = '';
+      }
+    }
+
+    document.getElementById('chat-input').addEventListener('keypress', function(e) {
+      if (e.key === 'Enter') sendChatMessage();
+    });
+  </script>
+</body>
+</html>
