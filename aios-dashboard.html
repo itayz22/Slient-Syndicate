@@ -1,0 +1,914 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AIOS Dashboard — Silent Syndicate</title>
+  <meta name="robots" content="noindex, nofollow">
+  <link rel="stylesheet" href="css/design-system.css">
+  <style>
+    /* ── Layout ── */
+    .dash-header {
+      background: var(--card);
+      border-bottom: 1px solid var(--border);
+      padding: 14px 0;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      backdrop-filter: blur(20px);
+    }
+    .dash-header-inner {
+      max-width: 1440px;
+      margin: 0 auto;
+      padding: 0 28px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+    .dash-logo {
+      font-family: 'Orbitron', monospace;
+      font-weight: 900;
+      font-size: 1.1rem;
+      letter-spacing: 0.08em;
+      background: linear-gradient(135deg, var(--pg), var(--pink));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      white-space: nowrap;
+    }
+    .dash-nav {
+      display: flex;
+      gap: 4px;
+      flex-wrap: wrap;
+    }
+    .dash-nav-btn {
+      padding: 7px 14px;
+      border-radius: var(--radius-full);
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 0.7rem;
+      letter-spacing: 0.08em;
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--dim);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .dash-nav-btn:hover,
+    .dash-nav-btn.active {
+      background: rgba(168, 85, 247, 0.12);
+      border-color: var(--pb);
+      color: var(--pg);
+    }
+    .live-indicator {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 0.68rem;
+      color: var(--green);
+      letter-spacing: 0.1em;
+    }
+    .live-dot {
+      width: 7px;
+      height: 7px;
+      background: var(--green);
+      border-radius: 50%;
+      animation: blink 1.2s step-start infinite;
+    }
+    @keyframes blink {
+      0%, 100% { opacity: 1; }
+      50%       { opacity: 0.2; }
+    }
+
+    /* ── Main grid ── */
+    .dash-main {
+      max-width: 1440px;
+      margin: 0 auto;
+      padding: 28px;
+    }
+
+    /* ── Sections ── */
+    .dash-section {
+      display: none;
+    }
+    .dash-section.active {
+      display: block;
+    }
+
+    /* ── Briefing section ── */
+    .briefing-grid {
+      display: grid;
+      grid-template-columns: 1fr 320px;
+      gap: 20px;
+    }
+    @media (max-width: 900px) {
+      .briefing-grid { grid-template-columns: 1fr; }
+    }
+    .briefing-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 28px;
+    }
+    .briefing-date {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 0.7rem;
+      color: var(--dim);
+      letter-spacing: 0.12em;
+      margin-bottom: 10px;
+    }
+    .briefing-title {
+      font-family: 'Orbitron', monospace;
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--pg);
+      margin-bottom: 16px;
+    }
+    .briefing-body {
+      font-size: 0.925rem;
+      color: var(--muted);
+      line-height: 1.7;
+      margin-bottom: 24px;
+    }
+    .briefing-actions {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    .action-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 9px 18px;
+      border-radius: var(--radius-full);
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 0.72rem;
+      letter-spacing: 0.08em;
+      background: rgba(168,85,247,0.12);
+      border: 1px solid var(--pb);
+      color: var(--pg);
+      cursor: pointer;
+      transition: all 0.2s;
+      text-decoration: none;
+    }
+    .action-btn:hover {
+      background: rgba(168,85,247,0.22);
+    }
+    .metrics-col {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .metric-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 18px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .metric-label {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 0.68rem;
+      color: var(--dim);
+      letter-spacing: 0.1em;
+      margin-bottom: 4px;
+    }
+    .metric-value {
+      font-family: 'Orbitron', monospace;
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: var(--white);
+    }
+    .metric-trend {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 0.72rem;
+      color: var(--green);
+      padding: 4px 10px;
+      background: rgba(74,222,128,0.1);
+      border-radius: var(--radius-full);
+    }
+
+    /* ── Stat bar ── */
+    .stat-row {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 14px;
+      margin-bottom: 24px;
+    }
+    .stat-box {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 18px 20px;
+    }
+    .stat-box-label {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 0.65rem;
+      color: var(--dim);
+      letter-spacing: 0.12em;
+      margin-bottom: 8px;
+    }
+    .stat-box-val {
+      font-family: 'Orbitron', monospace;
+      font-size: 1.5rem;
+      font-weight: 900;
+      color: var(--white);
+    }
+    .stat-box-val.purple { color: var(--pg); }
+    .stat-box-val.green  { color: var(--green); }
+    .stat-box-val.amber  { color: var(--amber); }
+    .stat-box-val.red    { color: var(--red); }
+
+    /* ── Table ── */
+    .data-table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    .data-table th {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 0.65rem;
+      letter-spacing: 0.12em;
+      color: var(--dim);
+      text-align: left;
+      padding: 10px 14px;
+      border-bottom: 1px solid var(--border);
+    }
+    .data-table td {
+      font-size: 0.875rem;
+      color: var(--muted);
+      padding: 12px 14px;
+      border-bottom: 1px solid rgba(168,85,247,0.07);
+    }
+    .data-table tr:last-child td { border-bottom: none; }
+
+    /* ── Score badge ── */
+    .score-badge {
+      display: inline-block;
+      padding: 3px 10px;
+      border-radius: var(--radius-full);
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 0.65rem;
+      letter-spacing: 0.1em;
+      font-weight: 700;
+    }
+    .score-HOT  { background: rgba(239,68,68,0.15);   color: var(--red);   border: 1px solid rgba(239,68,68,0.35); }
+    .score-WARM { background: rgba(251,191,36,0.12);  color: var(--amber); border: 1px solid rgba(251,191,36,0.3); }
+    .score-NEW  { background: rgba(192,132,252,0.12); color: var(--pg);    border: 1px solid rgba(192,132,252,0.3); }
+    .score-COLD { background: rgba(240,236,255,0.06); color: var(--dim);   border: 1px solid var(--border); }
+
+    /* ── Status badge ── */
+    .status-paid    { color: var(--green); }
+    .status-pending { color: var(--amber); }
+
+    /* ── Pipeline funnel ── */
+    .funnel-row {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 14px;
+      margin-bottom: 24px;
+    }
+    @media (max-width: 700px) {
+      .funnel-row { grid-template-columns: repeat(2, 1fr); }
+    }
+    .funnel-stage {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 18px;
+      text-align: center;
+      position: relative;
+    }
+    .funnel-stage-label {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 0.65rem;
+      color: var(--dim);
+      letter-spacing: 0.14em;
+      margin-bottom: 8px;
+    }
+    .funnel-stage-num {
+      font-family: 'Orbitron', monospace;
+      font-size: 2rem;
+      font-weight: 900;
+      color: var(--pg);
+    }
+    .funnel-stage-desc {
+      font-size: 0.75rem;
+      color: var(--dim);
+      margin-top: 4px;
+    }
+
+    /* ── Commission chart ── */
+    .chart-bars {
+      display: flex;
+      align-items: flex-end;
+      gap: 10px;
+      height: 120px;
+      margin: 20px 0 8px;
+    }
+    .chart-bar-wrap {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      height: 100%;
+      justify-content: flex-end;
+    }
+    .chart-bar {
+      width: 100%;
+      border-radius: 4px 4px 0 0;
+      background: linear-gradient(180deg, var(--pb), var(--pm));
+      transition: height 0.4s ease;
+    }
+    .chart-bar.highlight {
+      background: linear-gradient(180deg, var(--pink), #9d174d);
+    }
+    .chart-label {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 0.62rem;
+      color: var(--dim);
+      letter-spacing: 0.08em;
+    }
+    .chart-val {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 0.62rem;
+      color: var(--pg);
+    }
+
+    /* ── Section header ── */
+    .section-hd {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      margin-bottom: 16px;
+    }
+    .section-title {
+      font-family: 'Orbitron', monospace;
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: var(--pg);
+      letter-spacing: 0.1em;
+    }
+    .section-sub {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 0.67rem;
+      color: var(--dim);
+      letter-spacing: 0.08em;
+    }
+
+    /* ── Operator cards ── */
+    .operator-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+      gap: 14px;
+      margin-bottom: 24px;
+    }
+    .operator-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 18px;
+    }
+    .op-name {
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: var(--white);
+      margin-bottom: 4px;
+    }
+    .op-location {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 0.65rem;
+      color: var(--dim);
+      letter-spacing: 0.1em;
+      margin-bottom: 12px;
+    }
+    .op-tier {
+      display: inline-block;
+      padding: 3px 10px;
+      border-radius: var(--radius-full);
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 0.62rem;
+      letter-spacing: 0.1em;
+      background: rgba(168,85,247,0.14);
+      border: 1px solid rgba(168,85,247,0.35);
+      color: var(--pg);
+      margin-bottom: 12px;
+    }
+    .op-stats {
+      display: flex;
+      gap: 16px;
+    }
+    .op-stat-label {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 0.6rem;
+      color: var(--dim);
+      letter-spacing: 0.08em;
+    }
+    .op-stat-val {
+      font-family: 'Orbitron', monospace;
+      font-size: 0.9rem;
+      font-weight: 700;
+      color: var(--white);
+    }
+    .op-status-active    { color: var(--green); font-size: 0.65rem; font-family: 'Share Tech Mono', monospace; letter-spacing: 0.1em; }
+    .op-status-onboarding{ color: var(--amber); font-size: 0.65rem; font-family: 'Share Tech Mono', monospace; letter-spacing: 0.1em; }
+
+    /* ── Content table ── */
+    .content-platform {
+      display: inline-block;
+      padding: 2px 9px;
+      border-radius: var(--radius-full);
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 0.62rem;
+      letter-spacing: 0.08em;
+      background: rgba(34,211,238,0.1);
+      border: 1px solid rgba(34,211,238,0.2);
+      color: var(--cyan);
+    }
+
+    /* ── Table container ── */
+    .table-wrap {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      overflow-x: auto;
+      margin-bottom: 24px;
+    }
+
+    /* ── Card wrapper ── */
+    .card-wrap {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 24px;
+      margin-bottom: 24px;
+    }
+
+    /* ── Email sequence rows ── */
+    .email-icon { font-size: 0.85rem; }
+    .opened-yes { color: var(--green); font-family: 'Share Tech Mono', monospace; font-size: 0.7rem; }
+    .opened-no  { color: var(--dim);   font-family: 'Share Tech Mono', monospace; font-size: 0.7rem; }
+
+    /* ── Source bar ── */
+    .source-bar-wrap {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .source-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .source-name {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 0.7rem;
+      color: var(--muted);
+      width: 80px;
+    }
+    .source-bar-bg {
+      flex: 1;
+      height: 8px;
+      background: rgba(168,85,247,0.1);
+      border-radius: var(--radius-full);
+      overflow: hidden;
+    }
+    .source-bar-fill {
+      height: 100%;
+      border-radius: var(--radius-full);
+      background: linear-gradient(90deg, var(--pm), var(--pb));
+    }
+    .source-pct {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 0.7rem;
+      color: var(--dim);
+      width: 42px;
+      text-align: right;
+    }
+
+    /* ── Footer ── */
+    .dash-footer {
+      text-align: center;
+      padding: 28px;
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 0.65rem;
+      color: var(--dim);
+      letter-spacing: 0.1em;
+      border-top: 1px solid var(--border);
+      margin-top: 40px;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <header class="dash-header">
+    <div class="dash-header-inner">
+      <div class="dash-logo">SS // AIOS</div>
+      <nav class="dash-nav">
+        <button class="dash-nav-btn active" data-section="briefing">BRIEFING</button>
+        <button class="dash-nav-btn" data-section="pipeline">PIPELINE</button>
+        <button class="dash-nav-btn" data-section="commissions">COMMISSIONS</button>
+        <button class="dash-nav-btn" data-section="operators">OPERATORS</button>
+        <button class="dash-nav-btn" data-section="email">EMAIL</button>
+        <button class="dash-nav-btn" data-section="chatbot">CHATBOT</button>
+        <button class="dash-nav-btn" data-section="content">CONTENT</button>
+      </nav>
+      <div class="live-indicator">
+        <span class="live-dot"></span>
+        <span id="live-clock">--:--:-- UTC</span>
+      </div>
+    </div>
+  </header>
+
+  <main class="dash-main">
+
+    <!-- ══ BRIEFING ══ -->
+    <section class="dash-section active" id="section-briefing">
+      <div class="briefing-grid">
+        <div class="briefing-card">
+          <div class="briefing-date" id="briefing-date"></div>
+          <div class="briefing-title">AIOS DAILY BRIEFING</div>
+          <div class="briefing-body" id="briefing-body"></div>
+          <div class="briefing-actions" id="briefing-actions"></div>
+        </div>
+        <div class="metrics-col" id="briefing-metrics"></div>
+      </div>
+    </section>
+
+    <!-- ══ PIPELINE ══ -->
+    <section class="dash-section" id="section-pipeline">
+      <div class="section-hd">
+        <span class="section-title">LEAD PIPELINE</span>
+        <span class="section-sub">REAL-TIME FUNNEL VIEW</span>
+      </div>
+      <div class="funnel-row" id="funnel-stages"></div>
+      <div class="table-wrap">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>LEAD</th>
+              <th>EMAIL</th>
+              <th>STAGE</th>
+              <th>SCORE</th>
+              <th>TIME</th>
+            </tr>
+          </thead>
+          <tbody id="pipeline-leads"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- ══ COMMISSIONS ══ -->
+    <section class="dash-section" id="section-commissions">
+      <div class="section-hd">
+        <span class="section-title">COMMISSION TRACKER</span>
+        <span class="section-sub">PERSONAL + NETWORK</span>
+      </div>
+      <div class="stat-row" id="commission-stats"></div>
+      <div class="card-wrap">
+        <div class="section-hd">
+          <span class="section-title">6-MONTH HISTORY</span>
+        </div>
+        <div class="chart-bars" id="commission-chart"></div>
+      </div>
+      <div class="table-wrap">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>DATE</th>
+              <th>OPERATOR</th>
+              <th>TIER</th>
+              <th>AMOUNT</th>
+              <th>STATUS</th>
+            </tr>
+          </thead>
+          <tbody id="commission-rows"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- ══ OPERATORS ══ -->
+    <section class="dash-section" id="section-operators">
+      <div class="section-hd">
+        <span class="section-title">NETWORK OPERATORS</span>
+        <span class="section-sub">YOUR DISTRIBUTION TEAM</span>
+      </div>
+      <div class="operator-grid" id="operator-cards"></div>
+    </section>
+
+    <!-- ══ EMAIL ══ -->
+    <section class="dash-section" id="section-email">
+      <div class="section-hd">
+        <span class="section-title">EMAIL SEQUENCES</span>
+        <span class="section-sub">ACTIVECAMPAIGN AUTOMATION</span>
+      </div>
+      <div class="stat-row">
+        <div class="stat-box">
+          <div class="stat-box-label">ACTIVE LEADS IN SEQUENCE</div>
+          <div class="stat-box-val purple" id="email-active"></div>
+        </div>
+      </div>
+      <div class="table-wrap">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>LEAD</th>
+              <th>DAY</th>
+              <th>SUBJECT</th>
+              <th>OPENED</th>
+              <th>CLICKED</th>
+            </tr>
+          </thead>
+          <tbody id="email-rows"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- ══ CHATBOT ══ -->
+    <section class="dash-section" id="section-chatbot">
+      <div class="section-hd">
+        <span class="section-title">CHATBOT ACTIVITY</span>
+        <span class="section-sub">LIVE CONVERSATION MONITOR</span>
+      </div>
+      <div class="stat-row" id="chatbot-stats"></div>
+      <div class="table-wrap">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>USER</th>
+              <th>SCORE</th>
+              <th>LAST MESSAGE</th>
+              <th>TIME</th>
+            </tr>
+          </thead>
+          <tbody id="chatbot-rows"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- ══ CONTENT ══ -->
+    <section class="dash-section" id="section-content">
+      <div class="section-hd">
+        <span class="section-title">CONTENT PERFORMANCE</span>
+        <span class="section-sub">ORGANIC TRAFFIC ATTRIBUTION</span>
+      </div>
+      <div class="stat-row" id="content-stats"></div>
+      <div class="table-wrap">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>TITLE</th>
+              <th>PLATFORM</th>
+              <th>VIEWS</th>
+              <th>OPT-INS</th>
+              <th>CTA%</th>
+            </tr>
+          </thead>
+          <tbody id="content-rows"></tbody>
+        </table>
+      </div>
+      <div class="card-wrap">
+        <div class="section-hd">
+          <span class="section-title">TRAFFIC SOURCES</span>
+        </div>
+        <div class="source-bar-wrap" id="source-bars"></div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="dash-footer">
+    SILENT SYNDICATE // AIOS DASHBOARD &nbsp;|&nbsp; PRIVATE — DO NOT SHARE &nbsp;|&nbsp; DEMO DATA — CONNECT LIVE API FOR PRODUCTION
+  </footer>
+
+  <script src="js/aios.js"></script>
+  <script>
+    /* ── Nav ── */
+    const navBtns = document.querySelectorAll('.dash-nav-btn');
+    const sections = document.querySelectorAll('.dash-section');
+    navBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        navBtns.forEach(b => b.classList.remove('active'));
+        sections.forEach(s => s.classList.remove('active'));
+        btn.classList.add('active');
+        document.getElementById('section-' + btn.dataset.section).classList.add('active');
+      });
+    });
+
+    /* ── Live clock ── */
+    function updateClock() {
+      const now = new Date();
+      document.getElementById('live-clock').textContent =
+        now.toISOString().replace('T', ' ').slice(0, 19) + ' UTC';
+    }
+    updateClock();
+    setInterval(updateClock, 1000);
+
+    /* ── Helpers ── */
+    function fmt(n) { return n.toLocaleString(); }
+    function dollar(n) { return '$' + n.toLocaleString(); }
+
+    /* ── Render briefing ── */
+    const B = DEMO_DATA.briefing;
+    document.getElementById('briefing-date').textContent = B.date.toUpperCase();
+    document.getElementById('briefing-body').textContent = B.summary;
+    const actionsEl = document.getElementById('briefing-actions');
+    B.actions.forEach(a => {
+      const btn = document.createElement('button');
+      btn.className = 'action-btn';
+      btn.innerHTML = a.icon + ' ' + a.label;
+      btn.addEventListener('click', () => {
+        navBtns.forEach(b => {
+          if (b.dataset.section === a.action) b.click();
+        });
+      });
+      actionsEl.appendChild(btn);
+    });
+    const metricsEl = document.getElementById('briefing-metrics');
+    B.metrics.forEach(m => {
+      metricsEl.innerHTML += `
+        <div class="metric-card">
+          <div>
+            <div class="metric-label">${m.label.toUpperCase()}</div>
+            <div class="metric-value">${m.value}</div>
+          </div>
+          <div class="metric-trend">${m.trend}</div>
+        </div>`;
+    });
+
+    /* ── Render pipeline ── */
+    const P = DEMO_DATA.pipeline;
+    const stages = [
+      { key: 'capture', label: 'CAPTURE', val: P.capture, desc: 'opted in' },
+      { key: 'educate', label: 'EDUCATE', val: P.educate, desc: 'in sequence' },
+      { key: 'qualify', label: 'QUALIFY', val: P.qualify, desc: 'applied' },
+      { key: 'convert', label: 'CONVERT', val: P.convert, desc: 'paid / joined' }
+    ];
+    const funnelEl = document.getElementById('funnel-stages');
+    stages.forEach(s => {
+      funnelEl.innerHTML += `
+        <div class="funnel-stage">
+          <div class="funnel-stage-label">${s.label}</div>
+          <div class="funnel-stage-num">${s.val}</div>
+          <div class="funnel-stage-desc">${s.desc}</div>
+        </div>`;
+    });
+    const leadsEl = document.getElementById('pipeline-leads');
+    P.leads.forEach(l => {
+      leadsEl.innerHTML += `
+        <tr>
+          <td>${l.name}</td>
+          <td style="font-family:'Share Tech Mono',monospace;font-size:0.78rem;color:var(--dim)">${l.email}</td>
+          <td style="font-family:'Share Tech Mono',monospace;font-size:0.75rem;letter-spacing:0.08em;color:var(--muted)">${l.stage.toUpperCase()}</td>
+          <td><span class="score-badge score-${l.score}">${l.score}</span></td>
+          <td style="font-family:'Share Tech Mono',monospace;font-size:0.72rem;color:var(--dim)">${l.time}</td>
+        </tr>`;
+    });
+
+    /* ── Render commissions ── */
+    const C = DEMO_DATA.commissions;
+    const commStatsEl = document.getElementById('commission-stats');
+    [
+      { label: 'THIS WEEK', val: dollar(C.thisWeek), cls: 'green' },
+      { label: 'THIS MONTH', val: dollar(C.thisMonth), cls: 'purple' },
+      { label: 'PENDING', val: dollar(C.pending), cls: 'amber' },
+      { label: 'OVERRIDES', val: dollar(C.overrides), cls: '' }
+    ].forEach(s => {
+      commStatsEl.innerHTML += `
+        <div class="stat-box">
+          <div class="stat-box-label">${s.label}</div>
+          <div class="stat-box-val ${s.cls}">${s.val}</div>
+        </div>`;
+    });
+    const maxVal = Math.max(...C.history.map(h => h.amount));
+    const chartEl = document.getElementById('commission-chart');
+    C.history.forEach((h, i) => {
+      const pct = Math.round((h.amount / maxVal) * 100);
+      const isHighlight = i === C.history.length - 2; // current month
+      chartEl.innerHTML += `
+        <div class="chart-bar-wrap">
+          <div class="chart-val">${dollar(h.amount / 1000)}k</div>
+          <div class="chart-bar ${isHighlight ? 'highlight' : ''}" style="height:${pct}%"></div>
+          <div class="chart-label">${h.month}</div>
+        </div>`;
+    });
+    const commRowsEl = document.getElementById('commission-rows');
+    C.transactions.forEach(t => {
+      commRowsEl.innerHTML += `
+        <tr>
+          <td style="font-family:'Share Tech Mono',monospace;font-size:0.75rem;color:var(--dim)">${t.date}</td>
+          <td>${t.name}</td>
+          <td><span class="op-tier">${t.tier.toUpperCase()}</span></td>
+          <td style="font-family:'Orbitron',monospace;font-size:0.9rem;font-weight:700;color:var(--green)">${dollar(t.amount)}</td>
+          <td class="status-${t.status}" style="font-family:'Share Tech Mono',monospace;font-size:0.72rem;letter-spacing:0.1em">${t.status.toUpperCase()}</td>
+        </tr>`;
+    });
+
+    /* ── Render operators ── */
+    const opEl = document.getElementById('operator-cards');
+    DEMO_DATA.operators.forEach(op => {
+      opEl.innerHTML += `
+        <div class="operator-card">
+          <div class="op-name">${op.name}</div>
+          <div class="op-location">${op.location.toUpperCase()}</div>
+          <span class="op-tier">${op.tier}</span>
+          <div class="op-stats">
+            <div>
+              <div class="op-stat-label">MONTHLY</div>
+              <div class="op-stat-val">${op.monthly ? dollar(op.monthly) : '—'}</div>
+            </div>
+            <div>
+              <div class="op-stat-label">HOT LEADS</div>
+              <div class="op-stat-val">${op.hotLeads}</div>
+            </div>
+          </div>
+          <div style="margin-top:10px">
+            <span class="op-status-${op.status}">${op.status.toUpperCase()}</span>
+          </div>
+        </div>`;
+    });
+
+    /* ── Render email ── */
+    const E = DEMO_DATA.emailSequences;
+    document.getElementById('email-active').textContent = E.active;
+    const emailRowsEl = document.getElementById('email-rows');
+    E.sequences.forEach(s => {
+      emailRowsEl.innerHTML += `
+        <tr>
+          <td>${s.lead}</td>
+          <td style="font-family:'Orbitron',monospace;font-size:0.8rem;color:var(--pg)">D${s.day}</td>
+          <td style="color:var(--muted);font-size:0.85rem">${s.subject}</td>
+          <td class="${s.opened ? 'opened-yes' : 'opened-no'}">${s.opened ? 'YES' : 'NO'}</td>
+          <td class="${s.clicked ? 'opened-yes' : 'opened-no'}">${s.clicked ? 'YES' : 'NO'}</td>
+        </tr>`;
+    });
+
+    /* ── Render chatbot ── */
+    const CB = DEMO_DATA.chatbot;
+    const cbStatsEl = document.getElementById('chatbot-stats');
+    [
+      { label: 'CONVERSATIONS (24H)', val: CB.conversations, cls: 'purple' },
+      { label: 'HOT', val: CB.hot, cls: 'red' },
+      { label: 'WARM', val: CB.warm, cls: 'amber' },
+      { label: 'COLD', val: CB.cold, cls: '' }
+    ].forEach(s => {
+      cbStatsEl.innerHTML += `
+        <div class="stat-box">
+          <div class="stat-box-label">${s.label}</div>
+          <div class="stat-box-val ${s.cls}">${s.val}</div>
+        </div>`;
+    });
+    const cbRowsEl = document.getElementById('chatbot-rows');
+    CB.recent.forEach(r => {
+      cbRowsEl.innerHTML += `
+        <tr>
+          <td>${r.user}</td>
+          <td><span class="score-badge score-${r.score}">${r.score}</span></td>
+          <td style="color:var(--muted);font-size:0.85rem">"${r.lastMsg}"</td>
+          <td style="font-family:'Share Tech Mono',monospace;font-size:0.72rem;color:var(--dim)">${r.time}</td>
+        </tr>`;
+    });
+
+    /* ── Render content ── */
+    const CT = DEMO_DATA.content;
+    const ctStatsEl = document.getElementById('content-stats');
+    [
+      { label: 'TOTAL OPT-INS', val: fmt(CT.totalOptins), cls: 'purple' },
+      { label: 'BEST SOURCE', val: CT.bestSource, cls: '' },
+      { label: 'TOP PIECE OPT-INS', val: CT.topOptins, cls: 'green' }
+    ].forEach(s => {
+      ctStatsEl.innerHTML += `
+        <div class="stat-box">
+          <div class="stat-box-label">${s.label}</div>
+          <div class="stat-box-val ${s.cls}">${s.val}</div>
+        </div>`;
+    });
+    const ctRowsEl = document.getElementById('content-rows');
+    CT.pieces.forEach(p => {
+      ctRowsEl.innerHTML += `
+        <tr>
+          <td style="color:var(--white);font-size:0.875rem">${p.title}</td>
+          <td><span class="content-platform">${p.platform.toUpperCase()}</span></td>
+          <td style="font-family:'Orbitron',monospace;font-size:0.85rem;color:var(--muted)">${fmt(p.views)}</td>
+          <td style="font-family:'Orbitron',monospace;font-size:0.85rem;color:var(--green)">${fmt(p.optins)}</td>
+          <td style="font-family:'Share Tech Mono',monospace;font-size:0.75rem;color:var(--pg)">${p.cta}</td>
+        </tr>`;
+    });
+    const srcEl = document.getElementById('source-bars');
+    CT.sources.forEach(s => {
+      srcEl.innerHTML += `
+        <div class="source-row">
+          <div class="source-name">${s.source.toUpperCase()}</div>
+          <div class="source-bar-bg">
+            <div class="source-bar-fill" style="width:${s.pct}%"></div>
+          </div>
+          <div class="source-pct">${s.pct}%</div>
+        </div>`;
+    });
+  </script>
+</body>
+</html>

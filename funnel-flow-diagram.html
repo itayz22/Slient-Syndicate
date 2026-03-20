@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Funnel Flow Diagram — Silent Syndicate</title>
+  <meta name="robots" content="noindex, nofollow">
+  <link rel="stylesheet" href="css/design-system.css">
+  <style>
+    .page-wrap { max-width: 1100px; margin: 0 auto; padding: 60px 28px 80px; }
+    .page-eyebrow {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 0.7rem;
+      letter-spacing: 0.18em;
+      color: var(--pg);
+      margin-bottom: 14px;
+    }
+    .page-title {
+      font-family: 'Orbitron', monospace;
+      font-size: clamp(1.4rem, 3.5vw, 2.2rem);
+      font-weight: 900;
+      letter-spacing: 0.05em;
+      background: linear-gradient(135deg, var(--white) 30%, var(--pg));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 12px;
+    }
+    .page-lead {
+      font-size: 1rem;
+      color: var(--muted);
+      line-height: 1.7;
+      margin-bottom: 48px;
+      max-width: 640px;
+    }
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 0.72rem;
+      color: var(--dim);
+      text-decoration: none;
+      letter-spacing: 0.1em;
+      margin-bottom: 40px;
+      transition: color 0.2s;
+    }
+    .back-link:hover { color: var(--pg); }
+
+    /* ── Diagram ── */
+    .diagram {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+      align-items: stretch;
+    }
+
+    .diagram-row {
+      display: flex;
+      align-items: center;
+      gap: 0;
+    }
+
+    .diagram-col {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0;
+    }
+
+    /* ── Nodes ── */
+    .node {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 14px 18px;
+      min-width: 160px;
+      text-align: center;
+      position: relative;
+      cursor: default;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    .node:hover {
+      border-color: var(--pb);
+      box-shadow: 0 0 18px rgba(168,85,247,0.2);
+    }
+    .node-label {
+      font-family: 'Orbitron', monospace;
+      font-size: 0.72rem;
+      font-weight: 700;
+      color: var(--pg);
+      letter-spacing: 0.1em;
+      margin-bottom: 4px;
+    }
+    .node-sub {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 0.62rem;
+      color: var(--dim);
+      letter-spacing: 0.08em;
+    }
+    .node-api {
+      display: inline-block;
+      margin-top: 6px;
+      padding: 2px 8px;
+      border-radius: var(--radius-full);
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 0.58rem;
+      background: rgba(34,211,238,0.1);
+      border: 1px solid rgba(34,211,238,0.25);
+      color: var(--cyan);
+      letter-spacing: 0.08em;
+    }
+    .node.traffic { border-color: rgba(168,85,247,0.4); }
+    .node.page    { border-color: rgba(192,132,252,0.3); }
+    .node.api-node{ border-color: rgba(34,211,238,0.3); }
+    .node.email   { border-color: rgba(74,222,128,0.3); }
+    .node.hot     { border-color: rgba(239,68,68,0.45); }
+    .node.warm    { border-color: rgba(251,191,36,0.35); }
+    .node.cold    { border-color: rgba(240,236,255,0.12); }
+    .node.end     { border-color: rgba(74,222,128,0.45); }
+
+    /* ── Arrows ── */
+    .arrow-v {
+      width: 2px;
+      height: 32px;
+      background: linear-gradient(180deg, var(--pb), transparent);
+      margin: 0 auto;
+      position: relative;
+    }
+    .arrow-v::after {
+      content: '';
+      position: absolute;
+      bottom: -6px;
+      left: 50%;
+      transform: translateX(-50%);
+      border-left: 5px solid transparent;
+      border-right: 5px solid transparent;
+      border-top: 7px solid var(--pb);
+    }
+
+    .arrow-h {
+      flex: 1;
+      height: 2px;
+      background: linear-gradient(90deg, var(--pb), rgba(168,85,247,0.3));
+      position: relative;
+      min-width: 32px;
+      max-width: 80px;
+    }
+    .arrow-h::after {
+      content: '';
+      position: absolute;
+      right: -6px;
+      top: 50%;
+      transform: translateY(-50%);
+      border-top: 5px solid transparent;
+      border-bottom: 5px solid transparent;
+      border-left: 7px solid var(--pb);
+    }
+
+    .arrow-label {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 0.6rem;
+      color: var(--dim);
+      letter-spacing: 0.08em;
+      text-align: center;
+      margin: 2px 0;
+    }
+
+    /* ── Branch section ── */
+    .branch-wrap {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 20px;
+      margin-top: 8px;
+    }
+    @media (max-width: 680px) {
+      .branch-wrap { grid-template-columns: 1fr; }
+    }
+
+    .branch-line {
+      width: 100%;
+      height: 1px;
+      background: var(--border);
+      margin: 0 0 20px;
+    }
+
+    /* ── Legend ── */
+    .legend {
+      display: flex;
+      gap: 20px;
+      flex-wrap: wrap;
+      margin-top: 48px;
+      padding-top: 24px;
+      border-top: 1px solid var(--border);
+    }
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 0.68rem;
+      color: var(--dim);
+      letter-spacing: 0.08em;
+    }
+    .legend-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 3px;
+      flex-shrink: 0;
+    }
+
+    /* ── Detail panel ── */
+    .detail-panel {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 20px 24px;
+      margin-top: 40px;
+    }
+    .detail-title {
+      font-family: 'Orbitron', monospace;
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: var(--pg);
+      letter-spacing: 0.12em;
+      margin-bottom: 16px;
+    }
+    .detail-row {
+      display: grid;
+      grid-template-columns: 180px 1fr;
+      gap: 12px;
+      padding: 10px 0;
+      border-bottom: 1px solid rgba(168,85,247,0.07);
+      font-size: 0.875rem;
+    }
+    .detail-row:last-child { border-bottom: none; }
+    .detail-key {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 0.7rem;
+      color: var(--dim);
+      letter-spacing: 0.1em;
+    }
+    .detail-val { color: var(--muted); }
+  </style>
+</head>
+<body>
+  <div class="page-wrap">
+    <a href="hub.html" class="back-link">← BACK TO HUB</a>
+    <div class="page-eyebrow">RESOURCE // FUNNEL MAP</div>
+    <h1 class="page-title">Funnel Flow Diagram</h1>
+    <p class="page-lead">End-to-end visual map of the Silent Syndicate funnel. Every page, API call, email automation, and decision point — hover nodes for details.</p>
+
+    <div class="diagram">
+
+      <!-- Traffic -->
+      <div style="display:flex;justify-content:center">
+        <div class="node traffic">
+          <div class="node-label">TRAFFIC</div>
+          <div class="node-sub">TikTok / Instagram / Reels</div>
+        </div>
+      </div>
+
+      <div class="arrow-v"></div>
+      <div class="arrow-label">Link in bio</div>
+      <div class="arrow-v"></div>
+
+      <!-- Index page -->
+      <div style="display:flex;justify-content:center">
+        <div class="node page">
+          <div class="node-label">index.html</div>
+          <div class="node-sub">Landing page + Chatbot</div>
+        </div>
+      </div>
+
+      <div class="arrow-v"></div>
+      <div class="arrow-label">Email opt-in</div>
+      <div class="arrow-v"></div>
+
+      <!-- Subscribe API -->
+      <div style="display:flex;justify-content:center">
+        <div class="node api-node">
+          <div class="node-label">POST /api/subscribe</div>
+          <div class="node-sub">netlify/functions/subscribe.js</div>
+          <div class="node-api">ActiveCampaign API</div>
+        </div>
+      </div>
+
+      <div class="arrow-v"></div>
+      <div class="arrow-label">Contact created + SS-NEW tag</div>
+      <div class="arrow-v"></div>
+
+      <!-- Page 2 -->
+      <div style="display:flex;justify-content:center">
+        <div class="node page">
+          <div class="node-label">page2-manifesto.html</div>
+          <div class="node-sub">The manifesto / education</div>
+        </div>
+      </div>
+
+      <div class="arrow-v"></div>
+      <div class="arrow-label">CTA click → Apply</div>
+      <div class="arrow-v"></div>
+
+      <!-- Page 3 -->
+      <div style="display:flex;justify-content:center">
+        <div class="node page">
+          <div class="node-label">page3-apply.html</div>
+          <div class="node-sub">Application form</div>
+        </div>
+      </div>
+
+      <div class="arrow-v"></div>
+      <div class="arrow-label">Form submit</div>
+      <div class="arrow-v"></div>
+
+      <!-- Score + Apply APIs side by side -->
+      <div style="display:flex;justify-content:center;gap:20px;flex-wrap:wrap">
+        <div class="node api-node">
+          <div class="node-label">POST /api/score</div>
+          <div class="node-sub">Lead scoring engine</div>
+          <div class="node-api">Client-side</div>
+        </div>
+        <div class="node api-node">
+          <div class="node-label">POST /api/apply</div>
+          <div class="node-sub">netlify/functions/apply.js</div>
+          <div class="node-api">ActiveCampaign API</div>
+        </div>
+      </div>
+
+      <div class="arrow-v"></div>
+      <div class="arrow-label">Score result → route</div>
+      <div class="arrow-v"></div>
+
+      <!-- Branch -->
+      <div class="branch-wrap">
+        <div style="display:flex;flex-direction:column;align-items:center;gap:0">
+          <div class="node hot">
+            <div class="node-label" style="color:var(--red)">HOT ≥ 70</div>
+            <div class="node-sub">Tag: SS-HOT</div>
+          </div>
+          <div class="arrow-v"></div>
+          <div class="node page">
+            <div class="node-label">page4-offer.html</div>
+            <div class="node-sub">The offer / next steps</div>
+          </div>
+          <div class="arrow-v"></div>
+          <div class="node email" style="min-width:140px">
+            <div class="node-label" style="color:var(--green)">HOT AUTOMATION</div>
+            <div class="node-sub">3 emails / 24h</div>
+          </div>
+        </div>
+        <div style="display:flex;flex-direction:column;align-items:center;gap:0">
+          <div class="node warm">
+            <div class="node-label" style="color:var(--amber)">WARM 40–69</div>
+            <div class="node-sub">Tag: SS-WARM</div>
+          </div>
+          <div class="arrow-v"></div>
+          <div class="node email" style="min-width:140px">
+            <div class="node-label" style="color:var(--amber)">WARM NURTURE</div>
+            <div class="node-sub">5 emails / 30 days</div>
+          </div>
+          <div class="arrow-v"></div>
+          <div class="node page" style="min-width:140px">
+            <div class="node-label">Re-qualify or exit</div>
+            <div class="node-sub">Score improves → HOT</div>
+          </div>
+        </div>
+        <div style="display:flex;flex-direction:column;align-items:center;gap:0">
+          <div class="node cold">
+            <div class="node-label" style="color:var(--dim)">COLD &lt; 40</div>
+            <div class="node-sub">No tag</div>
+          </div>
+          <div class="arrow-v"></div>
+          <div class="node cold">
+            <div class="node-label" style="color:var(--dim)">FREE BLUEPRINT</div>
+            <div class="node-sub">Redirect + nurture exit</div>
+          </div>
+        </div>
+      </div>
+
+      <div style="margin-top:32px;display:flex;justify-content:center">
+        <div class="node end">
+          <div class="node-label" style="color:var(--green)">distributors.html</div>
+          <div class="node-sub">Operator onboarding hub</div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Detail panel -->
+    <div class="detail-panel">
+      <div class="detail-title">API CALL REFERENCE</div>
+      <div class="detail-row">
+        <div class="detail-key">POST /api/subscribe</div>
+        <div class="detail-val">Creates contact in AC, adds to main list, adds SS-NEW tag, triggers Welcome Sequence automation. Body: <code>{ email, name }</code>.</div>
+      </div>
+      <div class="detail-row">
+        <div class="detail-key">POST /api/score</div>
+        <div class="detail-val">Scores lead on capital, timeline, commitment, background. Returns <code>{ score, tier }</code>. Runs in browser — no server call.</div>
+      </div>
+      <div class="detail-row">
+        <div class="detail-key">POST /api/apply</div>
+        <div class="detail-val">Stores application, runs scoring, assigns HOT/WARM/COLD tag in AC, triggers appropriate automation, notifies owner by email. Body: full application payload.</div>
+      </div>
+      <div class="detail-row">
+        <div class="detail-key">POST /api/webhook</div>
+        <div class="detail-val">Receives AC webhooks for automation events (contact converted, tag added). Validates HMAC signature from <code>WEBHOOK_SECRET</code> env var. Used for real-time dashboard updates.</div>
+      </div>
+    </div>
+
+    <!-- Legend -->
+    <div class="legend">
+      <div class="legend-item">
+        <div class="legend-dot" style="background:rgba(168,85,247,0.4)"></div>
+        Traffic source
+      </div>
+      <div class="legend-item">
+        <div class="legend-dot" style="background:rgba(192,132,252,0.3)"></div>
+        HTML page
+      </div>
+      <div class="legend-item">
+        <div class="legend-dot" style="background:rgba(34,211,238,0.3)"></div>
+        API / function
+      </div>
+      <div class="legend-item">
+        <div class="legend-dot" style="background:rgba(74,222,128,0.3)"></div>
+        Email automation
+      </div>
+      <div class="legend-item">
+        <div class="legend-dot" style="background:rgba(239,68,68,0.4)"></div>
+        HOT path
+      </div>
+      <div class="legend-item">
+        <div class="legend-dot" style="background:rgba(251,191,36,0.35)"></div>
+        WARM path
+      </div>
+    </div>
+  </div>
+</body>
+</html>

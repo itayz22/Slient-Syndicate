@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tech Stack Guide — Silent Syndicate</title>
+  <meta name="robots" content="noindex, nofollow">
+  <link rel="stylesheet" href="css/design-system.css">
+  <style>
+    .page-wrap { max-width: 860px; margin: 0 auto; padding: 60px 28px 80px; }
+    .page-eyebrow {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 0.7rem;
+      letter-spacing: 0.18em;
+      color: var(--pg);
+      margin-bottom: 14px;
+    }
+    .page-title {
+      font-family: 'Orbitron', monospace;
+      font-size: clamp(1.6rem, 4vw, 2.4rem);
+      font-weight: 900;
+      letter-spacing: 0.05em;
+      background: linear-gradient(135deg, var(--white) 30%, var(--pg));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 12px;
+    }
+    .page-lead {
+      font-size: 1.05rem;
+      color: var(--muted);
+      line-height: 1.7;
+      margin-bottom: 48px;
+      max-width: 640px;
+    }
+    .stack-section { margin-bottom: 48px; }
+    .stack-section-title {
+      font-family: 'Orbitron', monospace;
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: var(--pg);
+      letter-spacing: 0.14em;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 10px;
+      margin-bottom: 20px;
+    }
+    .stack-row {
+      display: grid;
+      grid-template-columns: 180px 1fr auto;
+      gap: 16px;
+      align-items: start;
+      padding: 16px 0;
+      border-bottom: 1px solid rgba(168,85,247,0.07);
+    }
+    @media (max-width: 600px) {
+      .stack-row { grid-template-columns: 1fr; }
+    }
+    .stack-name {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 0.82rem;
+      color: var(--white);
+      letter-spacing: 0.06em;
+    }
+    .stack-role {
+      font-size: 0.875rem;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+    .stack-cost {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 0.75rem;
+      color: var(--dim);
+      white-space: nowrap;
+      text-align: right;
+    }
+    .stack-cost.free { color: var(--green); }
+    .note-box {
+      background: rgba(124,58,237,0.08);
+      border: 1px solid rgba(168,85,247,0.2);
+      border-radius: var(--radius);
+      padding: 20px 24px;
+      margin-top: 40px;
+    }
+    .note-label {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 0.67rem;
+      color: var(--pg);
+      letter-spacing: 0.14em;
+      margin-bottom: 8px;
+    }
+    .note-body { font-size: 0.9rem; color: var(--muted); line-height: 1.7; }
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 0.72rem;
+      color: var(--dim);
+      text-decoration: none;
+      letter-spacing: 0.1em;
+      margin-bottom: 40px;
+      transition: color 0.2s;
+    }
+    .back-link:hover { color: var(--pg); }
+  </style>
+</head>
+<body>
+  <div class="page-wrap">
+    <a href="hub.html" class="back-link">← BACK TO HUB</a>
+    <div class="page-eyebrow">RESOURCE // TECH STACK</div>
+    <h1 class="page-title">Tech Stack Guide</h1>
+    <p class="page-lead">Every service powering the Silent Syndicate funnel. What each tool does, why it's in the stack, and what it costs. All chosen for automation-first, low-maintenance operation.</p>
+
+    <!-- Hosting & Delivery -->
+    <div class="stack-section">
+      <div class="stack-section-title">HOSTING &amp; DELIVERY</div>
+      <div class="stack-row">
+        <div class="stack-name">Netlify</div>
+        <div class="stack-role">Static site hosting and serverless functions. Handles all HTML pages, CSS, JS, and the four API functions (subscribe, apply, score, webhook). Free tier covers the full funnel easily. Deploy via GitHub push.</div>
+        <div class="stack-cost free">Free tier</div>
+      </div>
+      <div class="stack-row">
+        <div class="stack-name">Netlify Functions</div>
+        <div class="stack-role">Serverless Node.js endpoints. The funnel uses four: <code>/subscribe</code>, <code>/apply</code>, <code>/score</code>, <code>/webhook</code>. Each runs in isolation with a 10-second timeout. 125k invocations/month free.</div>
+        <div class="stack-cost free">Included</div>
+      </div>
+      <div class="stack-row">
+        <div class="stack-name">Custom Domain + SSL</div>
+        <div class="stack-role">Any registrar works (Namecheap, Cloudflare, GoDaddy). Point DNS to Netlify. Free Let's Encrypt SSL provisioned automatically. Forces HTTPS via <code>_redirects</code> file.</div>
+        <div class="stack-cost">~$12/yr</div>
+      </div>
+    </div>
+
+    <!-- Email Automation -->
+    <div class="stack-section">
+      <div class="stack-section-title">EMAIL AUTOMATION</div>
+      <div class="stack-row">
+        <div class="stack-name">ActiveCampaign</div>
+        <div class="stack-role">CRM and email automation backbone. Stores all contacts, manages tag-based routing, and runs the three automation sequences (Welcome, HOT, Warm). REST API used by all four Netlify functions. Lite plan ($29/mo) covers up to 1,000 contacts.</div>
+        <div class="stack-cost">$29–79/mo</div>
+      </div>
+      <div class="stack-row">
+        <div class="stack-name">AC Automations</div>
+        <div class="stack-role">Three automations handle the full lead lifecycle: SS Welcome Sequence (7-day nurture), SS HOT Lead Routing (immediate high-intent path), SS Warm Nurture (30-day slow burn). Triggered by tags added via the API.</div>
+        <div class="stack-cost free">Included</div>
+      </div>
+    </div>
+
+    <!-- AI & Chatbot -->
+    <div class="stack-section">
+      <div class="stack-section-title">AI &amp; CHATBOT</div>
+      <div class="stack-row">
+        <div class="stack-name">Chatbot Engine</div>
+        <div class="stack-role">Rule-based chatbot in <code>js/chatbot.js</code>. Pattern-matches user messages against a keyword library and returns structured responses. Runs fully client-side — no API calls, no latency, no cost. Handles objections, qualification questions, and CTA routing.</div>
+        <div class="stack-cost free">Free (client-side)</div>
+      </div>
+      <div class="stack-row">
+        <div class="stack-name">Score Engine</div>
+        <div class="stack-role">The <code>/score</code> Netlify function scores each applicant on capital, timeline, commitment, and background. Returns HOT (≥70), WARM (40–69), or COLD (&lt;40) with a numeric score. Drives AC tag assignment and funnel routing.</div>
+        <div class="stack-cost free">Included</div>
+      </div>
+    </div>
+
+    <!-- Analytics -->
+    <div class="stack-section">
+      <div class="stack-section-title">ANALYTICS (OPTIONAL)</div>
+      <div class="stack-row">
+        <div class="stack-name">Netlify Analytics</div>
+        <div class="stack-role">Server-side analytics. No tracking scripts, no GDPR cookie banner required. Shows pageviews, unique visitors, top pages, and bandwidth. Optional add-on on Netlify.</div>
+        <div class="stack-cost">$9/mo</div>
+      </div>
+      <div class="stack-row">
+        <div class="stack-name">Plausible (alternative)</div>
+        <div class="stack-role">Privacy-first analytics alternative to Google Analytics. Self-hostable or hosted. Lightweight script (under 1KB). Tracks goals, referrers, and conversions without cookies.</div>
+        <div class="stack-cost">$9/mo</div>
+      </div>
+    </div>
+
+    <div class="note-box">
+      <div class="note-label">TOTAL MONTHLY COST</div>
+      <div class="note-body">Minimum viable stack: <strong>$29/month</strong> (ActiveCampaign Lite only). Full stack with analytics: <strong>~$38–50/month</strong>. Domain renewal adds ~$1/month amortised. One Launcher commission ($4,300) covers 12+ months of infrastructure.</div>
+    </div>
+  </div>
+</body>
+</html>

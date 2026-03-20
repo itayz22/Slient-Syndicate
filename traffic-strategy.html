@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Traffic Strategy — Silent Syndicate</title>
+  <meta name="robots" content="noindex, nofollow">
+  <link rel="stylesheet" href="css/design-system.css">
+  <style>
+    .page-wrap { max-width: 860px; margin: 0 auto; padding: 60px 28px 80px; }
+    .page-eyebrow {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 0.7rem;
+      letter-spacing: 0.18em;
+      color: var(--pg);
+      margin-bottom: 14px;
+    }
+    .page-title {
+      font-family: 'Orbitron', monospace;
+      font-size: clamp(1.6rem, 4vw, 2.4rem);
+      font-weight: 900;
+      letter-spacing: 0.05em;
+      background: linear-gradient(135deg, var(--white) 30%, var(--pg));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 12px;
+    }
+    .page-lead {
+      font-size: 1.05rem;
+      color: var(--muted);
+      line-height: 1.7;
+      margin-bottom: 48px;
+      max-width: 640px;
+    }
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 0.72rem;
+      color: var(--dim);
+      text-decoration: none;
+      letter-spacing: 0.1em;
+      margin-bottom: 40px;
+      transition: color 0.2s;
+    }
+    .back-link:hover { color: var(--pg); }
+    .strat-section { margin-bottom: 52px; }
+    .strat-title {
+      font-family: 'Orbitron', monospace;
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: var(--pg);
+      letter-spacing: 0.14em;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 10px;
+      margin-bottom: 24px;
+    }
+    .hook-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 24px 28px;
+      margin-bottom: 16px;
+    }
+    .hook-label {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 0.65rem;
+      color: var(--dim);
+      letter-spacing: 0.14em;
+      margin-bottom: 8px;
+    }
+    .hook-text {
+      font-size: 1.05rem;
+      color: var(--white);
+      font-weight: 600;
+      line-height: 1.5;
+      margin-bottom: 10px;
+    }
+    .hook-note { font-size: 0.875rem; color: var(--muted); line-height: 1.65; }
+    .cadence-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 14px;
+      margin-bottom: 24px;
+    }
+    .cadence-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 20px;
+    }
+    .cadence-day {
+      font-family: 'Orbitron', monospace;
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: var(--pg);
+      letter-spacing: 0.1em;
+      margin-bottom: 8px;
+    }
+    .cadence-task {
+      font-size: 0.875rem;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+    .channel-row {
+      display: grid;
+      grid-template-columns: 140px 1fr 100px;
+      gap: 16px;
+      align-items: start;
+      padding: 16px 0;
+      border-bottom: 1px solid rgba(168,85,247,0.07);
+    }
+    @media (max-width: 600px) { .channel-row { grid-template-columns: 1fr; } }
+    .channel-name {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 0.8rem;
+      color: var(--white);
+      letter-spacing: 0.06em;
+    }
+    .channel-desc { font-size: 0.875rem; color: var(--muted); line-height: 1.6; }
+    .channel-priority {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 0.68rem;
+      letter-spacing: 0.1em;
+      text-align: right;
+    }
+    .priority-primary { color: var(--green); }
+    .priority-secondary { color: var(--amber); }
+    .priority-optional { color: var(--dim); }
+    .disclaimer {
+      background: rgba(239,68,68,0.06);
+      border: 1px solid rgba(239,68,68,0.2);
+      border-radius: var(--radius);
+      padding: 16px 20px;
+      font-size: 0.8rem;
+      color: var(--dim);
+      line-height: 1.65;
+      margin-top: 48px;
+    }
+    .disclaimer strong { color: var(--red); }
+  </style>
+</head>
+<body>
+  <div class="page-wrap">
+    <a href="hub.html" class="back-link">← BACK TO HUB</a>
+    <div class="page-eyebrow">RESOURCE // TRAFFIC</div>
+    <h1 class="page-title">Traffic Strategy</h1>
+    <p class="page-lead">How to generate consistent opt-ins using short-form organic content. No paid ads required. One skill: posting short videos with a transparency hook. The funnel does everything else.</p>
+
+    <!-- Hook Formula -->
+    <div class="strat-section">
+      <div class="strat-title">THE TRANSPARENCY HOOK FORMULA</div>
+      <p style="font-size:0.925rem;color:var(--muted);margin-bottom:24px;line-height:1.7">The single most effective approach for this niche is radical transparency. Name the company, name the product, name the commissions. Audiences respond to specificity and honesty — especially when most people in this space are deliberately vague.</p>
+
+      <div class="hook-card">
+        <div class="hook-label">HOOK TYPE 01 — COMMISSION REVEAL</div>
+        <div class="hook-text">"I make $4,300 every time someone buys this water machine. Here's exactly how."</div>
+        <div class="hook-note">Works because it names a specific number and product category. Filters audience by curiosity and capital. The viewer who stays to the end is self-qualifying.</div>
+      </div>
+      <div class="hook-card">
+        <div class="hook-label">HOOK TYPE 02 — SYSTEM REVEAL</div>
+        <div class="hook-text">"I built an AI that talks to leads 24/7 so I don't have to. Here's how the whole thing works."</div>
+        <div class="hook-note">Appeals to operators and entrepreneurs. Leads with automation intrigue. Best performing hook for driving distributor inquiries vs consumer interest.</div>
+      </div>
+      <div class="hook-card">
+        <div class="hook-label">HOOK TYPE 03 — OBJECTION FLIP</div>
+        <div class="hook-text">"Everyone asks if this is an MLM. Let me show you the actual pay structure and you decide."</div>
+        <div class="hook-note">Pre-empts the biggest objection before it's raised. Builds trust immediately. High completion rate because it triggers pattern interruption.</div>
+      </div>
+      <div class="hook-card">
+        <div class="hook-label">HOOK TYPE 04 — INCOME TIMELINE</div>
+        <div class="hook-text">"Month 1: $0. Month 2: $4,300. Month 3: $12,900. This is what the ramp actually looks like."</div>
+        <div class="hook-note">Realistic timelines outperform hype. Shows the ramp honestly. Disqualifies impatient prospects before they enter the funnel — saving everyone's time.</div>
+      </div>
+    </div>
+
+    <!-- Content Cadence -->
+    <div class="strat-section">
+      <div class="strat-title">WEEKLY CONTENT CADENCE</div>
+      <p style="font-size:0.925rem;color:var(--muted);margin-bottom:20px;line-height:1.7">Minimum viable cadence: 1 video per day, 7 days a week. Results compound after 21–28 days of consistent posting. Do not expect significant lead volume in the first 2 weeks.</p>
+      <div class="cadence-grid">
+        <div class="cadence-card">
+          <div class="cadence-day">MON</div>
+          <div class="cadence-task">Commission reveal. Specific number + product + timeframe. Link in bio CTA.</div>
+        </div>
+        <div class="cadence-card">
+          <div class="cadence-day">TUE</div>
+          <div class="cadence-task">System walkthrough. Show the funnel flow. How AI handles leads end-to-end.</div>
+        </div>
+        <div class="cadence-card">
+          <div class="cadence-day">WED</div>
+          <div class="cadence-task">Objection video. Pick one objection (MLM, investment, time). Address it directly.</div>
+        </div>
+        <div class="cadence-card">
+          <div class="cadence-day">THU</div>
+          <div class="cadence-task">Day-in-the-life. 60 seconds showing your actual operator routine. Keeps it real.</div>
+        </div>
+        <div class="cadence-card">
+          <div class="cadence-day">FRI</div>
+          <div class="cadence-task">Numbers post. Commission screenshot, analytics, opt-in count. Always include income disclaimer.</div>
+        </div>
+        <div class="cadence-card">
+          <div class="cadence-day">SAT</div>
+          <div class="cadence-task">Testimonial or case study. Real operator story with realistic timeline and numbers.</div>
+        </div>
+        <div class="cadence-card">
+          <div class="cadence-day">SUN</div>
+          <div class="cadence-task">CTA push. Direct call to apply. Low-pressure, clear next step. Link in bio.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Channels -->
+    <div class="strat-section">
+      <div class="strat-title">CHANNEL PRIORITY</div>
+      <div class="channel-row">
+        <div class="channel-name">TikTok</div>
+        <div class="channel-desc">Primary channel. Algorithm distributes content to non-followers. Best reach-per-effort for transparency hook content. 60-second vertical videos. Post between 6–9am and 7–10pm local time for best reach.</div>
+        <div class="channel-priority priority-primary">PRIMARY</div>
+      </div>
+      <div class="channel-row">
+        <div class="channel-name">Instagram Reels</div>
+        <div class="channel-desc">Repurpose TikTok content without the watermark. Use SnapTik or similar to download, then upload natively to Instagram. Same hook formula works. Slightly older demographic — good for higher-capital prospects.</div>
+        <div class="channel-priority priority-secondary">SECONDARY</div>
+      </div>
+      <div class="channel-row">
+        <div class="channel-name">YouTube Shorts</div>
+        <div class="channel-desc">Repurpose from TikTok. Slower to compound but builds permanent search-indexed content. Good for long-tail discovery ("Enagic distributor income" searches). Worth adding once TikTok workflow is established.</div>
+        <div class="channel-priority priority-optional">OPTIONAL</div>
+      </div>
+      <div class="channel-row">
+        <div class="channel-name">Paid Ads</div>
+        <div class="channel-desc">Not recommended for new operators. Organic builds trust that ads cannot replicate. Run ads only after proving organic content converts. If using paid, retarget people who watched >50% of organic videos.</div>
+        <div class="channel-priority priority-optional">LATER</div>
+      </div>
+    </div>
+
+    <div class="disclaimer">
+      <strong>Income Disclaimer:</strong> Results shown are not typical. Individual results will vary based on content consistency, market conditions, capital invested, and operator effort. Most operators earn less than the examples shown, particularly in early months. This is a business opportunity, not a guaranteed income. Treat it as such.
+    </div>
+  </div>
+</body>
+</html>
