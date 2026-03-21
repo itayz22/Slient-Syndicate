@@ -9,10 +9,23 @@
     body { padding-top: 80px; }
 
     .approved-bar {
-      background: linear-gradient(90deg, rgba(74,222,128,0.1), rgba(74,222,128,0.05));
-      border-bottom: 1px solid rgba(74,222,128,0.2);
-      padding: 12px 0;
+      background: linear-gradient(90deg, rgba(74,222,128,0.08), rgba(74,222,128,0.15), rgba(74,222,128,0.08));
+      border-bottom: 1px solid rgba(74,222,128,0.3);
+      padding: 14px 0;
       text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .approved-bar::after {
+      content: '';
+      position: absolute;
+      top: 0; left: -100%; width: 60%; height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(74,222,128,0.15), transparent);
+      animation: approvedShimmer 3s ease-in-out infinite;
+    }
+    @keyframes approvedShimmer {
+      0% { left: -100%; }
+      100% { left: 200%; }
     }
 
     .tier-card {
@@ -39,18 +52,17 @@
     .tier-card.nuke::before { background: linear-gradient(90deg, var(--cyan), var(--pm)); }
 
     .tier-card.featured {
-      border-color: rgba(168,85,247,0.4);
-      transform: scale(1.03);
-      box-shadow: 0 0 40px rgba(124,58,237,0.2);
+      border-color: rgba(168,85,247,0.5);
+      box-shadow: 0 0 40px rgba(124,58,237,0.25), 0 -4px 20px rgba(124,58,237,0.2);
     }
 
     .tier-card:hover {
-      border-color: rgba(168,85,247,0.5);
-      transform: scale(1.05);
-      box-shadow: 0 12px 40px rgba(0,0,0,0.4);
+      border-color: rgba(168,85,247,0.6);
+      transform: translateY(-6px);
+      box-shadow: 0 20px 50px rgba(0,0,0,0.5), 0 0 30px rgba(124,58,237,0.2);
     }
 
-    .tier-card.featured:hover { transform: scale(1.07); }
+    .tier-card.featured:hover { transform: translateY(-8px); }
 
     .featured-badge {
       position: absolute;
@@ -211,6 +223,11 @@
       z-index: 1;
     }
 
+    /* Tier grid responsive */
+    @media (max-width: 900px) {
+      .tier-grid { grid-template-columns: 1fr !important; }
+    }
+
     /* Objections */
     .objection-card {
       background: var(--card2);
@@ -277,7 +294,7 @@
     <!-- TIER CARDS -->
     <section style="padding:0 0 80px;">
       <div class="container">
-        <div style="display:flex;gap:24px;align-items:stretch;flex-wrap:wrap;" class="reveal">
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:24px;" class="reveal tier-grid">
           <!-- STRIKER -->
           <div class="tier-card striker">
             <div class="tier-name">STRIKER</div>
@@ -295,8 +312,9 @@
               <li>Break-even: ~4 sales</li>
             </ul>
             <div style="margin-top:24px;">
-              <a href="https://www.enagic.com" target="_blank" rel="noopener" class="btn btn-ghost btn-full">
-                Register at Enagic →
+              <!-- REPLACE WITH YOUR ENAGIC STORE URL -->
+              <a href="join.html" data-tier="striker" class="btn btn-ghost btn-full">
+                Get Started — Striker →
               </a>
             </div>
           </div>
@@ -320,8 +338,9 @@
               <li>Break-even: ~4 sales</li>
             </ul>
             <div style="margin-top:24px;">
-              <a href="https://www.enagic.com" target="_blank" rel="noopener" class="btn btn-primary btn-full">
-                Register at Enagic →
+              <!-- REPLACE WITH YOUR ENAGIC STORE URL -->
+              <a href="join.html" data-tier="launcher" class="btn btn-primary btn-full">
+                Get Started — Launcher →
               </a>
             </div>
           </div>
@@ -344,8 +363,9 @@
               <li>Break-even: ~4 sales</li>
             </ul>
             <div style="margin-top:24px;">
-              <a href="https://www.enagic.com" target="_blank" rel="noopener" class="btn btn-cyan btn-full">
-                Register at Enagic →
+              <!-- REPLACE WITH YOUR ENAGIC STORE URL -->
+              <a href="join.html" data-tier="nuke" class="btn btn-cyan btn-full">
+                Get Started — Nuke →
               </a>
             </div>
           </div>
@@ -559,7 +579,7 @@
       <div class="container" style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:16px;">
         <div style="display:flex;align-items:center;gap:12px;">
           <div class="hex-logo hex-logo-sm"><span>SS</span></div>
-          <span style="font-family:'Share Tech Mono',monospace;font-size:0.75rem;color:var(--dim);">SILENT SYNDICATE © 2024</span>
+          <span style="font-family:'Share Tech Mono',monospace;font-size:0.75rem;color:var(--dim);">SILENT SYNDICATE © 2025</span>
         </div>
         <div style="font-size:0.75rem;color:var(--dim);">An authorised Enagic distributor network — AU &amp; NZ</div>
       </div>
@@ -586,7 +606,15 @@
         <button class="chat-send" onclick="sendChatMessage()">→</button>
       </div>
     </div>
-    <button class="chat-toggle" id="chat-toggle" onclick="toggleChat()">💬</button>
+    <button class="chat-toggle" id="chat-toggle" onclick="toggleChat()" style="position:relative;">
+    💬
+    <span id="chat-notify" style="position:absolute;top:-3px;right:-3px;width:12px;height:12px;background:var(--red);border-radius:50%;border:2px solid var(--bg);box-shadow:0 0 6px rgba(239,68,68,0.7);"></span>
+  </button>
+  </div>
+
+  <!-- STICKY MOBILE CTA -->
+  <div id="mobile-cta-bar" style="display:none;position:fixed;bottom:0;left:0;right:0;padding:12px 16px;background:rgba(5,2,14,0.97);border-top:1px solid rgba(168,85,247,0.3);z-index:500;backdrop-filter:blur(10px);">
+    <a href="join.html" class="btn btn-primary btn-full">Register Now — Select Your Tier →</a>
   </div>
 
   <script src="js/chatbot.js"></script>
@@ -623,6 +651,11 @@
     document.getElementById('tier-slider').addEventListener('input', updateCalc);
     updateCalc();
 
+    // Mobile CTA bar
+    if (window.innerWidth <= 768) {
+      document.getElementById('mobile-cta-bar').style.display = 'block';
+    }
+
     // Chat auto-open after 30s
     setTimeout(() => {
       if (typeof initChatbot === 'function') {
@@ -640,6 +673,9 @@
       if (!isOpen && typeof initChatbot === 'function') {
         initChatbot();
       }
+      // Hide notification dot when opened
+      const dot = document.getElementById('chat-notify');
+      if (dot) dot.style.display = 'none';
     }
 
     function sendChatMessage() {

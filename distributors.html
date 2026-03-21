@@ -26,20 +26,35 @@
     .commission-grid {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
-      gap: 2px;
-      background: var(--border);
-      border-radius: var(--radius);
-      overflow: hidden;
+      gap: 16px;
       margin: 40px 0;
     }
 
     .commission-cell {
       background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
       padding: 32px 24px;
       text-align: center;
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
     }
 
-    .commission-cell.featured { background: var(--card2); position: relative; }
+    .commission-cell::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 3px;
+    }
+
+    .commission-cell:nth-child(1)::before { background: linear-gradient(90deg, #6b7280, #9ca3af); }
+    .commission-cell:nth-child(2)::before { background: linear-gradient(90deg, var(--pm), var(--pink)); }
+    .commission-cell:nth-child(3)::before { background: linear-gradient(90deg, var(--cyan), var(--pm)); }
+
+    .commission-cell:hover { transform: translateY(-4px); border-color: rgba(168,85,247,0.35); box-shadow: 0 8px 30px rgba(0,0,0,0.3); }
+
+    .commission-cell.featured { background: var(--card2); border-color: rgba(168,85,247,0.35); box-shadow: 0 0 20px rgba(124,58,237,0.15); position: relative; }
     .commission-cell.featured::before {
       content: 'MOST SELECTED';
       position: absolute;
@@ -148,15 +163,12 @@
     .yes-no-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 2px;
-      background: var(--border);
-      border-radius: var(--radius);
-      overflow: hidden;
+      gap: 16px;
     }
 
-    .yes-col, .no-col { padding: 32px; }
-    .yes-col { background: rgba(74,222,128,0.04); }
-    .no-col { background: rgba(239,68,68,0.04); }
+    .yes-col, .no-col { padding: 32px; border-radius: var(--radius); }
+    .yes-col { background: rgba(74,222,128,0.04); border: 1px solid rgba(74,222,128,0.15); }
+    .no-col { background: rgba(239,68,68,0.04); border: 1px solid rgba(239,68,68,0.15); }
 
     .yes-col h3 { color: var(--green); font-family: 'Orbitron', monospace; font-size: var(--text-base); margin-bottom: 20px; }
     .no-col h3 { color: var(--red); font-family: 'Orbitron', monospace; font-size: var(--text-base); margin-bottom: 20px; }
@@ -560,7 +572,7 @@
       <div class="container" style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:16px;">
         <div style="display:flex;align-items:center;gap:12px;">
           <div class="hex-logo hex-logo-sm"><span>SS</span></div>
-          <span style="font-family:'Share Tech Mono',monospace;font-size:0.75rem;color:var(--dim);">SILENT SYNDICATE © 2024</span>
+          <span style="font-family:'Share Tech Mono',monospace;font-size:0.75rem;color:var(--dim);">SILENT SYNDICATE © 2025</span>
         </div>
         <a href="index.html" style="font-size:0.75rem;color:var(--dim);text-decoration:none;">Consumer Funnel →</a>
       </div>
