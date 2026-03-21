@@ -1,0 +1,550 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Operator Hub — Silent Syndicate</title>
+  <meta name="robots" content="noindex, nofollow">
+  <link rel="stylesheet" href="css/design-system.css">
+  <style>
+    .hub-hero {
+      padding: 140px 0 60px;
+    }
+
+    .hub-headline {
+      font-family: 'Orbitron', monospace;
+      font-size: clamp(2rem, 4vw, 3rem);
+      font-weight: 900;
+      line-height: 1.15;
+      margin-bottom: 8px;
+      letter-spacing: -0.02em;
+    }
+
+    .hub-greeting {
+      font-size: var(--text-xl);
+      color: var(--dim);
+      margin-bottom: 0;
+    }
+
+    /* Quick stats row */
+    .stat-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 28px 24px;
+      position: relative;
+      overflow: hidden;
+      transition: all 0.3s ease;
+    }
+
+    .stat-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0;
+      width: 0; height: 2px;
+      background: linear-gradient(90deg, var(--pm), var(--pink));
+      transition: width 0.4s ease;
+    }
+
+    .stat-card:hover { transform: translateY(-3px); box-shadow: var(--shadow-card); }
+    .stat-card:hover::before { width: 100%; }
+
+    .stat-card-label {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 0.65rem;
+      color: var(--dim);
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      margin-bottom: 10px;
+    }
+
+    .stat-card-value {
+      font-family: 'Orbitron', monospace;
+      font-size: var(--text-2xl);
+      font-weight: 700;
+      line-height: 1.1;
+      margin-bottom: 6px;
+    }
+
+    .stat-card-sub {
+      font-size: var(--text-xs);
+      color: var(--dim);
+    }
+
+    .stat-pipeline-icon {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 0.7rem;
+      color: var(--pb);
+      margin-top: 8px;
+    }
+
+    /* Main tools grid — 3x2 */
+    .tools-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: var(--space-6);
+    }
+
+    .tool-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 32px 28px;
+      text-decoration: none;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      position: relative;
+      overflow: hidden;
+      transition: all 0.3s ease;
+      min-height: 160px;
+    }
+
+    .tool-card::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    .tool-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 12px 40px rgba(0,0,0,0.5);
+    }
+
+    .tool-card:hover::after { opacity: 1; }
+
+    /* Individual card accent colours */
+    .tool-card-purple {
+      background: linear-gradient(135deg, rgba(124,58,237,0.12) 0%, rgba(10,6,24,1) 60%);
+      border-color: rgba(124,58,237,0.3);
+    }
+
+    .tool-card-purple:hover { border-color: rgba(168,85,247,0.5); box-shadow: 0 12px 40px rgba(124,58,237,0.25); }
+
+    .tool-card-cyan {
+      background: linear-gradient(135deg, rgba(34,211,238,0.08) 0%, rgba(10,6,24,1) 60%);
+      border-color: rgba(34,211,238,0.25);
+    }
+
+    .tool-card-cyan:hover { border-color: rgba(34,211,238,0.45); box-shadow: 0 12px 40px rgba(34,211,238,0.15); }
+
+    .tool-card-pink {
+      background: linear-gradient(135deg, rgba(236,72,153,0.08) 0%, rgba(10,6,24,1) 60%);
+      border-color: rgba(236,72,153,0.25);
+    }
+
+    .tool-card-pink:hover { border-color: rgba(236,72,153,0.45); box-shadow: 0 12px 40px rgba(236,72,153,0.15); }
+
+    .tool-icon {
+      font-size: 2rem;
+    }
+
+    .tool-title {
+      font-family: 'Orbitron', monospace;
+      font-size: var(--text-base);
+      font-weight: 700;
+      color: var(--white);
+    }
+
+    .tool-desc {
+      font-size: var(--text-sm);
+      color: var(--dim);
+      line-height: 1.6;
+    }
+
+    .tool-arrow {
+      margin-top: auto;
+      font-family: 'Share Tech Mono', monospace;
+      font-size: var(--text-xs);
+      color: var(--pb);
+      letter-spacing: 0.08em;
+    }
+
+    /* Funnel health table */
+    .health-table {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+    }
+
+    .health-table-header {
+      padding: 20px 28px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .health-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px 28px;
+      border-bottom: 1px solid rgba(168,85,247,0.06);
+      transition: background 0.2s;
+    }
+
+    .health-row:last-child { border-bottom: none; }
+    .health-row:hover { background: rgba(168,85,247,0.04); }
+
+    .health-endpoint {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: var(--text-sm);
+      color: var(--muted);
+    }
+
+    .health-status {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-family: 'Share Tech Mono', monospace;
+      font-size: var(--text-xs);
+      color: var(--green);
+      letter-spacing: 0.08em;
+    }
+
+    /* Activity feed */
+    .activity-feed {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+    }
+
+    .activity-header {
+      padding: 20px 28px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .activity-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 16px;
+      padding: 16px 28px;
+      border-bottom: 1px solid rgba(168,85,247,0.06);
+      transition: background 0.2s;
+    }
+
+    .activity-item:last-child { border-bottom: none; }
+    .activity-item:hover { background: rgba(168,85,247,0.04); }
+
+    .activity-dot-wrap {
+      flex-shrink: 0;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: rgba(124,58,237,0.1);
+      border: 1px solid rgba(168,85,247,0.2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.85rem;
+      margin-top: 2px;
+    }
+
+    .activity-body { flex: 1; }
+
+    .activity-text {
+      font-size: var(--text-sm);
+      color: var(--muted);
+      line-height: 1.5;
+      margin-bottom: 4px;
+    }
+
+    .activity-time {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: var(--text-xs);
+      color: var(--dim);
+    }
+
+    /* Private badge */
+    .operator-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 12px;
+      background: rgba(239,68,68,0.12);
+      border: 1px solid rgba(239,68,68,0.3);
+      border-radius: var(--radius-full);
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 0.65rem;
+      color: var(--red);
+      letter-spacing: 0.1em;
+    }
+
+    .hub-label {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 12px;
+      background: rgba(168,85,247,0.1);
+      border: 1px solid rgba(168,85,247,0.25);
+      border-radius: var(--radius-full);
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 0.65rem;
+      color: var(--pb);
+      letter-spacing: 0.1em;
+    }
+
+    @media (max-width: 768px) {
+      .tools-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <div class="orb orb-1"></div>
+  <div class="orb orb-2"></div>
+  <div class="orb orb-3"></div>
+
+  <nav class="nav">
+    <a href="index.html" class="nav-brand">
+      <div class="hex-logo hex-logo-sm"><span>SS</span></div>
+      <span class="nav-brand-text">SILENT SYNDICATE</span>
+    </a>
+    <div style="display:flex;align-items:center;gap:10px;">
+      <span class="hub-label">OPERATOR HUB</span>
+      <span class="operator-badge">&#x1F512; PRIVATE</span>
+    </div>
+  </nav>
+
+  <div class="page-wrap">
+
+    <!-- HERO -->
+    <section class="hub-hero">
+      <div class="container">
+        <div class="reveal">
+          <div style="display:inline-flex;align-items:center;gap:8px;padding:6px 14px;background:rgba(74,222,128,0.1);border:1px solid rgba(74,222,128,0.2);border-radius:var(--radius-full);font-family:'Share Tech Mono',monospace;font-size:var(--text-xs);color:var(--green);letter-spacing:0.1em;margin-bottom:20px;">
+            <div class="status-dot live"></div>
+            ALL SYSTEMS OPERATIONAL
+          </div>
+          <h1 class="hub-headline">
+            Your <span class="gradient-text">Operator Hub</span>
+          </h1>
+          <p class="hub-greeting">Welcome back, <span style="color:var(--muted);">[Operator]</span></p>
+        </div>
+      </div>
+    </section>
+
+    <!-- QUICK STATS -->
+    <section style="padding-bottom:var(--space-12);">
+      <div class="container">
+        <div class="grid-4">
+          <div class="stat-card reveal">
+            <div class="stat-card-label">Pipeline</div>
+            <div class="stat-card-value" style="color:var(--pb);">34</div>
+            <div class="stat-card-sub">leads in system</div>
+            <div class="stat-pipeline-icon">
+              &rarr; &rarr; &rarr;
+            </div>
+          </div>
+          <div class="stat-card reveal reveal-delay-1">
+            <div class="stat-card-label">This Month</div>
+            <div class="stat-card-value gradient-text">$12,900</div>
+            <div class="stat-card-sub">gross commissions</div>
+          </div>
+          <div class="stat-card reveal reveal-delay-2">
+            <div class="stat-card-label">HOT Leads</div>
+            <div style="display:flex;align-items:center;gap:10px;margin-bottom:6px;">
+              <div class="stat-card-value" style="color:var(--red);">4</div>
+              <span class="badge badge-hot">ACTIVE</span>
+            </div>
+            <div class="stat-card-sub">awaiting follow-up</div>
+          </div>
+          <div class="stat-card reveal reveal-delay-3">
+            <div class="stat-card-label">Next Payout</div>
+            <div class="stat-card-value" style="color:var(--amber);">Est. $8,600</div>
+            <div class="stat-card-sub">projected next cycle</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="divider"></div>
+
+    <!-- MAIN TOOLS GRID -->
+    <section class="section">
+      <div class="container">
+        <div class="text-center mb-8 reveal">
+          <h2 style="font-family:'Orbitron',monospace;font-size:var(--text-3xl);font-weight:700;">
+            Your <span class="gradient-text">Tools</span>
+          </h2>
+        </div>
+        <div class="tools-grid">
+
+          <a href="aios-dashboard.html" class="tool-card tool-card-purple reveal">
+            <div class="tool-icon">&#128250;</div>
+            <div class="tool-title">AIOS Dashboard</div>
+            <p class="tool-desc">Full AI Operator System. Leads, pipeline, applications, and conversion tracking.</p>
+            <div class="tool-arrow">OPEN DASHBOARD &rarr;</div>
+          </a>
+
+          <a href="email-sequence.html" class="tool-card tool-card-cyan reveal reveal-delay-1">
+            <div class="tool-icon">&#128233;</div>
+            <div class="tool-title">Email Sequences</div>
+            <p class="tool-desc">Your 7-day automated follow-up sequence. Edit, preview, and track open rates.</p>
+            <div class="tool-arrow" style="color:var(--cyan);">VIEW SEQUENCES &rarr;</div>
+          </a>
+
+          <a href="traffic-strategy.html" class="tool-card tool-card-pink reveal reveal-delay-2">
+            <div class="tool-icon">&#128202;</div>
+            <div class="tool-title">Traffic Strategy</div>
+            <p class="tool-desc">TikTok content frameworks, posting schedule, and traffic optimisation guides.</p>
+            <div class="tool-arrow" style="color:var(--pink);">VIEW STRATEGY &rarr;</div>
+          </a>
+
+          <a href="chatbot-script.html" class="tool-card reveal">
+            <div class="tool-icon">&#129302;</div>
+            <div class="tool-title">Chatbot Scripts</div>
+            <p class="tool-desc">All conversation flows for your AI qualifier. Edit responses and routing logic.</p>
+            <div class="tool-arrow">EDIT SCRIPTS &rarr;</div>
+          </a>
+
+          <a href="tech-stack-guide.html" class="tool-card reveal reveal-delay-1">
+            <div class="tool-icon">&#128296;</div>
+            <div class="tool-title">Tech Stack Guide</div>
+            <p class="tool-desc">Every tool in your system with setup instructions and troubleshooting steps.</p>
+            <div class="tool-arrow">VIEW GUIDE &rarr;</div>
+          </a>
+
+          <a href="commission-structure.html" class="tool-card reveal reveal-delay-2">
+            <div class="tool-icon">&#128176;</div>
+            <div class="tool-title">Commission Structure</div>
+            <p class="tool-desc">Full Enagic tier breakdown, override structure, and earnings calculator.</p>
+            <div class="tool-arrow">VIEW STRUCTURE &rarr;</div>
+          </a>
+
+        </div>
+      </div>
+    </section>
+
+    <div class="divider"></div>
+
+    <!-- FUNNEL HEALTH + ACTIVITY (2 column) -->
+    <section class="section">
+      <div class="container">
+        <div class="grid-2">
+
+          <!-- Funnel health -->
+          <div class="reveal">
+            <h2 style="font-family:'Orbitron',monospace;font-size:var(--text-2xl);font-weight:700;margin-bottom:var(--space-6);">
+              Funnel <span class="gradient-text">Status</span>
+            </h2>
+            <div class="health-table">
+              <div class="health-table-header">
+                <span style="font-family:'Share Tech Mono',monospace;font-size:0.7rem;color:var(--dim);letter-spacing:0.1em;">SYSTEM ENDPOINTS</span>
+                <span style="font-family:'Share Tech Mono',monospace;font-size:0.7rem;color:var(--green);">ALL LIVE</span>
+              </div>
+              <div class="health-row">
+                <span class="health-endpoint">/api/subscribe</span>
+                <span class="health-status">
+                  <span class="status-dot live"></span>
+                  LIVE
+                </span>
+              </div>
+              <div class="health-row">
+                <span class="health-endpoint">/api/apply</span>
+                <span class="health-status">
+                  <span class="status-dot live"></span>
+                  LIVE
+                </span>
+              </div>
+              <div class="health-row">
+                <span class="health-endpoint">ActiveCampaign</span>
+                <span class="health-status">
+                  <span class="status-dot live"></span>
+                  LIVE
+                </span>
+              </div>
+              <div class="health-row">
+                <span class="health-endpoint">Email Sequence</span>
+                <span class="health-status">
+                  <span class="status-dot live"></span>
+                  LIVE
+                </span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Recent activity -->
+          <div class="reveal reveal-delay-1">
+            <h2 style="font-family:'Orbitron',monospace;font-size:var(--text-2xl);font-weight:700;margin-bottom:var(--space-6);">
+              Recent <span class="gradient-text">Activity</span>
+            </h2>
+            <div class="activity-feed">
+              <div class="activity-header">
+                <span style="font-family:'Share Tech Mono',monospace;font-size:0.7rem;color:var(--dim);letter-spacing:0.1em;">LAST 24 HOURS</span>
+              </div>
+              <div class="activity-item">
+                <div class="activity-dot-wrap">&#128231;</div>
+                <div class="activity-body">
+                  <div class="activity-text">New opt-in: <strong style="color:var(--muted);">sarah.m@gmail.com</strong></div>
+                  <div class="activity-time">2 hours ago &mdash; added to sequence</div>
+                </div>
+              </div>
+              <div class="activity-item">
+                <div class="activity-dot-wrap">&#128203;</div>
+                <div class="activity-body">
+                  <div class="activity-text">Application submitted: <strong style="color:var(--muted);">J. Thompson</strong> &mdash; LAUNCHER tier</div>
+                  <div class="activity-time">5 hours ago &mdash; awaiting review</div>
+                </div>
+              </div>
+              <div class="activity-item">
+                <div class="activity-dot-wrap" style="background:rgba(74,222,128,0.1);border-color:rgba(74,222,128,0.2);">&#10003;</div>
+                <div class="activity-body">
+                  <div class="activity-text">Email sequence: Day 3 sent to <strong style="color:var(--muted);">12 leads</strong></div>
+                  <div class="activity-time">8 hours ago &mdash; 67% open rate</div>
+                </div>
+              </div>
+              <div class="activity-item">
+                <div class="activity-dot-wrap">&#128231;</div>
+                <div class="activity-body">
+                  <div class="activity-text">New opt-in: <strong style="color:var(--muted);">m.davies@hotmail.com</strong></div>
+                  <div class="activity-time">11 hours ago &mdash; added to sequence</div>
+                </div>
+              </div>
+              <div class="activity-item">
+                <div class="activity-dot-wrap" style="background:rgba(251,191,36,0.1);border-color:rgba(251,191,36,0.2);">&#128176;</div>
+                <div class="activity-body">
+                  <div class="activity-text">Commission confirmed: <strong style="color:var(--amber);">$4,300</strong> &mdash; LAUNCHER sale</div>
+                  <div class="activity-time">Yesterday at 3:42 PM &mdash; STRIKER referral bonus pending</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer style="padding:40px 0;border-top:1px solid var(--border);">
+      <div class="container" style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:16px;">
+        <div style="display:flex;align-items:center;gap:12px;">
+          <div class="hex-logo hex-logo-sm"><span>SS</span></div>
+          <span style="font-family:'Share Tech Mono',monospace;font-size:0.75rem;color:var(--dim);">
+            SILENT SYNDICATE &copy; 2025
+          </span>
+        </div>
+        <div style="font-size:0.75rem;color:var(--dim);">
+          An authorised Enagic distributor network &mdash; AU &amp; NZ
+        </div>
+      </div>
+    </footer>
+
+  </div><!-- /.page-wrap -->
+
+  <script>
+    // Scroll reveal
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+    }, { threshold: 0.1 });
+    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+  </script>
+</body>
+</html>

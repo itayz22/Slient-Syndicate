@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Operator Onboarding — Silent Syndicate</title>
+  <meta name="robots" content="noindex, nofollow">
+  <link rel="stylesheet" href="css/design-system.css">
+  <style>
+    .hero-onboard {
+      min-height: 60vh;
+      display: flex;
+      align-items: center;
+      padding: 140px 0 60px;
+    }
+
+    .hero-headline-ob {
+      font-family: 'Orbitron', monospace;
+      font-size: clamp(1.8rem, 4vw, 3rem);
+      font-weight: 900;
+      line-height: 1.15;
+      margin-bottom: 16px;
+      letter-spacing: -0.02em;
+    }
+
+    /* Big progress tracker */
+    .progress-tracker {
+      display: flex;
+      align-items: flex-start;
+      justify-content: center;
+      gap: 0;
+      padding: var(--space-8) 0;
+      overflow-x: auto;
+    }
+
+    .pt-step {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      position: relative;
+      flex: 1;
+      min-width: 120px;
+    }
+
+    .pt-connector {
+      flex: 1;
+      height: 2px;
+      background: rgba(168,85,247,0.2);
+      align-self: flex-start;
+      margin-top: 22px;
+      min-width: 40px;
+    }
+
+    .pt-connector.done {
+      background: var(--green);
+    }
+
+    .pt-connector.active {
+      background: linear-gradient(90deg, var(--pm), rgba(168,85,247,0.2));
+    }
+
+    .pt-node {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 0.75rem;
+      font-weight: 700;
+      border: 2px solid rgba(168,85,247,0.3);
+      background: rgba(10,6,24,1);
+      color: var(--dim);
+      margin-bottom: 10px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .pt-node.done {
+      border-color: var(--green);
+      background: rgba(74,222,128,0.1);
+      color: var(--green);
+    }
+
+    .pt-node.active {
+      border-color: var(--pm);
+      background: rgba(124,58,237,0.15);
+      color: var(--pb);
+      box-shadow: 0 0 20px rgba(124,58,237,0.5);
+      animation: ptPulse 2s ease-in-out infinite;
+    }
+
+    @keyframes ptPulse {
+      0%, 100% { box-shadow: 0 0 20px rgba(124,58,237,0.5); }
+      50% { box-shadow: 0 0 35px rgba(124,58,237,0.8); }
+    }
+
+    .pt-label {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 0.65rem;
+      color: var(--dim);
+      letter-spacing: 0.08em;
+      text-align: center;
+      max-width: 90px;
+    }
+
+    .pt-label.done { color: var(--green); }
+    .pt-label.active { color: var(--pb); }
+
+    /* Checklist card */
+    .checklist-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 40px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .checklist-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, var(--pm), var(--pink), var(--cyan));
+    }
+
+    .checklist-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 16px;
+      padding: 14px 0;
+      border-bottom: 1px solid rgba(168,85,247,0.08);
+    }
+
+    .checklist-item:last-child { border-bottom: none; }
+
+    .check-bullet {
+      flex-shrink: 0;
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      border: 2px solid rgba(168,85,247,0.3);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.7rem;
+      margin-top: 1px;
+      font-family: 'Share Tech Mono', monospace;
+      color: var(--dim);
+    }
+
+    .check-bullet.empty {
+      color: transparent;
+    }
+
+    .checklist-text {
+      font-size: var(--text-base);
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
+    .checklist-text a {
+      color: var(--pb);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .checklist-text a:hover { color: var(--pg); }
+
+    /* Resources grid */
+    .resource-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 28px;
+      text-decoration: none;
+      display: block;
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .resource-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0;
+      width: 0; height: 2px;
+      background: linear-gradient(90deg, var(--pm), var(--pink));
+      transition: width 0.4s ease;
+    }
+
+    .resource-card:hover {
+      border-color: rgba(168,85,247,0.35);
+      transform: translateY(-4px);
+      box-shadow: var(--shadow-card);
+    }
+
+    .resource-card:hover::before { width: 100%; }
+
+    .resource-icon {
+      font-size: 1.8rem;
+      margin-bottom: 12px;
+    }
+
+    .resource-title {
+      font-family: 'Orbitron', monospace;
+      font-size: var(--text-base);
+      font-weight: 700;
+      color: var(--white);
+      margin-bottom: 6px;
+    }
+
+    .resource-desc {
+      font-size: var(--text-sm);
+      color: var(--dim);
+    }
+
+    /* Key numbers */
+    .key-number-card {
+      background: var(--card2);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 32px 24px;
+      text-align: center;
+    }
+
+    .key-number-value {
+      font-family: 'Orbitron', monospace;
+      font-size: var(--text-2xl);
+      font-weight: 700;
+      color: var(--pg);
+      margin-bottom: 8px;
+    }
+
+    .key-number-label {
+      font-size: var(--text-sm);
+      color: var(--muted);
+      line-height: 1.5;
+    }
+
+    /* Private badge in nav */
+    .private-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 12px;
+      background: rgba(239,68,68,0.12);
+      border: 1px solid rgba(239,68,68,0.3);
+      border-radius: var(--radius-full);
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 0.65rem;
+      color: var(--red);
+      letter-spacing: 0.1em;
+    }
+
+    @media (max-width: 768px) {
+      .progress-tracker { justify-content: flex-start; padding: var(--space-6) var(--space-4); }
+      .checklist-card { padding: 24px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="orb orb-1"></div>
+  <div class="orb orb-2"></div>
+  <div class="orb orb-3"></div>
+
+  <nav class="nav">
+    <a href="index.html" class="nav-brand">
+      <div class="hex-logo hex-logo-sm"><span>SS</span></div>
+      <span class="nav-brand-text">SILENT SYNDICATE</span>
+    </a>
+    <div style="display:flex;align-items:center;gap:12px;">
+      <span class="private-badge">&#x26d4; PRIVATE &mdash; OPERATOR ONLY</span>
+    </div>
+  </nav>
+
+  <div class="page-wrap">
+
+    <!-- HERO -->
+    <section class="hero-onboard">
+      <div class="container">
+        <div class="text-center">
+          <div style="display:inline-flex;align-items:center;gap:8px;padding:6px 14px;background:rgba(74,222,128,0.1);border:1px solid rgba(74,222,128,0.25);border-radius:var(--radius-full);font-family:'Share Tech Mono',monospace;font-size:var(--text-xs);color:var(--green);letter-spacing:0.1em;margin-bottom:24px;">
+            <div class="status-dot live"></div>
+            REGISTRATION CONFIRMED
+          </div>
+          <h1 class="hero-headline-ob reveal">
+            Welcome to the <span class="gradient-text">Network</span>
+          </h1>
+          <p style="font-size:var(--text-xl);color:var(--muted);max-width:520px;margin:0 auto;line-height:1.65;" class="reveal">
+            You're registered. Here's your first 72 hours.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- PROGRESS TRACKER -->
+    <section class="section-sm">
+      <div class="container">
+        <div style="text-align:center;margin-bottom:var(--space-8);" class="reveal">
+          <span style="font-family:'Share Tech Mono',monospace;font-size:var(--text-xs);color:var(--dim);letter-spacing:0.12em;text-transform:uppercase;">YOUR OPERATOR JOURNEY</span>
+        </div>
+        <div class="progress-tracker reveal">
+
+          <div class="pt-step">
+            <div class="pt-node done">&#10003;</div>
+            <div class="pt-label done">REGISTERED</div>
+          </div>
+
+          <div class="pt-connector done"></div>
+
+          <div class="pt-step">
+            <div class="pt-node active">&#8594;</div>
+            <div class="pt-label active">FUNNEL SETUP</div>
+          </div>
+
+          <div class="pt-connector active"></div>
+
+          <div class="pt-step">
+            <div class="pt-node">03</div>
+            <div class="pt-label">TRAFFIC START</div>
+          </div>
+
+          <div class="pt-connector"></div>
+
+          <div class="pt-step">
+            <div class="pt-node">04</div>
+            <div class="pt-label">FIRST LEAD</div>
+          </div>
+
+          <div class="pt-connector"></div>
+
+          <div class="pt-step">
+            <div class="pt-node">05</div>
+            <div class="pt-label">FIRST SALE</div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <div class="divider"></div>
+
+    <!-- SETUP CHECKLIST -->
+    <section class="section">
+      <div class="container">
+        <div style="max-width:760px;margin:0 auto;">
+          <div class="text-center mb-8 reveal">
+            <h2 style="font-family:'Orbitron',monospace;font-size:var(--text-3xl);font-weight:700;">
+              Setup <span class="gradient-text">Checklist</span>
+            </h2>
+            <p style="color:var(--muted);margin-top:12px;">
+              Complete these 8 steps in order. Each one builds on the last.
+            </p>
+          </div>
+
+          <div class="checklist-card reveal">
+            <div class="checklist-item">
+              <div class="check-bullet empty">&#9711;</div>
+              <div class="checklist-text">
+                Activate your ActiveCampaign account &mdash; <a href="#">activate here &rarr;</a>
+              </div>
+            </div>
+            <div class="checklist-item">
+              <div class="check-bullet empty">&#9711;</div>
+              <div class="checklist-text">
+                Clone the funnel template &mdash; <a href="#">get the template &rarr;</a>
+              </div>
+            </div>
+            <div class="checklist-item">
+              <div class="check-bullet empty">&#9711;</div>
+              <div class="checklist-text">
+                Set your domain or subdomain on Netlify
+              </div>
+            </div>
+            <div class="checklist-item">
+              <div class="check-bullet empty">&#9711;</div>
+              <div class="checklist-text">
+                Configure your opt-in page with your name and distributor details
+              </div>
+            </div>
+            <div class="checklist-item">
+              <div class="check-bullet empty">&#9711;</div>
+              <div class="checklist-text">
+                Set up your 7-day email sequence in ActiveCampaign
+              </div>
+            </div>
+            <div class="checklist-item">
+              <div class="check-bullet empty">&#9711;</div>
+              <div class="checklist-text">
+                Test the full funnel end-to-end with a real email address
+              </div>
+            </div>
+            <div class="checklist-item">
+              <div class="check-bullet empty">&#9711;</div>
+              <div class="checklist-text">
+                Create your first 3 TikTok content pieces using the scripts guide
+              </div>
+            </div>
+            <div class="checklist-item">
+              <div class="check-bullet empty">&#9711;</div>
+              <div class="checklist-text">
+                Post your first piece of content &mdash; your clock starts now
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="divider"></div>
+
+    <!-- RESOURCES -->
+    <section class="section">
+      <div class="container">
+        <div class="text-center mb-8 reveal">
+          <h2 style="font-family:'Orbitron',monospace;font-size:var(--text-3xl);font-weight:700;">
+            Your <span class="gradient-text">Resources</span>
+          </h2>
+          <p style="color:var(--muted);margin-top:12px;">Everything you need to run the system.</p>
+        </div>
+        <div class="grid-2">
+          <a href="traffic-strategy.html" class="resource-card reveal">
+            <div class="resource-icon">&#128202;</div>
+            <div class="resource-title">Traffic Guide</div>
+            <p class="resource-desc">TikTok, short-form video, and organic traffic strategy for the funnel.</p>
+          </a>
+          <a href="chatbot-script.html" class="resource-card reveal reveal-delay-1">
+            <div class="resource-icon">&#129302;</div>
+            <div class="resource-title">Chatbot Scripts</div>
+            <p class="resource-desc">Pre-built conversation scripts for your AI qualifier chatbot.</p>
+          </a>
+          <a href="tech-stack-guide.html" class="resource-card reveal reveal-delay-1">
+            <div class="resource-icon">&#128296;</div>
+            <div class="resource-title">Tech Stack Guide</div>
+            <p class="resource-desc">Every tool in the system, why it's there, and how to set it up.</p>
+          </a>
+          <a href="aios-dashboard.html" class="resource-card reveal reveal-delay-2">
+            <div class="resource-icon">&#128250;</div>
+            <div class="resource-title">Your Dashboard</div>
+            <p class="resource-desc">Your AI Operator System dashboard — leads, pipeline, and activity.</p>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <div class="divider"></div>
+
+    <!-- KEY NUMBERS -->
+    <section class="section">
+      <div class="container">
+        <div class="text-center mb-8 reveal">
+          <h2 style="font-family:'Orbitron',monospace;font-size:var(--text-3xl);font-weight:700;">
+            Know Your <span class="gradient-text">Numbers</span>
+          </h2>
+          <p style="color:var(--muted);margin-top:12px;">Network medians across active operators.</p>
+        </div>
+        <div class="grid-3">
+          <div class="key-number-card reveal">
+            <div class="key-number-value">Day 21</div>
+            <div class="key-number-label">Median day of first application received</div>
+          </div>
+          <div class="key-number-card reveal reveal-delay-1">
+            <div class="key-number-value">Day 28</div>
+            <div class="key-number-label">Median day of first confirmed sale</div>
+          </div>
+          <div class="key-number-card reveal reveal-delay-2">
+            <div class="key-number-value">4 sales</div>
+            <div class="key-number-label">Break-even at Launcher tier ($15,000 investment)</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="divider"></div>
+
+    <!-- SUPPORT -->
+    <section class="section-sm">
+      <div class="container-sm">
+        <div class="text-center mb-8 reveal">
+          <h2 style="font-family:'Orbitron',monospace;font-size:var(--text-2xl);font-weight:700;">
+            Stuck? Here's What to Do
+          </h2>
+        </div>
+        <div class="card reveal">
+          <div style="font-family:'Orbitron',monospace;font-size:var(--text-base);font-weight:700;color:var(--pg);margin-bottom:16px;">
+            OPERATOR SUPPORT
+          </div>
+          <div style="display:flex;flex-direction:column;gap:14px;">
+            <div style="display:flex;align-items:flex-start;gap:12px;">
+              <span style="color:var(--pb);font-size:1.1rem;">&#128172;</span>
+              <div>
+                <div style="font-size:var(--text-sm);font-weight:600;color:var(--muted);margin-bottom:2px;">Telegram Support Group</div>
+                <a href="#" style="color:var(--dim);font-size:var(--text-sm);text-decoration:none;">[OPERATOR TELEGRAM LINK]</a>
+              </div>
+            </div>
+            <div style="display:flex;align-items:flex-start;gap:12px;">
+              <span style="color:var(--pb);font-size:1.1rem;">&#128233;</span>
+              <div>
+                <div style="font-size:var(--text-sm);font-weight:600;color:var(--muted);margin-bottom:2px;">Email Support</div>
+                <a href="mailto:support@silentsyndicate.com" style="color:var(--dim);font-size:var(--text-sm);text-decoration:none;">support@silentsyndicate.com</a>
+              </div>
+            </div>
+            <div style="display:flex;align-items:flex-start;gap:12px;">
+              <span style="color:var(--pb);font-size:1.1rem;">&#128336;</span>
+              <div>
+                <div style="font-size:var(--text-sm);font-weight:600;color:var(--muted);margin-bottom:2px;">Response Time</div>
+                <span style="color:var(--dim);font-size:var(--text-sm);">Within 24 hours on business days</span>
+              </div>
+            </div>
+          </div>
+          <div style="margin-top:20px;padding:14px;background:rgba(124,58,237,0.06);border:1px solid rgba(168,85,247,0.15);border-radius:var(--radius-sm);">
+            <p style="font-size:var(--text-sm);color:var(--dim);line-height:1.7;">
+              Before reaching out, check the <a href="tech-stack-guide.html" style="color:var(--pb);text-decoration:none;">Tech Stack Guide</a> and <a href="traffic-strategy.html" style="color:var(--pb);text-decoration:none;">Traffic Guide</a> — most setup questions are answered there.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer style="padding:40px 0;border-top:1px solid var(--border);">
+      <div class="container" style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:16px;">
+        <div style="display:flex;align-items:center;gap:12px;">
+          <div class="hex-logo hex-logo-sm"><span>SS</span></div>
+          <span style="font-family:'Share Tech Mono',monospace;font-size:0.75rem;color:var(--dim);">
+            SILENT SYNDICATE &copy; 2025
+          </span>
+        </div>
+        <div style="font-size:0.75rem;color:var(--dim);">
+          An authorised Enagic distributor network &mdash; AU &amp; NZ
+        </div>
+      </div>
+    </footer>
+
+  </div><!-- /.page-wrap -->
+
+  <script>
+    // Scroll reveal
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+    }, { threshold: 0.1 });
+    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+  </script>
+</body>
+</html>
