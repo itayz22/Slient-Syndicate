@@ -263,7 +263,7 @@
     .status-paid    { color: var(--green); }
     .status-pending { color: var(--amber); }
 
-    /* ── Pipeline funnel ── */
+    /* ── Pipeline funnel / kanban ── */
     .funnel-row {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
@@ -280,14 +280,22 @@
       padding: 18px;
       text-align: center;
       position: relative;
+      border-top: 3px solid var(--border);
     }
+    .funnel-stage.stage-capture { border-top-color: var(--cyan); }
+    .funnel-stage.stage-educate { border-top-color: var(--pb); }
+    .funnel-stage.stage-qualify { border-top-color: var(--amber); }
+    .funnel-stage.stage-convert { border-top-color: var(--green); }
     .funnel-stage-label {
       font-family: 'Share Tech Mono', monospace;
       font-size: 0.65rem;
-      color: var(--dim);
       letter-spacing: 0.14em;
       margin-bottom: 8px;
     }
+    .stage-capture .funnel-stage-label { color: var(--cyan); }
+    .stage-educate .funnel-stage-label { color: var(--pb); }
+    .stage-qualify .funnel-stage-label { color: var(--amber); }
+    .stage-convert .funnel-stage-label { color: var(--green); }
     .funnel-stage-num {
       font-family: 'Orbitron', monospace;
       font-size: 2rem;
@@ -298,6 +306,77 @@
       font-size: 0.75rem;
       color: var(--dim);
       margin-top: 4px;
+    }
+
+    /* ── Trend arrows on briefing metrics ── */
+    .metric-trend {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+    }
+    .metric-trend.up   { color: var(--green); }
+    .metric-trend.down { color: var(--red); }
+    .metric-trend.flat { color: var(--dim); }
+
+    /* ── Score distribution bars (chatbot) ── */
+    .score-dist-wrap {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-bottom: 24px;
+    }
+    .score-dist-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .score-dist-label {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 0.68rem;
+      letter-spacing: 0.08em;
+      width: 48px;
+    }
+    .score-dist-label.hot  { color: var(--red); }
+    .score-dist-label.warm { color: var(--amber); }
+    .score-dist-label.cold { color: var(--dim); }
+    .score-dist-bg {
+      flex: 1;
+      height: 10px;
+      background: rgba(168,85,247,0.08);
+      border-radius: var(--radius-full);
+      overflow: hidden;
+    }
+    .score-dist-fill {
+      height: 100%;
+      border-radius: var(--radius-full);
+      transition: width 0.6s ease;
+    }
+    .score-dist-fill.hot  { background: linear-gradient(90deg, #ef4444, #b91c1c); }
+    .score-dist-fill.warm { background: linear-gradient(90deg, var(--amber), #b45309); }
+    .score-dist-fill.cold { background: rgba(168,85,247,0.25); }
+    .score-dist-pct {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 0.7rem;
+      color: var(--dim);
+      width: 42px;
+      text-align: right;
+    }
+
+    /* ── Email open rate mini-bar ── */
+    .open-bar-bg {
+      display: inline-block;
+      width: 72px;
+      height: 6px;
+      background: rgba(168,85,247,0.1);
+      border-radius: var(--radius-full);
+      vertical-align: middle;
+      overflow: hidden;
+    }
+    .open-bar-fill {
+      height: 100%;
+      border-radius: var(--radius-full);
+      background: linear-gradient(90deg, var(--pg), var(--pb));
     }
 
     /* ── Commission chart ── */
@@ -619,7 +698,7 @@
               <th>LEAD</th>
               <th>DAY</th>
               <th>SUBJECT</th>
-              <th>OPENED</th>
+              <th>OPEN RATE</th>
               <th>CLICKED</th>
             </tr>
           </thead>
@@ -635,6 +714,12 @@
         <span class="section-sub">LIVE CONVERSATION MONITOR</span>
       </div>
       <div class="stat-row" id="chatbot-stats"></div>
+      <div class="card-wrap">
+        <div class="section-hd">
+          <span class="section-title">SCORE DISTRIBUTION</span>
+        </div>
+        <div class="score-dist-wrap" id="score-dist"></div>
+      </div>
       <div class="table-wrap">
         <table class="data-table">
           <thead>
@@ -730,13 +815,16 @@
     });
     const metricsEl = document.getElementById('briefing-metrics');
     B.metrics.forEach(m => {
+      const tStr = String(m.trend);
+      const tCls = tStr.startsWith('+') ? 'up' : tStr.startsWith('-') ? 'down' : 'flat';
+      const tArrow = tCls === 'up' ? '↑ ' : tCls === 'down' ? '↓ ' : '';
       metricsEl.innerHTML += `
         <div class="metric-card">
           <div>
             <div class="metric-label">${m.label.toUpperCase()}</div>
             <div class="metric-value">${m.value}</div>
           </div>
-          <div class="metric-trend">${m.trend}</div>
+          <div class="metric-trend ${tCls}">${tArrow}${tStr}</div>
         </div>`;
     });
 
@@ -751,7 +839,7 @@
     const funnelEl = document.getElementById('funnel-stages');
     stages.forEach(s => {
       funnelEl.innerHTML += `
-        <div class="funnel-stage">
+        <div class="funnel-stage stage-${s.key}">
           <div class="funnel-stage-label">${s.label}</div>
           <div class="funnel-stage-num">${s.val}</div>
           <div class="funnel-stage-desc">${s.desc}</div>
@@ -837,12 +925,16 @@
     document.getElementById('email-active').textContent = E.active;
     const emailRowsEl = document.getElementById('email-rows');
     E.sequences.forEach(s => {
+      const openPct = s.opened ? 100 : 0;
       emailRowsEl.innerHTML += `
         <tr>
           <td>${s.lead}</td>
           <td style="font-family:'Orbitron',monospace;font-size:0.8rem;color:var(--pg)">D${s.day}</td>
           <td style="color:var(--muted);font-size:0.85rem">${s.subject}</td>
-          <td class="${s.opened ? 'opened-yes' : 'opened-no'}">${s.opened ? 'YES' : 'NO'}</td>
+          <td>
+            <span class="open-bar-bg"><span class="open-bar-fill" style="width:${openPct}%"></span></span>
+            <span style="font-family:'Share Tech Mono',monospace;font-size:0.68rem;color:${s.opened ? 'var(--green)' : 'var(--dim)'};margin-left:6px">${s.opened ? 'OPENED' : 'PENDING'}</span>
+          </td>
           <td class="${s.clicked ? 'opened-yes' : 'opened-no'}">${s.clicked ? 'YES' : 'NO'}</td>
         </tr>`;
     });
@@ -862,6 +954,25 @@
           <div class="stat-box-val ${s.cls}">${s.val}</div>
         </div>`;
     });
+    /* Score distribution */
+    const total = CB.conversations || (CB.hot + CB.warm + CB.cold);
+    const distEl = document.getElementById('score-dist');
+    [
+      { label: 'HOT',  val: CB.hot,  cls: 'hot' },
+      { label: 'WARM', val: CB.warm, cls: 'warm' },
+      { label: 'COLD', val: CB.cold, cls: 'cold' }
+    ].forEach(d => {
+      const pct = total > 0 ? Math.round((d.val / total) * 100) : 0;
+      distEl.innerHTML += `
+        <div class="score-dist-row">
+          <div class="score-dist-label ${d.cls}">${d.label}</div>
+          <div class="score-dist-bg">
+            <div class="score-dist-fill ${d.cls}" style="width:${pct}%"></div>
+          </div>
+          <div class="score-dist-pct">${pct}%</div>
+        </div>`;
+    });
+
     const cbRowsEl = document.getElementById('chatbot-rows');
     CB.recent.forEach(r => {
       cbRowsEl.innerHTML += `
