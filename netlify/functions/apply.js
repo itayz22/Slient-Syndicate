@@ -259,9 +259,10 @@ async function triggerACAutomation(contactId, automationId) {
 }
 
 async function notifyOwner({ firstName, lastName, email, phone, score, investmentReady, incomeGoal }) {
-  if (!process.env.AC_BASE_URL || !process.env.OWNER_EMAIL) return;
+  const ownerEmail = process.env.OWNER_EMAIL;
+  const resendApiKey = process.env.RESEND_API_KEY;
+  const fromEmail = process.env.NOTIFY_FROM_EMAIL || 'notifications@silentsyndicate.com';
 
-  // Send via ActiveCampaign transactional email or log
   console.log('NEW APPLICATION:', {
     name: `${firstName} ${lastName}`,
     email,
@@ -272,7 +273,87 @@ async function notifyOwner({ firstName, lastName, email, phone, score, investmen
     timestamp: new Date().toISOString()
   });
 
-  // If you have SendGrid or similar configured, add here
+  if (!ownerEmail || !resendApiKey) return;
+  if (score === 'COLD') return; // Don't notify for cold leads
+
+  const isHot = score === 'HOT';
+  const subject = isHot
+    ? `🔥 HOT Lead: ${firstName} ${lastName} just applied`
+    : `⚡ WARM Lead: ${firstName} ${lastName} just applied`;
+
+  const html = `
+    <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto; padding: 24px;">
+      <h2 style="color: ${isHot ? '#ef4444' : '#f59e0b'}; margin: 0 0 8px;">
+        ${isHot ? '🔥 HOT Lead' : '⚡ WARM Lead'}
+      </h2>
+      <p style="color: #6b7280; margin: 0 0 24px; font-size: 14px;">
+        New application submitted — ${new Date().toUTCString()}
+      </p>
+
+      <table style="width: 100%; border-collapse: collapse; margin-bottom: 24px;">
+        <tr style="background: #f9fafb;">
+          <td style="padding: 10px 14px; font-weight: 600; width: 40%; border-bottom: 1px solid #e5e7eb;">Name</td>
+          <td style="padding: 10px 14px; border-bottom: 1px solid #e5e7eb;">${firstName} ${lastName}</td>
+        </tr>
+        <tr>
+          <td style="padding: 10px 14px; font-weight: 600; border-bottom: 1px solid #e5e7eb;">Email</td>
+          <td style="padding: 10px 14px; border-bottom: 1px solid #e5e7eb;"><a href="mailto:${email}">${email}</a></td>
+        </tr>
+        <tr style="background: #f9fafb;">
+          <td style="padding: 10px 14px; font-weight: 600; border-bottom: 1px solid #e5e7eb;">Phone</td>
+          <td style="padding: 10px 14px; border-bottom: 1px solid #e5e7eb;">${phone || 'Not provided'}</td>
+        </tr>
+        <tr>
+          <td style="padding: 10px 14px; font-weight: 600; border-bottom: 1px solid #e5e7eb;">Score</td>
+          <td style="padding: 10px 14px; border-bottom: 1px solid #e5e7eb;">
+            <strong style="color: ${isHot ? '#ef4444' : '#f59e0b'};">${score}</strong>
+          </td>
+        </tr>
+        <tr style="background: #f9fafb;">
+          <td style="padding: 10px 14px; font-weight: 600; border-bottom: 1px solid #e5e7eb;">Investment Ready</td>
+          <td style="padding: 10px 14px; border-bottom: 1px solid #e5e7eb;">${investmentReady || 'Not provided'}</td>
+        </tr>
+        <tr>
+          <td style="padding: 10px 14px; font-weight: 600;">Income Goal</td>
+          <td style="padding: 10px 14px;">${incomeGoal || 'Not provided'}</td>
+        </tr>
+      </table>
+
+      ${isHot ? `
+      <div style="background: #fef2f2; border: 1px solid #fecaca; border-radius: 8px; padding: 16px; margin-bottom: 24px;">
+        <p style="margin: 0; color: #991b1b; font-weight: 600;">
+          🔥 This is a HOT lead — they're ready to invest now. Follow up within the hour.
+        </p>
+      </div>` : `
+      <div style="background: #fffbeb; border: 1px solid #fde68a; border-radius: 8px; padding: 16px; margin-bottom: 24px;">
+        <p style="margin: 0; color: #92400e; font-weight: 600;">
+          ⚡ WARM lead — nurture sequence triggered. They may need 2–4 weeks.
+        </p>
+      </div>`}
+
+      <p style="color: #9ca3af; font-size: 12px; margin: 0;">
+        Silent Syndicate — Automated notification
+      </p>
+    </div>
+  `;
+
+  try {
+    await fetch('https://api.resend.com/emails', {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${resendApiKey}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        from: fromEmail,
+        to: ownerEmail,
+        subject,
+        html
+      })
+    });
+  } catch (err) {
+    console.error('Owner notification failed:', err.message);
+  }
 }
 
 function corsHeaders() {
