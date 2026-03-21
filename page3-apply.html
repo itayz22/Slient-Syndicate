@@ -23,6 +23,7 @@
       gap: 16px;
       padding: 20px 0;
       border-bottom: 1px solid var(--border);
+      transition: background 0.2s ease;
     }
 
     .trust-item:last-child { border-bottom: none; }
@@ -37,6 +38,14 @@
       justify-content: center;
       font-size: 1.1rem;
       flex-shrink: 0;
+      transition: box-shadow 0.3s ease, border-color 0.3s ease, background 0.3s ease;
+    }
+
+    /* Trust icon purple glow on hover */
+    .trust-item:hover .trust-icon {
+      box-shadow: 0 0 20px rgba(168,85,247,0.5), 0 0 6px rgba(168,85,247,0.3);
+      border-color: var(--pb);
+      background: rgba(168,85,247,0.18);
     }
 
     .trust-title {
@@ -47,12 +56,29 @@
       margin-bottom: 4px;
     }
 
+    /* Testimonial cards with left border and quote mark */
     .testimonial-card {
       background: var(--card2);
       border: 1px solid var(--border);
+      border-left: 3px solid rgba(168,85,247,0.3);
       border-radius: var(--radius);
       padding: 20px;
       margin-bottom: 16px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* Large quote mark in top-right corner */
+    .testimonial-card::before {
+      content: '\201C';
+      position: absolute;
+      top: -6px;
+      right: 14px;
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 4rem;
+      line-height: 1;
+      color: rgba(168,85,247,0.2);
+      pointer-events: none;
     }
 
     .testimonial-quote {
@@ -88,6 +114,7 @@
       background: linear-gradient(90deg, var(--pm), var(--pink), var(--cyan));
     }
 
+    /* Scarcity bar with larger dot and double ring */
     .scarcity-bar {
       background: rgba(239,68,68,0.08);
       border: 1px solid rgba(239,68,68,0.2);
@@ -99,17 +126,120 @@
       margin-bottom: 24px;
     }
 
+    .scarcity-dot-wrap {
+      position: relative;
+      width: 20px;
+      height: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
     .scarcity-dot {
-      width: 8px; height: 8px;
+      width: 12px; height: 12px;
       border-radius: 50%;
       background: var(--red);
-      box-shadow: 0 0 8px rgba(239,68,68,0.6);
-      animation: pulse 1.5s ease-in-out infinite;
-      flex-shrink: 0;
+      box-shadow: 0 0 10px rgba(239,68,68,0.7);
+      animation: scarcityPulse 1.5s ease-in-out infinite;
+      position: relative;
+      z-index: 2;
+    }
+
+    /* Outer ring animation around the dot */
+    .scarcity-dot-wrap::before {
+      content: '';
+      position: absolute;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      width: 12px; height: 12px;
+      border-radius: 50%;
+      border: 1.5px solid rgba(239,68,68,0.5);
+      animation: scarcityRing 1.5s ease-out infinite;
+      z-index: 1;
+    }
+
+    /* Second outer ring, offset by half cycle */
+    .scarcity-dot-wrap::after {
+      content: '';
+      position: absolute;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      width: 12px; height: 12px;
+      border-radius: 50%;
+      border: 1.5px solid rgba(239,68,68,0.3);
+      animation: scarcityRing 1.5s ease-out infinite;
+      animation-delay: 0.75s;
+      z-index: 1;
+    }
+
+    @keyframes scarcityPulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.75; transform: scale(0.9); }
+    }
+
+    @keyframes scarcityRing {
+      0%   { transform: translate(-50%, -50%) scale(1); opacity: 0.6; }
+      100% { transform: translate(-50%, -50%) scale(2.8); opacity: 0; }
     }
 
     .hero-apply {
       padding: 60px 0 40px;
+    }
+
+    /* Animated CSS checkmark for success state */
+    .success-check-wrap {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 20px;
+    }
+
+    .success-check {
+      position: relative;
+      width: 80px;
+      height: 80px;
+    }
+
+    /* Circle that draws in via stroke-dasharray */
+    .success-check svg {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      transform: rotate(-90deg);
+    }
+
+    .success-check-circle {
+      fill: none;
+      stroke: var(--green);
+      stroke-width: 3;
+      stroke-linecap: round;
+      stroke-dasharray: 220;
+      stroke-dashoffset: 220;
+      animation: drawCircle 0.6s ease forwards 0.1s;
+    }
+
+    @keyframes drawCircle {
+      to { stroke-dashoffset: 0; }
+    }
+
+    /* CSS check mark from borders */
+    .success-check-tick {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 28px;
+      height: 16px;
+      border-left: 3.5px solid var(--green);
+      border-bottom: 3.5px solid var(--green);
+      transform: translate(-55%, -65%) rotate(-45deg) scale(0);
+      border-radius: 1px;
+      animation: drawTick 0.35s ease forwards 0.55s;
+    }
+
+    @keyframes drawTick {
+      from { transform: translate(-55%, -65%) rotate(-45deg) scale(0); }
+      to   { transform: translate(-55%, -65%) rotate(-45deg) scale(1); }
     }
 
     @media (max-width: 900px) {
@@ -169,7 +299,7 @@
             <div class="trust-item">
               <div class="trust-icon">💼</div>
               <div>
-                <div class="trust-title">Experienced Sellers & Closers</div>
+                <div class="trust-title">Experienced Sellers &amp; Closers</div>
                 <p style="color:var(--muted);font-size:var(--text-sm);line-height:1.6;">
                   You understand sales. You've sold something. You're not afraid of a high-ticket conversation.
                 </p>
@@ -234,7 +364,9 @@
           <!-- RIGHT — FORM -->
           <div class="reveal">
             <div class="scarcity-bar">
-              <div class="scarcity-dot"></div>
+              <div class="scarcity-dot-wrap">
+                <div class="scarcity-dot"></div>
+              </div>
               <span style="font-size:var(--text-sm);color:var(--muted);">
                 <strong style="color:var(--red);">5 spots available</strong> in this cohort — applications reviewed weekly.
               </span>
@@ -243,6 +375,7 @@
             <div class="form-card-apply">
               <h3 style="font-family:'Orbitron',monospace;font-size:var(--text-lg);font-weight:700;margin-bottom:6px;">
                 Your Application
+                <span class="badge badge-green" style="vertical-align:middle;margin-left:8px;">LIVE</span>
               </h3>
               <p style="font-size:var(--text-sm);color:var(--dim);margin-bottom:28px;">
                 All fields required. Honest answers get you the right response faster.
@@ -322,7 +455,15 @@
               </form>
 
               <div id="apply-success" style="display:none;text-align:center;padding:32px 0;">
-                <div style="font-size:3rem;margin-bottom:16px;">✅</div>
+                <!-- Animated CSS checkmark replaces ✅ emoji -->
+                <div class="success-check-wrap">
+                  <div class="success-check">
+                    <svg viewBox="0 0 80 80">
+                      <circle class="success-check-circle" cx="40" cy="40" r="35"/>
+                    </svg>
+                    <div class="success-check-tick"></div>
+                  </div>
+                </div>
                 <h3 style="font-family:'Orbitron',monospace;font-size:var(--text-xl);font-weight:700;margin-bottom:8px;color:var(--green);">
                   Application Received
                 </h3>
@@ -343,6 +484,9 @@
 
     <footer style="padding:40px 0;border-top:1px solid var(--border);">
       <div class="container" style="text-align:center;">
+        <div style="font-family:'Share Tech Mono',monospace;font-size:0.75rem;color:var(--dim);margin-bottom:12px;">
+          SILENT SYNDICATE © 2025
+        </div>
         <div class="income-disclaimer" style="max-width:700px;margin:0 auto;">
           Income disclaimer: Results are not typical. Commission amounts shown are gross figures before expenses.
           The investment required ($8,500–$20,000) must be recovered from commission earnings before profit is achieved.
