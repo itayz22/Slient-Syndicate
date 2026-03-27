@@ -1,9 +1,1 @@
-/hub              /hub.html           200
-/apply            /page3-apply.html   200
-/offer            /page4-offer.html   200
-/join             /distributors.html  200
-/dashboard        /aios-dashboard.html 200
-/api/subscribe    /.netlify/functions/subscribe  200
-/api/apply        /.netlify/functions/apply  200
-/api/score        /.netlify/functions/score  200
-/api/webhook      /.netlify/functions/webhook  200
+/api/*    /.netlify/functions/:splat    200
