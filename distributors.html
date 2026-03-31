@@ -1,621 +1,587 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Silent Syndicate — Distributor Recruitment</title>
-  <meta name="description" content="$2,400–$6,330 per transaction. Capital-ready sellers only. Full transparency on the Enagic model.">
-  <link rel="stylesheet" href="css/design-system.css">
-  <style>
-    body { padding-top: 80px; }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Silent Syndicate — Become a Distributor</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=DM+Sans:wght@300;400;500;600&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+<style>
+:root{
+  --black:#03010a;--bg:#05020e;--card:#0a0618;--card2:#0e0920;
+  --pm:#7c3aed;--pb:#a855f7;--pg:#c084fc;--pink:#ec4899;--pkb:#f472b6;
+  --cyan:#22d3ee;--green:#4ade80;--amber:#fbbf24;--red:#ef4444;
+  --white:#f0ecff;--muted:rgba(240,236,255,0.78);--dim:rgba(240,236,255,0.48);
+  --border:rgba(168,85,247,0.15);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{font-size:16px;scroll-behavior:smooth;}
+body{background:var(--bg);color:var(--white);font-family:'DM Sans',sans-serif;overflow-x:hidden;}
+body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(rgba(168,85,247,0.03) 1px,transparent 1px),linear-gradient(90deg,rgba(168,85,247,0.03) 1px,transparent 1px);background-size:50px 50px;pointer-events:none;z-index:0;animation:gs 40s linear infinite;}
+@keyframes gs{to{background-position:50px 50px;}}
+body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradient(0deg,transparent,transparent 3px,rgba(0,0,0,0.02) 3px,rgba(0,0,0,0.02) 4px);pointer-events:none;z-index:997;}
+.orb{position:fixed;border-radius:50%;filter:blur(120px);pointer-events:none;z-index:0;}
+.o1{width:600px;height:600px;background:rgba(107,33,168,0.18);top:-150px;left:-150px;animation:od 22s ease-in-out infinite;}
+.o2{width:450px;height:450px;background:rgba(236,72,153,0.1);bottom:-100px;right:-100px;animation:od 28s ease-in-out infinite reverse;}
+@keyframes od{0%,100%{transform:translate(0,0);}50%{transform:translate(40px,-50px);}}
+nav,section,footer{position:relative;z-index:1;}
 
-    .hero-dist {
-      padding: 80px 0 60px;
-      text-align: center;
-    }
+nav{position:sticky;top:0;z-index:500;background:rgba(3,1,10,0.96);backdrop-filter:blur(24px);border-bottom:1px solid var(--border);padding:0.9rem 5%;display:flex;justify-content:space-between;align-items:center;}
+.nav-brand{display:flex;align-items:center;gap:0.8rem;}
+.nav-hex{width:22px;height:22px;background:linear-gradient(135deg,var(--pm),var(--pink));clip-path:polygon(50% 0%,100% 25%,100% 75%,50% 100%,0% 75%,0% 25%);box-shadow:0 0 12px rgba(168,85,247,0.7);animation:hp 3s ease-in-out infinite;}
+@keyframes hp{0%,100%{box-shadow:0 0 12px rgba(168,85,247,0.5);}50%{box-shadow:0 0 25px rgba(168,85,247,1),0 0 40px rgba(236,72,153,0.3);}}
+.nav-name{font-family:'Orbitron',sans-serif;font-size:0.88rem;font-weight:900;letter-spacing:0.18em;background:linear-gradient(90deg,var(--pg),var(--pkb));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.nav-tag{font-family:'Share Tech Mono',monospace;font-size:0.6rem;letter-spacing:0.15em;color:var(--dim);}
+.nav-right{display:flex;align-items:center;gap:0.8rem;}
+.nav-btn{font-family:'Orbitron',sans-serif;font-size:0.62rem;font-weight:700;letter-spacing:0.1em;padding:0.5rem 1.2rem;border-radius:4px;background:linear-gradient(135deg,var(--pm),var(--pink));color:var(--white);text-decoration:none;border:none;cursor:pointer;box-shadow:0 0 15px rgba(168,85,247,0.35);transition:all 0.3s;}
+.nav-btn:hover{box-shadow:0 0 25px rgba(168,85,247,0.6);transform:translateY(-1px);}
 
-    .hero-commission {
-      font-family: 'Orbitron', monospace;
-      font-size: clamp(2.5rem, 7vw, 5rem);
-      font-weight: 900;
-      line-height: 1.05;
-      letter-spacing: -0.02em;
-      margin-bottom: 12px;
-    }
+/* HERO */
+.hero{min-height:100vh;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;padding:6rem 5% 5rem;position:relative;overflow:hidden;}
+.hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 50% 40%,rgba(168,85,247,0.07),transparent 65%);pointer-events:none;}
 
-    .commission-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 16px;
-      margin: 40px 0;
-    }
+.h-label{font-family:'Share Tech Mono',monospace;font-size:0.65rem;letter-spacing:0.3em;color:var(--cyan);margin-bottom:1.5rem;opacity:0;animation:fu 0.6s ease 0.2s forwards;}
 
-    .commission-cell {
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: var(--radius-lg);
-      padding: 32px 24px;
-      text-align: center;
-      transition: all 0.3s ease;
-      position: relative;
-      overflow: hidden;
-    }
+.h-title{font-family:'Orbitron',sans-serif;font-size:clamp(2.2rem,7vw,6.5rem);font-weight:900;line-height:0.92;margin-bottom:2rem;opacity:0;animation:fu 0.9s ease 0.35s forwards;}
+.ht1{display:block;background:linear-gradient(135deg,var(--white) 0%,var(--pg) 50%,var(--pkb) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;filter:drop-shadow(0 0 40px rgba(168,85,247,0.4));}
+.ht2{display:block;font-size:0.42em;font-family:'DM Sans',sans-serif;font-weight:400;color:var(--muted);-webkit-text-fill-color:var(--muted);background:none;letter-spacing:0;margin-top:1.2rem;line-height:1.6;max-width:700px;margin-left:auto;margin-right:auto;}
+.ht2 strong{color:var(--white);}
 
-    .commission-cell::before {
-      content: '';
-      position: absolute;
-      top: 0; left: 0; right: 0;
-      height: 3px;
-    }
+/* commission stat bar */
+.comm-bar{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:rgba(168,85,247,0.15);border:1px solid rgba(168,85,247,0.2);border-radius:12px;overflow:hidden;max-width:700px;margin:0 auto 3rem;opacity:0;animation:fu 0.8s ease 0.7s forwards;}
+.cb-item{background:rgba(3,1,10,0.97);padding:1.8rem;text-align:center;}
+.cb-comm{font-family:'Orbitron',sans-serif;font-size:clamp(1.6rem,4vw,2.8rem);font-weight:900;background:linear-gradient(90deg,var(--pg),var(--pkb));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;display:block;line-height:1;}
+.cb-tier{font-family:'Share Tech Mono',monospace;font-size:0.58rem;letter-spacing:0.15em;color:var(--dim);margin-top:0.4rem;display:block;}
+.cb-inv{font-family:'Share Tech Mono',monospace;font-size:0.55rem;letter-spacing:0.1em;color:rgba(168,85,247,0.5);margin-top:0.2rem;display:block;}
 
-    .commission-cell:nth-child(1)::before { background: linear-gradient(90deg, #6b7280, #9ca3af); }
-    .commission-cell:nth-child(2)::before { background: linear-gradient(90deg, var(--pm), var(--pink)); }
-    .commission-cell:nth-child(3)::before { background: linear-gradient(90deg, var(--cyan), var(--pm)); }
+.hero-cta{opacity:0;animation:fu 0.8s ease 0.9s forwards;display:flex;flex-direction:column;align-items:center;gap:1rem;}
+.btn-main{display:inline-flex;align-items:center;gap:0.9rem;background:linear-gradient(135deg,var(--pm),var(--pink));color:var(--white);font-family:'Orbitron',sans-serif;font-size:0.95rem;font-weight:700;letter-spacing:0.1em;padding:1.3rem 3rem;border:none;border-radius:6px;cursor:pointer;text-decoration:none;box-shadow:0 0 50px rgba(168,85,247,0.5),0 8px 30px rgba(168,85,247,0.3);transition:all 0.3s;}
+.btn-main:hover{box-shadow:0 0 70px rgba(168,85,247,0.8);transform:translateY(-3px);}
+.btn-ghost{display:inline-flex;align-items:center;gap:0.7rem;background:rgba(168,85,247,0.08);border:1px solid rgba(168,85,247,0.28);color:var(--muted);font-family:'Orbitron',sans-serif;font-size:0.72rem;font-weight:700;letter-spacing:0.1em;padding:0.9rem 2rem;border-radius:6px;cursor:pointer;text-decoration:none;transition:all 0.3s;}
+.btn-ghost:hover{border-color:rgba(168,85,247,0.55);color:var(--white);}
+.btn-row{display:flex;gap:1rem;flex-wrap:wrap;justify-content:center;}
+.cta-micro{font-family:'Share Tech Mono',monospace;font-size:0.6rem;color:var(--dim);letter-spacing:0.1em;}
 
-    .commission-cell:hover { transform: translateY(-4px); border-color: rgba(168,85,247,0.35); box-shadow: 0 8px 30px rgba(0,0,0,0.3); }
+/* SECTION SHARED */
+.section{padding:6rem 5%;position:relative;z-index:1;}
+.section-alt{background:rgba(10,6,24,0.7);}
+.wrap{max-width:960px;margin:0 auto;}
+.sec-label{font-family:'Share Tech Mono',monospace;font-size:0.6rem;letter-spacing:0.22em;color:var(--cyan);display:flex;align-items:center;gap:0.7rem;margin-bottom:0.8rem;}
+.sec-label::before{content:'';width:18px;height:1px;background:linear-gradient(90deg,var(--cyan),var(--pb));box-shadow:0 0 4px var(--cyan);}
+.sec-head{font-family:'Orbitron',sans-serif;font-size:clamp(1.6rem,3.5vw,2.8rem);font-weight:900;background:linear-gradient(135deg,var(--white),var(--pg));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:1rem;line-height:1.05;}
+.sec-sub{font-size:1.02rem;color:var(--muted);line-height:1.9;max-width:620px;margin-bottom:3rem;}
+.sec-sub strong{color:var(--white);}
 
-    .commission-cell.featured { background: var(--card2); border-color: rgba(168,85,247,0.35); box-shadow: 0 0 20px rgba(124,58,237,0.15); position: relative; }
-    .commission-cell.featured::before {
-      content: 'MOST SELECTED';
-      position: absolute;
-      top: 12px; left: 50%; transform: translateX(-50%);
-      font-family: 'Share Tech Mono', monospace;
-      font-size: 0.6rem;
-      color: var(--pm);
-      letter-spacing: 0.1em;
-    }
+/* WHAT THIS IS — transparency block */
+.truth-block{background:rgba(34,211,238,0.04);border:1px solid rgba(34,211,238,0.18);border-radius:16px;padding:3rem;margin-bottom:3rem;position:relative;overflow:hidden;}
+.truth-block::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--cyan),var(--pb));box-shadow:0 0 10px var(--cyan);}
+.tb-label{font-family:'Share Tech Mono',monospace;font-size:0.6rem;letter-spacing:0.25em;color:var(--cyan);margin-bottom:1.5rem;}
+.tb-statement{font-size:1.1rem;color:var(--muted);line-height:2;margin-bottom:1.5rem;}
+.tb-statement strong{color:var(--white);}
+.tb-points{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-top:2rem;}
+.tbp{display:flex;align-items:flex-start;gap:0.8rem;font-size:0.95rem;color:var(--muted);line-height:1.7;}
+.tbp-icon{font-size:1rem;flex-shrink:0;margin-top:2px;}
 
-    .comm-cell-tier {
-      font-family: 'Share Tech Mono', monospace;
-      font-size: 0.7rem;
-      color: var(--dim);
-      letter-spacing: 0.12em;
-      margin-bottom: 8px;
-    }
+/* THE NUMBERS */
+.numbers-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;}
+.num-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:2.5rem;transition:all 0.3s;position:relative;overflow:hidden;}
+.num-card:hover{border-color:rgba(168,85,247,0.4);transform:translateY(-4px);box-shadow:0 16px 40px rgba(168,85,247,0.1);}
+.num-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--pb),var(--pkb));transform:scaleX(0);transition:transform 0.3s;}
+.num-card:hover::before{transform:scaleX(1);}
+.nc-label{font-family:'Share Tech Mono',monospace;font-size:0.58rem;letter-spacing:0.2em;color:var(--pg);margin-bottom:1rem;}
+.nc-number{font-family:'Orbitron',sans-serif;font-size:clamp(2rem,5vw,3.5rem);font-weight:900;background:linear-gradient(90deg,var(--pg),var(--pkb));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;line-height:1;margin-bottom:0.5rem;}
+.nc-desc{font-size:0.95rem;color:var(--muted);line-height:1.8;}
+.nc-desc strong{color:var(--white);}
 
-    .comm-cell-amount {
-      font-family: 'Orbitron', monospace;
-      font-size: var(--text-3xl);
-      font-weight: 900;
-      color: var(--pg);
-      margin-bottom: 6px;
-    }
+/* COMMISSION TABLE */
+.comm-table{background:var(--card);border:1px solid var(--border);border-radius:14px;overflow:hidden;margin-bottom:2rem;}
+.ct-head{display:grid;grid-template-columns:1fr 120px 120px 120px 100px;padding:1rem 1.8rem;background:rgba(168,85,247,0.08);border-bottom:1px solid rgba(168,85,247,0.12);font-family:'Share Tech Mono',monospace;font-size:0.55rem;letter-spacing:0.12em;color:var(--dim);}
+.ct-row{display:grid;grid-template-columns:1fr 120px 120px 120px 100px;padding:1.4rem 1.8rem;border-bottom:1px solid rgba(168,85,247,0.07);align-items:center;transition:background 0.2s;}
+.ct-row:last-child{border-bottom:none;}
+.ct-row:hover{background:rgba(168,85,247,0.05);}
+.ct-tier-name{font-family:'Orbitron',sans-serif;font-size:0.9rem;font-weight:700;color:var(--white);}
+.ct-tier-tag{font-family:'Share Tech Mono',monospace;font-size:0.5rem;letter-spacing:0.1em;color:var(--pg);}
+.ct-num{font-family:'Orbitron',sans-serif;font-size:1rem;font-weight:700;}
+.ct-num.comm{color:var(--green);}
+.ct-num.inv{color:var(--amber);}
+.ct-num.be{color:var(--cyan);}
+.ct-badge{font-family:'Share Tech Mono',monospace;font-size:0.52rem;padding:0.2rem 0.5rem;border-radius:3px;}
+.ct-badge.pop{background:rgba(236,72,153,0.1);color:var(--pkb);border:1px solid rgba(236,72,153,0.25);}
 
-    .comm-cell-invest { font-size: var(--text-sm); color: var(--dim); }
-    .comm-cell-rank { font-size: 0.75rem; color: var(--pm); margin-top: 8px; font-family: 'Share Tech Mono', monospace; }
+/* NETWORK STRUCTURE */
+.network-honest{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:3rem;margin-bottom:2rem;}
+.nh-label{font-family:'Share Tech Mono',monospace;font-size:0.6rem;letter-spacing:0.22em;color:var(--amber);margin-bottom:1.5rem;display:flex;align-items:center;gap:0.6rem;}
+.nh-label::before{content:'';width:16px;height:1px;background:var(--amber);}
+.nh-title{font-family:'Orbitron',sans-serif;font-size:1.3rem;font-weight:700;color:var(--white);margin-bottom:1rem;letter-spacing:0.05em;}
+.nh-body{font-size:1rem;color:var(--muted);line-height:1.9;margin-bottom:1.5rem;}
+.nh-body strong{color:var(--white);}
+.nh-points{display:flex;flex-direction:column;gap:0.8rem;}
+.nhp{display:flex;align-items:flex-start;gap:0.8rem;font-size:0.95rem;color:var(--muted);line-height:1.7;padding:0.8rem;background:rgba(251,191,36,0.04);border:1px solid rgba(251,191,36,0.1);border-radius:8px;}
+.nhp-icon{flex-shrink:0;font-size:0.9rem;margin-top:2px;}
 
-    .compare-table {
-      width: 100%;
-      border-collapse: collapse;
-    }
+/* THE SYSTEM DIFF */
+.diff-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;}
+.diff-col{border-radius:12px;padding:2rem;}
+.diff-col.old{background:rgba(239,68,68,0.04);border:1px solid rgba(239,68,68,0.15);}
+.diff-col.new{background:rgba(74,222,128,0.04);border:1px solid rgba(74,222,128,0.15);}
+.dc-label{font-family:'Orbitron',sans-serif;font-size:0.72rem;font-weight:700;letter-spacing:0.12em;margin-bottom:1.5rem;padding-bottom:0.8rem;border-bottom:1px solid rgba(168,85,247,0.1);}
+.diff-col.old .dc-label{color:#fca5a5;}
+.diff-col.new .dc-label{color:var(--green);}
+.diff-item{display:flex;align-items:flex-start;gap:0.7rem;font-size:0.92rem;color:var(--muted);line-height:1.6;margin-bottom:0.8rem;}
+.diff-item:last-child{margin-bottom:0;}
+.di-icon{flex-shrink:0;font-size:0.85rem;margin-top:2px;}
 
-    .compare-table th {
-      background: var(--card2);
-      padding: 14px 20px;
-      text-align: left;
-      font-family: 'Share Tech Mono', monospace;
-      font-size: 0.7rem;
-      color: var(--dim);
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      border-bottom: 1px solid var(--border);
-    }
+/* WHO WE WANT */
+.want-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;}
+.want-col{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:2rem;}
+.wc-label{font-family:'Orbitron',sans-serif;font-size:0.72rem;font-weight:700;letter-spacing:0.1em;margin-bottom:1.2rem;padding-bottom:0.8rem;border-bottom:1px solid rgba(168,85,247,0.1);}
+.want-col.yes .wc-label{color:var(--green);}
+.want-col.no .wc-label{color:var(--red);}
+.wi{display:flex;align-items:flex-start;gap:0.7rem;font-size:0.92rem;color:var(--muted);line-height:1.6;margin-bottom:0.6rem;}
+.wi:last-child{margin-bottom:0;}
 
-    .compare-table td {
-      padding: 14px 20px;
-      font-size: var(--text-sm);
-      color: var(--muted);
-      border-bottom: 1px solid var(--border);
-    }
+/* ENAGIC SECTION */
+.enagic-block{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:3rem;display:grid;grid-template-columns:1fr 1fr;gap:3rem;align-items:center;}
+.eb-label{font-family:'Share Tech Mono',monospace;font-size:0.6rem;letter-spacing:0.22em;color:var(--pg);margin-bottom:1rem;}
+.eb-title{font-family:'Orbitron',sans-serif;font-size:1.3rem;font-weight:700;color:var(--white);margin-bottom:1rem;letter-spacing:0.05em;}
+.eb-body{font-size:0.98rem;color:var(--muted);line-height:1.9;}
+.eb-body strong{color:var(--white);}
+.eb-stats{display:flex;flex-direction:column;gap:0.8rem;}
+.ebs{display:flex;justify-content:space-between;align-items:center;padding:0.8rem 1rem;background:rgba(168,85,247,0.05);border:1px solid rgba(168,85,247,0.1);border-radius:8px;}
+.ebs-label{font-size:0.88rem;color:var(--muted);}
+.ebs-val{font-family:'Orbitron',sans-serif;font-size:0.88rem;font-weight:700;color:var(--white);}
 
-    .compare-table tr:last-child td { border-bottom: none; }
+/* APPLY SECTION */
+.apply-section{padding:8rem 5%;text-align:center;position:relative;overflow:hidden;}
+.apply-section::before{content:'';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:700px;height:700px;border-radius:50%;background:radial-gradient(circle,rgba(168,85,247,0.09),transparent 65%);pointer-events:none;}
+.as-label{font-family:'Share Tech Mono',monospace;font-size:0.65rem;letter-spacing:0.3em;color:var(--cyan);margin-bottom:1.5rem;display:flex;align-items:center;justify-content:center;gap:1rem;}
+.as-label::before,.as-label::after{content:'';height:1px;width:35px;background:linear-gradient(90deg,transparent,var(--cyan));}
+.as-label::after{background:linear-gradient(90deg,var(--cyan),transparent);}
+.as-title{font-family:'Orbitron',sans-serif;font-size:clamp(2rem,5vw,4rem);font-weight:900;background:linear-gradient(135deg,var(--white),var(--pg) 50%,var(--pkb) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:1.5rem;line-height:1.05;}
+.as-sub{font-size:1.05rem;color:var(--muted);max-width:560px;margin:0 auto 3rem;line-height:1.9;}
+.as-sub strong{color:var(--white);}
 
-    .compare-table td:first-child {
-      color: var(--pg);
-      font-weight: 600;
-    }
+/* apply form card */
+.apply-card{max-width:580px;margin:0 auto;background:var(--card);border:1px solid rgba(168,85,247,0.25);border-radius:16px;padding:3rem;position:relative;overflow:hidden;}
+.apply-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--pb),var(--pkb));box-shadow:0 0 12px var(--pb);}
+.ac-label{font-family:'Share Tech Mono',monospace;font-size:0.6rem;letter-spacing:0.18em;color:var(--pg);margin-bottom:1.5rem;}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:0.8rem;margin-bottom:0.8rem;}
+.form-input{width:100%;background:rgba(255,255,255,0.04);border:1px solid rgba(168,85,247,0.2);border-radius:8px;padding:0.95rem 1.1rem;color:var(--white);font-family:'DM Sans',sans-serif;font-size:1rem;outline:none;transition:all 0.3s;}
+.form-input::placeholder{color:var(--dim);}
+.form-input:focus{border-color:rgba(168,85,247,0.55);background:rgba(168,85,247,0.05);box-shadow:0 0 15px rgba(168,85,247,0.1);}
+select.form-input{cursor:pointer;appearance:none;}
+.form-full{grid-column:1/-1;}
+.submit-btn{width:100%;background:linear-gradient(135deg,var(--pm),var(--pink));color:var(--white);font-family:'Orbitron',sans-serif;font-size:0.88rem;font-weight:700;letter-spacing:0.1em;padding:1.2rem;border:none;border-radius:8px;cursor:pointer;box-shadow:0 0 40px rgba(168,85,247,0.45);transition:all 0.3s;margin-top:0.5rem;display:flex;align-items:center;justify-content:center;gap:0.8rem;}
+.submit-btn:hover{box-shadow:0 0 60px rgba(168,85,247,0.7);transform:translateY(-2px);}
+.form-micro{font-family:'Share Tech Mono',monospace;font-size:0.58rem;color:var(--dim);letter-spacing:0.1em;text-align:center;margin-top:1rem;}
+.form-micro span{color:var(--green);}
 
-    .compare-table tr:hover td { background: rgba(168,85,247,0.04); }
+/* disclaimer */
+.disclaimer{font-family:'Share Tech Mono',monospace;font-size:0.6rem;color:var(--dim);letter-spacing:0.06em;max-width:760px;margin:4rem auto 0;line-height:1.9;border-top:1px solid rgba(168,85,247,0.1);padding-top:2.5rem;text-align:center;}
 
-    .old-new {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 24px;
-    }
+footer{padding:2rem 5%;border-top:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem;position:relative;z-index:1;}
+.footer-brand{font-family:'Orbitron',sans-serif;font-size:0.9rem;font-weight:900;letter-spacing:0.18em;background:linear-gradient(90deg,var(--pg),var(--pkb));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.footer-tag{font-family:'Share Tech Mono',monospace;font-size:0.58rem;letter-spacing:0.12em;color:var(--dim);}
 
-    .old-col, .new-col {
-      border-radius: var(--radius);
-      padding: 32px;
-    }
+@keyframes fu{from{opacity:0;transform:translateY(20px);}to{opacity:1;transform:translateY(0);}}
+.reveal{opacity:0;transform:translateY(22px);transition:opacity 0.7s ease,transform 0.7s ease;}
+.reveal.visible{opacity:1;transform:translateY(0);}
+.rd1{transition-delay:0.1s;}.rd2{transition-delay:0.2s;}.rd3{transition-delay:0.3s;}
 
-    .old-col {
-      background: rgba(239,68,68,0.04);
-      border: 1px solid rgba(239,68,68,0.15);
-    }
+@media(max-width:860px){
+  .tb-points,.numbers-grid,.diff-grid,.want-grid,.enagic-block,.form-row{grid-template-columns:1fr;}
+  .ct-head,.ct-row{grid-template-columns:1fr 100px 100px;}.ct-head>*:nth-child(4),.ct-row>*:nth-child(4),.ct-head>*:nth-child(5),.ct-row>*:nth-child(5){display:none;}
+}
+</style>
 
-    .new-col {
-      background: rgba(74,222,128,0.04);
-      border: 1px solid rgba(74,222,128,0.15);
-    }
-
-    .col-header {
-      font-family: 'Orbitron', monospace;
-      font-size: var(--text-base);
-      font-weight: 700;
-      margin-bottom: 20px;
-      padding-bottom: 12px;
-      border-bottom: 1px solid;
-    }
-
-    .old-col .col-header { color: var(--red); border-color: rgba(239,68,68,0.2); }
-    .new-col .col-header { color: var(--green); border-color: rgba(74,222,128,0.2); }
-
-    .col-item {
-      display: flex;
-      align-items: flex-start;
-      gap: 10px;
-      margin-bottom: 12px;
-      font-size: var(--text-sm);
-      color: var(--muted);
-      line-height: 1.5;
-    }
-
-    .yes-no-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 16px;
-    }
-
-    .yes-col, .no-col { padding: 32px; border-radius: var(--radius); }
-    .yes-col { background: rgba(74,222,128,0.04); border: 1px solid rgba(74,222,128,0.15); }
-    .no-col { background: rgba(239,68,68,0.04); border: 1px solid rgba(239,68,68,0.15); }
-
-    .yes-col h3 { color: var(--green); font-family: 'Orbitron', monospace; font-size: var(--text-base); margin-bottom: 20px; }
-    .no-col h3 { color: var(--red); font-family: 'Orbitron', monospace; font-size: var(--text-base); margin-bottom: 20px; }
-
-    .yes-item, .no-item {
-      display: flex; align-items: flex-start; gap: 8px;
-      font-size: var(--text-sm); color: var(--muted);
-      margin-bottom: 10px; line-height: 1.5;
-    }
-
-    .yes-item::before { content: '✓'; color: var(--green); flex-shrink: 0; }
-    .no-item::before { content: '✗'; color: var(--red); flex-shrink: 0; }
-
-    .enagic-facts {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 16px;
-    }
-
-    .fact-item {
-      text-align: center;
-      padding: 24px 16px;
-      background: var(--card2);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-    }
-
-    .fact-value {
-      font-family: 'Orbitron', monospace;
-      font-size: var(--text-2xl);
-      font-weight: 700;
-      color: var(--pg);
-      margin-bottom: 4px;
-    }
-
-    .fact-label { font-size: 0.75rem; color: var(--dim); line-height: 1.4; }
-
-    @media (max-width: 768px) {
-      .commission-grid { grid-template-columns: 1fr; }
-      .old-new { grid-template-columns: 1fr; }
-      .yes-no-grid { grid-template-columns: 1fr; }
-      .enagic-facts { grid-template-columns: repeat(2, 1fr); }
-    }
-  </style>
+<!-- ═══ ANALYTICS & TRACKING ═══ -->
+<!-- GA4: Replace G-XXXXXXXXXX with your real Measurement ID from analytics.google.com -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-XXXXXXXXXX');
+</script>
+<!-- Facebook Pixel: Replace XXXXXXXXXXXXXXX with your real Pixel ID from business.facebook.com -->
+<script>
+!function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;
+n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;
+t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,
+document,'script','https://connect.facebook.net/en_US/fbevents.js');
+fbq('init', 'XXXXXXXXXXXXXXX');
+fbq('track', 'PageView');
+</script>
+<noscript><img height="1" width="1" style="display:none" src="https://www.facebook.com/tr?id=XXXXXXXXXXXXXXX&ev=PageView&noscript=1"/></noscript>
+<!-- Tidio Chatbot: Replace xxxxxxxxxxxx with your real Tidio public key from tidio.com/panel/settings -->
+<script src="//code.tidio.co/xxxxxxxxxxxx.js" async></script>
+<!-- ═══════════════════════════ -->
 </head>
 <body>
-  <div class="orb orb-1"></div>
-  <div class="orb orb-2"></div>
+<div class="orb o1"></div><div class="orb o2"></div>
 
-  <nav class="nav">
-    <a href="index.html" class="nav-brand">
-      <div class="hex-logo hex-logo-sm"><span>SS</span></div>
-      <span class="nav-brand-text">SILENT SYNDICATE</span>
-    </a>
-    <span class="font-mono" style="font-size:0.7rem;color:var(--dim);">DISTRIBUTOR RECRUITMENT</span>
-  </nav>
+<nav>
+  <div class="nav-brand"><div class="nav-hex"></div><span class="nav-name">SILENT SYNDICATE</span></div>
+  <div class="nav-right">
+    <span class="nav-tag">// Distributor Recruitment</span>
+    <a href="#apply" class="nav-btn">APPLY NOW →</a>
+  </div>
+</nav>
 
-  <div class="page-wrap">
-    <!-- HERO -->
-    <section class="hero-dist">
-      <div class="container">
-        <div class="hero-eyebrow reveal" style="display:inline-flex;align-items:center;gap:8px;padding:6px 14px;background:rgba(168,85,247,0.1);border:1px solid rgba(168,85,247,0.25);border-radius:9999px;font-family:'Share Tech Mono',monospace;font-size:0.7rem;color:var(--pg);letter-spacing:0.1em;margin-bottom:24px;">
-          CAPITAL-READY OPERATORS ONLY — NO FLUFF
-        </div>
-        <h1 class="hero-commission reveal">
-          $2,400 – $6,330<br>
-          <span class="gradient-text">Per Transaction.</span>
-        </h1>
-        <p style="font-size:var(--text-xl);color:var(--muted);max-width:640px;margin:0 auto 32px;line-height:1.65;" class="reveal">
-          This is an Enagic distribution play. You invest ($8,500–$20,000), you get a distributor licence and
-          a Kangen machine, and you earn a direct commission on every sale. The AI funnel handles lead qualification.
-          You handle traffic.
-        </p>
-        <div class="reveal">
-          <a href="#apply-dist" class="btn btn-primary btn-lg">Apply to Join the Network →</a>
-          <p style="margin-top:12px;font-size:0.75rem;color:var(--dim);">
-            Takes 3 minutes. Capital required. Not for beginners.
-          </p>
-        </div>
-      </div>
-    </section>
+<!-- HERO -->
+<section class="hero">
+  <div class="h-label">// ENAGIC DISTRIBUTOR OPPORTUNITY — SILENT SYNDICATE NETWORK</div>
+  <h1 class="h-title">
+    <span class="ht1">$2,400 – $6,330<br>Per Transaction.</span>
+    <span class="ht2">We're building a network of <strong>serious distributors</strong> on top of Enagic's global commission structure. If you understand high-ticket sales, want to build a team that compounds, and are ready to invest in the right vehicle — read every word on this page.</span>
+  </h1>
 
-    <!-- COMMISSION BAR -->
-    <section style="padding:0 0 60px;">
-      <div class="container">
-        <div class="commission-grid reveal">
-          <div class="commission-cell">
-            <div class="comm-cell-tier">STRIKER</div>
-            <div class="comm-cell-amount">$2,400</div>
-            <div class="comm-cell-invest">per direct sale</div>
-            <div class="comm-cell-invest" style="margin-top:8px;">Investment: $8,500</div>
-            <div class="comm-cell-rank">D3 RANK</div>
-          </div>
-          <div class="commission-cell featured">
-            <div class="comm-cell-tier" style="margin-top:20px;color:var(--pm);">LAUNCHER</div>
-            <div class="comm-cell-amount gradient-text">$4,300</div>
-            <div class="comm-cell-invest">per direct sale</div>
-            <div class="comm-cell-invest" style="margin-top:8px;">Investment: $15,000</div>
-            <div class="comm-cell-rank">6A RANK</div>
-          </div>
-          <div class="commission-cell">
-            <div class="comm-cell-tier">NUKE</div>
-            <div class="comm-cell-amount" style="color:var(--cyan);">$6,330</div>
-            <div class="comm-cell-invest">per direct sale</div>
-            <div class="comm-cell-invest" style="margin-top:8px;">Investment: $20,000</div>
-            <div class="comm-cell-rank">6A-2 RANK</div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- FULL TRANSPARENCY BLOCK -->
-    <section class="section" style="padding-top:0;">
-      <div class="container-sm">
-        <div class="disclosure-banner reveal">
-          <strong>Full Transparency — Read This First:</strong>
-          Silent Syndicate is an Enagic distributor network. Enagic International is a Japanese direct-sales company
-          founded in 1974, operating in 190+ countries. Their primary product is the Kangen Water ionisation machine
-          (a legitimate health/wellness product). Becoming a distributor requires purchasing a machine and licence at
-          one of three tiers ($8,500 / $15,000 / $20,000). Commissions are paid directly by Enagic on each qualifying
-          sale. This is a direct-sales business, not passive income. You must drive traffic, generate leads, and
-          convert applications. We use an AI funnel to automate the education and qualification stages — you still
-          need to produce content to drive cold traffic into the top of the funnel.
-        </div>
-      </div>
-    </section>
-
-    <!-- COMMISSION TABLE -->
-    <section class="section" style="padding-top:0;">
-      <div class="container">
-        <div class="text-center mb-8 reveal">
-          <h2 style="font-family:'Orbitron',monospace;font-size:var(--text-3xl);font-weight:700;">
-            Commission <span class="gradient-text">Breakdown</span>
-          </h2>
-        </div>
-        <div style="border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;" class="reveal">
-          <table class="compare-table">
-            <thead>
-              <tr>
-                <th>Tier</th>
-                <th>Enagic Rank</th>
-                <th>Investment</th>
-                <th>Commission / Sale</th>
-                <th>Break-even Sales</th>
-                <th>3-Sale Month</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>STRIKER</td>
-                <td>D3</td>
-                <td>$8,500</td>
-                <td style="color:var(--pg);font-family:'Orbitron',monospace;">$2,400</td>
-                <td>~4 sales</td>
-                <td>$7,200 gross</td>
-              </tr>
-              <tr>
-                <td>LAUNCHER</td>
-                <td>6A</td>
-                <td>$15,000</td>
-                <td style="color:var(--pink);font-family:'Orbitron',monospace;">$4,300</td>
-                <td>~4 sales</td>
-                <td>$12,900 gross</td>
-              </tr>
-              <tr>
-                <td>NUKE</td>
-                <td>6A-2</td>
-                <td>$20,000</td>
-                <td style="color:var(--cyan);font-family:'Orbitron',monospace;">$6,330</td>
-                <td>~4 sales</td>
-                <td>$18,990 gross</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-        <p style="font-size:0.75rem;color:var(--dim);margin-top:12px;text-align:center;" class="reveal">
-          All commission figures are gross before expenses. Net profit depends on your traffic costs and operating expenses.
-        </p>
-      </div>
-    </section>
-
-    <!-- NETWORK HONEST SECTION -->
-    <section class="section" style="padding-top:0;">
-      <div class="container-sm">
-        <div class="text-center mb-8 reveal">
-          <h2 style="font-family:'Orbitron',monospace;font-size:var(--text-3xl);font-weight:700;">
-            The Network Layer — <span class="gradient-text">Honest Explanation</span>
-          </h2>
-        </div>
-        <div class="card reveal">
-          <p style="color:var(--muted);line-height:1.8;margin-bottom:16px;">
-            When people in your network (distributors you recruited) make direct sales, you earn a commission override
-            on each of their transactions. This is Enagic's upline structure — it exists in most direct-sales companies.
-          </p>
-          <p style="color:var(--muted);line-height:1.8;margin-bottom:16px;">
-            <strong style="color:var(--pg);">The math:</strong> If you have 3 operators in your network each making 2 sales/month at the Launcher tier,
-            that's 6 additional commission events per month generating override income on top of your direct sales.
-          </p>
-          <p style="color:var(--muted);line-height:1.8;">
-            <strong style="color:var(--amber);">The honest part:</strong> Building a network takes time. It's a second-order effect, not a first-month outcome.
-            Most operators earn primarily from direct sales for their first 3–6 months. Network overrides are a bonus,
-            not the primary income model.
-          </p>
-        </div>
-      </div>
-    </section>
-
-    <!-- OLD WAY vs NEW WAY -->
-    <section class="section" style="padding-top:0;">
-      <div class="container">
-        <div class="text-center mb-8 reveal">
-          <h2 style="font-family:'Orbitron',monospace;font-size:var(--text-3xl);font-weight:700;">
-            Old Way vs <span class="gradient-text">New Way</span>
-          </h2>
-        </div>
-        <div class="old-new reveal">
-          <div class="old-col">
-            <div class="col-header">THE OLD WAY</div>
-            <div class="col-item"><span>✗</span> Cold DM campaigns on Instagram</div>
-            <div class="col-item"><span>✗</span> Manual follow-up with every prospect</div>
-            <div class="col-item"><span>✗</span> Pitching everyone in your warm market</div>
-            <div class="col-item"><span>✗</span> 2-hour zoom calls to explain the model</div>
-            <div class="col-item"><span>✗</span> Leads don't understand the investment upfront</div>
-            <div class="col-item"><span>✗</span> High drop-off at the investment conversation</div>
-          </div>
-          <div class="new-col">
-            <div class="col-header">THE SILENT SYNDICATE WAY</div>
-            <div class="col-item"><span>✓</span> Short-form content drives cold traffic</div>
-            <div class="col-item"><span>✓</span> 7-day email sequence educates automatically</div>
-            <div class="col-item"><span>✓</span> AI scoring routes only HOT leads to you</div>
-            <div class="col-item"><span>✓</span> Chatbot handles objections 24/7</div>
-            <div class="col-item"><span>✓</span> Investment fully disclosed before application</div>
-            <div class="col-item"><span>✓</span> Pre-qualified leads understand the model</div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- ENAGIC FACTS -->
-    <section class="section" style="padding-top:0;">
-      <div class="container">
-        <div class="text-center mb-8 reveal">
-          <h2 style="font-family:'Orbitron',monospace;font-size:var(--text-2xl);font-weight:700;">
-            About Enagic
-          </h2>
-          <p style="color:var(--muted);margin-top:8px;font-size:var(--text-sm);">
-            The company behind the commission structure.
-          </p>
-        </div>
-        <div class="enagic-facts reveal">
-          <div class="fact-item">
-            <div class="fact-value">1974</div>
-            <div class="fact-label">Founded in Japan</div>
-          </div>
-          <div class="fact-item">
-            <div class="fact-value">190+</div>
-            <div class="fact-label">Countries with active distributors</div>
-          </div>
-          <div class="fact-item">
-            <div class="fact-value">50yrs</div>
-            <div class="fact-label">Operating history</div>
-          </div>
-          <div class="fact-item">
-            <div class="fact-value">Direct</div>
-            <div class="fact-label">Sales model — no retail middlemen</div>
-          </div>
-        </div>
-        <p style="color:var(--dim);font-size:var(--text-sm);text-align:center;margin-top:24px;" class="reveal">
-          Enagic's flagship product is the Kangen K8 water ionisation machine — a legitimate health product sold worldwide.
-          Buyers get both the product and a distributor licence. It is not sold separately.
-        </p>
-      </div>
-    </section>
-
-    <!-- WHO WE WANT / DON'T WANT -->
-    <section class="section" style="padding-top:0;">
-      <div class="container">
-        <div class="text-center mb-8 reveal">
-          <h2 style="font-family:'Orbitron',monospace;font-size:var(--text-3xl);font-weight:700;">
-            Who We're <span class="gradient-text">Looking For</span>
-          </h2>
-        </div>
-        <div class="yes-no-grid reveal">
-          <div class="yes-col">
-            <h3>WE WANT</h3>
-            <div class="yes-item">Capital accessible ($8.5K–$20K) and making a considered investment decision</div>
-            <div class="yes-item">Experience in sales, business, or marketing</div>
-            <div class="yes-item">Willing to produce content consistently (TikTok, Instagram)</div>
-            <div class="yes-item">Comfortable with a 3–6 month ramp to consistent income</div>
-            <div class="yes-item">Systems-minded — wants automation, not hustle</div>
-            <div class="yes-item">Existing high-ticket distributors looking for a better funnel</div>
-          </div>
-          <div class="no-col">
-            <h3>WE DON'T WANT</h3>
-            <div class="no-item">People without capital access who need to "figure it out"</div>
-            <div class="no-item">Those expecting passive income with zero effort</div>
-            <div class="no-item">Anyone who can't commit to consistent traffic generation</div>
-            <div class="no-item">People who haven't done their research on Enagic</div>
-            <div class="no-item">Anyone uncomfortable with a direct-sales business model</div>
-            <div class="no-item">Those who need guaranteed income from month 1</div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- APPLICATION FORM -->
-    <section class="section" id="apply-dist">
-      <div class="container-sm">
-        <div class="text-center mb-8 reveal">
-          <h2 style="font-family:'Orbitron',monospace;font-size:var(--text-3xl);font-weight:700;">
-            Apply to Join the <span class="gradient-text">Network</span>
-          </h2>
-          <p style="color:var(--muted);margin-top:10px;">
-            Capital-ready sellers only. We review all applications manually.
-          </p>
-        </div>
-
-        <div class="form-card-apply card reveal" style="max-width:600px;margin:0 auto;">
-          <form id="dist-form">
-            <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
-              <div class="form-group">
-                <label class="form-label" for="d-firstName">First Name</label>
-                <input class="form-input" type="text" id="d-firstName" required>
-              </div>
-              <div class="form-group">
-                <label class="form-label" for="d-lastName">Last Name</label>
-                <input class="form-input" type="text" id="d-lastName" required>
-              </div>
-            </div>
-
-            <div class="form-group">
-              <label class="form-label" for="d-email">Email</label>
-              <input class="form-input" type="email" id="d-email" required>
-            </div>
-
-            <div class="form-group">
-              <label class="form-label" for="d-phone">Phone</label>
-              <input class="form-input" type="tel" id="d-phone" placeholder="+61 400 000 000" required>
-            </div>
-
-            <div class="form-group">
-              <label class="form-label" for="d-tier">Target Tier</label>
-              <select class="form-select" id="d-tier" required>
-                <option value="" disabled selected>Which tier are you considering?</option>
-                <option value="striker">Striker — $8,500 / $2,400 commission</option>
-                <option value="launcher">Launcher — $15,000 / $4,300 commission</option>
-                <option value="nuke">Nuke — $20,000 / $6,330 commission</option>
-                <option value="undecided">Undecided — want to discuss first</option>
-              </select>
-            </div>
-
-            <div class="form-group">
-              <label class="form-label" for="d-background">Sales / Business Background</label>
-              <select class="form-select" id="d-background" required>
-                <option value="" disabled selected>What's your background?</option>
-                <option value="high-ticket">High-ticket sales experience</option>
-                <option value="own-business">Own a business</option>
-                <option value="marketing">Marketing / content creation</option>
-                <option value="employed-sales">Sales role (employed)</option>
-                <option value="other-dist">Existing distributor (different company)</option>
-                <option value="other">Other</option>
-              </select>
-            </div>
-
-            <div class="form-group">
-              <label class="form-label" for="d-why">Why are you interested in this specifically?</label>
-              <textarea class="form-textarea" id="d-why" placeholder="Brief context..." required></textarea>
-            </div>
-
-            <button type="submit" class="btn btn-primary btn-full btn-lg" id="dist-btn">
-              Submit Distributor Application →
-            </button>
-          </form>
-
-          <div id="dist-success" style="display:none;text-align:center;padding:40px 0;">
-            <div style="font-size:3rem;margin-bottom:16px;">✅</div>
-            <h3 style="font-family:'Orbitron',monospace;font-size:var(--text-xl);font-weight:700;margin-bottom:8px;color:var(--green);">Application Received</h3>
-            <p style="color:var(--muted);font-size:var(--text-sm);line-height:1.7;">
-              We review distributor applications within 24–48 hours.
-              You'll receive an email from our team with next steps.
-            </p>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- INCOME DISCLAIMER -->
-    <section class="section-sm">
-      <div class="container">
-        <div class="income-disclaimer">
-          <strong style="color:var(--amber);">Income Disclaimer:</strong> All commission figures shown ($2,400, $4,300, $6,330) are gross commissions per qualifying direct sale before
-          expenses. The investment amounts ($8,500, $15,000, $20,000) are the costs to join Enagic as a distributor at the respective rank — these are recoverable through
-          commission earnings. Results vary significantly — most new distributors earn $0–$2,400 in their first month while building traffic. Testimonials and income examples
-          shown are not typical results. This is a direct-sales business requiring real effort, consistent content production, and capital. It is not a passive income system.
-          Silent Syndicate is an authorised Enagic distributor network operating in Australia and New Zealand.
-        </div>
-      </div>
-    </section>
-
-    <footer style="padding:40px 0;border-top:1px solid var(--border);">
-      <div class="container" style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:16px;">
-        <div style="display:flex;align-items:center;gap:12px;">
-          <div class="hex-logo hex-logo-sm"><span>SS</span></div>
-          <span style="font-family:'Share Tech Mono',monospace;font-size:0.75rem;color:var(--dim);">SILENT SYNDICATE © 2025</span>
-        </div>
-        <a href="index.html" style="font-size:0.75rem;color:var(--dim);text-decoration:none;">Consumer Funnel →</a>
-      </div>
-    </footer>
+  <div class="comm-bar">
+    <div class="cb-item">
+      <span class="cb-comm">$2,400</span>
+      <span class="cb-tier">STRIKER TIER</span>
+      <span class="cb-inv">$8,500 entry</span>
+    </div>
+    <div class="cb-item">
+      <span class="cb-comm">$4,300</span>
+      <span class="cb-tier">LAUNCHER TIER</span>
+      <span class="cb-inv">$15,000 entry</span>
+    </div>
+    <div class="cb-item">
+      <span class="cb-comm">$6,330</span>
+      <span class="cb-tier">NUKE TIER</span>
+      <span class="cb-inv">$20,000 entry</span>
+    </div>
   </div>
 
-  <script>
-    const observer = new IntersectionObserver(entries => {
-      entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
-    }, { threshold: 0.1 });
-    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+  <div class="hero-cta">
+    <div class="btn-row">
+      <a href="#apply" class="btn-main">APPLY TO JOIN THE NETWORK →</a>
+      <a href="#structure" class="btn-ghost">SEE THE FULL STRUCTURE ↓</a>
+    </div>
+    <div class="cta-micro">No fluff. No mystique. Just the numbers and the model.</div>
+  </div>
+</section>
 
-    document.getElementById('dist-form').addEventListener('submit', async function(e) {
-      e.preventDefault();
-      const btn = document.getElementById('dist-btn');
-      btn.textContent = 'Submitting...';
-      btn.disabled = true;
+<!-- WHAT THIS IS -->
+<section class="section section-alt">
+  <div class="wrap">
+    <div class="sec-label reveal">Full Transparency</div>
+    <h2 class="sec-head reveal">Here's Exactly What This Is.</h2>
+    <div class="truth-block reveal">
+      <div class="tb-label">// STRAIGHT TALK — NO FINE PRINT</div>
+      <div class="tb-statement">
+        Silent Syndicate is a <strong>structured distributor network built on Enagic's direct sales platform.</strong> Enagic manufactures Kangen water ionisation machines — premium wellness products retailing between $3,000 and $5,000. When you become a distributor and bring in another distributor, <strong>you earn a commission directly from Enagic.</strong> That commission ranges from $2,400 to $6,330 depending on the tier you and your recruit joined at.<br><br>
+        There is also a <strong>network layer.</strong> When distributors in your downline make sales, you earn override commissions on their volume. The deeper your network, the more it compounds — without you being involved in every transaction.<br><br>
+        What Silent Syndicate adds on top of Enagic's model is an <strong>AI-automated funnel system</strong> — so instead of cold-calling, door-knocking, or pitching to people you know, you run a content-driven digital funnel that attracts and qualifies leads automatically.
+      </div>
+      <div class="tb-points">
+        <div class="tbp"><span class="tbp-icon">✓</span>Built on Enagic — a 40-year-old global company operating in 190 countries</div>
+        <div class="tbp"><span class="tbp-icon">✓</span>Commissions paid directly by Enagic — not through Silent Syndicate</div>
+        <div class="tbp"><span class="tbp-icon">✓</span>Network/team structure exists — overrides compound when your downline sells</div>
+        <div class="tbp"><span class="tbp-icon">✓</span>Real investment required — $8,500 to $20,000 to join as a distributor</div>
+        <div class="tbp"><span class="tbp-icon">✓</span>Results are not guaranteed — income depends on your effort and execution</div>
+        <div class="tbp"><span class="tbp-icon">✓</span>The AI system automates lead generation — you still need to drive traffic</div>
+      </div>
+    </div>
+  </div>
+</section>
 
-      const data = {
-        firstName: document.getElementById('d-firstName').value,
-        lastName: document.getElementById('d-lastName').value,
-        email: document.getElementById('d-email').value,
-        phone: document.getElementById('d-phone').value,
-        tier: document.getElementById('d-tier').value,
-        background: document.getElementById('d-background').value,
-        whyJoin: document.getElementById('d-why').value,
-        investmentReady: 'yes-ready',
+<!-- THE NUMBERS -->
+<section class="section" id="structure">
+  <div class="wrap">
+    <div class="sec-label reveal">The Commission Structure</div>
+    <h2 class="sec-head reveal">The Numbers.<br>Unfiltered.</h2>
+    <p class="sec-sub reveal">Every figure below comes directly from Enagic's distributor compensation structure. These are not projections — they are the published commission rates.</p>
+
+    <div class="comm-table reveal">
+      <div class="ct-head"><div>TIER</div><div>COMMISSION</div><div>INVESTMENT</div><div>BREAK-EVEN</div><div>STATUS</div></div>
+      <div class="ct-row">
+        <div><div class="ct-tier-name">STRIKER</div><div class="ct-tier-tag">Enagic D3</div></div>
+        <div><div class="ct-num comm">$2,400</div><div style="font-family:'Share Tech Mono',monospace;font-size:0.5rem;color:var(--dim)">per sale</div></div>
+        <div><div class="ct-num inv">$8,500</div></div>
+        <div><div class="ct-num be">4 sales</div></div>
+        <div><span class="ct-badge" style="color:var(--pg);background:rgba(168,85,247,0.08);border:1px solid rgba(168,85,247,0.2);">OPEN</span></div>
+      </div>
+      <div class="ct-row">
+        <div><div class="ct-tier-name">LAUNCHER</div><div class="ct-tier-tag">Enagic 6A</div></div>
+        <div><div class="ct-num comm">$4,300</div><div style="font-family:'Share Tech Mono',monospace;font-size:0.5rem;color:var(--dim)">per sale</div></div>
+        <div><div class="ct-num inv">$15,000</div></div>
+        <div><div class="ct-num be">4 sales</div></div>
+        <div><span class="ct-badge pop">POPULAR</span></div>
+      </div>
+      <div class="ct-row">
+        <div><div class="ct-tier-name">NUKE</div><div class="ct-tier-tag">Enagic 6A-2</div></div>
+        <div><div class="ct-num comm">$6,330</div><div style="font-family:'Share Tech Mono',monospace;font-size:0.5rem;color:var(--dim)">per sale</div></div>
+        <div><div class="ct-num inv">$20,000</div></div>
+        <div><div class="ct-num be">4 sales</div></div>
+        <div><span class="ct-badge" style="color:var(--cyan);background:rgba(34,211,238,0.08);border:1px solid rgba(34,211,238,0.2);">MAX</span></div>
+      </div>
+    </div>
+
+    <div class="numbers-grid">
+      <div class="num-card reveal">
+        <div class="nc-label">// NETWORK OVERRIDES</div>
+        <div class="nc-number">+$</div>
+        <div class="nc-desc">When distributors in your downline make sales, <strong>you earn override commissions on top of your own.</strong> The deeper your network grows, the more your income compounds without additional effort from you.</div>
+      </div>
+      <div class="num-card reveal rd1">
+        <div class="nc-label">// BREAK-EVEN REALITY</div>
+        <div class="nc-number">4×</div>
+        <div class="nc-desc">At every tier, <strong>four sales recovers your full investment.</strong> Sale five is pure profit. Most serious distributors who run the system consistently break even within 60–90 days.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- NETWORK STRUCTURE — HONEST -->
+<section class="section section-alt">
+  <div class="wrap">
+    <div class="sec-label reveal">The Network Structure</div>
+    <h2 class="sec-head reveal">Yes, There's a Team Layer.<br>Here's How It Works.</h2>
+    <div class="network-honest reveal">
+      <div class="nh-label">// HONEST BREAKDOWN</div>
+      <div class="nh-title">This is a distributor network. We're not going to dress it up.</div>
+      <div class="nh-body">
+        When you join and bring in other distributors, <strong>Enagic pays you an override commission on their sales.</strong> That's the network layer. It's not a secret — it's how the compensation structure is designed, and it's the same model used by major direct sales companies globally.<br><br>
+        What makes this different from traditional network marketing is what you're <strong>not</strong> doing. You're not cold-messaging strangers. You're not selling to family. You're not buying bulk inventory to resell. The AI funnel attracts people who are already looking for this kind of opportunity — and converts them without you being involved in the conversation.
+      </div>
+      <div class="nh-points">
+        <div class="nhp"><span class="nhp-icon">→</span>Your income comes primarily from your own direct sales — not from recruiting</div>
+        <div class="nhp"><span class="nhp-icon">→</span>Recruiting adds a compounding layer on top — but it's not required to earn</div>
+        <div class="nhp"><span class="nhp-icon">→</span>Everyone who joins becomes a distributor with access to the same system you're using</div>
+        <div class="nhp"><span class="nhp-icon">→</span>Enagic handles commission payments directly — we don't hold or distribute funds</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- OLD WAY VS NEW WAY -->
+<section class="section">
+  <div class="wrap">
+    <div class="sec-label reveal">The Difference</div>
+    <h2 class="sec-head reveal">How Most Distributors Do It.<br>How We Do It.</h2>
+    <p class="sec-sub reveal">Same Enagic compensation structure. Completely different method of finding buyers.</p>
+    <div class="diff-grid">
+      <div class="diff-col old reveal">
+        <div class="dc-label">✕ THE OLD WAY</div>
+        <div class="diff-item"><span class="di-icon">✕</span>Cold DMs to strangers on social media</div>
+        <div class="diff-item"><span class="di-icon">✕</span>Pitching to friends, family, colleagues</div>
+        <div class="diff-item"><span class="di-icon">✕</span>Long Zoom calls to explain the opportunity</div>
+        <div class="diff-item"><span class="di-icon">✕</span>Low-conversion because buyers aren't pre-qualified</div>
+        <div class="diff-item"><span class="di-icon">✕</span>Income stops when your activity stops</div>
+        <div class="diff-item"><span class="di-icon">✕</span>Depends entirely on your personal energy and time</div>
+      </div>
+      <div class="diff-col new reveal rd1">
+        <div class="dc-label">✓ THE SILENT SYNDICATE WAY</div>
+        <div class="diff-item"><span class="di-icon">✓</span>Content-driven cold traffic through TikTok and Instagram</div>
+        <div class="diff-item"><span class="di-icon">✓</span>AI funnel educates and qualifies leads automatically</div>
+        <div class="diff-item"><span class="di-icon">✓</span>No calls — offer page closes serious buyers directly</div>
+        <div class="diff-item"><span class="di-icon">✓</span>Application form filters out unserious leads before they reach the offer</div>
+        <div class="diff-item"><span class="di-icon">✓</span>System runs 24/7 — leads enter while you sleep</div>
+        <div class="diff-item"><span class="di-icon">✓</span>AIOS dashboard gives you full visibility of every lead and commission</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ENAGIC -->
+<section class="section section-alt">
+  <div class="wrap">
+    <div class="sec-label reveal">The Foundation</div>
+    <h2 class="sec-head reveal">About Enagic.</h2>
+    <div class="enagic-block reveal">
+      <div>
+        <div class="eb-label">// THE COMPANY BEHIND THE COMMISSIONS</div>
+        <div class="eb-title">Enagic International</div>
+        <div class="eb-body">Enagic is a Japanese manufacturing company founded in 1974. They produce Kangen water ionisation machines — devices that alkalise and filter water, used in homes, restaurants, and medical settings globally.<br><br>They operate in <strong>190+ countries</strong> with a direct sales distribution model that pays among the highest per-transaction commissions in the industry. Their distributor structure is what creates the $2,400–$6,330 commission per sale.<br><br>You are becoming an <strong>Enagic authorised distributor.</strong> Your licence, your commissions, and your product come directly from them.</div>
+      </div>
+      <div class="eb-stats">
+        <div class="ebs"><span class="ebs-label">Founded</span><span class="ebs-val">1974</span></div>
+        <div class="ebs"><span class="ebs-label">Countries</span><span class="ebs-val">190+</span></div>
+        <div class="ebs"><span class="ebs-label">Model</span><span class="ebs-val">Direct Sales</span></div>
+        <div class="ebs"><span class="ebs-label">Product</span><span class="ebs-val">Kangen Water Machines</span></div>
+        <div class="ebs"><span class="ebs-label">Commission paid by</span><span class="ebs-val">Enagic directly</span></div>
+        <div class="ebs"><span class="ebs-label">Max per transaction</span><span class="ebs-val" style="color:var(--green)">$6,330</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- WHO WE WANT -->
+<section class="section">
+  <div class="wrap">
+    <div class="sec-label reveal">Who This Is For</div>
+    <h2 class="sec-head reveal">We Want Serious People.<br>Not Everyone.</h2>
+    <p class="sec-sub reveal">This is a real business with a real investment. We're selective because the wrong person wastes their money and our time.</p>
+    <div class="want-grid">
+      <div class="want-col yes reveal">
+        <div class="wc-label">✓ WE WANT YOU IF...</div>
+        <div class="wi"><span>✓</span>You have $8,500–$20,000 available to invest and won't lose sleep over it</div>
+        <div class="wi"><span>✓</span>You understand commission-based business models and are comfortable with them</div>
+        <div class="wi"><span>✓</span>You're willing to create content consistently for 30–60 days to drive traffic</div>
+        <div class="wi"><span>✓</span>You want to build a team underneath you that generates passive override income</div>
+        <div class="wi"><span>✓</span>You're already in high-ticket sales and want a better vehicle or a second stream</div>
+        <div class="wi"><span>✓</span>You can follow a system without needing to reinvent it</div>
+      </div>
+      <div class="want-col no reveal rd1">
+        <div class="wc-label">✕ THIS ISN'T FOR YOU IF...</div>
+        <div class="wi"><span>✕</span>You need the investment money back within 30 days</div>
+        <div class="wi"><span>✕</span>You're uncomfortable with any form of network or direct sales structure</div>
+        <div class="wi"><span>✕</span>You want completely passive income with no effort on your part</div>
+        <div class="wi"><span>✕</span>You're not willing to create content or drive traffic to the funnel</div>
+        <div class="wi"><span>✕</span>You're expecting guaranteed income — it doesn't exist here or anywhere</div>
+        <div class="wi"><span>✕</span>You're looking for a low-cost test — this requires a real commitment</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- APPLY -->
+
+<!-- GEOGRAPHIC SCARCITY -->
+<section style="padding:3rem 5%;background:rgba(74,222,128,0.03);border-top:1px solid rgba(74,222,128,0.1);border-bottom:1px solid rgba(74,222,128,0.1);position:relative;z-index:1;">
+  <div style="max-width:960px;margin:0 auto;">
+    <div style="font-family:'Share Tech Mono',monospace;font-size:0.58rem;letter-spacing:0.22em;color:rgba(74,222,128,0.7);margin-bottom:1rem;">// OPERATOR LIMITS PER REGION</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:2rem;align-items:center;">
+      <div>
+        <div style="font-family:'Orbitron',sans-serif;font-size:1.1rem;font-weight:700;color:#f0ecff;margin-bottom:0.8rem;letter-spacing:0.05em;">We Limit Operators Per State. Here's Why.</div>
+        <div style="font-size:0.92rem;color:rgba(240,236,255,0.68);line-height:1.9;">The more distributors operating in a single geographic market, the harder conversion becomes for everyone. We deliberately cap the number of operators per Australian state and NZ region to protect conversion rates for all active operators — including you. When we reach capacity in your region, we close that intake until space opens.</div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.8rem;">
+        <div style="background:rgba(10,6,24,0.9);border:1px solid rgba(168,85,247,0.15);border-radius:8px;padding:1.2rem;text-align:center;">
+          <div style="font-family:'Orbitron',sans-serif;font-size:1.4rem;font-weight:900;background:linear-gradient(90deg,#c084fc,#f472b6);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;display:block;">QLD</div>
+          <div style="font-family:'Share Tech Mono',monospace;font-size:0.52rem;letter-spacing:0.12em;color:rgba(74,222,128,0.7);margin-top:0.3rem;">2 spots open</div>
+        </div>
+        <div style="background:rgba(10,6,24,0.9);border:1px solid rgba(168,85,247,0.15);border-radius:8px;padding:1.2rem;text-align:center;">
+          <div style="font-family:'Orbitron',sans-serif;font-size:1.4rem;font-weight:900;background:linear-gradient(90deg,#c084fc,#f472b6);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;display:block;">NSW</div>
+          <div style="font-family:'Share Tech Mono',monospace;font-size:0.52rem;letter-spacing:0.12em;color:rgba(74,222,128,0.7);margin-top:0.3rem;">3 spots open</div>
+        </div>
+        <div style="background:rgba(10,6,24,0.9);border:1px solid rgba(168,85,247,0.15);border-radius:8px;padding:1.2rem;text-align:center;">
+          <div style="font-family:'Orbitron',sans-serif;font-size:1.4rem;font-weight:900;background:linear-gradient(90deg,#c084fc,#f472b6);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;display:block;">VIC</div>
+          <div style="font-family:'Share Tech Mono',monospace;font-size:0.52rem;letter-spacing:0.12em;color:rgba(74,222,128,0.7);margin-top:0.3rem;">2 spots open</div>
+        </div>
+        <div style="background:rgba(10,6,24,0.9);border:1px solid rgba(168,85,247,0.15);border-radius:8px;padding:1.2rem;text-align:center;">
+          <div style="font-family:'Orbitron',sans-serif;font-size:1.4rem;font-weight:900;background:linear-gradient(90deg,#c084fc,#f472b6);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;display:block;">WA/SA</div>
+          <div style="font-family:'Share Tech Mono',monospace;font-size:0.52rem;letter-spacing:0.12em;color:rgba(251,191,36,0.8);margin-top:0.3rem;">1 spot each</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<section class="apply-section" id="apply">
+  <div class="as-label reveal">Join The Network</div>
+  <h2 class="as-title reveal">Apply To Become<br>A Distributor.</h2>
+  <p class="as-sub reveal">Fill this in honestly. We review every application and will follow up within <strong>24 hours.</strong> No pressure, no hard sell — just a conversation about whether this fits.</p>
+
+  <div class="apply-card reveal">
+    <div class="ac-label">// DISTRIBUTOR APPLICATION</div>
+    <form onsubmit="handleApply(event)">
+      <div class="form-row">
+        <input type="text" class="form-input" placeholder="First name" required>
+        <input type="text" class="form-input" placeholder="Last name" required>
+      </div>
+      <div class="form-row">
+        <input type="email" class="form-input" placeholder="Email address" required>
+        <input type="tel" class="form-input" placeholder="Phone number">
+      </div>
+      <select class="form-input form-full" style="margin-bottom:0.8rem;" required>
+        <option value="" disabled selected>What's your current situation?</option>
+        <option>Employed full-time, looking for a second income stream</option>
+        <option>Already in sales / high-ticket / direct sales</option>
+        <option>Running my own business</option>
+        <option>Self-employed / freelance</option>
+        <option>Looking for a primary income replacement</option>
+      </select>
+      <select class="form-input form-full" style="margin-bottom:0.8rem;" required>
+        <option value="" disabled selected>Which tier are you considering?</option>
+        <option>Striker — $8,500 / $2,400 per sale</option>
+        <option>Launcher — $15,000 / $4,300 per sale (most popular)</option>
+        <option>Nuke — $20,000 / $6,330 per sale</option>
+        <option>Not sure yet — need more information</option>
+      </select>
+      <select class="form-input form-full" style="margin-bottom:0.8rem;" required>
+        <option value="" disabled selected>Investment readiness?</option>
+        <option>Yes — I have the capital ready and I'm serious</option>
+        <option>I'm close — need 2–4 weeks to get there</option>
+        <option>I need to understand the model better first</option>
+      </select>
+      <button type="submit" class="submit-btn">SUBMIT APPLICATION <span style="animation:baa 1.5s ease-in-out infinite;display:inline-block;">→</span></button>
+    </form>
+    <div class="form-micro">🔒 Your details stay private. <span>No spam. Ever.</span></div>
+  </div>
+
+  <div class="disclaimer">
+    <strong>Income Disclaimer:</strong> All commission figures are based on Enagic's published distributor compensation structure. Individual results vary significantly. Most participants earn less than the figures shown. Income depends on effort, consistency, market conditions, and execution of the system. This is not a guaranteed income opportunity. Please conduct thorough due diligence before making any investment decision. Silent Syndicate is an independent distributor network — we are not Enagic International.
+  </div>
+</section>
+
+<footer>
+  <div class="footer-brand">SS / DISTRIBUTORS</div>
+  <div class="footer-tag">Silent Syndicate — Distributor Recruitment</div>
+  <div class="footer-tag">© 2025 · All Rights Reserved</div>
+<div style="width:100%;border-top:1px solid rgba(168,85,247,0.08);padding-top:1rem;margin-top:0.5rem;display:flex;gap:1.5rem;flex-wrap:wrap;">
+  <a href="privacy-policy.html" style="font-family:'Share Tech Mono',monospace;font-size:0.55rem;letter-spacing:0.1em;color:rgba(240,236,255,0.3);text-decoration:none;">Privacy Policy</a>
+  <a href="terms.html" style="font-family:'Share Tech Mono',monospace;font-size:0.55rem;letter-spacing:0.1em;color:rgba(240,236,255,0.3);text-decoration:none;">Terms of Service</a>
+  <a href="operator-guidelines.html" style="font-family:'Share Tech Mono',monospace;font-size:0.55rem;letter-spacing:0.1em;color:rgba(240,236,255,0.3);text-decoration:none;">Operator Guidelines</a>
+  <a href="commission-structure.html" style="font-family:'Share Tech Mono',monospace;font-size:0.55rem;letter-spacing:0.1em;color:rgba(240,236,255,0.3);text-decoration:none;">Income Disclosure</a>
+</div>
+</footer>
+
+<script>
+@keyframes baa{0%,100%{transform:translateX(0);}50%{transform:translateX(5px);}}
+
+async function handleApply(e){
+  e.preventDefault();
+  const form = e.target;
+  const btn = form.querySelector('.submit-btn');
+  const inputs = form.querySelectorAll('input');
+  const selects = form.querySelectorAll('select');
+
+  const firstName = inputs[0].value.trim();
+  const lastName = inputs[1].value.trim();
+  const email = inputs[2].value.trim();
+  const phone = inputs[3] ? inputs[3].value.trim() : '';
+  const situation = selects[0] ? selects[0].value : '';
+  const tier = selects[1] ? selects[1].value : '';
+  const investmentReady = selects[2] ? selects[2].value : '';
+
+  btn.textContent = 'SUBMITTING...';
+  btn.disabled = true;
+  btn.style.opacity = '0.8';
+
+  try {
+    await fetch('/.netlify/functions/apply', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        firstName, lastName, email, phone,
+        situation, tier, investmentReady,
         source: 'distributors-page'
-      };
-
-      try {
-        await fetch('/api/apply', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(data)
-        });
-      } catch (e) {
-        // Swallow error — show success regardless
-      }
-
-      document.getElementById('dist-form').style.display = 'none';
-      document.getElementById('dist-success').style.display = 'block';
+      })
     });
-  </script>
+  } catch(err) {
+    console.error('Apply error:', err);
+  }
+
+  btn.textContent = '\u2713 Application Received \u2014 We\'ll Be In Touch Within 24 Hours';
+  btn.style.background = 'linear-gradient(135deg,#166534,#15803d)';
+  btn.style.boxShadow = '0 0 30px rgba(74,222,128,0.4)';
+  btn.style.opacity = '1';
+}
+
+const obs = new IntersectionObserver(entries=>{
+  entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('visible');obs.unobserve(e.target);}});
+},{threshold:0.08});
+document.querySelectorAll('.reveal').forEach(el=>obs.observe(el));
+</script>
+
+<!-- INCOME DISCLOSURE FOOTER -->
+<div style="background:rgba(3,1,10,0.98);border-top:1px solid rgba(168,85,247,0.1);padding:2rem 5%;position:relative;z-index:1;">
+  <div style="max-width:900px;margin:0 auto;display:flex;align-items:flex-start;gap:1.5rem;flex-wrap:wrap;">
+    <div style="font-family:'Share Tech Mono',monospace;font-size:0.52rem;letter-spacing:0.18em;color:rgba(74,222,128,0.6);flex-shrink:0;padding-top:2px;white-space:nowrap;">// INCOME DISCLOSURE</div>
+    <div style="font-family:'Share Tech Mono',monospace;font-size:0.58rem;letter-spacing:0.05em;color:rgba(240,236,255,0.28);line-height:1.9;flex:1;">Results are not typical. Individual results vary significantly. Most participants earn considerably less than figures shown or earn nothing. Commission amounts are based on Enagic's published distributor compensation structure and are subject to change. This is not a guaranteed income opportunity. Conduct thorough due diligence before any investment. <a href="commission-structure.html" style="color:rgba(168,85,247,0.5);text-decoration:none;">Full income disclosure →</a></div>
+  </div>
+</div>
 </body>
 </html>

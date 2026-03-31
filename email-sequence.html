@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Silent Syndicate — 7-Day Email Sequence</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=DM+Sans:wght@300;400;500;600&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#05020e;--card:#0a0618;--card2:#0e0920;--pm:#7c3aed;--pb:#a855f7;--pg:#c084fc;--pink:#ec4899;--pkb:#f472b6;--cyan:#22d3ee;--green:#4ade80;--amber:#fbbf24;--white:#f0ecff;--muted:rgba(240,236,255,0.78);--dim:rgba(240,236,255,0.45);--border:rgba(168,85,247,0.15);}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{font-size:16px;}
+body{background:var(--bg);color:var(--white);font-family:'DM Sans',sans-serif;overflow-x:hidden;}
+body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(rgba(168,85,247,0.025) 1px,transparent 1px),linear-gradient(90deg,rgba(168,85,247,0.025) 1px,transparent 1px);background-size:50px 50px;pointer-events:none;z-index:0;}
+nav{position:sticky;top:0;z-index:500;background:rgba(3,1,10,0.96);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);padding:0.9rem 5%;display:flex;justify-content:space-between;align-items:center;}
+.nav-brand{display:flex;align-items:center;gap:0.7rem;}
+.nav-hex{width:22px;height:22px;background:linear-gradient(135deg,var(--pm),var(--pink));clip-path:polygon(50% 0%,100% 25%,100% 75%,50% 100%,0% 75%,0% 25%);box-shadow:0 0 12px rgba(168,85,247,0.7);}
+.nav-name{font-family:'Orbitron',sans-serif;font-size:0.85rem;font-weight:900;letter-spacing:0.15em;background:linear-gradient(90deg,var(--pg),var(--pkb));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.nav-tag{font-family:'Share Tech Mono',monospace;font-size:0.6rem;letter-spacing:0.15em;color:var(--dim);}
+.page-header{padding:3.5rem 5% 2.5rem;text-align:center;position:relative;z-index:1;}
+.ph-label{font-family:'Share Tech Mono',monospace;font-size:0.62rem;letter-spacing:0.25em;color:var(--cyan);margin-bottom:1rem;display:flex;align-items:center;justify-content:center;gap:0.8rem;}
+.ph-label::before,.ph-label::after{content:'';display:block;height:1px;width:30px;background:var(--cyan);}
+.ph-title{font-family:'Orbitron',sans-serif;font-size:clamp(1.6rem,4vw,2.8rem);font-weight:900;background:linear-gradient(135deg,var(--white),var(--pg));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:0.8rem;}
+.ph-sub{font-size:1rem;color:var(--muted);max-width:640px;margin:0 auto;line-height:1.9;}
+.how-to{max-width:900px;margin:0 auto 3rem;padding:0 5%;position:relative;z-index:1;}
+.ht-inner{background:rgba(34,211,238,0.05);border:1px solid rgba(34,211,238,0.2);border-radius:12px;padding:1.8rem 2rem;display:grid;grid-template-columns:repeat(4,1fr);gap:1.5rem;}
+.ht-step{text-align:center;}
+.ht-num{font-family:'Orbitron',sans-serif;font-size:1.4rem;font-weight:900;background:linear-gradient(90deg,var(--cyan),var(--pb));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;display:block;margin-bottom:0.3rem;}
+.ht-text{font-family:'Share Tech Mono',monospace;font-size:0.58rem;letter-spacing:0.1em;color:var(--dim);line-height:1.6;}
+.wrap{max-width:900px;margin:0 auto;padding:0 5% 6rem;position:relative;z-index:1;}
+.email-card{background:var(--card);border:1px solid var(--border);border-radius:14px;overflow:hidden;margin-bottom:2rem;}
+.ec-header{background:rgba(168,85,247,0.08);border-bottom:1px solid rgba(168,85,247,0.12);padding:1.2rem 2rem;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:0.8rem;}
+.badge{font-family:'Orbitron',sans-serif;font-size:0.72rem;font-weight:700;letter-spacing:0.1em;padding:0.3rem 0.9rem;border-radius:4px;}
+.b-green{background:rgba(74,222,128,0.15);color:var(--green);border:1px solid rgba(74,222,128,0.3);}
+.b-purple{background:rgba(168,85,247,0.12);color:var(--pg);border:1px solid rgba(168,85,247,0.25);}
+.b-cyan{background:rgba(34,211,238,0.1);color:var(--cyan);border:1px solid rgba(34,211,238,0.2);}
+.b-amber{background:rgba(251,191,36,0.1);color:var(--amber);border:1px solid rgba(251,191,36,0.2);}
+.b-pink{background:rgba(236,72,153,0.12);color:var(--pkb);border:1px solid rgba(236,72,153,0.25);}
+.ec-meta{font-family:'Share Tech Mono',monospace;font-size:0.58rem;letter-spacing:0.1em;color:var(--dim);}
+.ec-goal{font-family:'Share Tech Mono',monospace;font-size:0.58rem;letter-spacing:0.1em;color:var(--pg);}
+.ec-subject{padding:1.2rem 2rem;border-bottom:1px solid rgba(168,85,247,0.08);}
+.lbl{font-family:'Share Tech Mono',monospace;font-size:0.52rem;letter-spacing:0.18em;color:var(--dim);margin-bottom:0.4rem;}
+.subject-line{font-size:1rem;font-weight:600;color:var(--white);}
+.preview{font-size:0.88rem;color:var(--muted);font-style:italic;margin-top:0.5rem;}
+.ec-body{padding:2rem;}
+.email-content{background:var(--card2);border:1px solid rgba(168,85,247,0.1);border-radius:10px;padding:2rem;font-size:0.95rem;line-height:1.95;color:var(--muted);}
+.email-content p{margin-bottom:1.2rem;}
+.email-content p:last-child{margin-bottom:0;}
+.email-content strong{color:var(--white);}
+.salute{font-size:1rem;color:var(--white);font-weight:600;margin-bottom:1.2rem;display:block;}
+.hbox{background:rgba(168,85,247,0.08);border:1px solid rgba(168,85,247,0.2);border-radius:8px;padding:1.2rem;margin:1rem 0;line-height:1.8;}
+.cta{display:inline-block;background:linear-gradient(135deg,var(--pm),var(--pink));color:var(--white);font-family:'Orbitron',sans-serif;font-size:0.72rem;font-weight:700;letter-spacing:0.1em;padding:0.9rem 2rem;border-radius:6px;text-decoration:none;margin:1rem 0;}
+.signoff{margin-top:1.5rem;padding-top:1.2rem;border-top:1px solid rgba(168,85,247,0.1);}
+.sname{font-weight:600;color:var(--white);display:block;}
+.stitle{font-family:'Share Tech Mono',monospace;font-size:0.6rem;letter-spacing:0.12em;color:var(--pg);display:block;margin-top:0.2rem;}
+.disc{font-size:0.72rem;color:var(--dim);border-top:1px solid rgba(168,85,247,0.08);padding-top:1rem;margin-top:1rem;line-height:1.7;}
+.email-content ul{padding-left:1.5rem;margin:0.8rem 0;}
+.email-content ul li{margin-bottom:0.5rem;}
+.ec-note{padding:1.2rem 2rem;background:rgba(251,191,36,0.04);border-top:1px solid rgba(251,191,36,0.1);}
+.note-lbl{font-family:'Share Tech Mono',monospace;font-size:0.52rem;letter-spacing:0.18em;color:var(--amber);margin-bottom:0.4rem;}
+.note-txt{font-size:0.85rem;color:rgba(240,236,255,0.55);line-height:1.7;}
+footer{padding:2rem 5%;border-top:1px solid var(--border);display:flex;justify-content:space-between;flex-wrap:wrap;gap:1rem;position:relative;z-index:1;}
+.footer-brand{font-family:'Orbitron',sans-serif;font-size:0.9rem;font-weight:900;letter-spacing:0.15em;background:linear-gradient(90deg,var(--pg),var(--pkb));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.footer-tag{font-family:'Share Tech Mono',monospace;font-size:0.58rem;letter-spacing:0.12em;color:var(--dim);}
+@media(max-width:700px){.ht-inner{grid-template-columns:1fr 1fr;}.ec-header{flex-direction:column;}}
+</style>
+</head>
+<body>
+<nav><div class="nav-brand"><div class="nav-hex"></div><span class="nav-name">SILENT SYNDICATE</span></div><div class="nav-tag">// 7-Day Email Sequence</div></nav>
+
+<div class="page-header">
+  <div class="ph-label">ActiveCampaign — SS Welcome Automation</div>
+  <h1 class="ph-title">7-Day Email Sequence</h1>
+  <p class="ph-sub">All 7 emails ready to paste into ActiveCampaign. They fire automatically after every opt-in — educating, handling objections, building trust, and converting leads into paying operators without you lifting a finger.</p>
+</div>
+
+<div class="how-to">
+  <div class="ht-inner">
+    <div class="ht-step"><span class="ht-num">01</span><div class="ht-text">ActiveCampaign → Automations → SS Welcome Sequence → Add Email steps</div></div>
+    <div class="ht-step"><span class="ht-num">02</span><div class="ht-text">Set trigger: "When tag SS-NEW is added" — runs once per contact</div></div>
+    <div class="ht-step"><span class="ht-num">03</span><div class="ht-text">Copy subject line + body for each day. Replace [FIRST NAME] with AC merge tag %FIRSTNAME%</div></div>
+    <div class="ht-step"><span class="ht-num">04</span><div class="ht-text">Set automation to Active. Every opt-in triggers it automatically from that moment.</div></div>
+  </div>
+</div>
+
+<div class="wrap">
+
+<!-- DAY 0 -->
+<div class="email-card">
+  <div class="ec-header">
+    <span class="badge b-green">DAY 0 — IMMEDIATE</span>
+    <span class="ec-meta">Sends the moment someone opts in</span>
+    <span class="ec-goal">Goal: Deliver value + set honest expectations</span>
+  </div>
+  <div class="ec-subject">
+    <div class="lbl">// SUBJECT LINE — copy this exactly</div>
+    <div class="subject-line">You're in. Here's the Silent Syndicate blueprint.</div>
+    <div class="lbl" style="margin-top:0.8rem;">// PREVIEW TEXT</div>
+    <div class="preview">The honest breakdown of Enagic, the AI funnel, and what this actually pays.</div>
+  </div>
+  <div class="ec-body">
+    <div class="lbl">// EMAIL BODY — paste this into ActiveCampaign email editor</div>
+    <div class="email-content">
+      <span class="salute">Hey %FIRSTNAME%,</span>
+      <p>Welcome. You just opted in for the AI Income Blueprint — here it is.</p>
+      <p><strong>What Silent Syndicate actually is:</strong> We're an authorised distributor network built on Enagic International's direct sales platform. Enagic manufactures Kangen water ionisation machines and pays commissions of $2,400 to $6,330 per sale directly to distributors.</p>
+      <p>What makes Silent Syndicate different is how we find buyers. Instead of cold calling or pitching to people you know, we use an AI-automated funnel — content drives cold traffic in, an email sequence educates them automatically, an application filters serious buyers, and the offer page closes them. No calls required.</p>
+      <div class="hbox"><strong>The three entry tiers:</strong><br>Striker — $8,500 investment / $2,400 per sale<br>Launcher — $15,000 investment / $4,300 per sale<br>Nuke — $20,000 investment / $6,330 per sale</div>
+      <p>Over the next 7 days I'll walk you through exactly how the system works, what the numbers look like, and what it takes to run it.</p>
+      <p>Start here — the full system breakdown:</p>
+      <a href="https://silent-syndicate.netlify.app/page2-manifesto.html" class="cta">READ THE FULL SYSTEM →</a>
+      <div class="signoff"><span class="sname">Chairman — Silent Syndicate</span><span class="stitle">// AI-Powered Enagic Distributor Network</span></div>
+      <div class="disc">Income Disclaimer: Results are not typical. Individual results vary significantly. Most participants earn considerably less. This is not a guaranteed income opportunity.</div>
+    </div>
+  </div>
+  <div class="ec-note"><div class="note-lbl">// AC SETUP</div><div class="note-txt">Trigger: Tag SS-NEW added → Send immediately. No delay. This is the first thing every lead receives.</div></div>
+</div>
+
+<!-- DAY 1 -->
+<div class="email-card">
+  <div class="ec-header">
+    <span class="badge b-purple">DAY 1</span>
+    <span class="ec-meta">Wait 1 day after Day 0</span>
+    <span class="ec-goal">Goal: Explain the commission mechanics clearly</span>
+  </div>
+  <div class="ec-subject">
+    <div class="lbl">// SUBJECT LINE</div>
+    <div class="subject-line">How a water machine pays $4,300 commission</div>
+    <div class="lbl" style="margin-top:0.8rem;">// PREVIEW TEXT</div>
+    <div class="preview">The Enagic 8-point system explained in plain English. No fluff.</div>
+  </div>
+  <div class="ec-body">
+    <div class="lbl">// EMAIL BODY</div>
+    <div class="email-content">
+      <span class="salute">Hey %FIRSTNAME%,</span>
+      <p>Yesterday you got the overview. Today I want to explain the mechanics so you understand why the commissions are what they are.</p>
+      <p><strong>Enagic uses an 8-point commission system.</strong> When a machine is sold, the commission pool is split across up to 8 distributors in the chain. Each point is worth approximately $340.</p>
+      <p>Your rank determines how many points you capture per sale:</p>
+      <ul>
+        <li>Entry rank (1A) — 1 point — ~$340 per sale</li>
+        <li>Launcher rank (6A) — 6 points + bonuses — $4,300 per sale</li>
+        <li>Nuke rank (6A-2) — Maximum structure — $6,330 per sale</li>
+      </ul>
+      <p><strong>When you join Silent Syndicate at Launcher tier, you enter at 6A rank immediately.</strong> You start where most distributors spend years trying to reach.</p>
+      <p>And when operators join under you? You earn override commissions on their sales too. That's the network layer — it compounds silently while the funnel runs.</p>
+      <p>Tomorrow: the break-even math — exactly how many sales to recover your investment.</p>
+      <a href="https://silent-syndicate.netlify.app/commission-structure.html" class="cta">SEE THE FULL COMMISSION BREAKDOWN →</a>
+      <div class="signoff"><span class="sname">Chairman — Silent Syndicate</span><span class="stitle">// AI-Powered Enagic Distributor Network</span></div>
+      <div class="disc">Income Disclaimer: Results are not typical. Commission amounts are based on Enagic's published structure and subject to change.</div>
+    </div>
+  </div>
+  <div class="ec-note"><div class="note-lbl">// AC SETUP</div><div class="note-txt">1 day wait after Day 0. This email does the heavy lifting on education — watch for click-throughs to commission-structure page.</div></div>
+</div>
+
+<!-- DAY 2 -->
+<div class="email-card">
+  <div class="ec-header">
+    <span class="badge b-purple">DAY 2</span>
+    <span class="ec-meta">Wait 1 day after Day 1</span>
+    <span class="ec-goal">Goal: Make the ROI math undeniable</span>
+  </div>
+  <div class="ec-subject">
+    <div class="lbl">// SUBJECT LINE</div>
+    <div class="subject-line">Break-even at 4 sales. Here's the full equation.</div>
+    <div class="lbl" style="margin-top:0.8rem;">// PREVIEW TEXT</div>
+    <div class="preview">$15,000 invested. 4 sales later you're profitable. The arithmetic is simple.</div>
+  </div>
+  <div class="ec-body">
+    <div class="lbl">// EMAIL BODY</div>
+    <div class="email-content">
+      <span class="salute">Hey %FIRSTNAME%,</span>
+      <p>Let's talk numbers. Not projections — actual arithmetic.</p>
+      <div class="hbox"><strong>Launcher tier — most popular entry:</strong><br>Investment: $15,000<br>Commission per sale: $4,300<br>Break-even: 3.5 sales → <strong>4 sales</strong><br>Sale 5 onward: Pure profit</div>
+      <p>At 2 sales per month — conservative for a consistent operator — you recover your investment in 2 months and hit $8,600/month from month 3.</p>
+      <p>At 3 sales per month you're at $12,900/month. Before network overrides from operators under you.</p>
+      <p><strong>The AI funnel changes the traditional direct sales math entirely.</strong> Old-school Enagic distributors spend months cold calling and manually pitching. The funnel attracts pre-qualified buyers who've already been educated and already decided they want this — before they ever interact with you.</p>
+      <p>That's what compresses the timeline from months to weeks.</p>
+      <a href="https://silent-syndicate.netlify.app/page4-offer.html" class="cta">RUN THE ROI CALCULATOR →</a>
+      <div class="signoff"><span class="sname">Chairman — Silent Syndicate</span><span class="stitle">// AI-Powered Enagic Distributor Network</span></div>
+      <div class="disc">Income Disclaimer: Scenarios above are illustrative. Most participants earn less. Results depend on effort, consistency and market conditions.</div>
+    </div>
+  </div>
+  <div class="ec-note"><div class="note-lbl">// AC SETUP</div><div class="note-txt">1 day wait. Highest click-through to the offer page — watch your AC stats on this one. Many applications come in after this email.</div></div>
+</div>
+
+<!-- DAY 3 -->
+<div class="email-card">
+  <div class="ec-header">
+    <span class="badge b-cyan">DAY 3</span>
+    <span class="ec-meta">Wait 1 day after Day 2</span>
+    <span class="ec-goal">Goal: Kill objections before they kill the deal</span>
+  </div>
+  <div class="ec-subject">
+    <div class="lbl">// SUBJECT LINE</div>
+    <div class="subject-line">"Is this an MLM?" — Let me answer that directly.</div>
+    <div class="lbl" style="margin-top:0.8rem;">// PREVIEW TEXT</div>
+    <div class="preview">The three questions I get asked most. Answered honestly, no spin.</div>
+  </div>
+  <div class="ec-body">
+    <div class="lbl">// EMAIL BODY</div>
+    <div class="email-content">
+      <span class="salute">Hey %FIRSTNAME%,</span>
+      <p>By now you've probably had some questions come up. Let me answer the three most common ones directly.</p>
+      <p><strong>"Is this an MLM?"</strong><br>Yes — there is a network structure. When operators under you make sales, you earn override commissions. That's the same model used by major direct sales companies globally. What makes it different: your income comes primarily from your own sales, not recruiting. The product is real. Enagic has operated for 40+ years. And you're not cold-calling strangers — the AI funnel finds buyers automatically.</p>
+      <p><strong>"Is the investment worth it?"</strong><br>At $15,000 with $4,300 per sale, break-even is 4 sales. Most consistent operators hit that in 60–90 days. Compare that to a traditional franchise at $50,000–$500,000 with a 3–5 year break-even. The math is significantly better here.</p>
+      <p><strong>"Do I have to sell water machines to people I know?"</strong><br>No. Buyers come through the funnel — they found your content online, opted in voluntarily, read the education sequence, and applied because they want the business opportunity. You're not approaching your network.</p>
+      <p>Any other questions? Reply to this email directly. I read every one.</p>
+      <a href="https://silent-syndicate.netlify.app/page3-apply.html" class="cta">APPLY TO JOIN →</a>
+      <div class="signoff"><span class="sname">Chairman — Silent Syndicate</span><span class="stitle">// AI-Powered Enagic Distributor Network</span></div>
+    </div>
+  </div>
+  <div class="ec-note"><div class="note-lbl">// AC SETUP</div><div class="note-txt">1 day wait. People who reply with questions are your highest-value prospects. Check your replies daily after this one sends.</div></div>
+</div>
+
+<!-- DAY 4 -->
+<div class="email-card">
+  <div class="ec-header">
+    <span class="badge b-cyan">DAY 4</span>
+    <span class="ec-meta">Wait 1 day after Day 3</span>
+    <span class="ec-goal">Goal: Make the daily workflow tangible</span>
+  </div>
+  <div class="ec-subject">
+    <div class="lbl">// SUBJECT LINE</div>
+    <div class="subject-line">The only skill you actually need (it's not sales)</div>
+    <div class="lbl" style="margin-top:0.8rem;">// PREVIEW TEXT</div>
+    <div class="preview">Content drives the funnel. The funnel does the selling. Here's what a day looks like.</div>
+  </div>
+  <div class="ec-body">
+    <div class="lbl">// EMAIL BODY</div>
+    <div class="email-content">
+      <span class="salute">Hey %FIRSTNAME%,</span>
+      <p>People assume this model requires sales skills. It doesn't. <strong>The one skill it requires is content creation</strong> — specifically short-form video on TikTok and Instagram.</p>
+      <p>Here's what a typical day looks like once the system is running:</p>
+      <ul>
+        <li>Film 1–2 short videos (60 seconds) about the income opportunity</li>
+        <li>Post them. Your funnel link is in your bio.</li>
+        <li>The AIOS dashboard shows you overnight opt-ins</li>
+        <li>The email sequence is educating and qualifying those leads automatically</li>
+        <li>HOT leads get routed to the offer page without you involved</li>
+      </ul>
+      <p><strong>Total daily active time: 30–60 minutes.</strong> Everything else runs on autopilot.</p>
+      <p>The content doesn't need to be polished. It needs to be consistent and honest. The transparency hook — "here's what this actually is and what it pays" — outperforms every hype-based approach every time.</p>
+      <p>You don't need a following. You don't need experience. You need to post every day and let the system do its job.</p>
+      <a href="https://silent-syndicate.netlify.app/traffic-strategy.html" class="cta">READ THE FULL TRAFFIC STRATEGY →</a>
+      <div class="signoff"><span class="sname">Chairman — Silent Syndicate</span><span class="stitle">// AI-Powered Enagic Distributor Network</span></div>
+    </div>
+  </div>
+  <div class="ec-note"><div class="note-lbl">// AC SETUP</div><div class="note-txt">1 day wait. People who click through to the traffic strategy are serious. Tag them SS-WARM if not already tagged.</div></div>
+</div>
+
+<!-- DAY 5 -->
+<div class="email-card">
+  <div class="ec-header">
+    <span class="badge b-amber">DAY 5</span>
+    <span class="ec-meta">Wait 1 day after Day 4</span>
+    <span class="ec-goal">Goal: Social proof — make results real and believable</span>
+  </div>
+  <div class="ec-subject">
+    <div class="lbl">// SUBJECT LINE</div>
+    <div class="subject-line">Sarah made $14,200 in month 3. Here's her first 30 days.</div>
+    <div class="lbl" style="margin-top:0.8rem;">// PREVIEW TEXT</div>
+    <div class="preview">Real timeline. Real numbers. Her results are above average — here's what's typical too.</div>
+  </div>
+  <div class="ec-body">
+    <div class="lbl">// EMAIL BODY</div>
+    <div class="email-content">
+      <span class="salute">Hey %FIRSTNAME%,</span>
+      <p>I want to show you what the first 30 days actually look like for a new operator.</p>
+      <p><strong>Sarah K. — Brisbane, QLD — Launcher tier:</strong></p>
+      <div class="hbox">
+        Day 1–2: System set up. Funnel live. Email sequence active.<br>
+        Day 3–14: Daily TikToks posted. First opt-ins coming in.<br>
+        Day 15–18: HOT leads appearing in pipeline.<br>
+        Day 19: First application converted. <strong>$4,300 commission earned.</strong><br>
+        Month 3: $14,200/month — 3 sales per month consistently.
+      </div>
+      <p>I'll be straight — Sarah's results are above average. She was consistent from day one, posted daily, and had the full system set up before driving any traffic.</p>
+      <p><strong>What's more typical for someone starting from zero:</strong> first HOT lead in weeks 2–3, first confirmed sale in weeks 3–5, break-even around month 2.</p>
+      <p>The operators who get results fastest share two things: they set up properly before sending traffic, and they post content every single day without exception.</p>
+      <p>If that's you — the application takes 3 minutes.</p>
+      <a href="https://silent-syndicate.netlify.app/page3-apply.html" class="cta">SUBMIT YOUR APPLICATION →</a>
+      <div class="signoff"><span class="sname">Chairman — Silent Syndicate</span><span class="stitle">// AI-Powered Enagic Distributor Network</span></div>
+      <div class="disc">Income Disclaimer: Sarah's results are not typical. Most participants earn considerably less. Individual results depend on effort, consistency and market conditions.</div>
+    </div>
+  </div>
+  <div class="ec-note"><div class="note-lbl">// AC SETUP</div><div class="note-txt">1 day wait. Highest open rate email in the sequence. Watch for application spikes 24–48 hours after this sends.</div></div>
+</div>
+
+<!-- DAY 6 -->
+<div class="email-card">
+  <div class="ec-header">
+    <span class="badge b-amber">DAY 6</span>
+    <span class="ec-meta">Wait 1 day after Day 5</span>
+    <span class="ec-goal">Goal: Self-qualification — filter in the right people</span>
+  </div>
+  <div class="ec-subject">
+    <div class="lbl">// SUBJECT LINE</div>
+    <div class="subject-line">Three questions that tell you if this is right for you.</div>
+    <div class="lbl" style="margin-top:0.8rem;">// PREVIEW TEXT</div>
+    <div class="preview">Honest self-assessment. Yes to all three — apply today.</div>
+  </div>
+  <div class="ec-body">
+    <div class="lbl">// EMAIL BODY</div>
+    <div class="email-content">
+      <span class="salute">Hey %FIRSTNAME%,</span>
+      <p>Before you apply I want you to honestly answer these three questions:</p>
+      <p><strong>1. Do you have the capital?</strong><br>The investment is $8,500 to $20,000 depending on tier. This should be capital you can put to work — not money you can't afford to lose. If this would cause financial stress, it's not the right time.</p>
+      <p><strong>2. Can you post content consistently?</strong><br>One video per day, every day, for at least 30 days. No exceptions. If you won't commit to that, the funnel won't fill and the system won't produce results.</p>
+      <p><strong>3. Are you comfortable with a 30–60 day ramp?</strong><br>This is not instant income. First qualified leads typically arrive in weeks 2–3. First sales in weeks 3–5. If you need money in the next 30 days, this isn't the right vehicle right now.</p>
+      <p>If you answered yes to all three — you're exactly who this is built for.</p>
+      <p>If you answered no to any of them — bookmark this and come back when the timing is right. No pressure.</p>
+      <a href="https://silent-syndicate.netlify.app/page3-apply.html" class="cta">YES — I'M READY. APPLY NOW →</a>
+      <div class="signoff"><span class="sname">Chairman — Silent Syndicate</span><span class="stitle">// AI-Powered Enagic Distributor Network</span></div>
+    </div>
+  </div>
+  <div class="ec-note"><div class="note-lbl">// AC SETUP</div><div class="note-txt">1 day wait. This email filters your list naturally — serious applicants click through, unready leads self-select out. Both are the right outcome.</div></div>
+</div>
+
+<!-- DAY 7 -->
+<div class="email-card">
+  <div class="ec-header">
+    <span class="badge b-pink">DAY 7 — FINAL CTA</span>
+    <span class="ec-meta">Wait 1 day after Day 6</span>
+    <span class="ec-goal">Goal: Close the loop — apply now or reply</span>
+  </div>
+  <div class="ec-subject">
+    <div class="lbl">// SUBJECT LINE</div>
+    <div class="subject-line">This is your invitation. Here's what to do next.</div>
+    <div class="lbl" style="margin-top:0.8rem;">// PREVIEW TEXT</div>
+    <div class="preview">7 days. You have everything you need to decide. The application takes 3 minutes.</div>
+  </div>
+  <div class="ec-body">
+    <div class="lbl">// EMAIL BODY</div>
+    <div class="email-content">
+      <span class="salute">Hey %FIRSTNAME%,</span>
+      <p>You've spent 7 days seeing exactly what Silent Syndicate is — the model, the math, the system, the proof, and the self-qualification checklist.</p>
+      <p>You either see it or you don't. Either the numbers make sense and you're ready to act — or this isn't the right fit right now. Both are completely fine.</p>
+      <p><strong>If you're ready:</strong> The application takes 3 minutes. Your answers are scored automatically. If you're a fit, your offer unlocks immediately — no call, no waiting, no hard sell.</p>
+      <div class="hbox">
+        Striker — $8,500 / $2,400 per sale<br>
+        Launcher — $15,000 / $4,300 per sale ← most chosen<br>
+        Nuke — $20,000 / $6,330 per sale
+      </div>
+      <p><strong>If you're not ready yet:</strong> Reply to this email and tell me where you're at. I'll give you a straight answer on whether this makes sense for your situation and timeline.</p>
+      <p>This is the last email in the sequence. The opportunity doesn't disappear — but make a decision today rather than letting it drift.</p>
+      <a href="https://silent-syndicate.netlify.app/page3-apply.html" class="cta">SUBMIT MY APPLICATION →</a>
+      <div class="signoff"><span class="sname">Chairman — Silent Syndicate</span><span class="stitle">// AI-Powered Enagic Distributor Network</span></div>
+      <div class="disc">Income Disclaimer: All income figures are illustrative. Results vary significantly. Most participants earn considerably less. This is not a guaranteed income opportunity. Please conduct thorough due diligence before investing.</div>
+    </div>
+  </div>
+  <div class="ec-note"><div class="note-lbl">// AC SETUP</div><div class="note-txt">Final email. After this — move non-applicants into a 30-day warm nurture sequence with monthly check-ins. Never let a lead go permanently cold.</div></div>
+</div>
+
+</div>
+
+<footer>
+  <div class="footer-brand">SS / EMAIL SEQUENCE</div>
+  <div class="footer-tag">7-Day Welcome Automation · ActiveCampaign</div>
+  <div class="footer-tag">© 2025 Silent Syndicate</div>
+</footer>
+</body>
+</html>

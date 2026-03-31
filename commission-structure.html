@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Silent Syndicate — Commission Structure Explained</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=DM+Sans:wght@300;400;500;600&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+<style>
+:root{
+  --black:#03010a;--bg:#05020e;--card:#0a0618;--card2:#0e0920;
+  --pm:#7c3aed;--pb:#a855f7;--pg:#c084fc;--pink:#ec4899;--pkb:#f472b6;
+  --cyan:#22d3ee;--green:#4ade80;--amber:#fbbf24;--red:#ef4444;
+  --white:#f0ecff;--muted:rgba(240,236,255,0.78);--dim:rgba(240,236,255,0.48);
+  --border:rgba(168,85,247,0.15);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{font-size:16px;scroll-behavior:smooth;}
+body{background:var(--bg);color:var(--white);font-family:'DM Sans',sans-serif;overflow-x:hidden;}
+body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(rgba(168,85,247,0.03) 1px,transparent 1px),linear-gradient(90deg,rgba(168,85,247,0.03) 1px,transparent 1px);background-size:50px 50px;pointer-events:none;z-index:0;animation:gs 40s linear infinite;}
+@keyframes gs{to{background-position:50px 50px;}}
+.orb{position:fixed;border-radius:50%;filter:blur(110px);pointer-events:none;z-index:0;}
+.o1{width:500px;height:500px;background:rgba(107,33,168,0.15);top:-100px;left:-100px;animation:od 20s ease-in-out infinite;}
+.o2{width:400px;height:400px;background:rgba(34,211,238,0.06);bottom:-80px;right:-80px;animation:od 25s ease-in-out infinite reverse;}
+@keyframes od{0%,100%{transform:translate(0,0);}50%{transform:translate(35px,-45px);}}
+nav,section,footer{position:relative;z-index:1;}
+
+nav{position:sticky;top:0;z-index:500;background:rgba(3,1,10,0.96);backdrop-filter:blur(24px);border-bottom:1px solid var(--border);padding:0.9rem 5%;display:flex;justify-content:space-between;align-items:center;}
+.nav-brand{display:flex;align-items:center;gap:0.7rem;}
+.nav-hex{width:22px;height:22px;background:linear-gradient(135deg,var(--pm),var(--pink));clip-path:polygon(50% 0%,100% 25%,100% 75%,50% 100%,0% 75%,0% 25%);box-shadow:0 0 12px rgba(168,85,247,0.7);animation:hp 3s ease-in-out infinite;}
+@keyframes hp{0%,100%{box-shadow:0 0 12px rgba(168,85,247,0.5);}50%{box-shadow:0 0 25px rgba(168,85,247,1);}}
+.nav-name{font-family:'Orbitron',sans-serif;font-size:0.85rem;font-weight:900;letter-spacing:0.15em;background:linear-gradient(90deg,var(--pg),var(--pkb));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.nav-tag{font-family:'Share Tech Mono',monospace;font-size:0.6rem;letter-spacing:0.15em;color:var(--dim);}
+
+.page-header{padding:4rem 5% 3rem;text-align:center;}
+.ph-label{font-family:'Share Tech Mono',monospace;font-size:0.65rem;letter-spacing:0.25em;color:var(--cyan);margin-bottom:1rem;display:flex;align-items:center;justify-content:center;gap:0.8rem;}
+.ph-label::before,.ph-label::after{content:'';display:block;height:1px;width:30px;background:var(--cyan);}
+.ph-title{font-family:'Orbitron',sans-serif;font-size:clamp(1.8rem,4vw,3rem);font-weight:900;background:linear-gradient(135deg,var(--white),var(--pg) 50%,var(--cyan) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:1rem;line-height:1.1;}
+.ph-sub{font-size:1.05rem;color:var(--muted);max-width:680px;margin:0 auto;line-height:1.9;}
+
+.wrap{max-width:960px;margin:0 auto;padding:0 5% 6rem;}
+
+.sec-label{font-family:'Share Tech Mono',monospace;font-size:0.6rem;letter-spacing:0.22em;color:var(--cyan);display:flex;align-items:center;gap:0.7rem;margin-bottom:0.8rem;}
+.sec-label::before{content:'';width:18px;height:1px;background:linear-gradient(90deg,var(--cyan),var(--pb));}
+.sec-title{font-family:'Orbitron',sans-serif;font-size:clamp(1.4rem,3vw,2.2rem);font-weight:900;background:linear-gradient(135deg,var(--white),var(--pg));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:0.8rem;line-height:1.05;}
+.sec-sub{font-size:0.98rem;color:var(--muted);line-height:1.9;max-width:680px;margin-bottom:3rem;}
+.sec-sub strong{color:var(--white);}
+
+/* ── 8 POINT VISUAL ── */
+.eight-point-wrap{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:3rem;margin-bottom:3rem;position:relative;overflow:hidden;}
+.eight-point-wrap::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--cyan),var(--pb));box-shadow:0 0 10px var(--cyan);}
+
+.ep-intro{display:grid;grid-template-columns:1fr 1fr;gap:3rem;margin-bottom:3rem;align-items:center;}
+.ep-text h3{font-family:'Orbitron',sans-serif;font-size:1.1rem;font-weight:700;color:var(--white);margin-bottom:0.8rem;letter-spacing:0.05em;}
+.ep-text p{font-size:0.95rem;color:var(--muted);line-height:1.9;}
+.ep-text p strong{color:var(--white);}
+
+.ep-math{background:var(--card2);border:1px solid rgba(34,211,238,0.15);border-radius:10px;padding:1.8rem;text-align:center;}
+.epm-label{font-family:'Share Tech Mono',monospace;font-size:0.55rem;letter-spacing:0.2em;color:var(--cyan);margin-bottom:1rem;}
+.epm-eq{font-family:'Orbitron',sans-serif;font-size:1rem;font-weight:700;color:var(--white);margin-bottom:0.5rem;}
+.epm-val{font-family:'Orbitron',sans-serif;font-size:2.5rem;font-weight:900;background:linear-gradient(90deg,var(--green),#86efac);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;display:block;line-height:1;}
+.epm-sub{font-family:'Share Tech Mono',monospace;font-size:0.55rem;letter-spacing:0.1em;color:var(--dim);margin-top:0.4rem;}
+
+/* point chain visual */
+.point-chain{display:flex;flex-direction:column;gap:0;}
+.point-chain-label{font-family:'Share Tech Mono',monospace;font-size:0.58rem;letter-spacing:0.18em;color:var(--pg);margin-bottom:1.2rem;}
+
+.pc-row{display:grid;grid-template-columns:24px 1fr auto;gap:1rem;align-items:center;padding:0.7rem 0;border-bottom:1px solid rgba(168,85,247,0.07);}
+.pc-row:last-child{border-bottom:none;}
+.pc-point{width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Orbitron',sans-serif;font-size:0.55rem;font-weight:700;flex-shrink:0;}
+.pc-point.direct{background:linear-gradient(135deg,var(--green),#166534);color:var(--white);box-shadow:0 0 10px rgba(74,222,128,0.4);}
+.pc-point.up{background:rgba(168,85,247,0.15);border:1px solid rgba(168,85,247,0.3);color:var(--pg);}
+.pc-who{font-size:0.88rem;color:var(--muted);}
+.pc-who strong{color:var(--white);}
+.pc-earn{font-family:'Orbitron',sans-serif;font-size:0.88rem;font-weight:700;color:var(--green);}
+.pc-earn.dim{color:rgba(168,85,247,0.5);}
+
+/* ── RANK PROGRESSION ── */
+.rank-progression{display:flex;flex-direction:column;gap:2px;margin-bottom:3rem;position:relative;}
+
+.rank-row{display:grid;grid-template-columns:80px 120px 1fr 120px 120px;gap:0;align-items:center;background:var(--card);border:1px solid rgba(168,85,247,0.1);transition:all 0.25s;cursor:default;}
+.rank-row:hover{border-color:rgba(168,85,247,0.35);background:rgba(168,85,247,0.07);}
+.rank-row.ss-tier{border-color:rgba(168,85,247,0.3);background:rgba(168,85,247,0.08);}
+.rank-row.ss-tier.featured{border-color:var(--pb);background:rgba(168,85,247,0.14);}
+.rank-row.ss-tier.top{border-color:var(--amber);background:rgba(251,191,36,0.05);}
+.rank-row.header-row{background:rgba(168,85,247,0.06);border-color:rgba(168,85,247,0.15);}
+
+.rr-rank{padding:1.2rem;font-family:'Orbitron',sans-serif;font-size:1.1rem;font-weight:700;text-align:center;border-right:1px solid rgba(168,85,247,0.08);}
+.header-row .rr-rank{font-family:'Share Tech Mono',monospace;font-size:0.52rem;letter-spacing:0.15em;color:var(--dim);font-weight:400;}
+
+.rr-name{padding:1.2rem;border-right:1px solid rgba(168,85,247,0.08);}
+.rr-name-label{font-family:'Share Tech Mono',monospace;font-size:0.6rem;letter-spacing:0.12em;color:var(--pg);}
+.header-row .rr-name{font-family:'Share Tech Mono',monospace;font-size:0.52rem;letter-spacing:0.15em;color:var(--dim);display:flex;align-items:center;}
+
+.rr-desc{padding:1.2rem 1.5rem;border-right:1px solid rgba(168,85,247,0.08);font-size:0.85rem;color:var(--dim);line-height:1.6;}
+.header-row .rr-desc{font-family:'Share Tech Mono',monospace;font-size:0.52rem;letter-spacing:0.15em;color:var(--dim);}
+
+.rr-points{padding:1.2rem;text-align:center;border-right:1px solid rgba(168,85,247,0.08);}
+.rr-points-val{font-family:'Orbitron',sans-serif;font-size:1.2rem;font-weight:700;color:var(--cyan);display:block;line-height:1;}
+.rr-points-label{font-family:'Share Tech Mono',monospace;font-size:0.48rem;letter-spacing:0.1em;color:var(--dim);margin-top:0.2rem;display:block;}
+.header-row .rr-points{font-family:'Share Tech Mono',monospace;font-size:0.52rem;letter-spacing:0.15em;color:var(--dim);}
+
+.rr-income{padding:1.2rem;text-align:center;}
+.rr-income-val{font-family:'Orbitron',sans-serif;font-size:1rem;font-weight:700;color:var(--green);display:block;line-height:1;}
+.rr-income-label{font-family:'Share Tech Mono',monospace;font-size:0.48rem;letter-spacing:0.1em;color:var(--dim);margin-top:0.2rem;display:block;}
+.header-row .rr-income{font-family:'Share Tech Mono',monospace;font-size:0.52rem;letter-spacing:0.15em;color:var(--dim);}
+
+.ss-badge{display:inline-block;font-family:'Share Tech Mono',monospace;font-size:0.48rem;letter-spacing:0.1em;padding:0.15rem 0.5rem;border-radius:3px;margin-top:0.3rem;}
+.ss-badge.entry{color:var(--pg);background:rgba(168,85,247,0.1);border:1px solid rgba(168,85,247,0.25);}
+.ss-badge.mid{color:var(--pkb);background:rgba(236,72,153,0.08);border:1px solid rgba(236,72,153,0.2);}
+.ss-badge.top{color:var(--amber);background:rgba(251,191,36,0.08);border:1px solid rgba(251,191,36,0.2);}
+
+/* breakaway explainer */
+.breakaway-box{background:rgba(251,191,36,0.05);border:1px solid rgba(251,191,36,0.2);border-radius:12px;padding:2.5rem;margin-bottom:3rem;position:relative;overflow:hidden;}
+.breakaway-box::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--amber),transparent);}
+.bb-label{font-family:'Share Tech Mono',monospace;font-size:0.6rem;letter-spacing:0.22em;color:var(--amber);margin-bottom:1rem;}
+.bb-title{font-family:'Orbitron',sans-serif;font-size:1.1rem;font-weight:700;color:var(--white);margin-bottom:1rem;letter-spacing:0.05em;}
+.bb-body{font-size:0.95rem;color:var(--muted);line-height:1.9;margin-bottom:1.5rem;}
+.bb-body strong{color:var(--white);}
+.bb-points{display:flex;flex-direction:column;gap:0.6rem;}
+.bbp{display:flex;align-items:flex-start;gap:0.8rem;font-size:0.92rem;color:var(--muted);line-height:1.6;padding:0.7rem;background:rgba(251,191,36,0.04);border:1px solid rgba(251,191,36,0.08);border-radius:6px;}
+.bbp strong{color:var(--white);}
+
+/* ── INCOME DISCLOSURE ── */
+.income-disclosure{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:3rem;margin-bottom:3rem;position:relative;overflow:hidden;}
+.income-disclosure::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--green),var(--cyan));box-shadow:0 0 10px var(--green);}
+
+.id-label{font-family:'Share Tech Mono',monospace;font-size:0.6rem;letter-spacing:0.25em;color:var(--green);margin-bottom:1.5rem;}
+.id-title{font-family:'Orbitron',sans-serif;font-size:1.3rem;font-weight:700;color:var(--white);margin-bottom:1rem;letter-spacing:0.05em;}
+.id-intro{font-size:0.95rem;color:var(--muted);line-height:1.9;margin-bottom:2rem;}
+
+.disclosure-table{width:100%;border-collapse:collapse;margin-bottom:1.5rem;}
+.disclosure-table th{font-family:'Share Tech Mono',monospace;font-size:0.52rem;letter-spacing:0.15em;color:var(--pg);padding:0.9rem 1.2rem;text-align:left;border-bottom:1px solid rgba(168,85,247,0.15);background:rgba(168,85,247,0.05);}
+.disclosure-table td{padding:1rem 1.2rem;border-bottom:1px solid rgba(168,85,247,0.07);font-size:0.88rem;color:var(--muted);vertical-align:middle;}
+.disclosure-table tr:hover td{background:rgba(168,85,247,0.04);}
+.disclosure-table td:first-child{font-weight:600;color:var(--white);}
+
+.dt-bar-wrap{width:100%;background:rgba(168,85,247,0.1);border-radius:3px;height:6px;margin-top:0.4rem;}
+.dt-bar{height:100%;border-radius:3px;background:linear-gradient(90deg,var(--pb),var(--pkb));}
+
+.id-footnote{font-family:'Share Tech Mono',monospace;font-size:0.58rem;letter-spacing:0.06em;color:var(--dim);line-height:1.9;border-top:1px solid rgba(168,85,247,0.1);padding-top:1.2rem;}
+
+footer{padding:2rem 5%;border-top:1px solid var(--border);display:flex;justify-content:space-between;flex-wrap:wrap;gap:1rem;}
+.footer-brand{font-family:'Orbitron',sans-serif;font-size:0.9rem;font-weight:900;letter-spacing:0.15em;background:linear-gradient(90deg,var(--pg),var(--cyan));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.footer-tag{font-family:'Share Tech Mono',monospace;font-size:0.58rem;letter-spacing:0.12em;color:var(--dim);}
+
+.reveal{opacity:0;transform:translateY(22px);transition:opacity 0.7s ease,transform 0.7s ease;}
+.reveal.visible{opacity:1;transform:translateY(0);}
+.rd1{transition-delay:0.1s;}.rd2{transition-delay:0.2s;}
+
+@media(max-width:800px){
+  .ep-intro{grid-template-columns:1fr;}
+  .rank-row{grid-template-columns:60px 100px 1fr 90px;}
+  .rank-row .rr-income{display:none;}
+}
+</style>
+
+<!-- ═══ ANALYTICS & TRACKING ═══ -->
+<!-- GA4: Replace G-XXXXXXXXXX with your real Measurement ID from analytics.google.com -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-XXXXXXXXXX');
+</script>
+<!-- Facebook Pixel: Replace XXXXXXXXXXXXXXX with your real Pixel ID from business.facebook.com -->
+<script>
+!function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;
+n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;
+t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,
+document,'script','https://connect.facebook.net/en_US/fbevents.js');
+fbq('init', 'XXXXXXXXXXXXXXX');
+fbq('track', 'PageView');
+</script>
+<noscript><img height="1" width="1" style="display:none" src="https://www.facebook.com/tr?id=XXXXXXXXXXXXXXX&ev=PageView&noscript=1"/></noscript>
+<!-- Tidio Chatbot: Replace xxxxxxxxxxxx with your real Tidio public key from tidio.com/panel/settings -->
+<script src="//code.tidio.co/xxxxxxxxxxxx.js" async></script>
+<!-- ═══════════════════════════ -->
+</head>
+<body>
+<div class="orb o1"></div><div class="orb o2"></div>
+
+<nav>
+  <div class="nav-brand"><div class="nav-hex"></div><span class="nav-name">SILENT SYNDICATE</span></div>
+  <div class="nav-tag">// Commission Structure Explained</div>
+</nav>
+
+<div class="page-header">
+  <div class="ph-label">Full Transparency — No Fine Print</div>
+  <h1 class="ph-title">The 8-Point System.<br>Ranks. Progression. Real Numbers.</h1>
+  <p class="ph-sub">This is the complete breakdown of how Enagic's commission structure works, how rank progression affects your earnings, and what the realistic income distribution looks like across all distributors. Everything visible. Nothing hidden.</p>
+</div>
+
+<div class="wrap">
+
+  <!-- 8 POINT SYSTEM -->
+  <div class="sec-label reveal">// Section 01</div>
+  <h2 class="sec-title reveal">The 8-Point Commission System</h2>
+  <p class="sec-sub reveal">When an Enagic machine is sold, the commission is <strong>distributed across up to 8 people</strong> in the distributor chain. Each "point" has a fixed dollar value. Your rank determines how many points you capture — both from your own sales and from your downline's sales.</p>
+
+  <div class="eight-point-wrap reveal">
+    <div class="ep-intro">
+      <div class="ep-text">
+        <h3>How The Points Work</h3>
+        <p>Every machine sale generates a fixed pool of commission — approximately <strong>$340–$350 per point × 8 points = ~$2,720–$2,800 total distributed</strong>. That pool gets split across the distributor chain based on rank.<br><br>A 1A distributor (entry rank) captures 1 point from their own sale. A 6A distributor (Launcher tier) captures 6 points. The remaining points flow to higher-ranked distributors further up the chain.<br><br>The higher your rank, the more of the available pool you capture — and the more you also capture from every sale your downline makes.</p>
+      </div>
+      <div class="ep-math">
+        <div class="epm-label">// POINT VALUE EXAMPLE</div>
+        <div class="epm-eq">~$340 per point × 6 points</div>
+        <span class="epm-val">$2,040</span>
+        <div class="epm-sub">Base at 6A rank + bonuses = $4,300 total</div>
+        <div style="margin-top:1.5rem;border-top:1px solid rgba(34,211,238,0.15);padding-top:1.2rem;">
+          <div class="epm-eq">~$340 per point × 8 points</div>
+          <span class="epm-val" style="font-size:1.8rem;">$2,720</span>
+          <div class="epm-sub">Max base pool per sale distributed across chain</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="point-chain">
+      <div class="point-chain-label">// HOW ONE SALE DISTRIBUTES — EXAMPLE (6A SELLER)</div>
+      <div class="pc-row">
+        <div class="pc-point direct">YOU</div>
+        <div class="pc-who"><strong>You — 6A rank (Launcher)</strong><br><span style="font-size:0.78rem;">Direct seller — captures 6 points + rank bonuses</span></div>
+        <div class="pc-earn">$4,300</div>
+      </div>
+      <div class="pc-row">
+        <div class="pc-point up">L1</div>
+        <div class="pc-who"><strong>Your sponsor</strong><br><span style="font-size:0.78rem;">Earns override points based on their rank vs yours</span></div>
+        <div class="pc-earn dim">Override</div>
+      </div>
+      <div class="pc-row">
+        <div class="pc-point up">L2</div>
+        <div class="pc-who"><strong>Their sponsor</strong><br><span style="font-size:0.78rem;">Continues up the chain — up to 8 levels total</span></div>
+        <div class="pc-earn dim">Override</div>
+      </div>
+      <div class="pc-row">
+        <div class="pc-point up">L3+</div>
+        <div class="pc-who"><strong>Further up the chain</strong><br><span style="font-size:0.78rem;">Points flow until all 8 are distributed or chain ends</span></div>
+        <div class="pc-earn dim">Override</div>
+      </div>
+      <div class="pc-row">
+        <div class="pc-point" style="background:rgba(34,211,238,0.1);border:1px solid rgba(34,211,238,0.3);color:var(--cyan);">ENG</div>
+        <div class="pc-who"><strong>Enagic International</strong><br><span style="font-size:0.78rem;">Pays all commissions directly. Silent Syndicate does not handle commission funds.</span></div>
+        <div class="pc-earn" style="color:var(--cyan);">Pays all</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- RANK PROGRESSION -->
+  <div class="sec-label reveal">// Section 02</div>
+  <h2 class="sec-title reveal">Rank Progression Roadmap</h2>
+  <p class="sec-sub reveal">Your rank determines your commission per sale. You advance by accumulating sales. <strong>Higher rank = more points per sale = higher commission on every transaction in your network.</strong> Silent Syndicate's three entry tiers correspond to specific Enagic rank levels.</p>
+
+  <div class="rank-progression reveal">
+    <div class="rank-row header-row">
+      <div class="rr-rank">RANK</div>
+      <div class="rr-name" style="display:flex;align-items:center;">SS TIER</div>
+      <div class="rr-desc">WHAT IT MEANS</div>
+      <div class="rr-points" style="display:flex;align-items:center;justify-content:center;font-family:'Share Tech Mono',monospace;font-size:0.52rem;letter-spacing:0.15em;color:var(--dim);">POINTS/SALE</div>
+      <div class="rr-income" style="display:flex;align-items:center;justify-content:center;font-family:'Share Tech Mono',monospace;font-size:0.52rem;letter-spacing:0.15em;color:var(--dim);">EST/SALE</div>
+    </div>
+
+    <div class="rank-row">
+      <div class="rr-rank" style="color:rgba(168,85,247,0.4);">1A</div>
+      <div class="rr-name"><div class="rr-name-label">Entry</div></div>
+      <div class="rr-desc">Starting rank. Earns 1 point per sale. Most new distributors begin here before joining Silent Syndicate.</div>
+      <div class="rr-points"><span class="rr-points-val" style="color:rgba(168,85,247,0.4);">1</span><span class="rr-points-label">per sale</span></div>
+      <div class="rr-income"><span class="rr-income-val" style="color:rgba(74,222,128,0.4);">~$340</span><span class="rr-income-label">base</span></div>
+    </div>
+
+    <div class="rank-row">
+      <div class="rr-rank" style="color:rgba(168,85,247,0.5);">2A</div>
+      <div class="rr-name"><div class="rr-name-label">Growing</div></div>
+      <div class="rr-desc">2 points per sale. Downline sales begin to generate meaningful overrides.</div>
+      <div class="rr-points"><span class="rr-points-val" style="color:rgba(168,85,247,0.5);">2</span><span class="rr-points-label">per sale</span></div>
+      <div class="rr-income"><span class="rr-income-val" style="color:rgba(74,222,128,0.5);">~$680</span><span class="rr-income-label">base</span></div>
+    </div>
+
+    <div class="rank-row">
+      <div class="rr-rank" style="color:rgba(168,85,247,0.65);">3A</div>
+      <div class="rr-name"><div class="rr-name-label">Building</div></div>
+      <div class="rr-desc">3 points. Network overrides start to become a meaningful portion of income.</div>
+      <div class="rr-points"><span class="rr-points-val" style="color:rgba(168,85,247,0.65);">3</span><span class="rr-points-label">per sale</span></div>
+      <div class="rr-income"><span class="rr-income-val" style="color:rgba(74,222,128,0.65);">~$1,020</span><span class="rr-income-label">base</span></div>
+    </div>
+
+    <div class="rank-row ss-tier">
+      <div class="rr-rank" style="color:var(--pb);">D3</div>
+      <div class="rr-name"><div class="rr-name-label" style="color:var(--white);">STRIKER</div><span class="ss-badge entry">SS ENTRY</span></div>
+      <div class="rr-desc" style="color:var(--muted);">Silent Syndicate Striker tier entry point. Earns on D3 structure. $2,400 per direct sale. Full AIOS access included.</div>
+      <div class="rr-points"><span class="rr-points-val">D3</span><span class="rr-points-label">structure</span></div>
+      <div class="rr-income"><span class="rr-income-val">$2,400</span><span class="rr-income-label">per sale</span></div>
+    </div>
+
+    <div class="rank-row">
+      <div class="rr-rank" style="color:rgba(168,85,247,0.8);">4A</div>
+      <div class="rr-name"><div class="rr-name-label">Advancing</div></div>
+      <div class="rr-desc">4 points per sale. Override income becoming significant. Network growing.</div>
+      <div class="rr-points"><span class="rr-points-val" style="color:rgba(168,85,247,0.8);">4</span><span class="rr-points-label">per sale</span></div>
+      <div class="rr-income"><span class="rr-income-val" style="color:rgba(74,222,128,0.8);">~$1,360</span><span class="rr-income-label">base</span></div>
+    </div>
+
+    <div class="rank-row">
+      <div class="rr-rank" style="color:rgba(168,85,247,0.9);">5A</div>
+      <div class="rr-name"><div class="rr-name-label">Strong</div></div>
+      <div class="rr-desc">5 points per sale. Network overrides compounding meaningfully.</div>
+      <div class="rr-points"><span class="rr-points-val" style="color:rgba(168,85,247,0.9);">5</span><span class="rr-points-label">per sale</span></div>
+      <div class="rr-income"><span class="rr-income-val" style="color:rgba(74,222,128,0.9);">~$1,700</span><span class="rr-income-label">base</span></div>
+    </div>
+
+    <div class="rank-row ss-tier featured">
+      <div class="rr-rank" style="color:var(--pg);">6A</div>
+      <div class="rr-name"><div class="rr-name-label" style="color:var(--white);">LAUNCHER</div><span class="ss-badge mid">MOST CHOSEN</span></div>
+      <div class="rr-desc" style="color:var(--muted);">Silent Syndicate Launcher entry. 6 points per sale. Maximum single-sale capture before bonus structures. $4,300 per direct sale. Overrides on full downline.</div>
+      <div class="rr-points"><span class="rr-points-val">6</span><span class="rr-points-label">per sale</span></div>
+      <div class="rr-income"><span class="rr-income-val">$4,300</span><span class="rr-income-label">per sale</span></div>
+    </div>
+
+    <div class="rank-row ss-tier top">
+      <div class="rr-rank" style="color:var(--amber);">6A-2</div>
+      <div class="rr-name"><div class="rr-name-label" style="color:var(--white);">NUKE</div><span class="ss-badge top">MAXIMUM</span></div>
+      <div class="rr-desc" style="color:var(--muted);">Silent Syndicate Nuke entry. 6A-2 bonus structures unlock. $6,330 per direct sale. Maximum commission capture. Royalty income eligible. Full Master AIOS.</div>
+      <div class="rr-points"><span class="rr-points-val" style="color:var(--amber);">6A+</span><span class="rr-points-label">bonus</span></div>
+      <div class="rr-income"><span class="rr-income-val" style="color:var(--amber);">$6,330</span><span class="rr-income-label">per sale</span></div>
+    </div>
+  </div>
+
+  <!-- BREAKAWAY MECHANIC -->
+  <div class="breakaway-box reveal">
+    <div class="bb-label">// THE BREAKAWAY MECHANIC — EXPLAINED PLAINLY</div>
+    <div class="bb-title">What Happens When Your Downline Outranks You</div>
+    <div class="bb-body">
+      In Enagic's commission structure, <strong>rank determines point capture.</strong> If a distributor in your downline achieves a higher rank than you, they begin capturing more of the available commission points per sale — including some that previously flowed to you.<br><br>
+      This is called the breakaway mechanic. It is not a hidden trap. <strong>It is a structural feature designed to reward active operators and create sustained motivation to build.</strong>
+    </div>
+    <div class="bb-points">
+      <div class="bbp"><strong>What it means in practice:</strong> If you join at Launcher (6A) and your recruit eventually reaches 6A themselves, they capture a similar commission structure to yours on their sales. Your override on their sales adjusts accordingly.</div>
+      <div class="bbp"><strong>Why this is actually good:</strong> It ensures the system rewards performance at every level — not just seniority. Strong operators at every level are compensated for their own work.</div>
+      <div class="bbp"><strong>How to protect your position:</strong> Stay active. Keep building your own sales volume and network. Operators who stay at the top of their own network in terms of rank and activity earn the most long-term.</div>
+      <div class="bbp"><strong>The Silent Syndicate angle:</strong> The AI funnel keeps you consistently generating new sales and new operators — which is exactly what protects and grows your rank position over time.</div>
+    </div>
+  </div>
+
+  <!-- INCOME DISCLOSURE -->
+  <div class="income-disclosure reveal">
+    <div class="id-label">// INCOME DISCLOSURE STATEMENT</div>
+    <div class="id-title">Realistic Earnings Distribution</div>
+    <div class="id-intro">
+      Most direct sales organisations do not publish income disclosures. We do. The figures below represent our honest assessment of realistic earnings distributions across distributor levels. These are not cherry-picked highs — they are realistic ranges based on consistent operation of the system.
+    </div>
+
+    <table class="disclosure-table">
+      <thead>
+        <tr>
+          <th>Operator Profile</th>
+          <th>Monthly Range</th>
+          <th>Annual Range</th>
+          <th>What This Requires</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Inactive / not posting content</td>
+          <td style="color:var(--red);">$0</td>
+          <td style="color:var(--red);">$0</td>
+          <td>No traffic = no leads = no sales</td>
+        </tr>
+        <tr>
+          <td>Early stage (months 1–2)</td>
+          <td style="color:var(--amber);">$0 – $4,300</td>
+          <td style="color:var(--amber);">$0 – $12,000</td>
+          <td>System setup + consistent content, first HOT leads converting</td>
+        </tr>
+        <tr>
+          <td>Active operator — 1–2 sales/mo</td>
+          <td style="color:var(--pg);">$2,400 – $8,600</td>
+          <td style="color:var(--pg);">$28,800 – $103,200</td>
+          <td>Daily content, optimised funnel, 50–100 opt-ins/week</td>
+        </tr>
+        <tr>
+          <td>Strong operator — 3–4 sales/mo</td>
+          <td style="color:var(--green);">$8,600 – $17,200</td>
+          <td style="color:var(--green);">$103,200 – $206,400</td>
+          <td>High traffic volume, proven content angles, growing network overrides</td>
+        </tr>
+        <tr>
+          <td>Network operator — own sales + overrides</td>
+          <td style="color:var(--green);">$15,000 – $40,000+</td>
+          <td style="color:var(--green);">$180,000 – $480,000+</td>
+          <td>Active downline of 5+ operators all running their own funnels</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="id-footnote">
+      INCOME DISCLAIMER: The ranges above are illustrative estimates, not guarantees. Most participants earn less than the figures shown. The majority of new distributors who do not post consistent content or drive regular traffic earn $0. Results depend entirely on individual effort, consistency, market conditions, traffic volume, and execution quality. Commission amounts are based on Enagic's published distributor compensation structure and are subject to change without notice. Silent Syndicate is an independent distributor network and is not affiliated with or officially endorsed by Enagic International. This document does not constitute financial advice. Always conduct thorough due diligence before making any investment decision.
+    </div>
+  </div>
+
+</div>
+
+<footer>
+  <div class="footer-brand">SS / STRUCTURE</div>
+  <div class="footer-tag">Commission Structure Explained · Silent Syndicate</div>
+  <div class="footer-tag">© 2025</div>
+<div style="width:100%;border-top:1px solid rgba(168,85,247,0.08);padding-top:1rem;margin-top:0.5rem;display:flex;gap:1.5rem;flex-wrap:wrap;">
+  <a href="privacy-policy.html" style="font-family:'Share Tech Mono',monospace;font-size:0.55rem;letter-spacing:0.1em;color:rgba(240,236,255,0.3);text-decoration:none;">Privacy Policy</a>
+  <a href="terms.html" style="font-family:'Share Tech Mono',monospace;font-size:0.55rem;letter-spacing:0.1em;color:rgba(240,236,255,0.3);text-decoration:none;">Terms of Service</a>
+  <a href="operator-guidelines.html" style="font-family:'Share Tech Mono',monospace;font-size:0.55rem;letter-spacing:0.1em;color:rgba(240,236,255,0.3);text-decoration:none;">Operator Guidelines</a>
+  <a href="commission-structure.html" style="font-family:'Share Tech Mono',monospace;font-size:0.55rem;letter-spacing:0.1em;color:rgba(240,236,255,0.3);text-decoration:none;">Income Disclosure</a>
+</div>
+</footer>
+
+<script>
+const obs = new IntersectionObserver(entries=>{
+  entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('visible');obs.unobserve(e.target);}});
+},{threshold:0.08});
+document.querySelectorAll('.reveal').forEach(el=>obs.observe(el));
+</script>
+</body>
+</html>

@@ -1,0 +1,674 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Silent Syndicate — Faceless Content Workflow</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=DM+Sans:wght@300;400;500;600&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#05020e;--card:#0a0618;--card2:#0e0920;--pm:#7c3aed;--pb:#a855f7;--pg:#c084fc;--pink:#ec4899;--pkb:#f472b6;--cyan:#22d3ee;--green:#4ade80;--amber:#fbbf24;--white:#f0ecff;--muted:rgba(240,236,255,0.78);--dim:rgba(240,236,255,0.45);--border:rgba(168,85,247,0.15);}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{font-size:16px;}
+body{background:var(--bg);color:var(--white);font-family:'DM Sans',sans-serif;overflow-x:hidden;}
+body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(rgba(168,85,247,0.025) 1px,transparent 1px),linear-gradient(90deg,rgba(168,85,247,0.025) 1px,transparent 1px);background-size:50px 50px;pointer-events:none;z-index:0;}
+.orb{position:fixed;border-radius:50%;filter:blur(120px);pointer-events:none;z-index:0;}
+.o1{width:500px;height:500px;background:rgba(107,33,168,0.15);top:-100px;right:-100px;animation:od 20s ease-in-out infinite;}
+.o2{width:350px;height:350px;background:rgba(34,211,238,0.06);bottom:-80px;left:-80px;animation:od 26s ease-in-out infinite reverse;}
+@keyframes od{0%,100%{transform:translate(0,0);}50%{transform:translate(30px,-40px);}}
+
+nav{position:sticky;top:0;z-index:500;background:rgba(3,1,10,0.96);backdrop-filter:blur(24px);border-bottom:1px solid var(--border);padding:0.9rem 5%;display:flex;justify-content:space-between;align-items:center;position:relative;z-index:1;}
+.nav-brand{display:flex;align-items:center;gap:0.8rem;}
+.nav-hex{width:22px;height:22px;background:linear-gradient(135deg,var(--pm),var(--pink));clip-path:polygon(50% 0%,100% 25%,100% 75%,50% 100%,0% 75%,0% 25%);box-shadow:0 0 14px rgba(168,85,247,0.8);}
+.nav-name{font-family:'Orbitron',sans-serif;font-size:0.9rem;font-weight:900;letter-spacing:0.18em;background:linear-gradient(90deg,var(--pg),var(--pkb));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.nav-tag{font-family:'Share Tech Mono',monospace;font-size:0.6rem;letter-spacing:0.15em;color:var(--dim);}
+
+.page-hero{padding:4rem 5% 3rem;text-align:center;position:relative;z-index:1;}
+.ph-label{font-family:'Share Tech Mono',monospace;font-size:0.62rem;letter-spacing:0.25em;color:var(--cyan);margin-bottom:1rem;display:flex;align-items:center;justify-content:center;gap:0.8rem;}
+.ph-label::before,.ph-label::after{content:'';display:block;height:1px;width:30px;background:var(--cyan);}
+.ph-title{font-family:'Orbitron',sans-serif;font-size:clamp(1.8rem,5vw,3.8rem);font-weight:900;background:linear-gradient(135deg,var(--white),var(--pg));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:1rem;line-height:1.05;}
+.ph-sub{font-size:1rem;color:var(--muted);max-width:620px;margin:0 auto;line-height:1.9;}
+
+/* TOOL STACK */
+.wrap{max-width:960px;margin:0 auto;padding:0 5% 6rem;position:relative;z-index:1;}
+
+.section-label{font-family:'Share Tech Mono',monospace;font-size:0.62rem;letter-spacing:0.22em;color:var(--cyan);display:flex;align-items:center;gap:0.7rem;margin-bottom:0.8rem;margin-top:4rem;}
+.section-label::before{content:'';width:20px;height:1px;background:var(--cyan);}
+.section-title{font-family:'Orbitron',sans-serif;font-size:clamp(1.4rem,3vw,2.2rem);font-weight:900;background:linear-gradient(135deg,var(--white),var(--pg));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:0.8rem;}
+.section-sub{font-size:0.97rem;color:var(--muted);line-height:1.9;margin-bottom:2.5rem;}
+
+/* TOOL CARDS */
+.tool-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.2rem;margin-bottom:3rem;}
+.tool-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:1.8rem;transition:all 0.25s;cursor:default;}
+.tool-card:hover{border-color:rgba(168,85,247,0.35);transform:translateY(-3px);}
+.tool-card.primary{border-color:rgba(168,85,247,0.3);background:rgba(168,85,247,0.06);}
+.tc-icon{font-size:1.6rem;margin-bottom:0.8rem;display:block;}
+.tc-name{font-family:'Orbitron',sans-serif;font-size:0.88rem;font-weight:700;color:var(--white);margin-bottom:0.3rem;letter-spacing:0.05em;}
+.tc-purpose{font-family:'Share Tech Mono',monospace;font-size:0.55rem;letter-spacing:0.12em;color:var(--pg);margin-bottom:0.6rem;}
+.tc-desc{font-size:0.85rem;color:var(--muted);line-height:1.7;margin-bottom:0.8rem;}
+.tc-price{font-family:'Share Tech Mono',monospace;font-size:0.6rem;letter-spacing:0.1em;padding:0.3rem 0.8rem;border-radius:4px;display:inline-block;}
+.tc-price.free{background:rgba(74,222,128,0.1);color:var(--green);border:1px solid rgba(74,222,128,0.25);}
+.tc-price.paid{background:rgba(168,85,247,0.1);color:var(--pg);border:1px solid rgba(168,85,247,0.2);}
+.tc-price.optional{background:rgba(251,191,36,0.08);color:var(--amber);border:1px solid rgba(251,191,36,0.2);}
+.tc-link{display:block;margin-top:0.8rem;font-family:'Share Tech Mono',monospace;font-size:0.55rem;letter-spacing:0.12em;color:var(--cyan);text-decoration:none;}
+.tc-link:hover{text-decoration:underline;}
+
+/* COST SUMMARY */
+.cost-bar{background:var(--card);border:1px solid rgba(74,222,128,0.2);border-radius:12px;padding:1.8rem;margin-bottom:3rem;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1.5rem;}
+.cb-label{font-family:'Share Tech Mono',monospace;font-size:0.55rem;letter-spacing:0.18em;color:var(--dim);}
+.cb-items{display:flex;gap:2rem;flex-wrap:wrap;}
+.cb-item{text-align:center;}
+.cb-item-name{font-family:'Share Tech Mono',monospace;font-size:0.55rem;letter-spacing:0.1em;color:var(--dim);display:block;margin-bottom:0.2rem;}
+.cb-item-price{font-family:'Orbitron',sans-serif;font-size:1rem;font-weight:700;color:var(--white);}
+.cb-total{text-align:right;}
+.cb-total-label{font-family:'Share Tech Mono',monospace;font-size:0.55rem;letter-spacing:0.15em;color:var(--green);display:block;margin-bottom:0.2rem;}
+.cb-total-price{font-family:'Orbitron',sans-serif;font-size:1.6rem;font-weight:900;color:var(--green);}
+.cb-total-sub{font-family:'Share Tech Mono',monospace;font-size:0.52rem;letter-spacing:0.1em;color:var(--dim);}
+
+/* WORKFLOW STEPS */
+.workflow{display:flex;flex-direction:column;gap:4px;margin-bottom:3rem;}
+.wf-step{background:var(--card);border:1px solid var(--border);border-radius:0;display:grid;grid-template-columns:80px 1fr;overflow:hidden;transition:all 0.2s;}
+.wf-step:first-child{border-radius:12px 12px 0 0;}
+.wf-step:last-child{border-radius:0 0 12px 12px;}
+.wf-step:hover{border-color:rgba(168,85,247,0.3);z-index:1;}
+.ws-num{background:linear-gradient(180deg,var(--pm),#5b21b6);display:flex;align-items:center;justify-content:center;font-family:'Orbitron',sans-serif;font-size:1.5rem;font-weight:900;color:var(--white);min-height:90px;}
+.ws-body{padding:1.5rem 2rem;}
+.ws-title{font-family:'Orbitron',sans-serif;font-size:0.9rem;font-weight:700;color:var(--white);margin-bottom:0.4rem;letter-spacing:0.05em;}
+.ws-time{font-family:'Share Tech Mono',monospace;font-size:0.52rem;letter-spacing:0.15em;color:var(--cyan);margin-bottom:0.5rem;}
+.ws-desc{font-size:0.88rem;color:var(--muted);line-height:1.8;}
+.ws-desc strong{color:var(--white);}
+.ws-tools{display:flex;gap:0.5rem;margin-top:0.6rem;flex-wrap:wrap;}
+.ws-tool{font-family:'Share Tech Mono',monospace;font-size:0.52rem;letter-spacing:0.1em;padding:0.2rem 0.6rem;background:rgba(168,85,247,0.1);border:1px solid rgba(168,85,247,0.2);border-radius:4px;color:var(--pg);}
+
+/* SCRIPTS */
+.script-block{background:var(--card2);border:1px solid rgba(168,85,247,0.15);border-radius:12px;overflow:hidden;margin-bottom:1.5rem;}
+.sb-header{background:rgba(168,85,247,0.08);border-bottom:1px solid rgba(168,85,247,0.12);padding:1rem 1.5rem;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:0.5rem;}
+.sbh-pillar{font-family:'Share Tech Mono',monospace;font-size:0.52rem;letter-spacing:0.15em;}
+.sbh-pillar.pain{color:var(--red,#ef4444);}
+.sbh-pillar.edu{color:var(--cyan);}
+.sbh-pillar.proof{color:var(--green);}
+.sbh-pillar.obj{color:var(--amber);}
+.sbh-title{font-weight:600;color:var(--white);font-size:0.92rem;}
+.sbh-time{font-family:'Share Tech Mono',monospace;font-size:0.52rem;letter-spacing:0.1em;color:var(--dim);}
+.sb-script{padding:1.5rem;}
+.script-line{padding:0.6rem 0;border-bottom:1px solid rgba(168,85,247,0.06);display:flex;gap:1rem;align-items:flex-start;}
+.script-line:last-child{border-bottom:none;}
+.sl-tag{font-family:'Share Tech Mono',monospace;font-size:0.5rem;letter-spacing:0.12em;padding:0.2rem 0.5rem;border-radius:3px;flex-shrink:0;margin-top:2px;}
+.sl-tag.hook{background:rgba(236,72,153,0.15);color:var(--pkb);border:1px solid rgba(236,72,153,0.25);}
+.sl-tag.body{background:rgba(168,85,247,0.1);color:var(--pg);border:1px solid rgba(168,85,247,0.2);}
+.sl-tag.cta{background:rgba(74,222,128,0.1);color:var(--green);border:1px solid rgba(74,222,128,0.2);}
+.sl-text{font-size:0.9rem;color:var(--muted);line-height:1.7;}
+.sl-text strong{color:var(--white);}
+.sl-text em{color:var(--dim);font-style:normal;font-size:0.82rem;}
+
+/* SCHEDULE */
+.schedule-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:0.5rem;margin-bottom:2rem;}
+.sched-day{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:0.8rem 0.5rem;text-align:center;}
+.sd-name{font-family:'Orbitron',sans-serif;font-size:0.55rem;font-weight:700;letter-spacing:0.1em;color:var(--pg);margin-bottom:0.5rem;}
+.sd-pillar{font-size:0.72rem;color:var(--muted);line-height:1.5;}
+.sd-pillar span{display:block;font-family:'Share Tech Mono',monospace;font-size:0.5rem;letter-spacing:0.1em;margin-top:0.3rem;}
+
+/* 30-DAY RAMP */
+.ramp{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;margin-bottom:2rem;}
+.ramp-week{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:1.5rem;}
+.rw-week{font-family:'Orbitron',sans-serif;font-size:0.65rem;font-weight:700;letter-spacing:0.15em;color:var(--pg);margin-bottom:0.5rem;}
+.rw-title{font-weight:600;color:var(--white);margin-bottom:0.5rem;font-size:0.9rem;}
+.rw-items{font-size:0.82rem;color:var(--muted);line-height:1.9;}
+.rw-items span{display:block;}
+.rw-target{margin-top:0.8rem;font-family:'Share Tech Mono',monospace;font-size:0.55rem;letter-spacing:0.12em;color:var(--green);}
+
+/* HEYGEN SETUP */
+.setup-steps{display:flex;flex-direction:column;gap:0.8rem;margin-bottom:2rem;}
+.setup-step{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:1.2rem 1.5rem;display:flex;gap:1rem;align-items:flex-start;}
+.ss-num{width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,var(--pm),var(--pink));display:flex;align-items:center;justify-content:center;font-family:'Orbitron',sans-serif;font-size:0.65rem;font-weight:700;color:var(--white);flex-shrink:0;}
+.ss-body{}
+.ss-title{font-weight:600;color:var(--white);font-size:0.9rem;margin-bottom:0.2rem;}
+.ss-desc{font-size:0.83rem;color:var(--muted);line-height:1.7;}
+.ss-desc a{color:var(--cyan);text-decoration:none;}
+
+/* CAPTION TEMPLATE */
+.caption-box{background:var(--card2);border:1px solid rgba(34,211,238,0.15);border-radius:10px;padding:1.5rem;margin-bottom:1rem;}
+.cap-label{font-family:'Share Tech Mono',monospace;font-size:0.52rem;letter-spacing:0.18em;color:var(--cyan);margin-bottom:0.8rem;}
+.cap-text{font-size:0.9rem;color:var(--muted);line-height:1.9;white-space:pre-wrap;}
+.cap-text strong{color:var(--white);}
+
+footer{padding:2rem 5%;border-top:1px solid var(--border);display:flex;justify-content:space-between;flex-wrap:wrap;gap:1rem;position:relative;z-index:1;}
+.footer-brand{font-family:'Orbitron',sans-serif;font-size:0.9rem;font-weight:900;letter-spacing:0.15em;background:linear-gradient(90deg,var(--pg),var(--pkb));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.footer-tag{font-family:'Share Tech Mono',monospace;font-size:0.58rem;letter-spacing:0.12em;color:var(--dim);}
+
+@media(max-width:800px){.tool-grid{grid-template-columns:1fr 1fr;}.ramp{grid-template-columns:1fr 1fr;}.schedule-grid{grid-template-columns:repeat(4,1fr);}}
+@media(max-width:540px){.tool-grid{grid-template-columns:1fr;}.ramp{grid-template-columns:1fr;}.schedule-grid{grid-template-columns:repeat(2,1fr);}.wf-step{grid-template-columns:60px 1fr;}.ws-num{font-size:1rem;}}
+</style>
+</head>
+<body>
+<div class="orb o1"></div>
+<div class="orb o2"></div>
+
+<nav>
+  <div class="nav-brand"><div class="nav-hex"></div><span class="nav-name">SILENT SYNDICATE</span></div>
+  <span class="nav-tag">// Faceless Content Workflow</span>
+</nav>
+
+<div class="page-hero">
+  <div class="ph-label">Automated Traffic System</div>
+  <h1 class="ph-title">Faceless AI Content.<br>Zero Camera Time.</h1>
+  <p class="ph-sub">The complete workflow to generate, publish, and automate daily TikTok and Instagram content using AI — no filming, no editing skills, no camera. One commission covers the entire system cost for months.</p>
+</div>
+
+<div class="wrap">
+
+  <!-- TOOL STACK -->
+  <div class="section-label">The Tool Stack</div>
+  <h2 class="section-title">5 Tools. Total Cost: ~$58 AUD/month.</h2>
+  <p class="section-sub">Every tool has a specific job. Together they form a complete content production pipeline that runs with minimal input from you.</p>
+
+  <div class="tool-grid">
+    <div class="tool-card primary">
+      <span class="tc-icon">🎭</span>
+      <div class="tc-name">HeyGen</div>
+      <div class="tc-purpose">// AI AVATAR VIDEO CREATOR</div>
+      <div class="tc-desc">Creates the actual video. You paste a script, select an AI avatar (or create one from your photo), choose a voice, and it renders a complete talking-head video in minutes. No camera. No editing. 700+ avatars, 140+ languages, 1080p output.</div>
+      <span class="tc-price paid">$29 USD/month — Creator Plan</span>
+      <a href="https://heygen.com" target="_blank" class="tc-link">heygen.com →</a>
+    </div>
+    <div class="tool-card primary">
+      <span class="tc-icon">✍️</span>
+      <div class="tc-name">Claude / ChatGPT</div>
+      <div class="tc-purpose">// SCRIPT WRITER</div>
+      <div class="tc-desc">Writes all your video scripts using the transparency hook formula. You already have Claude. Feed it the content pillar and hook, it writes a complete 30–60 second script in seconds. 30 scripts in under 30 minutes.</div>
+      <span class="tc-price free">Already have Claude — $0 extra</span>
+    </div>
+    <div class="tool-card primary">
+      <span class="tc-icon">📱</span>
+      <div class="tc-name">CapCut</div>
+      <div class="tc-purpose">// AUTO-CAPTIONS + POLISH</div>
+      <div class="tc-desc">Free video editor that adds automatic captions, adjusts aspect ratio to 9:16, adds background music, and polishes the exported HeyGen video before posting. Captions are proven to increase watch time by 40%+.</div>
+      <span class="tc-price free">Free — CapCut.com or mobile app</span>
+      <a href="https://capcut.com" target="_blank" class="tc-link">capcut.com →</a>
+    </div>
+    <div class="tool-card">
+      <span class="tc-icon">📅</span>
+      <div class="tc-name">Later</div>
+      <div class="tc-purpose">// SCHEDULER + AUTO-POST</div>
+      <div class="tc-desc">Schedules posts to TikTok and Instagram automatically. Upload a week of content on Sunday, set the posting times, and it posts daily without you touching anything. Free plan handles 30 posts/month.</div>
+      <span class="tc-price free">Free plan — 30 posts/month</span>
+      <a href="https://later.com" target="_blank" class="tc-link">later.com →</a>
+    </div>
+    <div class="tool-card">
+      <span class="tc-icon">🎙️</span>
+      <div class="tc-name">ElevenLabs</div>
+      <div class="tc-purpose">// VOICE CLONING (OPTIONAL)</div>
+      <div class="tc-desc">If you want the AI to speak in your actual voice rather than a stock voice, ElevenLabs clones it from a 30-second recording. Your voice, your avatar, zero time on camera. Upgrade once the system is running.</div>
+      <span class="tc-price optional">$5 USD/month — Starter Plan</span>
+      <a href="https://elevenlabs.io" target="_blank" class="tc-link">elevenlabs.io →</a>
+    </div>
+    <div class="tool-card">
+      <span class="tc-icon">📊</span>
+      <div class="tc-name">TikTok + Instagram</div>
+      <div class="tc-purpose">// DISTRIBUTION PLATFORMS</div>
+      <div class="tc-desc">Both free. Set up a business account on each. Funnel link goes in bio. TikTok is primary — strongest organic reach. Instagram Reels captures a different audience. Same content posts to both.</div>
+      <span class="tc-price free">Free — both platforms</span>
+    </div>
+  </div>
+
+  <!-- COST SUMMARY -->
+  <div class="cost-bar">
+    <div>
+      <div class="cb-label">// MONTHLY TOOL COST</div>
+      <div class="cb-items">
+        <div class="cb-item"><span class="cb-item-name">HeyGen</span><span class="cb-item-price">$45</span></div>
+        <div class="cb-item"><span class="cb-item-name">ElevenLabs</span><span class="cb-item-price">$8</span></div>
+        <div class="cb-item"><span class="cb-item-name">CapCut</span><span class="cb-item-price">$0</span></div>
+        <div class="cb-item"><span class="cb-item-name">Later</span><span class="cb-item-price">$0</span></div>
+        <div class="cb-item"><span class="cb-item-name">Platforms</span><span class="cb-item-price">$0</span></div>
+      </div>
+    </div>
+    <div class="cb-total">
+      <span class="cb-total-label">// TOTAL / MONTH (AUD)</span>
+      <div class="cb-total-price">~$58 AUD</div>
+      <div class="cb-total-sub">One K8 commission pays ~117 months of this</div>
+    </div>
+  </div>
+
+  <!-- WORKFLOW -->
+  <div class="section-label">The Daily Workflow</div>
+  <h2 class="section-title">One Video Per Day.<br>20 Minutes of Your Time.</h2>
+  <p class="section-sub">This is the complete process from idea to posted. Once set up, a week's content takes one Sunday session. Everything runs on schedule after that.</p>
+
+  <div class="workflow">
+    <div class="wf-step">
+      <div class="ws-num">1</div>
+      <div class="ws-body">
+        <div class="ws-title">Pick Your Pillar and Hook</div>
+        <div class="ws-time">// 2 MINUTES</div>
+        <div class="ws-desc">Choose one of the four content pillars for today: Pain, Education, Proof, or Objection. Pick a hook from your hook library (30 are written below). That's your brief.</div>
+        <div class="ws-tools"><span class="ws-tool">Hook library below</span><span class="ws-tool">4 content pillars</span></div>
+      </div>
+    </div>
+    <div class="wf-step">
+      <div class="ws-num">2</div>
+      <div class="ws-body">
+        <div class="ws-title">Generate the Script with Claude</div>
+        <div class="ws-time">// 3 MINUTES</div>
+        <div class="ws-desc">Open Claude and paste: <strong>"Write a 45-second TikTok script using this hook: [your hook]. Use the transparency formula — name Enagic, name the investment range, name the commission. End with: link in bio for the full breakdown."</strong> Claude writes the complete script. Review and approve.</div>
+        <div class="ws-tools"><span class="ws-tool">Claude</span><span class="ws-tool">Transparency formula</span></div>
+      </div>
+    </div>
+    <div class="wf-step">
+      <div class="ws-num">3</div>
+      <div class="ws-body">
+        <div class="ws-title">Generate the Video in HeyGen</div>
+        <div class="ws-time">// 5 MINUTES (+ 3 min render)</div>
+        <div class="ws-desc">Log into HeyGen. Select your avatar (stock or your photo-to-avatar). Paste the script. Choose your voice. Hit generate. Video renders in ~3 minutes in 1080p, 9:16 format, ready for TikTok. Download the finished video.</div>
+        <div class="ws-tools"><span class="ws-tool">HeyGen Creator $29/mo</span><span class="ws-tool">Avatar IV</span><span class="ws-tool">1080p output</span></div>
+      </div>
+    </div>
+    <div class="wf-step">
+      <div class="ws-num">4</div>
+      <div class="ws-body">
+        <div class="ws-title">Add Captions in CapCut</div>
+        <div class="ws-time">// 5 MINUTES</div>
+        <div class="ws-desc">Import HeyGen video into CapCut. Click <strong>Text → Auto Captions</strong>. Captions generate automatically. Style them — bold white text, black outline, centred lower third. Add a trending background track at 10% volume. Export.</div>
+        <div class="ws-tools"><span class="ws-tool">CapCut — free</span><span class="ws-tool">Auto captions</span><span class="ws-tool">9:16 format</span></div>
+      </div>
+    </div>
+    <div class="wf-step">
+      <div class="ws-num">5</div>
+      <div class="ws-body">
+        <div class="ws-title">Schedule via Later</div>
+        <div class="ws-time">// 3 MINUTES</div>
+        <div class="ws-desc">Upload the final video to Later. Write caption using the template below. Add hashtags. Schedule TikTok for 7pm AEST and Instagram for 6pm AEST. Done. Both platforms post automatically.</div>
+        <div class="ws-tools"><span class="ws-tool">Later — free</span><span class="ws-tool">TikTok auto-post</span><span class="ws-tool">Instagram auto-post</span></div>
+      </div>
+    </div>
+    <div class="wf-step">
+      <div class="ws-num">6</div>
+      <div class="ws-body">
+        <div class="ws-title">Check the Dashboard (Morning)</div>
+        <div class="ws-time">// 2 MINUTES</div>
+        <div class="ws-desc">Each morning: open ActiveCampaign. Check how many opt-ins came in overnight. Check for any HOT leads in the pipeline. Reply to any email replies from the sequence. That's your whole morning task for Silent Syndicate.</div>
+        <div class="ws-tools"><span class="ws-tool">ActiveCampaign</span><span class="ws-tool">AIOS dashboard</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CONTENT PILLARS + SCRIPTS -->
+  <div class="section-label">Ready-To-Use Scripts</div>
+  <h2 class="section-title">30 Scripts. 4 Pillars.<br>Paste Straight Into HeyGen.</h2>
+  <p class="section-sub">These are written in the transparency hook formula that outperforms every hype-based approach. Name Enagic. Name the investment. Name the commission. Let the honesty do the work.</p>
+
+  <!-- PAIN PILLAR -->
+  <div style="margin-bottom:2rem;">
+    <p style="font-family:'Share Tech Mono',monospace;font-size:0.6rem;letter-spacing:0.2em;color:#ef4444;margin-bottom:1rem;">// PILLAR 1 — PAIN CONTENT (7 scripts)</p>
+
+    <div class="script-block">
+      <div class="sb-header">
+        <span class="sbh-pillar pain">// PAIN</span>
+        <span class="sbh-title">The side hustle trap</span>
+        <span class="sbh-time">~45 seconds</span>
+      </div>
+      <div class="sb-script">
+        <div class="script-line"><span class="sl-tag hook">HOOK</span><span class="sl-text"><strong>The side hustle you're running is designed to keep you busy — not make you rich.</strong></span></div>
+        <div class="script-line"><span class="sl-tag body">BODY</span><span class="sl-text">Most people selling $47 digital products need 200 sales a month just to replace their income. That's 200 strangers finding you, trusting you, and buying from you — every single month. The math doesn't work. I switched to high-ticket direct sales through a company called Enagic. The investment to start is between $6,787 and $18,469 depending on the package. Commission per sale is $365 to $2,595. I need 4–7 sales to break even. Not 200.</span></div>
+        <div class="script-line"><span class="sl-tag cta">CTA</span><span class="sl-text">Full breakdown in bio. Including the parts that aren't perfect. <em>// Link in bio → silent-syndicate.netlify.app</em></span></div>
+      </div>
+    </div>
+
+    <div class="script-block">
+      <div class="sb-header">
+        <span class="sbh-pillar pain">// PAIN</span>
+        <span class="sbh-title">Trading time for money</span>
+        <span class="sbh-time">~40 seconds</span>
+      </div>
+      <div class="sb-script">
+        <div class="script-line"><span class="sl-tag hook">HOOK</span><span class="sl-text"><strong>If you stop working today — how long before the money stops too?</strong></span></div>
+        <div class="script-line"><span class="sl-tag body">BODY</span><span class="sl-text">Most income models are time-for-money. You work, you get paid. You stop working, it stops. I found a model where an AI funnel runs the education and qualification automatically — and commissions of $365 to $2,595 fire on sales I didn't manually close. I run a painting business during the day. This runs on autopilot alongside it.</span></div>
+        <div class="script-line"><span class="sl-tag cta">CTA</span><span class="sl-text">Link in bio for the full honest breakdown of what it actually costs and pays.</span></div>
+      </div>
+    </div>
+
+    <div class="script-block">
+      <div class="sb-header">
+        <span class="sbh-pillar pain">// PAIN</span>
+        <span class="sbh-title">The follower count lie</span>
+        <span class="sbh-time">~35 seconds</span>
+      </div>
+      <div class="sb-script">
+        <div class="script-line"><span class="sl-tag hook">HOOK</span><span class="sl-text"><strong>You don't need 100,000 followers. You need 4 buyers.</strong></span></div>
+        <div class="script-line"><span class="sl-tag body">BODY</span><span class="sl-text">High-ticket direct sales through Enagic pays $365 to $2,595 per sale depending on your package. Break-even is 4 to 7 sales. That's it. The AI funnel finds and qualifies buyers from cold traffic automatically. You don't need an audience. You need a system.</span></div>
+        <div class="script-line"><span class="sl-tag cta">CTA</span><span class="sl-text">Full system in bio. Investment range, commission breakdown, realistic timelines — all there.</span></div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- EDUCATION PILLAR -->
+  <div style="margin-bottom:2rem;">
+    <p style="font-family:'Share Tech Mono',monospace;font-size:0.6rem;letter-spacing:0.2em;color:var(--cyan);margin-bottom:1rem;">// PILLAR 2 — EDUCATION CONTENT (8 scripts)</p>
+
+    <div class="script-block">
+      <div class="sb-header">
+        <span class="sbh-pillar edu">// EDUCATION</span>
+        <span class="sbh-title">How the 8-point system works</span>
+        <span class="sbh-time">~50 seconds</span>
+      </div>
+      <div class="sb-script">
+        <div class="script-line"><span class="sl-tag hook">HOOK</span><span class="sl-text"><strong>Here's why some Enagic distributors earn $365 per sale and others earn $2,595 — for the exact same sale.</strong></span></div>
+        <div class="script-line"><span class="sl-tag body">BODY</span><span class="sl-text">Enagic uses an 8-point commission system. Every time a machine sells, 8 points get paid out across the distributor chain. Your rank determines how many points you capture. A 1A distributor captures 1 point — about $365. A 6A distributor captures 6 points plus bonuses — about $2,595. When you join through Silent Syndicate at certain tiers, you start at a higher rank immediately. That's the structure.</span></div>
+        <div class="script-line"><span class="sl-tag cta">CTA</span><span class="sl-text">Full commission breakdown linked in bio. No fluff — every number is there.</span></div>
+      </div>
+    </div>
+
+    <div class="script-block">
+      <div class="sb-header">
+        <span class="sbh-pillar edu">// EDUCATION</span>
+        <span class="sbh-title">What is Enagic actually</span>
+        <span class="sbh-time">~45 seconds</span>
+      </div>
+      <div class="sb-script">
+        <div class="script-line"><span class="sl-tag hook">HOOK</span><span class="sl-text"><strong>Let me tell you exactly what Enagic is before you watch another person hype it.</strong></span></div>
+        <div class="script-line"><span class="sl-tag body">BODY</span><span class="sl-text">Enagic is a 40-year-old Japanese company that manufactures water ionisation machines. Their flagship K8 costs $6,787 AUD. They pay commissions directly to distributors. There's no warehouse. No dropshipping. No inventory. You register as a distributor, an AI funnel finds buyers, they purchase through Enagic, Enagic pays you. Commission per K8 sale at your rank ranges from $365 to $2,595.</span></div>
+        <div class="script-line"><span class="sl-tag cta">CTA</span><span class="sl-text">Bio has the full breakdown including all investment amounts and what the business actually requires.</span></div>
+      </div>
+    </div>
+
+    <div class="script-block">
+      <div class="sb-header">
+        <span class="sbh-pillar edu">// EDUCATION</span>
+        <span class="sbh-title">The break-even math</span>
+        <span class="sbh-time">~40 seconds</span>
+      </div>
+      <div class="sb-script">
+        <div class="script-line"><span class="sl-tag hook">HOOK</span><span class="sl-text"><strong>Here's the exact math on when an Enagic business pays itself off.</strong></span></div>
+        <div class="script-line"><span class="sl-tag body">BODY</span><span class="sl-text">Trifecta package: ~$11,682 investment. Commission per trifecta sale at 2A rank: $1,322. Break-even: 9 sales. Quad package: ~$18,469 investment. Commission per quad at 3A rank: $2,595. Break-even: 7 sales. After that every sale is pure profit. The AI funnel handles the finding and qualifying of buyers automatically. This is the arithmetic — make your own assessment.</span></div>
+        <div class="script-line"><span class="sl-tag cta">CTA</span><span class="sl-text">ROI calculator in bio. Plug in your own numbers.</span></div>
+      </div>
+    </div>
+
+    <div class="script-block">
+      <div class="sb-header">
+        <span class="sbh-pillar edu">// EDUCATION</span>
+        <span class="sbh-title">What the AI funnel actually does</span>
+        <span class="sbh-time">~45 seconds</span>
+      </div>
+      <div class="sb-script">
+        <div class="script-line"><span class="sl-tag hook">HOOK</span><span class="sl-text"><strong>This is what "AI automated" actually means in this business — not just a buzzword.</strong></span></div>
+        <div class="script-line"><span class="sl-tag body">BODY</span><span class="sl-text">The AI funnel has 5 stages. Capture: someone opts in from content. Educate: a 7-email sequence explains the model automatically over 7 days. Qualify: an application form scores leads as HOT, WARM, or COLD. Route: HOT leads go to the offer page automatically. Convert: they choose a tier and register. Your job is to post content. Everything after the click is automated.</span></div>
+        <div class="script-line"><span class="sl-tag cta">CTA</span><span class="sl-text">Full funnel walkthrough linked in bio.</span></div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- PROOF PILLAR -->
+  <div style="margin-bottom:2rem;">
+    <p style="font-family:'Share Tech Mono',monospace;font-size:0.6rem;letter-spacing:0.2em;color:var(--green);margin-bottom:1rem;">// PILLAR 3 — PROOF CONTENT (8 scripts)</p>
+
+    <div class="script-block">
+      <div class="sb-header">
+        <span class="sbh-pillar proof">// PROOF</span>
+        <span class="sbh-title">First 30 days honest timeline</span>
+        <span class="sbh-time">~50 seconds</span>
+      </div>
+      <div class="sb-script">
+        <div class="script-line"><span class="sl-tag hook">HOOK</span><span class="sl-text"><strong>Here's what the first 30 days of an Enagic business actually looks like — no highlight reel.</strong></span></div>
+        <div class="script-line"><span class="sl-tag body">BODY</span><span class="sl-text">Week 1: set up the funnel, post first content, zero opt-ins. Week 2: algorithm picks up the content, first opt-ins start coming in, pipeline is empty. Week 3: 20-40 leads in the email sequence being warmed automatically. Week 4: first HOT leads appearing. First application submitted. Most people see their first confirmed sale somewhere between day 19 and day 40. Results vary significantly — some people are faster, many are slower.</span></div>
+        <div class="script-line"><span class="sl-tag cta">CTA</span><span class="sl-text">Real income disclosure in bio. Not just the good outcomes.</span></div>
+      </div>
+    </div>
+
+    <div class="script-block">
+      <div class="sb-header">
+        <span class="sbh-pillar proof">// PROOF</span>
+        <span class="sbh-title">What a commission notification looks like</span>
+        <span class="sbh-time">~35 seconds</span>
+      </div>
+      <div class="sb-script">
+        <div class="script-line"><span class="sl-tag hook">HOOK</span><span class="sl-text"><strong>What it looks like when Enagic pays your commission — the actual process.</strong></span></div>
+        <div class="script-line"><span class="sl-tag body">BODY</span><span class="sl-text">Enagic pays commissions daily once processed. 10 business days after your buyer's order is approved, your commission hits. It doesn't come from your downline. It doesn't come from Silent Syndicate. It comes directly from Enagic International based on your distributor ID being on the order form. That's the chain. That's how it's verified.</span></div>
+        <div class="script-line"><span class="sl-tag cta">CTA</span><span class="sl-text">Commission structure link in bio.</span></div>
+      </div>
+    </div>
+
+    <div class="script-block">
+      <div class="sb-header">
+        <span class="sbh-pillar proof">// PROOF</span>
+        <span class="sbh-title">What 3 sales a month looks like</span>
+        <span class="sbh-time">~40 seconds</span>
+      </div>
+      <div class="sb-script">
+        <div class="script-line"><span class="sl-tag hook">HOOK</span><span class="sl-text"><strong>What does 3 trifecta sales a month actually pay? I'll show you the exact numbers.</strong></span></div>
+        <div class="script-line"><span class="sl-tag body">BODY</span><span class="sl-text">At 2A rank, each trifecta pays $1,322 commission. Three sales: $3,966 a month. Break-even on a trifecta entry (~$11,682) happens at sale 9 — roughly month 3 at this pace. Month 4 onward that $3,966 is pure profit on top of whatever else you earn. These are illustrative projections. Most people earn less, especially starting out. But the arithmetic is real.</span></div>
+        <div class="script-line"><span class="sl-tag cta">CTA</span><span class="sl-text">Full income disclosure in bio. All scenarios including the realistic ones.</span></div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- OBJECTION PILLAR -->
+  <div style="margin-bottom:2rem;">
+    <p style="font-family:'Share Tech Mono',monospace;font-size:0.6rem;letter-spacing:0.2em;color:var(--amber);margin-bottom:1rem;">// PILLAR 4 — OBJECTION CONTENT (7 scripts)</p>
+
+    <div class="script-block">
+      <div class="sb-header">
+        <span class="sbh-pillar obj">// OBJECTION</span>
+        <span class="sbh-title">Is this an MLM?</span>
+        <span class="sbh-time">~50 seconds</span>
+      </div>
+      <div class="sb-script">
+        <div class="script-line"><span class="sl-tag hook">HOOK</span><span class="sl-text"><strong>Is this an MLM? Yes. Here's why I don't care — and why you shouldn't either.</strong></span></div>
+        <div class="script-line"><span class="sl-tag body">BODY</span><span class="sl-text">Multi-level marketing means there's a network structure where commissions flow upward. Enagic has that. But here's the difference: your income comes primarily from your own sales, not from recruiting. The product is a real $6,787 water ioniser that's been sold for 40 years in 190 countries. You're not selling hype to family members. An AI funnel finds strangers who want the business opportunity. You earn when machines sell. That's a real product business with a network commission layer.</span></div>
+        <div class="script-line"><span class="sl-tag cta">CTA</span><span class="sl-text">Full transparency breakdown in bio. Including the parts most people don't say.</span></div>
+      </div>
+    </div>
+
+    <div class="script-block">
+      <div class="sb-header">
+        <span class="sbh-pillar obj">// OBJECTION</span>
+        <span class="sbh-title">The investment is too high</span>
+        <span class="sbh-time">~45 seconds</span>
+      </div>
+      <div class="sb-script">
+        <div class="script-line"><span class="sl-tag hook">HOOK</span><span class="sl-text"><strong>$11,682 to start a business sounds like a lot. Here's how it compares to literally everything else.</strong></span></div>
+        <div class="script-line"><span class="sl-tag body">BODY</span><span class="sl-text">A McDonald's franchise costs $500,000 to $1.5 million. A trade qualification costs $20,000 to $80,000. A Subway franchise costs $200,000. An Enagic trifecta entry costs $11,682 and pays $1,322 commission per sale at 2A rank. Break-even is 9 sales. Show me a $500,000 franchise with a 9-sale break-even. If the amount feels big, it should — it's real capital with real returns. If it's genuinely out of reach right now, that's also a real answer.</span></div>
+        <div class="script-line"><span class="sl-tag cta">CTA</span><span class="sl-text">Investment tiers and payment options linked in bio.</span></div>
+      </div>
+    </div>
+
+    <div class="script-block">
+      <div class="sb-header">
+        <span class="sbh-pillar obj">// OBJECTION</span>
+        <span class="sbh-title">Do I need to know people?</span>
+        <span class="sbh-time">~40 seconds</span>
+      </div>
+      <div class="sb-script">
+        <div class="script-line"><span class="sl-tag hook">HOOK</span><span class="sl-text"><strong>Do you have to sell Kangen water to your friends and family? No. Here's why.</strong></span></div>
+        <div class="script-line"><span class="sl-tag body">BODY</span><span class="sl-text">Traditional Enagic distributors pitch to their network — friends, family, colleagues. That's the old model. The Silent Syndicate system uses an AI funnel fed by short-form content. Strangers find your content, opt in voluntarily, go through a 7-day email sequence, apply for the business opportunity, and get routed to a closing page — without you ever speaking to them. Your buyers are people who found you online and decided they wanted in. Not your cousin.</span></div>
+        <div class="script-line"><span class="sl-tag cta">CTA</span><span class="sl-text">Full system walkthrough in bio.</span></div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- WEEKLY SCHEDULE -->
+  <div class="section-label">Weekly Posting Schedule</div>
+  <h2 class="section-title">One Pillar Per Day.<br>Algorithm Fed Daily.</h2>
+  <p class="section-sub">Post at 7pm AEST for TikTok, 6pm AEST for Instagram. Consistency beats quality. One video every day for 30 days matters more than 7 perfect videos.</p>
+
+  <div class="schedule-grid">
+    <div class="sched-day">
+      <div class="sd-name">MON</div>
+      <div class="sd-pillar">Pain<span style="color:#ef4444;">PAIN</span></div>
+    </div>
+    <div class="sched-day">
+      <div class="sd-name">TUE</div>
+      <div class="sd-pillar">Educate<span style="color:var(--cyan);">EDUCATION</span></div>
+    </div>
+    <div class="sched-day">
+      <div class="sd-name">WED</div>
+      <div class="sd-pillar">Proof<span style="color:var(--green);">PROOF</span></div>
+    </div>
+    <div class="sched-day">
+      <div class="sd-name">THU</div>
+      <div class="sd-pillar">Objection<span style="color:var(--amber);">OBJECTION</span></div>
+    </div>
+    <div class="sched-day">
+      <div class="sd-name">FRI</div>
+      <div class="sd-pillar">Educate<span style="color:var(--cyan);">EDUCATION</span></div>
+    </div>
+    <div class="sched-day">
+      <div class="sd-name">SAT</div>
+      <div class="sd-pillar">Proof<span style="color:var(--green);">PROOF</span></div>
+    </div>
+    <div class="sched-day">
+      <div class="sd-name">SUN</div>
+      <div class="sd-pillar">Pain<span style="color:#ef4444;">PAIN</span></div>
+    </div>
+  </div>
+
+  <!-- 30-DAY RAMP -->
+  <div class="section-label">30-Day Launch Ramp</div>
+  <h2 class="section-title">Week by Week.<br>What to Expect.</h2>
+  <p class="section-sub">Be realistic with yourself. The first 2 weeks are for building the habit. The pipeline fills in weeks 3–4. Commissions follow.</p>
+
+  <div class="ramp">
+    <div class="ramp-week">
+      <div class="rw-week">// WEEK 1</div>
+      <div class="rw-title">Setup & First Posts</div>
+      <div class="rw-items">
+        <span>✓ HeyGen account live</span>
+        <span>✓ TikTok + Instagram accounts set up</span>
+        <span>✓ Bio link → silent-syndicate.netlify.app</span>
+        <span>✓ First 7 videos posted</span>
+        <span>✓ Later scheduler configured</span>
+      </div>
+      <div class="rw-target">Target: 0–5 opt-ins (algorithm learning)</div>
+    </div>
+    <div class="ramp-week">
+      <div class="rw-week">// WEEK 2</div>
+      <div class="rw-title">Algorithm Wakes Up</div>
+      <div class="rw-items">
+        <span>✓ 14 videos posted total</span>
+        <span>✓ Algorithm starts distributing content</span>
+        <span>✓ First view spikes on some videos</span>
+        <span>✓ First opt-ins arriving</span>
+        <span>✓ Email sequence firing automatically</span>
+      </div>
+      <div class="rw-target">Target: 10–30 opt-ins</div>
+    </div>
+    <div class="ramp-week">
+      <div class="rw-week">// WEEK 3</div>
+      <div class="rw-title">Pipeline Fills</div>
+      <div class="rw-items">
+        <span>✓ 21 videos posted total</span>
+        <span>✓ 30–60 leads in email sequence</span>
+        <span>✓ First applications arriving</span>
+        <span>✓ HOT leads being flagged in AC</span>
+        <span>✓ Email replies from interested leads</span>
+      </div>
+      <div class="rw-target">Target: 40–80 total opt-ins</div>
+    </div>
+    <div class="ramp-week">
+      <div class="rw-week">// WEEK 4</div>
+      <div class="rw-title">First Commission Window</div>
+      <div class="rw-items">
+        <span>✓ 30 videos posted total</span>
+        <span>✓ Multiple HOT leads in pipeline</span>
+        <span>✓ First registrations through join.html</span>
+        <span>✓ Enagic orders being submitted</span>
+        <span>✓ Commission processing begins</span>
+      </div>
+      <div class="rw-target">Target: First commission 14–21 days after first order</div>
+    </div>
+  </div>
+
+  <!-- HEYGEN SETUP -->
+  <div class="section-label">HeyGen Setup Guide</div>
+  <h2 class="section-title">Up and Running<br>in Under 20 Minutes.</h2>
+  <p class="section-sub">Follow these steps once. After setup, creating each video takes under 10 minutes.</p>
+
+  <div class="setup-steps">
+    <div class="setup-step">
+      <div class="ss-num">1</div>
+      <div class="ss-body">
+        <div class="ss-title">Sign up for HeyGen Creator ($29/month)</div>
+        <div class="ss-desc">Go to <a href="https://heygen.com" target="_blank">heygen.com</a> → Sign up → Choose Creator plan ($29/month or $24/month annual). Start with monthly — upgrade to annual after your first commission.</div>
+      </div>
+    </div>
+    <div class="setup-step">
+      <div class="ss-num">2</div>
+      <div class="ss-body">
+        <div class="ss-title">Create your AI Avatar (Photo-to-Video)</div>
+        <div class="ss-desc">Dashboard → Avatars → Create Avatar → Photo Avatar (Avatar IV). Upload one clear headshot — good lighting, neutral background, facing forward. HeyGen animates it into a talking avatar. This is your permanent avatar for all videos. Takes ~5 minutes to process.</div>
+      </div>
+    </div>
+    <div class="setup-step">
+      <div class="ss-num">3</div>
+      <div class="ss-body">
+        <div class="ss-title">Set your voice (Optional: clone yours)</div>
+        <div class="ss-desc">Either: select a stock voice from HeyGen's library (700+ options — pick one that sounds like a confident Australian professional), OR sign up to <a href="https://elevenlabs.io" target="_blank">ElevenLabs</a> ($5/month), record 30 seconds of yourself speaking, clone your voice, and use ElevenLabs to generate the voiceover audio — then upload to HeyGen instead of using their voices.</div>
+      </div>
+    </div>
+    <div class="setup-step">
+      <div class="ss-num">4</div>
+      <div class="ss-body">
+        <div class="ss-title">Set video format to 9:16 vertical</div>
+        <div class="ss-desc">In HeyGen AI Studio → New Video → select 9:16 Portrait format. This is the TikTok/Reels format. Every video should be this ratio. Set 1080p quality. Background: solid dark colour or blurred office/minimal backdrop works best.</div>
+      </div>
+    </div>
+    <div class="setup-step">
+      <div class="ss-num">5</div>
+      <div class="ss-body">
+        <div class="ss-title">Generate your first test video</div>
+        <div class="ss-desc">Paste the first script from above (Pain — "The side hustle trap"). Select your avatar. Select your voice. Hit Generate. Watch it render in ~3 minutes. Download and review. This is what your content looks like. Adjust avatar or voice if needed.</div>
+      </div>
+    </div>
+    <div class="setup-step">
+      <div class="ss-num">6</div>
+      <div class="ss-body">
+        <div class="ss-title">Import to CapCut and add captions</div>
+        <div class="ss-desc">Open <a href="https://capcut.com" target="_blank">CapCut</a> (free, web or app). Import your HeyGen video → Text → Auto Captions → Generate. Style: white bold text, black outline, position at lower third. Add a subtle background track (CapCut's library → Commercial Music → pick something calm at 8–10% volume). Export 1080p.</div>
+      </div>
+    </div>
+    <div class="setup-step">
+      <div class="ss-num">7</div>
+      <div class="ss-body">
+        <div class="ss-title">Schedule via Later and post</div>
+        <div class="ss-desc">Sign up to <a href="https://later.com" target="_blank">later.com</a> (free). Connect your TikTok and Instagram accounts. Upload your video. Write your caption (template below). Schedule for 7pm AEST TikTok, 6pm AEST Instagram. Done.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CAPTION TEMPLATE -->
+  <div class="section-label">Caption Templates</div>
+  <h2 class="section-title">Copy. Paste. Post.</h2>
+  <p class="section-sub">Use these caption templates for every video. The hashtags are optimised for the income/opportunity niche in Australia.</p>
+
+  <div class="caption-box">
+    <div class="cap-label">// CAPTION TEMPLATE — EDUCATION / PROOF VIDEOS</div>
+    <div class="cap-text"><strong>[One-line version of your hook]</strong>
+
+Full breakdown of the Enagic model, the investment range ($6,787–$18,469), and the commission structure ($365–$2,595 per sale) is linked in bio.
+
+This is not for everyone. It requires real capital and consistent content effort. But if the math works for your situation — the free breakdown is in bio.
+
+#silentsyndicate #enagic #highticketcommissions #makemoneyonline #sidehustleaustralia #passiveincome #financialfreedom #directsales #australiabusiness #incomeopportunity</div>
+  </div>
+
+  <div class="caption-box">
+    <div class="cap-label">// CAPTION TEMPLATE — PAIN / OBJECTION VIDEOS</div>
+    <div class="cap-text"><strong>[One-line version of your hook]</strong>
+
+If you're sick of building for someone else's paycheck, the free AI Income Blueprint in bio walks through exactly how this works — investment amounts, commission structure, realistic timelines, and what most people don't tell you.
+
+#enagicaustralia #kangenwateraustralia #highticket #businessopportunity #australiaentrepreneur #workfromhome #residualincome #directsalesaustralia #silentsyndicate</div>
+  </div>
+
+</div>
+
+<footer>
+  <div class="footer-brand">SS / CONTENT</div>
+  <div class="footer-tag">Faceless AI Content Workflow · Silent Syndicate</div>
+  <div class="footer-tag">© 2025</div>
+</footer>
+</body>
+</html>

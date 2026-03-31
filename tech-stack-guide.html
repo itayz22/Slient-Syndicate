@@ -1,185 +1,374 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Tech Stack Guide — Silent Syndicate</title>
-  <meta name="robots" content="noindex, nofollow">
-  <link rel="stylesheet" href="css/design-system.css">
-  <style>
-    .page-wrap { max-width: 860px; margin: 0 auto; padding: 60px 28px 80px; }
-    .page-eyebrow {
-      font-family: 'Share Tech Mono', monospace;
-      font-size: 0.7rem;
-      letter-spacing: 0.18em;
-      color: var(--pg);
-      margin-bottom: 14px;
-    }
-    .page-title {
-      font-family: 'Orbitron', monospace;
-      font-size: clamp(1.6rem, 4vw, 2.4rem);
-      font-weight: 900;
-      letter-spacing: 0.05em;
-      background: linear-gradient(135deg, var(--white) 30%, var(--pg));
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-      margin-bottom: 12px;
-    }
-    .page-lead {
-      font-size: 1.05rem;
-      color: var(--muted);
-      line-height: 1.7;
-      margin-bottom: 48px;
-      max-width: 640px;
-    }
-    .stack-section { margin-bottom: 48px; }
-    .stack-section-title {
-      font-family: 'Orbitron', monospace;
-      font-size: 0.8rem;
-      font-weight: 700;
-      color: var(--pg);
-      letter-spacing: 0.14em;
-      border-bottom: 1px solid var(--border);
-      padding-bottom: 10px;
-      margin-bottom: 20px;
-    }
-    .stack-row {
-      display: grid;
-      grid-template-columns: 180px 1fr auto;
-      gap: 16px;
-      align-items: start;
-      padding: 16px 0;
-      border-bottom: 1px solid rgba(168,85,247,0.07);
-    }
-    @media (max-width: 600px) {
-      .stack-row { grid-template-columns: 1fr; }
-    }
-    .stack-name {
-      font-family: 'Share Tech Mono', monospace;
-      font-size: 0.82rem;
-      color: var(--white);
-      letter-spacing: 0.06em;
-    }
-    .stack-role {
-      font-size: 0.875rem;
-      color: var(--muted);
-      line-height: 1.6;
-    }
-    .stack-cost {
-      font-family: 'Share Tech Mono', monospace;
-      font-size: 0.75rem;
-      color: var(--dim);
-      white-space: nowrap;
-      text-align: right;
-    }
-    .stack-cost.free { color: var(--green); }
-    .note-box {
-      background: rgba(124,58,237,0.08);
-      border: 1px solid rgba(168,85,247,0.2);
-      border-radius: var(--radius);
-      padding: 20px 24px;
-      margin-top: 40px;
-    }
-    .note-label {
-      font-family: 'Share Tech Mono', monospace;
-      font-size: 0.67rem;
-      color: var(--pg);
-      letter-spacing: 0.14em;
-      margin-bottom: 8px;
-    }
-    .note-body { font-size: 0.9rem; color: var(--muted); line-height: 1.7; }
-    .back-link {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      font-family: 'Share Tech Mono', monospace;
-      font-size: 0.72rem;
-      color: var(--dim);
-      text-decoration: none;
-      letter-spacing: 0.1em;
-      margin-bottom: 40px;
-      transition: color 0.2s;
-    }
-    .back-link:hover { color: var(--pg); }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Silent Syndicate — Tech Stack Setup Guide</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=DM+Sans:wght@300;400;500;600&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+<style>
+:root{
+  --black:#03010a;--bg:#05020e;--card:#0a0618;--card2:#0e0920;
+  --pm:#7c3aed;--pb:#a855f7;--pg:#c084fc;--pink:#ec4899;--pkb:#f472b6;
+  --cyan:#22d3ee;--green:#4ade80;--amber:#fbbf24;--red:#ef4444;
+  --white:#f0ecff;--muted:rgba(240,236,255,0.78);--dim:rgba(240,236,255,0.48);
+  --border:rgba(168,85,247,0.15);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{font-size:16px;scroll-behavior:smooth;}
+body{background:var(--bg);color:var(--white);font-family:'DM Sans',sans-serif;overflow-x:hidden;}
+body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(rgba(168,85,247,0.03) 1px,transparent 1px),linear-gradient(90deg,rgba(168,85,247,0.03) 1px,transparent 1px);background-size:50px 50px;pointer-events:none;z-index:0;}
+.orb{position:fixed;border-radius:50%;filter:blur(110px);pointer-events:none;z-index:0;}
+.o1{width:500px;height:500px;background:rgba(107,33,168,0.15);top:-100px;left:-100px;animation:od 20s ease-in-out infinite;}
+.o2{width:400px;height:400px;background:rgba(34,211,238,0.06);bottom:-80px;right:-80px;animation:od 25s ease-in-out infinite reverse;}
+@keyframes od{0%,100%{transform:translate(0,0);}50%{transform:translate(35px,-45px);}}
+section,nav,header,footer{position:relative;z-index:1;}
+
+nav{position:sticky;top:0;z-index:500;background:rgba(3,1,10,0.95);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);padding:0.9rem 5%;display:flex;justify-content:space-between;align-items:center;}
+.nav-brand{display:flex;align-items:center;gap:0.7rem;}
+.nav-hex{width:22px;height:22px;background:linear-gradient(135deg,var(--pm),var(--pink));clip-path:polygon(50% 0%,100% 25%,100% 75%,50% 100%,0% 75%,0% 25%);box-shadow:0 0 12px rgba(168,85,247,0.7);animation:hp 3s ease-in-out infinite;}
+@keyframes hp{0%,100%{box-shadow:0 0 12px rgba(168,85,247,0.5);}50%{box-shadow:0 0 25px rgba(168,85,247,1);}}
+.nav-name{font-family:'Orbitron',sans-serif;font-size:0.85rem;font-weight:900;letter-spacing:0.15em;background:linear-gradient(90deg,var(--pg),var(--pkb));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.nav-tag{font-family:'Share Tech Mono',monospace;font-size:0.6rem;letter-spacing:0.15em;color:var(--dim);}
+
+/* page header */
+.page-header{padding:4rem 5% 3rem;text-align:center;}
+.ph-label{font-family:'Share Tech Mono',monospace;font-size:0.65rem;letter-spacing:0.25em;color:var(--cyan);margin-bottom:1rem;display:flex;align-items:center;justify-content:center;gap:0.8rem;}
+.ph-label::before,.ph-label::after{content:'';display:block;height:1px;width:30px;background:linear-gradient(90deg,transparent,var(--cyan));}
+.ph-label::after{background:linear-gradient(90deg,var(--cyan),transparent);}
+.ph-title{font-family:'Orbitron',sans-serif;font-size:clamp(1.8rem,4vw,3rem);font-weight:900;background:linear-gradient(135deg,var(--white),var(--pg) 55%,var(--cyan) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:1rem;line-height:1.1;}
+.ph-sub{font-size:1.05rem;color:var(--muted);max-width:620px;margin:0 auto;line-height:1.9;}
+
+/* cost summary bar */
+.cost-bar{max-width:900px;margin:0 auto 4rem;background:rgba(168,85,247,0.06);border:1px solid var(--border);border-radius:12px;padding:1.5rem 2.5rem;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1rem;}
+.cb-item{text-align:center;}
+.cb-val{font-family:'Orbitron',sans-serif;font-size:1.4rem;font-weight:900;background:linear-gradient(90deg,var(--pg),var(--pkb));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;display:block;}
+.cb-label{font-family:'Share Tech Mono',monospace;font-size:0.55rem;letter-spacing:0.15em;color:var(--dim);margin-top:0.2rem;display:block;}
+.cb-divider{width:1px;height:40px;background:var(--border);}
+
+/* tool steps */
+.tools-wrap{max-width:900px;margin:0 auto;padding:0 5% 6rem;}
+.phase{margin-bottom:4rem;}
+.phase-header{display:flex;align-items:center;gap:1rem;margin-bottom:2rem;padding-bottom:1rem;border-bottom:1px solid var(--border);}
+.phase-num{font-family:'Orbitron',sans-serif;font-size:2rem;font-weight:900;color:rgba(168,85,247,0.2);}
+.phase-info{}
+.phase-tag{font-family:'Share Tech Mono',monospace;font-size:0.58rem;letter-spacing:0.22em;color:var(--cyan);margin-bottom:0.3rem;}
+.phase-title{font-family:'Orbitron',sans-serif;font-size:1.2rem;font-weight:700;color:var(--white);}
+.phase-eta{font-family:'Share Tech Mono',monospace;font-size:0.6rem;letter-spacing:0.12em;color:var(--green);margin-left:auto;background:rgba(74,222,128,0.08);border:1px solid rgba(74,222,128,0.2);padding:0.3rem 0.8rem;border-radius:4px;}
+
+.tool-block{background:var(--card);border:1px solid var(--border);border-radius:14px;overflow:hidden;margin-bottom:1.2rem;}
+.tb-header{padding:1.4rem 2rem;background:rgba(168,85,247,0.06);border-bottom:1px solid rgba(168,85,247,0.1);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:0.8rem;}
+.tb-tool-name{display:flex;align-items:center;gap:0.8rem;}
+.tb-icon{font-size:1.4rem;}
+.tb-name{font-family:'Orbitron',sans-serif;font-size:0.95rem;font-weight:700;color:var(--white);}
+.tb-url{font-family:'Share Tech Mono',monospace;font-size:0.6rem;letter-spacing:0.08em;color:var(--cyan);text-decoration:none;background:rgba(34,211,238,0.07);border:1px solid rgba(34,211,238,0.2);padding:0.25rem 0.7rem;border-radius:4px;transition:all 0.2s;}
+.tb-url:hover{background:rgba(34,211,238,0.12);border-color:rgba(34,211,238,0.4);}
+.tb-meta{display:flex;align-items:center;gap:0.8rem;flex-wrap:wrap;}
+.tb-cost{font-family:'Share Tech Mono',monospace;font-size:0.6rem;letter-spacing:0.1em;padding:0.25rem 0.7rem;border-radius:4px;}
+.tb-cost.free{color:var(--green);background:rgba(74,222,128,0.08);border:1px solid rgba(74,222,128,0.2);}
+.tb-cost.paid{color:var(--amber);background:rgba(251,191,36,0.08);border:1px solid rgba(251,191,36,0.2);}
+.tb-cost.one-off{color:var(--pb);background:rgba(168,85,247,0.08);border:1px solid rgba(168,85,247,0.2);}
+.tb-why{padding:1.2rem 2rem;font-size:0.95rem;color:var(--muted);line-height:1.8;border-bottom:1px solid rgba(168,85,247,0.07);}
+.tb-why strong{color:var(--white);}
+.tb-steps{padding:1.5rem 2rem;}
+.tb-steps-label{font-family:'Share Tech Mono',monospace;font-size:0.58rem;letter-spacing:0.2em;color:var(--pg);margin-bottom:1.2rem;}
+.setup-step{display:flex;gap:1rem;margin-bottom:1rem;align-items:flex-start;}
+.ss-num{width:24px;height:24px;border-radius:50%;background:linear-gradient(135deg,var(--pm),var(--pink));display:flex;align-items:center;justify-content:center;font-family:'Orbitron',sans-serif;font-size:0.58rem;font-weight:700;flex-shrink:0;box-shadow:0 0 8px rgba(168,85,247,0.4);}
+.ss-body{}
+.ss-title{font-size:0.92rem;font-weight:600;color:var(--white);margin-bottom:0.2rem;}
+.ss-desc{font-size:0.85rem;color:var(--dim);line-height:1.7;}
+.ss-desc strong{color:var(--muted);}
+.ss-code{display:inline-block;background:rgba(168,85,247,0.1);border:1px solid rgba(168,85,247,0.2);border-radius:4px;padding:0.2rem 0.6rem;font-family:'Share Tech Mono',monospace;font-size:0.68rem;letter-spacing:0.05em;color:var(--pg);margin-top:0.3rem;}
+
+/* connection diagram */
+.conn-diagram{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:2.5rem;margin-bottom:3rem;}
+.cd-title{font-family:'Share Tech Mono',monospace;font-size:0.62rem;letter-spacing:0.22em;color:var(--pg);margin-bottom:2rem;}
+.cd-flow{display:flex;align-items:center;flex-wrap:wrap;gap:0.5rem;justify-content:center;}
+.cd-node{background:rgba(168,85,247,0.08);border:1px solid rgba(168,85,247,0.25);border-radius:8px;padding:0.8rem 1.2rem;text-align:center;min-width:100px;}
+.cd-node.highlight{background:rgba(168,85,247,0.15);border-color:var(--pb);box-shadow:0 0 15px rgba(168,85,247,0.15);}
+.cdn-icon{font-size:1.2rem;display:block;margin-bottom:0.3rem;}
+.cdn-name{font-family:'Share Tech Mono',monospace;font-size:0.58rem;letter-spacing:0.1em;color:var(--white);}
+.cdn-role{font-family:'Share Tech Mono',monospace;font-size:0.48rem;letter-spacing:0.06em;color:var(--dim);margin-top:0.2rem;}
+.cd-arrow{color:var(--pb);font-size:1.2rem;opacity:0.6;}
+
+/* checklist */
+.checklist{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:2.5rem;max-width:900px;margin:0 auto 4rem;}
+.cl-title{font-family:'Orbitron',sans-serif;font-size:1rem;font-weight:700;color:var(--white);margin-bottom:1.5rem;letter-spacing:0.05em;}
+.cl-section{margin-bottom:1.5rem;}
+.cl-section-label{font-family:'Share Tech Mono',monospace;font-size:0.58rem;letter-spacing:0.2em;color:var(--pg);margin-bottom:0.8rem;}
+.cl-item{display:flex;align-items:center;gap:0.8rem;padding:0.6rem 0;border-bottom:1px solid rgba(168,85,247,0.06);font-size:0.92rem;color:var(--muted);cursor:pointer;transition:color 0.2s;}
+.cl-item:last-child{border-bottom:none;}
+.cl-item:hover{color:var(--white);}
+.cl-box{width:18px;height:18px;border:1px solid rgba(168,85,247,0.35);border-radius:4px;flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:all 0.2s;background:rgba(168,85,247,0.05);}
+.cl-item.checked .cl-box{background:var(--green);border-color:var(--green);box-shadow:0 0 8px rgba(74,222,128,0.4);}
+.cl-item.checked{color:var(--dim);text-decoration:line-through;}
+.cl-check{display:none;color:var(--black);font-size:0.7rem;font-weight:700;}
+.cl-item.checked .cl-check{display:block;}
+
+footer{padding:2rem 5%;border-top:1px solid var(--border);display:flex;justify-content:space-between;flex-wrap:wrap;gap:1rem;}
+.footer-brand{font-family:'Orbitron',sans-serif;font-size:0.9rem;font-weight:900;letter-spacing:0.15em;background:linear-gradient(90deg,var(--pg),var(--cyan));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.footer-tag{font-family:'Share Tech Mono',monospace;font-size:0.58rem;letter-spacing:0.12em;color:var(--dim);}
+</style>
 </head>
 <body>
-  <div class="page-wrap">
-    <a href="hub.html" class="back-link">← BACK TO HUB</a>
-    <div class="page-eyebrow">RESOURCE // TECH STACK</div>
-    <h1 class="page-title">Tech Stack Guide</h1>
-    <p class="page-lead">Every service powering the Silent Syndicate funnel. What each tool does, why it's in the stack, and what it costs. All chosen for automation-first, low-maintenance operation.</p>
+<div class="orb o1"></div><div class="orb o2"></div>
 
-    <!-- Hosting & Delivery -->
-    <div class="stack-section">
-      <div class="stack-section-title">HOSTING &amp; DELIVERY</div>
-      <div class="stack-row">
-        <div class="stack-name">Netlify</div>
-        <div class="stack-role">Static site hosting and serverless functions. Handles all HTML pages, CSS, JS, and the four API functions (subscribe, apply, score, webhook). Free tier covers the full funnel easily. Deploy via GitHub push.</div>
-        <div class="stack-cost free">Free tier</div>
-      </div>
-      <div class="stack-row">
-        <div class="stack-name">Netlify Functions</div>
-        <div class="stack-role">Serverless Node.js endpoints. The funnel uses four: <code>/subscribe</code>, <code>/apply</code>, <code>/score</code>, <code>/webhook</code>. Each runs in isolation with a 10-second timeout. 125k invocations/month free.</div>
-        <div class="stack-cost free">Included</div>
-      </div>
-      <div class="stack-row">
-        <div class="stack-name">Custom Domain + SSL</div>
-        <div class="stack-role">Any registrar works (Namecheap, Cloudflare, GoDaddy). Point DNS to Netlify. Free Let's Encrypt SSL provisioned automatically. Forces HTTPS via <code>_redirects</code> file.</div>
-        <div class="stack-cost">~$12/yr</div>
-      </div>
-    </div>
+<nav>
+  <div class="nav-brand"><div class="nav-hex"></div><span class="nav-name">SILENT SYNDICATE</span></div>
+  <div class="nav-tag">// Tech Stack Setup Guide</div>
+<a href="hub.html" style="font-family:'Share Tech Mono',monospace;font-size:0.58rem;letter-spacing:0.12em;color:rgba(240,236,255,0.4);text-decoration:none;border:1px solid rgba(168,85,247,0.15);padding:0.35rem 0.8rem;border-radius:4px;transition:all 0.2s;" onmouseover="this.style.color='rgba(240,236,255,0.8)';this.style.borderColor='rgba(168,85,247,0.4)'" onmouseout="this.style.color='rgba(240,236,255,0.4)';this.style.borderColor='rgba(168,85,247,0.15)'">⬡ HUB</a>
+</nav>
 
-    <!-- Email Automation -->
-    <div class="stack-section">
-      <div class="stack-section-title">EMAIL AUTOMATION</div>
-      <div class="stack-row">
-        <div class="stack-name">ActiveCampaign</div>
-        <div class="stack-role">CRM and email automation backbone. Stores all contacts, manages tag-based routing, and runs the three automation sequences (Welcome, HOT, Warm). REST API used by all four Netlify functions. Lite plan ($29/mo) covers up to 1,000 contacts.</div>
-        <div class="stack-cost">$29–79/mo</div>
-      </div>
-      <div class="stack-row">
-        <div class="stack-name">AC Automations</div>
-        <div class="stack-role">Three automations handle the full lead lifecycle: SS Welcome Sequence (7-day nurture), SS HOT Lead Routing (immediate high-intent path), SS Warm Nurture (30-day slow burn). Triggered by tags added via the API.</div>
-        <div class="stack-cost free">Included</div>
-      </div>
-    </div>
+<div class="page-header">
+  <div class="ph-label">The Infrastructure</div>
+  <h1 class="ph-title">What To Plug In.<br>In What Order. Exactly How.</h1>
+  <p class="ph-sub">Every tool you need to go from static HTML pages to a fully live, connected funnel that captures leads, runs email sequences, qualifies applicants, and tracks commissions — automatically.</p>
+</div>
 
-    <!-- AI & Chatbot -->
-    <div class="stack-section">
-      <div class="stack-section-title">AI &amp; CHATBOT</div>
-      <div class="stack-row">
-        <div class="stack-name">Chatbot Engine</div>
-        <div class="stack-role">Rule-based chatbot in <code>js/chatbot.js</code>. Pattern-matches user messages against a keyword library and returns structured responses. Runs fully client-side — no API calls, no latency, no cost. Handles objections, qualification questions, and CTA routing.</div>
-        <div class="stack-cost free">Free (client-side)</div>
-      </div>
-      <div class="stack-row">
-        <div class="stack-name">Score Engine</div>
-        <div class="stack-role">The <code>/score</code> Netlify function scores each applicant on capital, timeline, commitment, and background. Returns HOT (≥70), WARM (40–69), or COLD (&lt;40) with a numeric score. Drives AC tag assignment and funnel routing.</div>
-        <div class="stack-cost free">Included</div>
-      </div>
-    </div>
+<!-- COST SUMMARY -->
+<div class="cost-bar">
+  <div class="cb-item"><span class="cb-val">~$120</span><span class="cb-label">Per month total</span></div>
+  <div class="cb-divider"></div>
+  <div class="cb-item"><span class="cb-val">~$30</span><span class="cb-label">One-off setup costs</span></div>
+  <div class="cb-divider"></div>
+  <div class="cb-item"><span class="cb-val">5</span><span class="cb-label">Core tools needed</span></div>
+  <div class="cb-divider"></div>
+  <div class="cb-item"><span class="cb-val">48h</span><span class="cb-label">Realistic setup time</span></div>
+  <div class="cb-divider"></div>
+  <div class="cb-item"><span class="cb-val">0</span><span class="cb-label">Code required</span></div>
+</div>
 
-    <!-- Analytics -->
-    <div class="stack-section">
-      <div class="stack-section-title">ANALYTICS (OPTIONAL)</div>
-      <div class="stack-row">
-        <div class="stack-name">Netlify Analytics</div>
-        <div class="stack-role">Server-side analytics. No tracking scripts, no GDPR cookie banner required. Shows pageviews, unique visitors, top pages, and bandwidth. Optional add-on on Netlify.</div>
-        <div class="stack-cost">$9/mo</div>
-      </div>
-      <div class="stack-row">
-        <div class="stack-name">Plausible (alternative)</div>
-        <div class="stack-role">Privacy-first analytics alternative to Google Analytics. Self-hostable or hosted. Lightweight script (under 1KB). Tracks goals, referrers, and conversions without cookies.</div>
-        <div class="stack-cost">$9/mo</div>
-      </div>
-    </div>
-
-    <div class="note-box">
-      <div class="note-label">TOTAL MONTHLY COST</div>
-      <div class="note-body">Minimum viable stack: <strong>$29/month</strong> (ActiveCampaign Lite only). Full stack with analytics: <strong>~$38–50/month</strong>. Domain renewal adds ~$1/month amortised. One Launcher commission ($4,300) covers 12+ months of infrastructure.</div>
+<!-- CONNECTION DIAGRAM -->
+<div style="max-width:900px;margin:0 auto;padding:0 5% 2rem;">
+  <div class="conn-diagram">
+    <div class="cd-title">// HOW EVERYTHING CONNECTS</div>
+    <div class="cd-flow">
+      <div class="cd-node"><span class="cdn-icon">📄</span><div class="cdn-name">NETLIFY</div><div class="cdn-role">Hosts your pages</div></div>
+      <div class="cd-arrow">→</div>
+      <div class="cd-node highlight"><span class="cdn-icon">📧</span><div class="cdn-name">ACTIVECAMPAIGN</div><div class="cdn-role">Captures leads + sends emails</div></div>
+      <div class="cd-arrow">→</div>
+      <div class="cd-node"><span class="cdn-icon">⚡</span><div class="cdn-name">ZAPIER</div><div class="cdn-role">Connects everything</div></div>
+      <div class="cd-arrow">→</div>
+      <div class="cd-node"><span class="cdn-icon">📋</span><div class="cdn-name">TYPEFORM</div><div class="cdn-role">Application + scoring</div></div>
+      <div class="cd-arrow">→</div>
+      <div class="cd-node highlight"><span class="cdn-icon">🤖</span><div class="cdn-name">TIDIO</div><div class="cdn-role">AI chatbot on all pages</div></div>
     </div>
   </div>
+</div>
+
+<!-- TOOLS -->
+<div class="tools-wrap">
+
+  <!-- PHASE 1 -->
+  <div class="phase">
+    <div class="phase-header">
+      <div class="phase-num">01</div>
+      <div class="phase-info">
+        <div class="phase-tag">// PHASE ONE — Do This First</div>
+        <div class="phase-title">Get Your Pages Live Online</div>
+      </div>
+      <div class="phase-eta">~2 hours</div>
+    </div>
+
+    <div class="tool-block">
+      <div class="tb-header">
+        <div class="tb-tool-name"><span class="tb-icon">🌐</span><span class="tb-name">Netlify</span></div>
+        <div class="tb-meta">
+          <a href="https://netlify.com" class="tb-url" target="_blank">netlify.com →</a>
+          <span class="tb-cost free">FREE to host</span>
+        </div>
+      </div>
+      <div class="tb-why">Netlify hosts your HTML files and gives them a live URL that works on any phone or browser. It takes about 5 minutes. You can use a free <strong>yoursite.netlify.app</strong> URL to start, then connect your own domain later.</div>
+      <div class="tb-steps">
+        <div class="tb-steps-label">// SETUP STEPS</div>
+        <div class="setup-step"><div class="ss-num">1</div><div class="ss-body"><div class="ss-title">Create a free account</div><div class="ss-desc">Go to netlify.com, sign up with email or Google. No credit card needed.</div></div></div>
+        <div class="setup-step"><div class="ss-num">2</div><div class="ss-body"><div class="ss-title">Drag and drop your files</div><div class="ss-desc">On the Netlify dashboard, find the <strong>"Deploy manually"</strong> area. Drag ALL your HTML files in at once — page1-optin, page2-manifesto, page3-apply, page4-offer, aios-dashboard, aios-sales.</div></div></div>
+        <div class="setup-step"><div class="ss-num">3</div><div class="ss-body"><div class="ss-title">Get your live URL</div><div class="ss-desc">Netlify generates a URL instantly — something like <span class="ss-code">purple-syndicate-7f2a.netlify.app</span>. This is your live funnel.</div></div></div>
+        <div class="setup-step"><div class="ss-num">4</div><div class="ss-body"><div class="ss-title">(Optional) Connect your own domain</div><div class="ss-desc">Buy <strong>silentsyndicateAU.com</strong> from Namecheap (~$12/yr). In Netlify → Domain Settings → Add custom domain. Follow the DNS instructions. Takes 24h to propagate.</div></div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PHASE 2 -->
+  <div class="phase">
+    <div class="phase-header">
+      <div class="phase-num">02</div>
+      <div class="phase-info">
+        <div class="phase-tag">// PHASE TWO — The Email Engine</div>
+        <div class="phase-title">Connect Your Email Platform</div>
+      </div>
+      <div class="phase-eta">~4 hours</div>
+    </div>
+
+    <div class="tool-block">
+      <div class="tb-header">
+        <div class="tb-tool-name"><span class="tb-icon">📧</span><span class="tb-name">ActiveCampaign</span></div>
+        <div class="tb-meta">
+          <a href="https://activecampaign.com" class="tb-url" target="_blank">activecampaign.com →</a>
+          <span class="tb-cost paid">$29/month</span>
+        </div>
+      </div>
+      <div class="tb-why">This is the brain of the funnel. It stores every lead, sends your 7-day email sequence automatically, applies tags based on behaviour, and tells you exactly who opened what. <strong>Everything runs through here.</strong></div>
+      <div class="tb-steps">
+        <div class="tb-steps-label">// SETUP STEPS</div>
+        <div class="setup-step"><div class="ss-num">1</div><div class="ss-body"><div class="ss-title">Create your account</div><div class="ss-desc">Sign up at activecampaign.com. Choose the <strong>Lite plan at $29/month</strong> — it covers everything you need at this stage.</div></div></div>
+        <div class="setup-step"><div class="ss-num">2</div><div class="ss-body"><div class="ss-title">Create your list</div><div class="ss-desc">In ActiveCampaign → Lists → New List. Call it <strong>"Silent Syndicate Leads"</strong>. This is where all opt-ins land.</div></div></div>
+        <div class="setup-step"><div class="ss-num">3</div><div class="ss-body"><div class="ss-title">Create your form embed</div><div class="ss-desc">In ActiveCampaign → Forms → New Form. Create an inline form with Name + Email fields. Copy the embed code — you'll replace the form on page1-optin.html with this code.</div></div></div>
+        <div class="setup-step"><div class="ss-num">4</div><div class="ss-body"><div class="ss-title">Build your automation</div><div class="ss-desc">Go to Automations → New Automation → <strong>"Start from scratch"</strong>. Set the trigger as <strong>"Subscribes to list"</strong>. This is where your 7-day sequence will live — we'll add the emails here once they're written.</div></div></div>
+        <div class="setup-step"><div class="ss-num">5</div><div class="ss-body"><div class="ss-title">Set up your tags</div><div class="ss-desc">Create these four tags in ActiveCampaign → Tags:<br><span class="ss-code">SS-NEW</span> <span class="ss-code">SS-WARM</span> <span class="ss-code">SS-HOT</span> <span class="ss-code">SS-APPLIED</span><br>These will be applied automatically based on behaviour.</div></div></div>
+        <div class="setup-step"><div class="ss-num">6</div><div class="ss-body"><div class="ss-title">Replace the form on Page 1</div><div class="ss-desc">Open page1-optin.html in a text editor. Find the <span class="ss-code">&lt;form id="optinForm"&gt;</span> section and replace it entirely with your ActiveCampaign embed code. Save and re-upload to Netlify.</div></div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PHASE 3 -->
+  <div class="phase">
+    <div class="phase-header">
+      <div class="phase-num">03</div>
+      <div class="phase-info">
+        <div class="phase-tag">// PHASE THREE — The Glue</div>
+        <div class="phase-title">Connect Everything With Zapier</div>
+      </div>
+      <div class="phase-eta">~2 hours</div>
+    </div>
+
+    <div class="tool-block">
+      <div class="tb-header">
+        <div class="tb-tool-name"><span class="tb-icon">⚡</span><span class="tb-name">Zapier</span></div>
+        <div class="tb-meta">
+          <a href="https://zapier.com" class="tb-url" target="_blank">zapier.com →</a>
+          <span class="tb-cost free">Free tier (100 tasks/mo)</span>
+        </div>
+      </div>
+      <div class="tb-why">Zapier is the invisible glue. It watches for things happening in one tool and triggers actions in another — <strong>automatically, no code needed</strong>. You'll use it to route qualified applicants and apply lead scores.</div>
+      <div class="tb-steps">
+        <div class="tb-steps-label">// THE THREE ZAPS YOU NEED</div>
+        <div class="setup-step"><div class="ss-num">1</div><div class="ss-body"><div class="ss-title">Zap 1: Application → ActiveCampaign tag</div><div class="ss-desc"><strong>Trigger:</strong> New Typeform submission<br><strong>Action:</strong> Find contact in ActiveCampaign by email → Apply tag <span class="ss-code">SS-APPLIED</span><br>This fires the moment someone submits the apply form.</div></div></div>
+        <div class="setup-step"><div class="ss-num">2</div><div class="ss-body"><div class="ss-title">Zap 2: Score HOT leads automatically</div><div class="ss-desc"><strong>Trigger:</strong> New Typeform submission where answer to "investment readiness" = "Yes — I'm ready"<br><strong>Action:</strong> Apply tag <span class="ss-code">SS-HOT</span> in ActiveCampaign → Send notification email to yourself<br>You get alerted the instant a HOT lead applies.</div></div></div>
+        <div class="setup-step"><div class="ss-num">3</div><div class="ss-body"><div class="ss-title">Zap 3: HOT lead → route to offer page email</div><div class="ss-desc"><strong>Trigger:</strong> Tag <span class="ss-code">SS-HOT</span> added to contact<br><strong>Action:</strong> Send email via ActiveCampaign with subject <strong>"Your application is approved — here's your offer"</strong> and link to page4-offer.html<br>This is the callless conversion trigger.</div></div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PHASE 4 -->
+  <div class="phase">
+    <div class="phase-header">
+      <div class="phase-num">04</div>
+      <div class="phase-info">
+        <div class="phase-tag">// PHASE FOUR — The Application</div>
+        <div class="phase-title">Set Up The Application Form</div>
+      </div>
+      <div class="phase-eta">~1 hour</div>
+    </div>
+
+    <div class="tool-block">
+      <div class="tb-header">
+        <div class="tb-tool-name"><span class="tb-icon">📋</span><span class="tb-name">Typeform</span></div>
+        <div class="tb-meta">
+          <a href="https://typeform.com" class="tb-url" target="_blank">typeform.com →</a>
+          <span class="tb-cost free">Free tier available</span>
+        </div>
+      </div>
+      <div class="tb-why">Typeform replaces the built-in form on page3-apply.html with a properly connected form that sends data to Zapier and ActiveCampaign. <strong>High completion rate on mobile</strong> — critical for a funnel built for phones.</div>
+      <div class="tb-steps">
+        <div class="tb-steps-label">// SETUP STEPS</div>
+        <div class="setup-step"><div class="ss-num">1</div><div class="ss-body"><div class="ss-title">Create your form</div><div class="ss-desc">New Typeform → build 7 questions matching exactly what's on page3-apply.html. Use the same questions — current situation, income goal, prior experience, investment readiness, why you want to join, anything else.</div></div></div>
+        <div class="setup-step"><div class="ss-num">2</div><div class="ss-body"><div class="ss-title">Style it to match</div><div class="ss-desc">In Typeform design settings: background <span class="ss-code">#05020e</span>, accent colour <span class="ss-code">#a855f7</span>, font: any sans-serif. This keeps it on-brand.</div></div></div>
+        <div class="setup-step"><div class="ss-num">3</div><div class="ss-body"><div class="ss-title">Embed or link from page 3</div><div class="ss-desc">Either embed the Typeform directly into page3-apply.html using the embed code, or simply update the form's submit button to redirect to your Typeform URL. The redirect is simpler and works well on mobile.</div></div></div>
+        <div class="setup-step"><div class="ss-num">4</div><div class="ss-body"><div class="ss-title">Connect to Zapier</div><div class="ss-desc">In Typeform → Connect → Zapier. Authorise the connection. This is what Zap 1 and Zap 2 above will listen to.</div></div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PHASE 5 -->
+  <div class="phase">
+    <div class="phase-header">
+      <div class="phase-num">05</div>
+      <div class="phase-info">
+        <div class="phase-tag">// PHASE FIVE — The Chatbot</div>
+        <div class="phase-title">Add The AI Chatbot</div>
+      </div>
+      <div class="phase-eta">~2 hours</div>
+    </div>
+
+    <div class="tool-block">
+      <div class="tb-header">
+        <div class="tb-tool-name"><span class="tb-icon">🤖</span><span class="tb-name">Tidio</span></div>
+        <div class="tb-meta">
+          <a href="https://tidio.com" class="tb-url" target="_blank">tidio.com →</a>
+          <span class="tb-cost paid">$29/month</span>
+        </div>
+      </div>
+      <div class="tb-why">Tidio puts an AI chat widget on every page of your funnel. It handles objections, answers questions, and qualifies leads at 2am when you're asleep. <strong>The chatbot script we've built tells it exactly what to say</strong> — you just paste it in.</div>
+      <div class="tb-steps">
+        <div class="tb-steps-label">// SETUP STEPS</div>
+        <div class="setup-step"><div class="ss-num">1</div><div class="ss-body"><div class="ss-title">Create account and install widget</div><div class="ss-desc">Sign up at tidio.com. In Settings → Channels → Live Chat → get your install code. It's a small JavaScript snippet.</div></div></div>
+        <div class="setup-step"><div class="ss-num">2</div><div class="ss-body"><div class="ss-title">Add the snippet to all pages</div><div class="ss-desc">Paste the Tidio script just before the <span class="ss-code">&lt;/body&gt;</span> tag in page1, page2, page3, and page4. Re-upload all four to Netlify.</div></div></div>
+        <div class="setup-step"><div class="ss-num">3</div><div class="ss-body"><div class="ss-title">Train your AI with the chatbot script</div><div class="ss-desc">In Tidio → Lyro AI → Knowledge Base. Paste the full chatbot qualification script (see the chatbot script document). This teaches the AI your offer, your objections, and your qualifying questions.</div></div></div>
+        <div class="setup-step"><div class="ss-num">4</div><div class="ss-body"><div class="ss-title">Style to match brand</div><div class="ss-desc">In Tidio → Appearance: set colour to <span class="ss-code">#a855f7</span>, widget position bottom-right, greeting message: <strong>"Hey — got questions about the system? I'm here."</strong></div></div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CHECKLIST -->
+  <div class="checklist">
+    <div class="cl-title">// LAUNCH CHECKLIST — Tick these off in order</div>
+    <div class="cl-section">
+      <div class="cl-section-label">// PHASE 1 — HOSTING</div>
+      <div class="cl-item" onclick="toggleCheck(this)"><div class="cl-box"><span class="cl-check">✓</span></div>All 6 HTML files uploaded to Netlify</div>
+      <div class="cl-item" onclick="toggleCheck(this)"><div class="cl-box"><span class="cl-check">✓</span></div>Live URL confirmed and working on mobile</div>
+      <div class="cl-item" onclick="toggleCheck(this)"><div class="cl-box"><span class="cl-check">✓</span></div>Custom domain purchased and connected (optional)</div>
+    </div>
+    <div class="cl-section">
+      <div class="cl-section-label">// PHASE 2 — EMAIL</div>
+      <div class="cl-item" onclick="toggleCheck(this)"><div class="cl-box"><span class="cl-check">✓</span></div>ActiveCampaign account created</div>
+      <div class="cl-item" onclick="toggleCheck(this)"><div class="cl-box"><span class="cl-check">✓</span></div>"Silent Syndicate Leads" list created</div>
+      <div class="cl-item" onclick="toggleCheck(this)"><div class="cl-box"><span class="cl-check">✓</span></div>ActiveCampaign form embedded on page 1</div>
+      <div class="cl-item" onclick="toggleCheck(this)"><div class="cl-box"><span class="cl-check">✓</span></div>4 tags created: SS-NEW, SS-WARM, SS-HOT, SS-APPLIED</div>
+      <div class="cl-item" onclick="toggleCheck(this)"><div class="cl-box"><span class="cl-check">✓</span></div>Automation shell built (emails to be added)</div>
+    </div>
+    <div class="cl-section">
+      <div class="cl-section-label">// PHASE 3 — ZAPIER</div>
+      <div class="cl-item" onclick="toggleCheck(this)"><div class="cl-box"><span class="cl-check">✓</span></div>Zap 1: Application → SS-APPLIED tag</div>
+      <div class="cl-item" onclick="toggleCheck(this)"><div class="cl-box"><span class="cl-check">✓</span></div>Zap 2: Investment-ready → SS-HOT tag + alert</div>
+      <div class="cl-item" onclick="toggleCheck(this)"><div class="cl-box"><span class="cl-check">✓</span></div>Zap 3: SS-HOT → offer page email sent</div>
+    </div>
+    <div class="cl-section">
+      <div class="cl-section-label">// PHASE 4 — APPLICATION</div>
+      <div class="cl-item" onclick="toggleCheck(this)"><div class="cl-box"><span class="cl-check">✓</span></div>Typeform created with 7 questions</div>
+      <div class="cl-item" onclick="toggleCheck(this)"><div class="cl-box"><span class="cl-check">✓</span></div>Typeform styled to match brand</div>
+      <div class="cl-item" onclick="toggleCheck(this)"><div class="cl-box"><span class="cl-check">✓</span></div>Typeform connected to Zapier</div>
+    </div>
+    <div class="cl-section">
+      <div class="cl-section-label">// PHASE 5 — CHATBOT</div>
+      <div class="cl-item" onclick="toggleCheck(this)"><div class="cl-box"><span class="cl-check">✓</span></div>Tidio account created</div>
+      <div class="cl-item" onclick="toggleCheck(this)"><div class="cl-box"><span class="cl-check">✓</span></div>Snippet added to all 4 funnel pages</div>
+      <div class="cl-item" onclick="toggleCheck(this)"><div class="cl-box"><span class="cl-check">✓</span></div>Chatbot knowledge base trained with script</div>
+      <div class="cl-item" onclick="toggleCheck(this)"><div class="cl-box"><span class="cl-check">✓</span></div>Test conversation completed end-to-end</div>
+    </div>
+    <div class="cl-section">
+      <div class="cl-section-label">// FINAL CHECK — Before sending traffic</div>
+      <div class="cl-item" onclick="toggleCheck(this)"><div class="cl-box"><span class="cl-check">✓</span></div>Submit a test opt-in — appears in ActiveCampaign ✓</div>
+      <div class="cl-item" onclick="toggleCheck(this)"><div class="cl-box"><span class="cl-check">✓</span></div>Complete test application — Zapier fires ✓</div>
+      <div class="cl-item" onclick="toggleCheck(this)"><div class="cl-box"><span class="cl-check">✓</span></div>Offer page email received after SS-HOT tag applied ✓</div>
+      <div class="cl-item" onclick="toggleCheck(this)"><div class="cl-box"><span class="cl-check">✓</span></div>Chatbot responds correctly on mobile ✓</div>
+      <div class="cl-item" onclick="toggleCheck(this)"><div class="cl-box"><span class="cl-check">✓</span></div>All page links work correctly across the funnel ✓</div>
+    </div>
+  </div>
+
+</div><!-- /tools-wrap -->
+
+<footer>
+  <div class="footer-brand">SS / TECH STACK</div>
+  <div class="footer-tag">Silent Syndicate Setup Guide</div>
+  <div class="footer-tag">© 2025</div>
+</footer>
+
+<script>
+function toggleCheck(el) {
+  el.classList.toggle('checked');
+  const total = document.querySelectorAll('.cl-item').length;
+  const done = document.querySelectorAll('.cl-item.checked').length;
+}
+</script>
 </body>
 </html>

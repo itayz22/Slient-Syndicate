@@ -15,6 +15,26 @@
   status = 200
 
 [[redirects]]
-  from = "/*"
-  to = "/index.html"
+  from = "/hub"
+  to = "/hub.html"
+  status = 200
+
+[[redirects]]
+  from = "/apply"
+  to = "/page3-apply.html"
+  status = 200
+
+[[redirects]]
+  from = "/offer"
+  to = "/page4-offer.html"
+  status = 200
+
+[[redirects]]
+  from = "/join"
+  to = "/distributors.html"
+  status = 200
+
+[[redirects]]
+  from = "/dashboard"
+  to = "/aios-dashboard.html"
   status = 200

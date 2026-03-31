@@ -1,785 +1,636 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>AIOS — The AI Operating System | Silent Syndicate</title>
-  <meta name="description" content="AIOS is the mission control dashboard for Silent Syndicate operators. Monitor your pipeline, commissions, email sequences, AI chatbot, and network from one place.">
-  <link rel="stylesheet" href="css/design-system.css">
-  <style>
-    /* ── Nav ── */
-    .nav {
-      position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      z-index: 100;
-      background: rgba(5, 2, 14, 0.85);
-      backdrop-filter: blur(20px);
-      border-bottom: 1px solid var(--border);
-    }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AIOS — The AI Operating System by Silent Syndicate</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=DM+Sans:wght@300;400;500;600&family=Share+Tech+Mono&family=Cormorant+Garamond:ital,wght@0,300;1,300&display=swap" rel="stylesheet">
+<style>
+:root{
+  --black:#03010a;--deep:#06030f;--card:#0a0618;--card2:#0f0a20;
+  --pm:#7c3aed;--pb:#a855f7;--pg:#c084fc;--pink:#ec4899;--pkb:#f472b6;
+  --cyan:#22d3ee;--green:#4ade80;--amber:#fbbf24;--red:#ef4444;
+  --white:#f0ecff;--muted:rgba(240,236,255,0.75);--dim:rgba(240,236,255,0.45);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{font-size:16px;scroll-behavior:smooth;}
+body{background:var(--black);color:var(--white);font-family:'DM Sans',sans-serif;overflow-x:hidden;}
 
-    .nav-inner {
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 0 32px;
-      height: 64px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
+/* GRID */
+body::before{content:'';position:fixed;inset:0;
+  background-image:linear-gradient(rgba(168,85,247,0.04) 1px,transparent 1px),linear-gradient(90deg,rgba(168,85,247,0.04) 1px,transparent 1px);
+  background-size:50px 50px;pointer-events:none;z-index:0;animation:gs 40s linear infinite;}
+@keyframes gs{to{background-position:50px 50px;}}
 
-    .nav-logo {
-      font-family: 'Orbitron', monospace;
-      font-weight: 900;
-      font-size: 1.1rem;
-      letter-spacing: 0.1em;
-      background: linear-gradient(135deg, var(--pg), var(--pink));
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-      text-decoration: none;
-    }
+/* SCANLINES */
+body::after{content:'';position:fixed;inset:0;
+  background:repeating-linear-gradient(0deg,transparent,transparent 3px,rgba(0,0,0,0.03) 3px,rgba(0,0,0,0.03) 4px);
+  pointer-events:none;z-index:998;}
 
-    .nav-cta {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      padding: 9px 22px;
-      background: var(--pm);
-      color: var(--white);
-      border-radius: var(--radius-full);
-      font-family: 'DM Sans', sans-serif;
-      font-weight: 600;
-      font-size: 0.85rem;
-      text-decoration: none;
-      transition: background 0.2s, box-shadow 0.2s;
-    }
+.orb{position:fixed;border-radius:50%;filter:blur(120px);pointer-events:none;z-index:0;}
+.o1{width:700px;height:700px;background:rgba(107,33,168,0.2);top:-200px;left:-200px;animation:od 20s ease-in-out infinite;}
+.o2{width:500px;height:500px;background:rgba(236,72,153,0.1);bottom:-100px;right:-100px;animation:od 25s ease-in-out infinite reverse;}
+.o3{width:350px;height:350px;background:rgba(34,211,238,0.06);top:35%;left:60%;animation:od 30s ease-in-out infinite 8s;}
+@keyframes od{0%,100%{transform:translate(0,0);}33%{transform:translate(50px,-70px);}66%{transform:translate(-40px,35px);}}
+section,nav,footer{position:relative;z-index:1;}
 
-    .nav-cta:hover {
-      background: var(--pb);
-      box-shadow: 0 0 20px rgba(168, 85, 247, 0.4);
-    }
+/* NAV */
+nav{position:sticky;top:0;z-index:500;background:rgba(3,1,10,0.94);backdrop-filter:blur(24px);
+  border-bottom:1px solid rgba(168,85,247,0.15);padding:1rem 5%;
+  display:flex;justify-content:space-between;align-items:center;}
+.nav-brand{display:flex;align-items:center;gap:0.8rem;}
+.nav-hex{width:28px;height:28px;background:linear-gradient(135deg,var(--pm),var(--pink));
+  clip-path:polygon(50% 0%,100% 25%,100% 75%,50% 100%,0% 75%,0% 25%);
+  box-shadow:0 0 16px rgba(168,85,247,0.8);animation:hp 3s ease-in-out infinite;flex-shrink:0;}
+@keyframes hp{0%,100%{box-shadow:0 0 16px rgba(168,85,247,0.6);}50%{box-shadow:0 0 32px rgba(168,85,247,1),0 0 55px rgba(236,72,153,0.4);}}
+.nav-name{font-family:'Orbitron',sans-serif;font-size:0.95rem;font-weight:900;letter-spacing:0.2em;
+  background:linear-gradient(90deg,var(--pg),var(--pkb));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.nav-slash{color:rgba(168,85,247,0.4);margin:0 0.3rem;font-weight:300;}
+.nav-sub{font-family:'Share Tech Mono',monospace;font-size:0.7rem;letter-spacing:0.15em;color:var(--cyan);}
+.nav-cta{background:linear-gradient(135deg,var(--pm),var(--pink));color:var(--white);
+  font-family:'Orbitron',sans-serif;font-size:0.65rem;font-weight:700;letter-spacing:0.12em;
+  padding:0.6rem 1.4rem;border:none;border-radius:4px;cursor:pointer;text-decoration:none;
+  box-shadow:0 0 20px rgba(168,85,247,0.4);transition:all 0.3s;}
+.nav-cta:hover{box-shadow:0 0 35px rgba(168,85,247,0.7);transform:translateY(-1px);}
 
-    /* ── Hero ── */
-    .hero {
-      min-height: 100vh;
-      display: flex;
-      align-items: center;
-      padding: 120px 32px 80px;
-      max-width: 1200px;
-      margin: 0 auto;
-    }
+/* HERO */
+.hero{min-height:100vh;display:flex;flex-direction:column;justify-content:center;align-items:center;
+  text-align:center;padding:6rem 5% 5rem;position:relative;overflow:hidden;}
 
-    .hero-inner {
-      max-width: 720px;
-    }
+/* Mission telemetry bar */
+.telemetry{display:flex;gap:3rem;align-items:center;justify-content:center;
+  font-family:'Share Tech Mono',monospace;font-size:0.6rem;letter-spacing:0.15em;
+  color:var(--dim);margin-bottom:3rem;flex-wrap:wrap;
+  opacity:0;animation:fu 0.6s ease 0.2s forwards;}
+.tel-item{display:flex;align-items:center;gap:0.5rem;}
+.tel-dot{width:6px;height:6px;border-radius:50%;animation:blink 2s ease-in-out infinite;}
+.tel-dot.green{background:var(--green);box-shadow:0 0 6px var(--green);}
+.tel-dot.cyan{background:var(--cyan);box-shadow:0 0 6px var(--cyan);animation-delay:0.5s;}
+.tel-dot.amber{background:var(--amber);box-shadow:0 0 6px var(--amber);animation-delay:1s;}
+@keyframes blink{0%,100%{opacity:1;}50%{opacity:0.3;}}
 
-    .hero-eyebrow {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      padding: 6px 16px;
-      background: rgba(168,85,247,0.1);
-      border: 1px solid rgba(168,85,247,0.25);
-      border-radius: var(--radius-full);
-      font-family: 'Share Tech Mono', monospace;
-      font-size: 0.7rem;
-      color: var(--pg);
-      letter-spacing: 0.12em;
-      margin-bottom: 28px;
-    }
+.hero-system-label{font-family:'Share Tech Mono',monospace;font-size:0.68rem;
+  letter-spacing:0.35em;color:var(--cyan);margin-bottom:1.5rem;
+  opacity:0;animation:fu 0.6s ease 0.35s forwards;}
 
-    .hero-eyebrow-dot {
-      width: 6px;
-      height: 6px;
-      background: var(--pg);
-      border-radius: 50%;
-      animation: pulse-dot 2s ease-in-out infinite;
-    }
+.hero-title{font-family:'Orbitron',sans-serif;font-size:clamp(3rem,10vw,9rem);
+  font-weight:900;line-height:0.88;margin-bottom:1rem;
+  opacity:0;animation:fu 1s ease 0.45s forwards;}
+.ht-aios{display:block;background:linear-gradient(135deg,var(--white) 0%,var(--pg) 40%,var(--cyan) 80%,var(--pkb) 100%);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+  filter:drop-shadow(0 0 50px rgba(168,85,247,0.5));}
+.ht-sub{display:block;font-size:0.22em;font-family:'Share Tech Mono',monospace;
+  font-weight:400;letter-spacing:0.25em;color:var(--dim);margin-top:1rem;
+  -webkit-text-fill-color:var(--dim);background:none;}
 
-    @keyframes pulse-dot {
-      0%, 100% { opacity: 1; }
-      50%       { opacity: 0.3; }
-    }
+.hero-divider{width:1px;height:80px;background:linear-gradient(180deg,transparent,var(--pb),var(--cyan),transparent);
+  margin:2.5rem auto;box-shadow:0 0 12px var(--pb);
+  opacity:0;animation:fu 0.6s ease 0.8s forwards;}
 
-    .hero-title {
-      font-family: 'Orbitron', monospace;
-      font-size: clamp(2rem, 5vw, 3.6rem);
-      font-weight: 900;
-      line-height: 1.08;
-      letter-spacing: -0.02em;
-      margin-bottom: 24px;
-    }
+.hero-tagline{font-family:'Cormorant Garamond',serif;font-size:clamp(1.2rem,3vw,2.2rem);
+  font-style:italic;font-weight:300;color:var(--muted);max-width:800px;line-height:1.5;
+  opacity:0;animation:fu 0.8s ease 0.9s forwards;}
+.hero-tagline em{font-style:normal;background:linear-gradient(90deg,var(--pg),var(--cyan));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;font-weight:400;}
 
-    .hero-title span {
-      background: linear-gradient(135deg, var(--pg) 0%, var(--pink) 60%, var(--cyan) 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-    }
+/* STATUS PANEL */
+.status-panel{
+  display:grid;grid-template-columns:repeat(4,1fr);gap:1px;
+  background:rgba(168,85,247,0.15);border:1px solid rgba(168,85,247,0.2);
+  border-radius:12px;overflow:hidden;margin:3rem auto 0;max-width:800px;
+  opacity:0;animation:fu 0.8s ease 1.1s forwards;}
+.sp-item{background:rgba(3,1,10,0.95);padding:1.5rem;text-align:center;}
+.sp-val{font-family:'Orbitron',sans-serif;font-size:1.6rem;font-weight:900;
+  background:linear-gradient(90deg,var(--pg),var(--pkb));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;display:block;}
+.sp-label{font-family:'Share Tech Mono',monospace;font-size:0.55rem;letter-spacing:0.15em;color:var(--dim);margin-top:0.3rem;display:block;}
 
-    .hero-sub {
-      font-size: 1.2rem;
-      color: var(--muted);
-      line-height: 1.65;
-      max-width: 560px;
-      margin-bottom: 40px;
-    }
+.hero-cta-row{margin-top:3.5rem;display:flex;flex-direction:column;align-items:center;gap:1rem;
+  opacity:0;animation:fu 0.8s ease 1.3s forwards;}
+.btn-primary{display:inline-flex;align-items:center;gap:0.9rem;
+  background:linear-gradient(135deg,var(--pm),var(--pink));color:var(--white);
+  font-family:'Orbitron',sans-serif;font-size:0.95rem;font-weight:700;letter-spacing:0.1em;
+  padding:1.3rem 3.5rem;border:none;border-radius:6px;cursor:pointer;text-decoration:none;
+  box-shadow:0 0 50px rgba(168,85,247,0.5),0 8px 30px rgba(168,85,247,0.3);
+  transition:all 0.3s;position:relative;overflow:hidden;}
+.btn-primary::before{content:'';position:absolute;inset:0;
+  background:linear-gradient(135deg,rgba(255,255,255,0.1),transparent);opacity:0;transition:opacity 0.3s;}
+.btn-primary:hover{box-shadow:0 0 70px rgba(168,85,247,0.8),0 12px 40px rgba(168,85,247,0.4);transform:translateY(-3px);}
+.btn-primary:hover::before{opacity:1;}
+.btn-secondary{display:inline-flex;align-items:center;gap:0.7rem;
+  background:rgba(168,85,247,0.08);border:1px solid rgba(168,85,247,0.3);
+  color:var(--muted);font-family:'Orbitron',sans-serif;font-size:0.75rem;font-weight:700;letter-spacing:0.1em;
+  padding:0.9rem 2rem;border-radius:6px;cursor:pointer;text-decoration:none;transition:all 0.3s;}
+.btn-secondary:hover{border-color:rgba(168,85,247,0.6);color:var(--white);background:rgba(168,85,247,0.12);}
+.btn-row{display:flex;gap:1rem;flex-wrap:wrap;justify-content:center;}
+.ba{animation:baa 1.5s ease-in-out infinite;}
+@keyframes baa{0%,100%{transform:translateX(0);}50%{transform:translateX(6px);}}
+.cta-micro{font-family:'Share Tech Mono',monospace;font-size:0.6rem;color:var(--dim);letter-spacing:0.12em;}
+.cta-micro span{color:var(--green);}
 
-    .hero-actions {
-      display: flex;
-      gap: 16px;
-      flex-wrap: wrap;
-    }
+/* SECTION SHARED */
+.section{padding:7rem 5%;position:relative;z-index:1;}
+.section-alt{background:rgba(10,6,24,0.8);}
+.sec-label{font-family:'Share Tech Mono',monospace;font-size:0.62rem;letter-spacing:0.22em;
+  color:var(--cyan);text-transform:uppercase;margin-bottom:1rem;
+  display:flex;align-items:center;gap:0.8rem;}
+.sec-label::before{content:'';display:block;width:20px;height:1px;
+  background:linear-gradient(90deg,var(--cyan),var(--pb));box-shadow:0 0 5px var(--cyan);}
+.sec-head{font-family:'Orbitron',sans-serif;font-size:clamp(1.8rem,4vw,3.2rem);font-weight:900;
+  background:linear-gradient(135deg,var(--white),var(--pg));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+  margin-bottom:1rem;line-height:1.05;}
+.sec-sub{font-size:1.02rem;color:var(--muted);line-height:1.9;max-width:600px;margin-bottom:3.5rem;}
 
-    .btn-primary {
-      display: inline-flex;
-      align-items: center;
-      gap: 10px;
-      padding: 14px 32px;
-      background: linear-gradient(135deg, var(--pm), var(--pb));
-      color: var(--white);
-      border-radius: var(--radius-full);
-      font-family: 'DM Sans', sans-serif;
-      font-weight: 700;
-      font-size: 1rem;
-      text-decoration: none;
-      transition: box-shadow 0.25s, transform 0.2s;
-    }
+/* FIVE LAYERS */
+.layers-wrap{display:flex;flex-direction:column;gap:2px;max-width:950px;margin:0 auto;}
+.layer{
+  display:grid;grid-template-columns:60px 200px 1fr auto;
+  gap:0;background:rgba(10,6,24,0.9);border:1px solid rgba(168,85,247,0.12);
+  align-items:center;overflow:hidden;transition:all 0.35s;cursor:pointer;
+  position:relative;
+}
+.layer::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;
+  background:linear-gradient(180deg,var(--pb),var(--pkb));
+  transform:scaleY(0);transition:transform 0.35s;}
+.layer:hover,.layer.active{background:rgba(168,85,247,0.07);border-color:rgba(168,85,247,0.35);}
+.layer:hover::before,.layer.active::before{transform:scaleY(1);}
 
-    .btn-primary:hover {
-      box-shadow: 0 0 32px rgba(168, 85, 247, 0.5);
-      transform: translateY(-2px);
-    }
+.layer-num{font-family:'Orbitron',sans-serif;font-size:1.4rem;font-weight:900;
+  color:rgba(168,85,247,0.25);padding:2rem;text-align:center;transition:color 0.3s;}
+.layer:hover .layer-num,.layer.active .layer-num{color:var(--pb);}
+.layer-name-col{padding:2rem 1rem;border-right:1px solid rgba(168,85,247,0.08);}
+.layer-tag{font-family:'Share Tech Mono',monospace;font-size:0.55rem;letter-spacing:0.2em;color:var(--cyan);margin-bottom:0.4rem;}
+.layer-name{font-family:'Orbitron',sans-serif;font-size:1.1rem;font-weight:700;color:var(--white);letter-spacing:0.05em;}
+.layer-body{padding:2rem 2.5rem;}
+.layer-desc{font-size:0.98rem;color:var(--muted);line-height:1.8;}
+.layer-desc strong{color:var(--white);}
+.layer-example{margin-top:1rem;font-family:'Share Tech Mono',monospace;font-size:0.7rem;
+  letter-spacing:0.1em;color:var(--cyan);background:rgba(34,211,238,0.06);
+  border:1px solid rgba(34,211,238,0.15);border-radius:6px;padding:0.6rem 1rem;
+  display:none;}
+.layer:hover .layer-example,.layer.active .layer-example{display:block;}
+.layer-icon{padding:2rem;font-size:2rem;opacity:0.6;transition:opacity 0.3s;}
+.layer:hover .layer-icon,.layer.active .layer-icon{opacity:1;}
 
-    .btn-ghost {
-      display: inline-flex;
-      align-items: center;
-      gap: 10px;
-      padding: 14px 32px;
-      background: transparent;
-      color: var(--muted);
-      border: 1px solid var(--border);
-      border-radius: var(--radius-full);
-      font-family: 'DM Sans', sans-serif;
-      font-weight: 600;
-      font-size: 1rem;
-      text-decoration: none;
-      transition: border-color 0.25s, color 0.25s;
-    }
+/* WHAT IT DELIVERS */
+.deliver-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem;}
+.deliver-card{background:var(--card2);border:1px solid rgba(168,85,247,0.15);border-radius:14px;
+  padding:2.5rem;position:relative;overflow:hidden;transition:all 0.35s;}
+.deliver-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;
+  background:linear-gradient(90deg,var(--pb),var(--cyan));
+  transform:scaleX(0);transition:transform 0.35s;}
+.deliver-card:hover{border-color:rgba(168,85,247,0.4);transform:translateY(-5px);
+  box-shadow:0 20px 50px rgba(168,85,247,0.1);}
+.deliver-card:hover::before{transform:scaleX(1);}
+.dc-icon{font-size:2.2rem;margin-bottom:1.2rem;display:block;}
+.dc-title{font-family:'Orbitron',sans-serif;font-size:1rem;font-weight:700;color:var(--white);
+  margin-bottom:0.8rem;letter-spacing:0.05em;}
+.dc-desc{font-size:0.95rem;color:var(--muted);line-height:1.8;}
+.dc-metric{display:inline-block;margin-top:1.2rem;font-family:'Share Tech Mono',monospace;
+  font-size:0.6rem;letter-spacing:0.12em;color:var(--green);
+  background:rgba(74,222,128,0.08);border:1px solid rgba(74,222,128,0.2);
+  padding:0.25rem 0.7rem;border-radius:4px;}
 
-    .btn-ghost:hover {
-      border-color: rgba(168, 85, 247, 0.4);
-      color: var(--white);
-    }
+/* MORNING BRIEFING DEMO */
+.briefing-demo{
+  background:var(--card);border:1px solid rgba(168,85,247,0.2);border-radius:16px;
+  overflow:hidden;max-width:900px;margin:0 auto;
+  box-shadow:0 0 60px rgba(168,85,247,0.08);}
+.bd-header{background:rgba(168,85,247,0.08);border-bottom:1px solid rgba(168,85,247,0.15);
+  padding:1rem 1.5rem;display:flex;align-items:center;gap:1rem;}
+.bd-dots{display:flex;gap:0.4rem;}
+.bd-dot{width:10px;height:10px;border-radius:50%;}
+.bd-dot:nth-child(1){background:#ef4444;}
+.bd-dot:nth-child(2){background:var(--amber);}
+.bd-dot:nth-child(3){background:var(--green);}
+.bd-title{font-family:'Share Tech Mono',monospace;font-size:0.62rem;letter-spacing:0.15em;color:var(--dim);margin-left:0.5rem;}
+.bd-status{margin-left:auto;display:flex;align-items:center;gap:0.5rem;
+  font-family:'Share Tech Mono',monospace;font-size:0.6rem;color:var(--green);}
+.bd-status-dot{width:6px;height:6px;border-radius:50%;background:var(--green);box-shadow:0 0 6px var(--green);animation:blink 1.5s ease-in-out infinite;}
+.bd-body{padding:2rem;}
+.bd-time{font-family:'Share Tech Mono',monospace;font-size:0.65rem;letter-spacing:0.15em;color:var(--cyan);margin-bottom:1.5rem;}
+.bd-greeting{font-family:'Orbitron',sans-serif;font-size:1.1rem;font-weight:700;color:var(--white);margin-bottom:2rem;}
+.bd-sections{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;}
+.bd-section{background:rgba(168,85,247,0.05);border:1px solid rgba(168,85,247,0.12);border-radius:10px;padding:1.5rem;}
+.bds-label{font-family:'Share Tech Mono',monospace;font-size:0.58rem;letter-spacing:0.2em;color:var(--pg);margin-bottom:1rem;}
+.bds-item{display:flex;justify-content:space-between;align-items:center;padding:0.5rem 0;
+  border-bottom:1px solid rgba(168,85,247,0.07);font-size:0.88rem;color:var(--muted);}
+.bds-item:last-child{border-bottom:none;}
+.bds-val{font-family:'Orbitron',sans-serif;font-size:0.8rem;font-weight:700;}
+.bds-val.green{color:var(--green);}
+.bds-val.cyan{color:var(--cyan);}
+.bds-val.amber{color:var(--amber);}
+.bd-insight{background:rgba(34,211,238,0.05);border:1px solid rgba(34,211,238,0.15);
+  border-radius:10px;padding:1.5rem;margin-top:1.5rem;}
+.bdi-label{font-family:'Share Tech Mono',monospace;font-size:0.58rem;letter-spacing:0.2em;color:var(--cyan);margin-bottom:0.8rem;}
+.bdi-text{font-size:0.95rem;color:var(--muted);line-height:1.8;}
+.bdi-text strong{color:var(--white);}
+.bd-action{background:linear-gradient(135deg,rgba(168,85,247,0.1),rgba(236,72,153,0.06));
+  border:1px solid rgba(168,85,247,0.2);border-radius:10px;padding:1.2rem 1.5rem;
+  margin-top:1.5rem;display:flex;align-items:center;justify-content:space-between;}
+.bda-text{font-size:0.88rem;color:var(--muted);}
+.bda-text strong{color:var(--white);}
+.bda-btn{font-family:'Orbitron',sans-serif;font-size:0.62rem;font-weight:700;letter-spacing:0.1em;
+  background:linear-gradient(135deg,var(--pm),var(--pink));color:var(--white);
+  border:none;border-radius:4px;padding:0.5rem 1rem;cursor:pointer;}
 
-    /* ── Dashboard preview ── */
-    .dashboard-preview {
-      max-width: 1200px;
-      margin: 0 auto 100px;
-      padding: 0 32px;
-    }
+/* WHO IT'S FOR */
+.who-grid{display:grid;grid-template-columns:1fr 1fr;gap:2rem;}
+.who-col{background:var(--card2);border:1px solid rgba(168,85,247,0.15);border-radius:14px;padding:2.5rem;}
+.who-col-label{font-family:'Orbitron',sans-serif;font-size:0.72rem;font-weight:700;
+  letter-spacing:0.12em;margin-bottom:1.5rem;padding-bottom:1rem;
+  border-bottom:1px solid rgba(168,85,247,0.1);}
+.who-col.master .who-col-label{color:var(--cyan);}
+.who-col.operator .who-col-label{color:var(--pg);}
+.who-item{display:flex;align-items:flex-start;gap:0.8rem;padding:0.7rem 0;
+  font-size:0.95rem;color:var(--muted);line-height:1.5;border-bottom:1px solid rgba(168,85,247,0.06);}
+.who-item:last-child{border-bottom:none;}
+.who-icon{flex-shrink:0;font-size:1rem;}
 
-    .preview-frame {
-      background: var(--card);
-      border: 1px solid rgba(168, 85, 247, 0.2);
-      border-radius: var(--radius-xl);
-      overflow: hidden;
-      box-shadow: 0 40px 100px rgba(0,0,0,0.6), 0 0 60px rgba(124,58,237,0.15);
-    }
+/* PRICING */
+.pricing-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem;max-width:1000px;margin:0 auto;}
+.price-card{background:var(--card2);border:1px solid rgba(168,85,247,0.18);border-radius:16px;
+  padding:2.5rem;position:relative;overflow:hidden;transition:all 0.35s;}
+.price-card.featured{border-color:var(--pb);background:rgba(168,85,247,0.08);}
+.price-card.featured::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;
+  background:linear-gradient(90deg,var(--pb),var(--cyan));box-shadow:0 0 15px var(--pb);}
+.price-card:hover{transform:translateY(-5px);box-shadow:0 20px 50px rgba(168,85,247,0.1);}
+.price-tag{position:absolute;top:1.2rem;right:1.2rem;font-family:'Share Tech Mono',monospace;
+  font-size:0.55rem;letter-spacing:0.1em;color:var(--pkb);
+  background:rgba(236,72,153,0.1);border:1px solid rgba(236,72,153,0.3);
+  padding:0.2rem 0.5rem;border-radius:3px;}
+.pc-tier{font-family:'Share Tech Mono',monospace;font-size:0.6rem;letter-spacing:0.22em;color:var(--cyan);margin-bottom:0.8rem;}
+.pc-name{font-family:'Orbitron',sans-serif;font-size:1.3rem;font-weight:900;color:var(--white);margin-bottom:1rem;}
+.pc-price{font-family:'Orbitron',sans-serif;font-size:2.8rem;font-weight:900;
+  background:linear-gradient(90deg,var(--pg),var(--pkb));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+  line-height:1;margin-bottom:0.3rem;}
+.pc-period{font-family:'Share Tech Mono',monospace;font-size:0.6rem;letter-spacing:0.12em;color:var(--dim);margin-bottom:2rem;}
+.pc-features{display:flex;flex-direction:column;gap:0.7rem;margin-bottom:2.5rem;}
+.pcf{display:flex;align-items:flex-start;gap:0.7rem;font-size:0.92rem;color:var(--muted);line-height:1.5;}
+.pcf-check{color:var(--green);font-size:0.75rem;flex-shrink:0;margin-top:2px;
+  filter:drop-shadow(0 0 3px rgba(74,222,128,0.4));}
+.pc-btn{width:100%;background:rgba(168,85,247,0.1);border:1px solid rgba(168,85,247,0.3);
+  color:var(--white);font-family:'Orbitron',sans-serif;font-size:0.72rem;font-weight:700;
+  letter-spacing:0.1em;padding:1rem;border-radius:6px;cursor:pointer;text-align:center;
+  text-decoration:none;display:block;transition:all 0.3s;}
+.pc-btn:hover,.price-card.featured .pc-btn{
+  background:linear-gradient(135deg,var(--pm),var(--pink));border-color:transparent;
+  box-shadow:0 0 25px rgba(168,85,247,0.4);}
 
-    .preview-bar {
-      background: var(--card2);
-      padding: 12px 20px;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      border-bottom: 1px solid var(--border);
-    }
+/* FINAL CTA */
+.final-cta{padding:9rem 5%;text-align:center;position:relative;overflow:hidden;}
+.final-cta::before{content:'';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
+  width:800px;height:800px;border-radius:50%;
+  background:radial-gradient(circle,rgba(168,85,247,0.09),transparent 65%);pointer-events:none;}
+.fc-mission{font-family:'Share Tech Mono',monospace;font-size:0.65rem;letter-spacing:0.3em;
+  color:var(--cyan);margin-bottom:2rem;display:flex;align-items:center;justify-content:center;gap:1rem;}
+.fc-mission::before,.fc-mission::after{content:'';display:block;height:1px;width:40px;
+  background:linear-gradient(90deg,transparent,var(--cyan));}
+.fc-mission::after{background:linear-gradient(90deg,var(--cyan),transparent);}
+.fc-title{font-family:'Orbitron',sans-serif;font-size:clamp(2rem,5.5vw,4.5rem);font-weight:900;
+  background:linear-gradient(135deg,var(--white) 0%,var(--pg) 45%,var(--cyan) 75%,var(--pkb) 100%);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+  margin-bottom:1.5rem;line-height:1.05;}
+.fc-sub{font-size:1.08rem;color:var(--muted);max-width:560px;margin:0 auto 3.5rem;line-height:1.9;}
 
-    .preview-dot {
-      width: 10px;
-      height: 10px;
-      border-radius: 50%;
-    }
+footer{padding:2.5rem 5%;border-top:1px solid rgba(168,85,247,0.1);
+  display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem;z-index:1;position:relative;}
+.footer-brand{font-family:'Orbitron',sans-serif;font-size:0.95rem;font-weight:900;letter-spacing:0.18em;
+  background:linear-gradient(90deg,var(--pg),var(--cyan));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.footer-tag{font-family:'Share Tech Mono',monospace;font-size:0.58rem;letter-spacing:0.15em;color:var(--dim);}
 
-    .preview-content {
-      padding: 32px;
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 16px;
-    }
+@keyframes fu{from{opacity:0;transform:translateY(22px);}to{opacity:1;transform:translateY(0);}}
+.reveal{opacity:0;transform:translateY(24px);transition:opacity 0.7s ease,transform 0.7s ease;}
+.reveal.visible{opacity:1;transform:translateY(0);}
+.rd1{transition-delay:0.1s;}.rd2{transition-delay:0.2s;}.rd3{transition-delay:0.3s;}.rd4{transition-delay:0.4s;}
 
-    .mini-card {
-      background: var(--card2);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 20px;
-    }
+@media(max-width:900px){
+  .deliver-grid,.who-grid,.pricing-grid{grid-template-columns:1fr;}
+  .layer{grid-template-columns:50px 1fr;}
+  .layer-name-col{display:none;}
+  .layer-icon{display:none;}
+  .status-panel{grid-template-columns:repeat(2,1fr);}
+  .bd-sections{grid-template-columns:1fr;}
+  .nav-cta{display:none;}
+}
+</style>
 
-    .mini-card-label {
-      font-family: 'Share Tech Mono', monospace;
-      font-size: 0.6rem;
-      color: var(--dim);
-      letter-spacing: 0.14em;
-      text-transform: uppercase;
-      margin-bottom: 8px;
-    }
-
-    .mini-card-value {
-      font-family: 'Share Tech Mono', monospace;
-      font-size: 1.6rem;
-      color: var(--pg);
-    }
-
-    .mini-card-change {
-      font-family: 'Share Tech Mono', monospace;
-      font-size: 0.65rem;
-      color: var(--green);
-      margin-top: 4px;
-    }
-
-    /* ── Section wrapper ── */
-    .section {
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 0 32px 100px;
-    }
-
-    .section-eyebrow {
-      font-family: 'Share Tech Mono', monospace;
-      font-size: 0.7rem;
-      color: var(--pg);
-      letter-spacing: 0.18em;
-      text-transform: uppercase;
-      margin-bottom: 16px;
-    }
-
-    .section-title {
-      font-family: 'Orbitron', monospace;
-      font-size: clamp(1.5rem, 3vw, 2.2rem);
-      font-weight: 900;
-      letter-spacing: -0.01em;
-      margin-bottom: 16px;
-    }
-
-    .section-sub {
-      font-size: 1.05rem;
-      color: var(--muted);
-      line-height: 1.6;
-      max-width: 560px;
-      margin-bottom: 56px;
-    }
-
-    /* ── Feature cards ── */
-    .features-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-      gap: 20px;
-    }
-
-    .feature-card {
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: var(--radius-lg);
-      padding: 32px;
-      position: relative;
-      overflow: hidden;
-      transition: border-color 0.25s, transform 0.2s;
-    }
-
-    .feature-card::after {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background: radial-gradient(ellipse at top left, rgba(124,58,237,0.06), transparent 70%);
-      pointer-events: none;
-    }
-
-    .feature-card:hover {
-      border-color: rgba(168, 85, 247, 0.35);
-      transform: translateY(-4px);
-    }
-
-    .feature-num {
-      font-family: 'Share Tech Mono', monospace;
-      font-size: 0.65rem;
-      color: var(--pg);
-      opacity: 0.5;
-      letter-spacing: 0.1em;
-      margin-bottom: 20px;
-    }
-
-    .feature-icon-wrap {
-      width: 52px;
-      height: 52px;
-      border-radius: var(--radius);
-      background: rgba(124,58,237,0.12);
-      border: 1px solid rgba(168,85,247,0.2);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 1.5rem;
-      margin-bottom: 20px;
-    }
-
-    .feature-title {
-      font-family: 'Orbitron', monospace;
-      font-size: 0.85rem;
-      font-weight: 700;
-      color: var(--white);
-      letter-spacing: 0.04em;
-      margin-bottom: 12px;
-    }
-
-    .feature-desc {
-      font-size: 0.9rem;
-      color: var(--muted);
-      line-height: 1.65;
-      margin-bottom: 20px;
-    }
-
-    .feature-tags {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 6px;
-    }
-
-    .ftag {
-      padding: 3px 10px;
-      border-radius: var(--radius-full);
-      font-family: 'Share Tech Mono', monospace;
-      font-size: 0.6rem;
-      letter-spacing: 0.08em;
-      background: rgba(124,58,237,0.12);
-      color: var(--pg);
-      border: 1px solid rgba(168,85,247,0.18);
-    }
-
-    /* ── How it works ── */
-    .steps {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 0;
-      position: relative;
-    }
-
-    .steps::before {
-      content: '';
-      position: absolute;
-      top: 36px;
-      left: calc(100% / 6);
-      right: calc(100% / 6);
-      height: 1px;
-      background: linear-gradient(90deg, transparent, var(--pm), var(--pb), var(--pm), transparent);
-    }
-
-    .step {
-      padding: 32px 24px;
-      text-align: center;
-      position: relative;
-    }
-
-    .step-num {
-      width: 72px;
-      height: 72px;
-      border-radius: 50%;
-      background: var(--card);
-      border: 2px solid var(--pm);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-family: 'Orbitron', monospace;
-      font-size: 1.4rem;
-      font-weight: 900;
-      color: var(--pg);
-      margin: 0 auto 24px;
-      position: relative;
-      z-index: 1;
-      box-shadow: 0 0 24px rgba(124,58,237,0.3);
-    }
-
-    .step-title {
-      font-family: 'Orbitron', monospace;
-      font-size: 0.85rem;
-      font-weight: 700;
-      color: var(--white);
-      letter-spacing: 0.04em;
-      margin-bottom: 12px;
-    }
-
-    .step-desc {
-      font-size: 0.9rem;
-      color: var(--muted);
-      line-height: 1.6;
-    }
-
-    /* ── CTA section ── */
-    .cta-section {
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 0 32px 120px;
-    }
-
-    .cta-card {
-      background: var(--card);
-      border: 1px solid rgba(168,85,247,0.25);
-      border-radius: var(--radius-xl);
-      padding: 80px 60px;
-      text-align: center;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .cta-card::before {
-      content: '';
-      position: absolute;
-      top: -40%;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 600px;
-      height: 300px;
-      background: radial-gradient(ellipse, rgba(124,58,237,0.18), transparent 70%);
-      pointer-events: none;
-    }
-
-    .cta-title {
-      font-family: 'Orbitron', monospace;
-      font-size: clamp(1.4rem, 3vw, 2rem);
-      font-weight: 900;
-      margin-bottom: 16px;
-      letter-spacing: -0.01em;
-    }
-
-    .cta-sub {
-      font-size: 1.05rem;
-      color: var(--muted);
-      max-width: 500px;
-      margin: 0 auto 40px;
-      line-height: 1.65;
-    }
-
-    /* ── Footer ── */
-    .footer {
-      border-top: 1px solid var(--border);
-      padding: 40px 32px;
-      text-align: center;
-    }
-
-    .footer-inner {
-      max-width: 1200px;
-      margin: 0 auto;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      flex-wrap: wrap;
-      gap: 16px;
-    }
-
-    .footer-logo {
-      font-family: 'Orbitron', monospace;
-      font-size: 0.9rem;
-      font-weight: 700;
-      color: var(--dim);
-      letter-spacing: 0.08em;
-      text-decoration: none;
-    }
-
-    .footer-links {
-      display: flex;
-      gap: 24px;
-    }
-
-    .footer-links a {
-      font-size: 0.8rem;
-      color: var(--dim);
-      text-decoration: none;
-      transition: color 0.2s;
-    }
-
-    .footer-links a:hover { color: var(--pg); }
-
-    .footer-copy {
-      font-family: 'Share Tech Mono', monospace;
-      font-size: 0.65rem;
-      color: var(--dim);
-      letter-spacing: 0.08em;
-    }
-
-    /* ── Responsive ── */
-    @media (max-width: 768px) {
-      .nav-inner { padding: 0 16px; }
-      .hero { padding: 100px 16px 60px; }
-      .preview-content { grid-template-columns: 1fr; }
-      .steps { grid-template-columns: 1fr; }
-      .steps::before { display: none; }
-      .section, .dashboard-preview, .cta-section { padding-left: 16px; padding-right: 16px; }
-      .cta-card { padding: 48px 24px; }
-      .features-grid { grid-template-columns: 1fr; }
-    }
-  </style>
+<!-- ═══ ANALYTICS & TRACKING ═══ -->
+<!-- GA4: Replace G-XXXXXXXXXX with your real Measurement ID from analytics.google.com -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-XXXXXXXXXX');
+</script>
+<!-- Facebook Pixel: Replace XXXXXXXXXXXXXXX with your real Pixel ID from business.facebook.com -->
+<script>
+!function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;
+n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;
+t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,
+document,'script','https://connect.facebook.net/en_US/fbevents.js');
+fbq('init', 'XXXXXXXXXXXXXXX');
+fbq('track', 'PageView');
+</script>
+<noscript><img height="1" width="1" style="display:none" src="https://www.facebook.com/tr?id=XXXXXXXXXXXXXXX&ev=PageView&noscript=1"/></noscript>
+<!-- Tidio Chatbot: Replace xxxxxxxxxxxx with your real Tidio public key from tidio.com/panel/settings -->
+<script src="//code.tidio.co/xxxxxxxxxxxx.js" async></script>
+<!-- ═══════════════════════════ -->
 </head>
 <body>
+<div class="orb o1"></div><div class="orb o2"></div><div class="orb o3"></div>
 
-  <!-- NAV -->
-  <nav class="nav">
-    <div class="nav-inner">
-      <a href="index.html" class="nav-logo">SILENT SYNDICATE</a>
-      <a href="aios-dashboard.html" class="nav-cta">Access Dashboard →</a>
+<nav>
+  <div class="nav-brand">
+    <div class="nav-hex"></div>
+    <span class="nav-name">SILENT SYNDICATE</span>
+    <span class="nav-slash">/</span>
+    <span class="nav-sub">AIOS</span>
+  </div>
+  <a href="aios-dashboard.html" class="nav-cta">LAUNCH DASHBOARD →</a>
+<a href="hub.html" style="font-family:'Share Tech Mono',monospace;font-size:0.58rem;letter-spacing:0.12em;color:rgba(240,236,255,0.4);text-decoration:none;border:1px solid rgba(168,85,247,0.15);padding:0.35rem 0.8rem;border-radius:4px;transition:all 0.2s;" onmouseover="this.style.color='rgba(240,236,255,0.8)';this.style.borderColor='rgba(168,85,247,0.4)'" onmouseout="this.style.color='rgba(240,236,255,0.4)';this.style.borderColor='rgba(168,85,247,0.15)'">⬡ HUB</a>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="telemetry">
+    <div class="tel-item"><div class="tel-dot green"></div>SYSTEM ONLINE</div>
+    <div class="tel-item"><div class="tel-dot cyan"></div>ALL MODULES ACTIVE</div>
+    <div class="tel-item"><div class="tel-dot amber"></div>VERSION 1.0</div>
+    <div class="tel-item"><div class="tel-dot green"></div>OPERATORS: 2,400+</div>
+  </div>
+
+  <div class="hero-system-label">// AI OPERATING SYSTEM — BY SILENT SYNDICATE</div>
+
+  <h1 class="hero-title">
+    <span class="ht-aios">AIOS</span>
+    <span class="ht-sub">ARTIFICIAL INTELLIGENCE OPERATING SYSTEM</span>
+  </h1>
+
+  <div class="hero-divider"></div>
+
+  <p class="hero-tagline">
+    Five compounding layers. One operating system.<br>
+    <em>Your entire business — running intelligently, automatically, before 8am.</em>
+  </p>
+
+  <div class="status-panel">
+    <div class="sp-item"><span class="sp-val">5</span><span class="sp-label">AI Layers</span></div>
+    <div class="sp-item"><span class="sp-val">24/7</span><span class="sp-label">Uptime</span></div>
+    <div class="sp-item"><span class="sp-val">0</span><span class="sp-label">Calls Required</span></div>
+    <div class="sp-item"><span class="sp-val">∞</span><span class="sp-label">Scale</span></div>
+  </div>
+
+  <div class="hero-cta-row">
+    <div class="btn-row">
+      <a href="aios-dashboard.html" class="btn-primary">LAUNCH THE AIOS <span class="ba">→</span></a>
+      <a href="#layers" class="btn-secondary">SEE HOW IT WORKS ↓</a>
     </div>
-  </nav>
+    <div class="cta-micro">🔒 Included with every Silent Syndicate licence. <span>No extra cost.</span></div>
+  </div>
+</section>
 
-  <!-- HERO -->
-  <section style="background: radial-gradient(ellipse at 60% 0%, rgba(124,58,237,0.12), transparent 60%);">
-    <div class="hero">
-      <div class="hero-inner">
-        <div class="hero-eyebrow">
-          <div class="hero-eyebrow-dot"></div>
-          AIOS — AI OPERATING SYSTEM
+<!-- THE 5 LAYERS -->
+<section class="section section-alt" id="layers">
+  <div class="sec-label reveal">The Architecture</div>
+  <h2 class="sec-head reveal">Five Layers That Stack<br>and Compound.</h2>
+  <p class="sec-sub reveal">Most AI tools are isolated hacks. AIOS is a connected system — each layer feeds the next. The compound effect is why it works when everything else doesn't.</p>
+
+  <div class="layers-wrap">
+    <div class="layer reveal active">
+      <div class="layer-num">01</div>
+      <div class="layer-name-col"><div class="layer-tag">// LAYER ONE</div><div class="layer-name">CONTEXT</div></div>
+      <div class="layer-body">
+        <div class="layer-desc">AIOS learns <strong>your business, your voice, your offers, and your goals</strong>. Every other layer builds on this foundation. Without context, AI gives generic answers. With it, every output is tuned specifically to you.</div>
+        <div class="layer-example">→ In practice: AIOS knows your commission tiers, your operator network, your best-performing content angles, and your target audience — permanently.</div>
+      </div>
+      <div class="layer-icon">🧠</div>
+    </div>
+    <div class="layer reveal rd1">
+      <div class="layer-num">02</div>
+      <div class="layer-name-col"><div class="layer-tag">// LAYER TWO</div><div class="layer-name">DATA</div></div>
+      <div class="layer-body">
+        <div class="layer-desc">AIOS pulls live data from your funnel, your email platform, your lead pipeline, and your commission tracking. <strong>Every decision is made from real numbers</strong>, not guesswork.</div>
+        <div class="layer-example">→ In practice: "You have 14 HOT leads sitting in Stage 3 who haven't received a follow-up email in 48 hours. Recommend action?"</div>
+      </div>
+      <div class="layer-icon">📊</div>
+    </div>
+    <div class="layer reveal rd2">
+      <div class="layer-num">03</div>
+      <div class="layer-name-col"><div class="layer-tag">// LAYER THREE</div><div class="layer-name">INTELLIGENCE</div></div>
+      <div class="layer-body">
+        <div class="layer-desc">The AI layer that synthesises context and data into <strong>strategic recommendations, daily briefings, and prioritised action lists</strong>. This is what lands on your phone before 8am every morning.</div>
+        <div class="layer-example">→ In practice: "Your opt-in rate dropped 12% this week. The likely cause is mobile load speed on your landing page. Here's the fix."</div>
+      </div>
+      <div class="layer-icon">⚡</div>
+    </div>
+    <div class="layer reveal rd3">
+      <div class="layer-num">04</div>
+      <div class="layer-name-col"><div class="layer-tag">// LAYER FOUR</div><div class="layer-name">AUTOMATE</div></div>
+      <div class="layer-body">
+        <div class="layer-desc">Recurring tasks are permanently removed from your plate. AIOS identifies what you do repeatedly, <strong>builds automation for it once, and runs it forever</strong>. This is the compound layer.</div>
+        <div class="layer-example">→ In practice: Lead follow-up, email tagging, commission calculations, weekly reports, chatbot responses — all automated, all compounding.</div>
+      </div>
+      <div class="layer-icon">🔁</div>
+    </div>
+    <div class="layer reveal rd4">
+      <div class="layer-num">05</div>
+      <div class="layer-name-col"><div class="layer-tag">// LAYER FIVE</div><div class="layer-name">BUILD</div></div>
+      <div class="layer-body">
+        <div class="layer-desc">AIOS doesn't just manage your current system — it <strong>builds new assets, new funnels, new sequences, and new content</strong> based on what the data shows is working. The system grows itself.</div>
+        <div class="layer-example">→ In practice: "Your Perth leads convert 40% better. AIOS has drafted a geo-targeted landing page variant. Review and deploy in one click."</div>
+      </div>
+      <div class="layer-icon">🚀</div>
+    </div>
+  </div>
+</section>
+
+<!-- MORNING BRIEFING -->
+<section class="section">
+  <div class="sec-label reveal">Intelligence Layer — In Action</div>
+  <h2 class="sec-head reveal">Your Strategic Briefing.<br>Every Morning. Before 8am.</h2>
+  <p class="sec-sub reveal">This is what AIOS delivers to your phone while you're still drinking your coffee.</p>
+
+  <div class="briefing-demo reveal">
+    <div class="bd-header">
+      <div class="bd-dots"><div class="bd-dot"></div><div class="bd-dot"></div><div class="bd-dot"></div></div>
+      <div class="bd-title">AIOS — MORNING BRIEFING · Wednesday, 7:43am</div>
+      <div class="bd-status"><div class="bd-status-dot"></div>LIVE</div>
+    </div>
+    <div class="bd-body">
+      <div class="bd-time">// 07:43 AEST · DAILY INTELLIGENCE REPORT</div>
+      <div class="bd-greeting">Good morning. Here's your system status across all four business areas.</div>
+      <div class="bd-sections">
+        <div class="bd-section">
+          <div class="bds-label">// FUNNEL PIPELINE</div>
+          <div class="bds-item">New opt-ins (24h)<span class="bds-val cyan">34</span></div>
+          <div class="bds-item">In education sequence<span class="bds-val">187</span></div>
+          <div class="bds-item">HOT leads (ready to buy)<span class="bds-val green">11</span></div>
+          <div class="bds-item">Applications submitted<span class="bds-val amber">6</span></div>
         </div>
-        <h1 class="hero-title">
-          The <span>AI Operating System</span> for Silent Syndicate Operators
-        </h1>
-        <p class="hero-sub">
-          Mission control for your pipeline, commissions, network, and content. Every lead, every sequence, every dollar — visible in real time from one unified dashboard.
-        </p>
-        <div class="hero-actions">
-          <a href="aios-dashboard.html" class="btn-primary">Access Your Dashboard →</a>
-          <a href="#how-it-works" class="btn-ghost">See How It Works</a>
+        <div class="bd-section">
+          <div class="bds-label">// COMMISSIONS</div>
+          <div class="bds-item">This week<span class="bds-val green">$12,900</span></div>
+          <div class="bds-item">This month<span class="bds-val green">$38,700</span></div>
+          <div class="bds-item">Pending (processing)<span class="bds-val amber">$8,600</span></div>
+          <div class="bds-item">Network overrides<span class="bds-val cyan">$2,140</span></div>
         </div>
       </div>
-    </div>
-  </section>
-
-  <!-- DASHBOARD PREVIEW -->
-  <div class="dashboard-preview">
-    <div class="preview-frame">
-      <div class="preview-bar">
-        <div class="preview-dot" style="background:#ef4444;"></div>
-        <div class="preview-dot" style="background:#fbbf24;"></div>
-        <div class="preview-dot" style="background:#4ade80;"></div>
-        <span style="margin-left:12px;font-family:'Share Tech Mono',monospace;font-size:0.7rem;color:var(--dim);">aios-dashboard.html — Morning Briefing</span>
+      <div class="bd-insight">
+        <div class="bdi-label">// AI INTELLIGENCE — PRIORITY INSIGHT</div>
+        <div class="bdi-text">Your <strong>Tuesday email (Day 5 sequence)</strong> has a 41% open rate vs. your 34% average. The subject line pattern "The thing nobody tells you about [X]" is outperforming. AIOS recommends applying this pattern to Day 2 and Day 7 emails. <strong>Estimated +18% sequence completion rate.</strong></div>
       </div>
-      <div class="preview-content">
-        <div class="mini-card">
-          <div class="mini-card-label">Active Leads</div>
-          <div class="mini-card-value">47</div>
-          <div class="mini-card-change">↑ +12 this week</div>
-        </div>
-        <div class="mini-card">
-          <div class="mini-card-label">Pipeline Value</div>
-          <div class="mini-card-value">$94k</div>
-          <div class="mini-card-change">↑ HOT × 14</div>
-        </div>
-        <div class="mini-card">
-          <div class="mini-card-label">Email Open Rate</div>
-          <div class="mini-card-value">68%</div>
-          <div class="mini-card-change">↑ Day 3 sequence</div>
-        </div>
-        <div class="mini-card">
-          <div class="mini-card-label">Commissions MTD</div>
-          <div class="mini-card-value">$18.7k</div>
-          <div class="mini-card-change">↑ 3 closes</div>
-        </div>
-        <div class="mini-card">
-          <div class="mini-card-label">Network Size</div>
-          <div class="mini-card-value">28</div>
-          <div class="mini-card-change">Operators active</div>
-        </div>
-        <div class="mini-card">
-          <div class="mini-card-label">Content Reach</div>
-          <div class="mini-card-value">142k</div>
-          <div class="mini-card-change">↑ Organic views</div>
-        </div>
+      <div class="bd-action">
+        <div class="bda-text">11 HOT leads haven't received follow-up in <strong>36+ hours</strong>. Deploy re-engagement sequence?</div>
+        <button class="bda-btn">DEPLOY NOW</button>
       </div>
     </div>
   </div>
+</section>
 
-  <!-- FEATURES -->
-  <section class="section">
-    <div class="section-eyebrow">Dashboard Views</div>
-    <h2 class="section-title">Seven views. Total visibility.</h2>
-    <p class="section-sub">AIOS gives you a dedicated view for every critical dimension of your distribution business — all updated automatically.</p>
+<!-- WHAT IT DELIVERS -->
+<section class="section section-alt">
+  <div class="sec-label reveal">The Six Modules</div>
+  <h2 class="sec-head reveal">Everything AIOS Controls.</h2>
+  <p class="sec-sub reveal">Six fully integrated modules. One dashboard. Zero switching between tools.</p>
 
-    <div class="features-grid">
+  <div class="deliver-grid">
+    <div class="deliver-card reveal"><span class="dc-icon">🎯</span><div class="dc-title">Lead Pipeline</div><div class="dc-desc">Every lead tracked across all four stages. See exactly who's where, what they've received, and what action is needed next.</div><span class="dc-metric">Real-time updates</span></div>
+    <div class="deliver-card reveal rd1"><span class="dc-icon">📧</span><div class="dc-title">Email Sequence Status</div><div class="dc-desc">Live view of every contact's position in your sequence. Open rates, click rates, and drop-off points — per lead, per email.</div><span class="dc-metric">Per-lead tracking</span></div>
+    <div class="deliver-card reveal rd2"><span class="dc-icon">🤖</span><div class="dc-title">AI Chatbot Conversations</div><div class="dc-desc">Every chatbot conversation logged, scored, and surfaced. HOT conversations flagged for review. Patterns fed back into the AI.</div><span class="dc-metric">Auto-scored</span></div>
+    <div class="deliver-card reveal"><span class="dc-icon">💰</span><div class="dc-title">Commission Tracking</div><div class="dc-desc">Every sale, every commission, every override — live. Daily, weekly, monthly views. Network earnings broken down by operator.</div><span class="dc-metric">Live commission data</span></div>
+    <div class="deliver-card reveal rd1"><span class="dc-icon">🌐</span><div class="dc-title">Operator Network</div><div class="dc-desc">Your full downline — active operators, their pipeline status, their commission volume. Master view for you, individual view for each operator.</div><span class="dc-metric">Full network visibility</span></div>
+    <div class="deliver-card reveal rd2"><span class="dc-icon">📡</span><div class="dc-title">Content Performance</div><div class="dc-desc">Which content is driving opt-ins. Which traffic source converts best. Which messages trigger the most applications. All in one place.</div><span class="dc-metric">Source attribution</span></div>
+  </div>
+</section>
 
-      <!-- 1 -->
-      <div class="feature-card">
-        <div class="feature-num">VIEW 01</div>
-        <div class="feature-icon-wrap">☀️</div>
-        <div class="feature-title">Morning Briefing</div>
-        <div class="feature-desc">
-          Start every day with a single-page intelligence digest. New leads overnight, pipeline movement, urgent follow-ups, and today's priority actions — generated automatically each morning.
-        </div>
-        <div class="feature-tags">
-          <span class="ftag">DAILY DIGEST</span>
-          <span class="ftag">AI-GENERATED</span>
-          <span class="ftag">PRIORITY FLAGS</span>
-        </div>
-      </div>
-
-      <!-- 2 -->
-      <div class="feature-card">
-        <div class="feature-num">VIEW 02</div>
-        <div class="feature-icon-wrap">🔥</div>
-        <div class="feature-title">Lead Pipeline</div>
-        <div class="feature-desc">
-          Every lead scored HOT, WARM, or COLD based on application data. See full profiles, scoring breakdown, engagement history, and suggested next actions. One-click to trigger follow-up sequences.
-        </div>
-        <div class="feature-tags">
-          <span class="ftag">LEAD SCORING</span>
-          <span class="ftag">PROFILES</span>
-          <span class="ftag">PIPELINE STAGES</span>
-        </div>
-      </div>
-
-      <!-- 3 -->
-      <div class="feature-card">
-        <div class="feature-num">VIEW 03</div>
-        <div class="feature-icon-wrap">✉️</div>
-        <div class="feature-title">Email Sequences</div>
-        <div class="feature-desc">
-          Monitor all 7-day automated email sequences in real time. Open rates, click rates, reply rates, and unsubscribes per sequence day. Identify which messages convert and which need tuning.
-        </div>
-        <div class="feature-tags">
-          <span class="ftag">7-DAY SEQUENCES</span>
-          <span class="ftag">OPEN RATES</span>
-          <span class="ftag">CLICK TRACKING</span>
-        </div>
-      </div>
-
-      <!-- 4 -->
-      <div class="feature-card">
-        <div class="feature-num">VIEW 04</div>
-        <div class="feature-icon-wrap">🤖</div>
-        <div class="feature-title">AI Chatbot</div>
-        <div class="feature-desc">
-          Review live chatbot conversations, qualification outcomes, and escalations. See where leads drop off, which objections come up most, and how the AI is handling each interaction.
-        </div>
-        <div class="feature-tags">
-          <span class="ftag">LIVE CHAT LOG</span>
-          <span class="ftag">OBJECTION ANALYSIS</span>
-          <span class="ftag">ESCALATIONS</span>
-        </div>
-      </div>
-
-      <!-- 5 -->
-      <div class="feature-card">
-        <div class="feature-num">VIEW 05</div>
-        <div class="feature-icon-wrap">💰</div>
-        <div class="feature-title">Commissions</div>
-        <div class="feature-desc">
-          Full Enagic commission tracker. Closed sales, pending commissions, 8-point distribution, network overrides, and monthly totals. Linked to your AC number for automatic reconciliation.
-        </div>
-        <div class="feature-tags">
-          <span class="ftag">ENAGIC POINTS</span>
-          <span class="ftag">OVERRIDES</span>
-          <span class="ftag">MTD TOTALS</span>
-        </div>
-      </div>
-
-      <!-- 6 -->
-      <div class="feature-card">
-        <div class="feature-num">VIEW 06</div>
-        <div class="feature-icon-wrap">🌐</div>
-        <div class="feature-title">Operator Network</div>
-        <div class="feature-desc">
-          See your entire downline network. Operator activity levels, their pipeline status, commission contributions to your overrides, and training completion. Know who needs support before they ask.
-        </div>
-        <div class="feature-tags">
-          <span class="ftag">DOWNLINE MAP</span>
-          <span class="ftag">ACTIVITY SCORES</span>
-          <span class="ftag">OVERRIDE TRACKING</span>
-        </div>
-      </div>
-
-      <!-- 7 -->
-      <div class="feature-card">
-        <div class="feature-num">VIEW 07</div>
-        <div class="feature-icon-wrap">📊</div>
-        <div class="feature-title">Content Performance</div>
-        <div class="feature-desc">
-          Track which content pieces drive the most lead capture and application starts. Views, engagement, click-through to funnel, and conversion per content piece across all channels.
-        </div>
-        <div class="feature-tags">
-          <span class="ftag">CONTENT ANALYTICS</span>
-          <span class="ftag">LEAD ATTRIBUTION</span>
-          <span class="ftag">CHANNEL BREAKDOWN</span>
-        </div>
-      </div>
-
+<!-- WHO USES IT -->
+<section class="section">
+  <div class="sec-label reveal">Two Versions. One System.</div>
+  <h2 class="sec-head reveal">Master AIOS vs Operator AIOS.</h2>
+  <p class="sec-sub reveal">You run the master version. Every operator in your network gets their own instance — powered by the same infrastructure.</p>
+  <div class="who-grid">
+    <div class="who-col master reveal">
+      <div class="who-col-label">⚡ MASTER AIOS — You</div>
+      <div class="who-item"><span class="who-icon">👁️</span>Full network visibility — every operator's pipeline and commissions</div>
+      <div class="who-item"><span class="who-icon">📊</span>Aggregate intelligence across the entire Syndicate</div>
+      <div class="who-item"><span class="who-icon">🎛️</span>Deploy system updates to all operators simultaneously</div>
+      <div class="who-item"><span class="who-icon">💰</span>Override commission tracking and royalty calculations</div>
+      <div class="who-item"><span class="who-icon">🚀</span>Build layer — create new assets for the whole network</div>
     </div>
-  </section>
-
-  <!-- HOW IT WORKS -->
-  <section class="section" id="how-it-works">
-    <div class="section-eyebrow">How It Works</div>
-    <h2 class="section-title">Three steps to full visibility</h2>
-    <p class="section-sub">AIOS connects to your Enagic account and funnel data automatically. No manual data entry, no spreadsheets.</p>
-
-    <div class="steps">
-      <div class="step">
-        <div class="step-num">01</div>
-        <div class="step-title">Connect Your AC Account</div>
-        <div class="step-desc">
-          Enter your Enagic AC number and API credentials once. AIOS authenticates with Enagic's system and your Netlify functions to establish secure data feeds for all seven dashboard modules.
-        </div>
-      </div>
-      <div class="step">
-        <div class="step-num">02</div>
-        <div class="step-title">Data Flows In</div>
-        <div class="step-desc">
-          Every form submission, email open, chatbot session, and sale is captured in real time. The scoring engine processes each lead and updates pipeline stages automatically — no intervention required.
-        </div>
-      </div>
-      <div class="step">
-        <div class="step-num">03</div>
-        <div class="step-title">Monitor and Act</div>
-        <div class="step-desc">
-          Log in each morning to your briefing. Drill into hot leads, review overnight sequences, track commission progress, and adjust your content strategy — all from one unified interface.
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- QUOTE -->
-  <section style="max-width:1200px;margin:0 auto;padding:0 32px 100px;text-align:center;">
-    <blockquote style="font-family:'Cormorant Garamond',serif;font-style:italic;font-size:clamp(1.3rem,2.5vw,1.9rem);color:var(--muted);line-height:1.55;max-width:760px;margin:0 auto;border-left:none;padding:0;">
-      "The operators who win in this model are not the most charismatic. They are the most systematic. AIOS is the system."
-    </blockquote>
-    <div style="margin-top:24px;font-family:'Share Tech Mono',monospace;font-size:0.7rem;color:var(--dim);letter-spacing:0.14em;">— SILENT SYNDICATE OPERATIONS DOCTRINE</div>
-  </section>
-
-  <!-- CTA -->
-  <div class="cta-section">
-    <div class="cta-card">
-      <div style="font-family:'Share Tech Mono',monospace;font-size:0.7rem;color:var(--pg);letter-spacing:0.18em;margin-bottom:20px;">READY TO OPERATE</div>
-      <h2 class="cta-title">Access Your Dashboard</h2>
-      <p class="cta-sub">
-        AIOS is available to all active Silent Syndicate operators. If you are already in the network, your dashboard is waiting.
-      </p>
-      <div style="display:flex;gap:16px;justify-content:center;flex-wrap:wrap;">
-        <a href="aios-dashboard.html" class="btn-primary">Access Your Dashboard →</a>
-        <a href="page3-apply.html" class="btn-ghost">Apply to Join</a>
-      </div>
+    <div class="who-col operator reveal rd1">
+      <div class="who-col-label">🔮 OPERATOR AIOS — Each operator</div>
+      <div class="who-item"><span class="who-icon">🎯</span>Their own lead pipeline — fully isolated and private</div>
+      <div class="who-item"><span class="who-icon">📧</span>Their own email sequence management and performance data</div>
+      <div class="who-item"><span class="who-icon">💬</span>Their own chatbot conversation dashboard</div>
+      <div class="who-item"><span class="who-icon">💸</span>Their personal commission tracking and projections</div>
+      <div class="who-item"><span class="who-icon">🌅</span>Their own morning briefing — personalised to their numbers</div>
     </div>
   </div>
+</section>
 
-  <!-- FOOTER -->
-  <footer class="footer">
-    <div class="footer-inner">
-      <a href="index.html" class="footer-logo">SILENT SYNDICATE</a>
-      <div class="footer-links">
-        <a href="index.html">Home</a>
-        <a href="page2-manifesto.html">Manifesto</a>
-        <a href="page3-apply.html">Apply</a>
-        <a href="distributors.html">Operators</a>
-        <a href="aios-dashboard.html">Dashboard</a>
+<!-- PRICING / INCLUDED -->
+<section class="section section-alt">
+  <div class="sec-label reveal">Access</div>
+  <h2 class="sec-head reveal">AIOS Is Included.<br>With Every Licence.</h2>
+  <p class="sec-sub reveal" style="margin:0 auto 3.5rem;">You don't buy AIOS separately. It's what makes the Silent Syndicate licence worth what it costs.</p>
+  <div class="pricing-grid">
+    <div class="price-card reveal">
+      <div class="pc-tier">// STRIKER</div>
+      <div class="pc-name">Operator AIOS</div>
+      <div class="pc-price">Included</div>
+      <div class="pc-period">with $8,500 Striker licence</div>
+      <div class="pc-features">
+        <div class="pcf"><span class="pcf-check">✓</span>Personal AIOS dashboard</div>
+        <div class="pcf"><span class="pcf-check">✓</span>Lead pipeline module</div>
+        <div class="pcf"><span class="pcf-check">✓</span>Email sequence tracker</div>
+        <div class="pcf"><span class="pcf-check">✓</span>Commission tracking</div>
+        <div class="pcf"><span class="pcf-check">✓</span>Morning intelligence briefing</div>
       </div>
-      <div class="footer-copy">© 2025 SILENT SYNDICATE. ALL RIGHTS RESERVED.</div>
+      <a href="page4-offer.html" class="pc-btn">GET STRIKER + AIOS</a>
     </div>
-  </footer>
+    <div class="price-card featured reveal rd1">
+      <span class="price-tag">MOST CHOSEN</span>
+      <div class="pc-tier">// LAUNCHER</div>
+      <div class="pc-name">Operator AIOS+</div>
+      <div class="pc-price">Included</div>
+      <div class="pc-period">with $15,000 Launcher licence</div>
+      <div class="pc-features">
+        <div class="pcf"><span class="pcf-check">✓</span>Everything in Striker</div>
+        <div class="pcf"><span class="pcf-check">✓</span>AI chatbot conversations module</div>
+        <div class="pcf"><span class="pcf-check">✓</span>Content performance tracking</div>
+        <div class="pcf"><span class="pcf-check">✓</span>Automate layer access</div>
+        <div class="pcf"><span class="pcf-check">✓</span>Network operator view</div>
+      </div>
+      <a href="page4-offer.html" class="pc-btn">GET LAUNCHER + AIOS</a>
+    </div>
+    <div class="price-card reveal rd2">
+      <div class="pc-tier">// NUKE</div>
+      <div class="pc-name">Master AIOS</div>
+      <div class="pc-price">Included</div>
+      <div class="pc-period">with $20,000 Nuke licence</div>
+      <div class="pc-features">
+        <div class="pcf"><span class="pcf-check">✓</span>Everything in Launcher</div>
+        <div class="pcf"><span class="pcf-check">✓</span>Full Master AIOS access</div>
+        <div class="pcf"><span class="pcf-check">✓</span>Network-wide intelligence</div>
+        <div class="pcf"><span class="pcf-check">✓</span>Build layer — asset creation</div>
+        <div class="pcf"><span class="pcf-check">✓</span>Override & royalty tracking</div>
+      </div>
+      <a href="page4-offer.html" class="pc-btn">GET NUKE + MASTER AIOS</a>
+    </div>
+  </div>
+</section>
 
+<!-- FINAL CTA -->
+<section class="final-cta">
+  <div class="fc-mission reveal">MISSION READY</div>
+  <h2 class="fc-title reveal">Your Business. On Autopilot.<br>Before 8am.</h2>
+  <p class="fc-sub reveal">The AIOS isn't a tool you use. It's an operating system that runs your business — while you sleep, while you travel, while you live.</p>
+  <div class="reveal">
+    <div class="btn-row" style="justify-content:center;margin-bottom:1rem;">
+      <a href="aios-dashboard.html" class="btn-primary">LAUNCH THE AIOS <span class="ba">→</span></a>
+      <a href="page4-offer.html" class="btn-secondary">VIEW LICENCES ↗</a>
+    </div>
+    <div class="cta-micro">Included with every Silent Syndicate licence. <span>No calls. No waitlist.</span></div>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-brand">SS / AIOS</div>
+  <div class="footer-tag">AI Operating System · Silent Syndicate</div>
+  <div class="footer-tag">© 2025 · All Rights Reserved</div>
+<div style="width:100%;border-top:1px solid rgba(168,85,247,0.08);padding-top:1rem;margin-top:0.5rem;display:flex;gap:1.5rem;flex-wrap:wrap;">
+  <a href="privacy-policy.html" style="font-family:'Share Tech Mono',monospace;font-size:0.55rem;letter-spacing:0.1em;color:rgba(240,236,255,0.3);text-decoration:none;">Privacy Policy</a>
+  <a href="terms.html" style="font-family:'Share Tech Mono',monospace;font-size:0.55rem;letter-spacing:0.1em;color:rgba(240,236,255,0.3);text-decoration:none;">Terms of Service</a>
+  <a href="operator-guidelines.html" style="font-family:'Share Tech Mono',monospace;font-size:0.55rem;letter-spacing:0.1em;color:rgba(240,236,255,0.3);text-decoration:none;">Operator Guidelines</a>
+  <a href="commission-structure.html" style="font-family:'Share Tech Mono',monospace;font-size:0.55rem;letter-spacing:0.1em;color:rgba(240,236,255,0.3);text-decoration:none;">Income Disclosure</a>
+</div>
+</footer>
+
+<script>
+document.querySelectorAll('.layer').forEach(l=>{
+  l.addEventListener('click',()=>{
+    document.querySelectorAll('.layer').forEach(x=>x.classList.remove('active'));
+    l.classList.add('active');
+  });
+});
+const obs=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('visible');obs.unobserve(e.target);}});
+},{threshold:0.1});
+document.querySelectorAll('.reveal').forEach(el=>obs.observe(el));
+</script>
+
+<!-- INCOME DISCLOSURE FOOTER -->
+<div style="background:rgba(3,1,10,0.98);border-top:1px solid rgba(168,85,247,0.1);padding:2rem 5%;position:relative;z-index:1;">
+  <div style="max-width:900px;margin:0 auto;display:flex;align-items:flex-start;gap:1.5rem;flex-wrap:wrap;">
+    <div style="font-family:'Share Tech Mono',monospace;font-size:0.52rem;letter-spacing:0.18em;color:rgba(74,222,128,0.6);flex-shrink:0;padding-top:2px;white-space:nowrap;">// INCOME DISCLOSURE</div>
+    <div style="font-family:'Share Tech Mono',monospace;font-size:0.58rem;letter-spacing:0.05em;color:rgba(240,236,255,0.28);line-height:1.9;flex:1;">Results are not typical. Individual results vary significantly. Most participants earn considerably less than figures shown or earn nothing. Commission amounts are based on Enagic's published distributor compensation structure and are subject to change. This is not a guaranteed income opportunity. Conduct thorough due diligence before any investment. <a href="commission-structure.html" style="color:rgba(168,85,247,0.5);text-decoration:none;">Full income disclosure →</a></div>
+  </div>
+</div>
 </body>
 </html>

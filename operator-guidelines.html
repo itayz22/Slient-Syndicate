@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Silent Syndicate — Operator Content Guidelines</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=DM+Sans:wght@300;400;500;600&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+<style>
+:root{
+  --black:#03010a;--bg:#05020e;--card:#0a0618;--card2:#0e0920;
+  --pm:#7c3aed;--pb:#a855f7;--pg:#c084fc;--pink:#ec4899;--pkb:#f472b6;
+  --cyan:#22d3ee;--green:#4ade80;--amber:#fbbf24;--red:#ef4444;
+  --white:#f0ecff;--muted:rgba(240,236,255,0.78);--dim:rgba(240,236,255,0.48);
+  --border:rgba(168,85,247,0.15);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{font-size:16px;scroll-behavior:smooth;}
+body{background:var(--bg);color:var(--white);font-family:'DM Sans',sans-serif;overflow-x:hidden;}
+body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(rgba(168,85,247,0.03) 1px,transparent 1px),linear-gradient(90deg,rgba(168,85,247,0.03) 1px,transparent 1px);background-size:50px 50px;pointer-events:none;z-index:0;}
+.orb{position:fixed;border-radius:50%;filter:blur(110px);pointer-events:none;z-index:0;}
+.o1{width:500px;height:500px;background:rgba(107,33,168,0.15);top:-100px;left:-100px;animation:od 20s ease-in-out infinite;}
+.o2{width:350px;height:350px;background:rgba(239,68,68,0.06);bottom:-80px;right:-80px;animation:od 25s ease-in-out infinite reverse;}
+@keyframes od{0%,100%{transform:translate(0,0);}50%{transform:translate(30px,-40px);}}
+nav,section,footer{position:relative;z-index:1;}
+
+nav{position:sticky;top:0;z-index:500;background:rgba(3,1,10,0.96);backdrop-filter:blur(24px);border-bottom:1px solid var(--border);padding:0.9rem 5%;display:flex;justify-content:space-between;align-items:center;}
+.nav-brand{display:flex;align-items:center;gap:0.7rem;}
+.nav-hex{width:22px;height:22px;background:linear-gradient(135deg,var(--pm),var(--pink));clip-path:polygon(50% 0%,100% 25%,100% 75%,50% 100%,0% 75%,0% 25%);box-shadow:0 0 12px rgba(168,85,247,0.7);animation:hp 3s ease-in-out infinite;}
+@keyframes hp{0%,100%{box-shadow:0 0 12px rgba(168,85,247,0.5);}50%{box-shadow:0 0 25px rgba(168,85,247,1);}}
+.nav-name{font-family:'Orbitron',sans-serif;font-size:0.85rem;font-weight:900;letter-spacing:0.15em;background:linear-gradient(90deg,var(--pg),var(--pkb));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.nav-tag{font-family:'Share Tech Mono',monospace;font-size:0.6rem;letter-spacing:0.15em;color:var(--dim);}
+
+.page-header{padding:4rem 5% 3rem;text-align:center;}
+.ph-label{font-family:'Share Tech Mono',monospace;font-size:0.65rem;letter-spacing:0.25em;color:var(--amber);margin-bottom:1rem;display:flex;align-items:center;justify-content:center;gap:0.8rem;}
+.ph-label::before,.ph-label::after{content:'';display:block;height:1px;width:30px;background:linear-gradient(90deg,transparent,var(--amber));}
+.ph-label::after{background:linear-gradient(90deg,var(--amber),transparent);}
+.ph-title{font-family:'Orbitron',sans-serif;font-size:clamp(1.8rem,4vw,3rem);font-weight:900;background:linear-gradient(135deg,var(--white),var(--pg));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:1rem;line-height:1.1;}
+.ph-sub{font-size:1.05rem;color:var(--muted);max-width:680px;margin:0 auto;line-height:1.9;}
+
+.wrap{max-width:900px;margin:0 auto;padding:0 5% 6rem;}
+
+/* alert box */
+.alert{border-radius:12px;padding:2rem;margin-bottom:2rem;position:relative;overflow:hidden;}
+.alert::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;}
+.alert.red{background:rgba(239,68,68,0.06);border:1px solid rgba(239,68,68,0.2);}
+.alert.red::before{background:linear-gradient(90deg,var(--red),transparent);}
+.alert.amber{background:rgba(251,191,36,0.06);border:1px solid rgba(251,191,36,0.2);}
+.alert.amber::before{background:linear-gradient(90deg,var(--amber),transparent);}
+.alert.green{background:rgba(74,222,128,0.06);border:1px solid rgba(74,222,128,0.2);}
+.alert.green::before{background:linear-gradient(90deg,var(--green),transparent);}
+.alert-label{font-family:'Share Tech Mono',monospace;font-size:0.58rem;letter-spacing:0.2em;margin-bottom:0.8rem;}
+.alert.red .alert-label{color:var(--red);}
+.alert.amber .alert-label{color:var(--amber);}
+.alert.green .alert-label{color:var(--green);}
+.alert-body{font-size:0.95rem;color:var(--muted);line-height:1.9;}
+.alert-body strong{color:var(--white);}
+
+/* rule sections */
+.rule-section{margin-bottom:3rem;}
+.rs-header{display:flex;align-items:center;gap:1rem;margin-bottom:1.5rem;padding-bottom:1rem;border-bottom:1px solid var(--border);}
+.rs-num{font-family:'Orbitron',sans-serif;font-size:1.8rem;font-weight:900;color:rgba(168,85,247,0.2);}
+.rs-title{font-family:'Orbitron',sans-serif;font-size:1.1rem;font-weight:700;color:var(--white);letter-spacing:0.05em;}
+
+.do-dont{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1.5rem;}
+.dd-col{border-radius:10px;padding:1.8rem;}
+.dd-col.do{background:rgba(74,222,128,0.05);border:1px solid rgba(74,222,128,0.15);}
+.dd-col.dont{background:rgba(239,68,68,0.05);border:1px solid rgba(239,68,68,0.15);}
+.dd-label{font-family:'Orbitron',sans-serif;font-size:0.72rem;font-weight:700;letter-spacing:0.12em;margin-bottom:1rem;padding-bottom:0.7rem;border-bottom:1px solid rgba(168,85,247,0.1);}
+.dd-col.do .dd-label{color:var(--green);}
+.dd-col.dont .dd-label{color:var(--red);}
+.dd-item{display:flex;align-items:flex-start;gap:0.7rem;font-size:0.9rem;color:var(--muted);line-height:1.6;margin-bottom:0.7rem;}
+.dd-item:last-child{margin-bottom:0;}
+.dd-icon{flex-shrink:0;font-size:0.8rem;margin-top:2px;}
+
+/* example posts */
+.example-block{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:1.8rem;margin-bottom:1rem;}
+.eb-label{font-family:'Share Tech Mono',monospace;font-size:0.55rem;letter-spacing:0.18em;margin-bottom:1rem;}
+.eb-label.good{color:var(--green);}
+.eb-label.bad{color:var(--red);}
+.eb-post{font-size:0.92rem;color:var(--muted);line-height:1.8;font-style:italic;border-left:2px solid;padding-left:1rem;}
+.eb-post.good{border-color:rgba(74,222,128,0.3);}
+.eb-post.bad{border-color:rgba(239,68,68,0.3);}
+.eb-why{font-family:'Share Tech Mono',monospace;font-size:0.58rem;letter-spacing:0.1em;color:var(--dim);margin-top:0.8rem;}
+
+/* compliance table */
+.comp-table{width:100%;border-collapse:collapse;margin-bottom:2rem;}
+.comp-table th{font-family:'Share Tech Mono',monospace;font-size:0.55rem;letter-spacing:0.15em;color:var(--pg);padding:0.9rem 1.2rem;text-align:left;border-bottom:1px solid rgba(168,85,247,0.15);background:rgba(168,85,247,0.05);}
+.comp-table td{padding:1rem 1.2rem;border-bottom:1px solid rgba(168,85,247,0.07);font-size:0.88rem;color:var(--muted);vertical-align:top;line-height:1.7;}
+.comp-table tr:hover td{background:rgba(168,85,247,0.04);}
+.comp-table td:first-child{color:var(--white);font-weight:500;}
+.td-ok{color:var(--green) !important;}
+.td-no{color:var(--red) !important;}
+.td-care{color:var(--amber) !important;}
+
+footer{padding:2rem 5%;border-top:1px solid var(--border);display:flex;justify-content:space-between;flex-wrap:wrap;gap:1rem;}
+.footer-brand{font-family:'Orbitron',sans-serif;font-size:0.9rem;font-weight:900;letter-spacing:0.15em;background:linear-gradient(90deg,var(--pg),var(--pkb));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.footer-tag{font-family:'Share Tech Mono',monospace;font-size:0.58rem;letter-spacing:0.12em;color:var(--dim);}
+
+@media(max-width:700px){.do-dont{grid-template-columns:1fr;}}
+</style>
+</head>
+<body>
+<div class="orb o1"></div><div class="orb o2"></div>
+
+<nav>
+  <div class="nav-brand"><div class="nav-hex"></div><span class="nav-name">SILENT SYNDICATE</span></div>
+  <div class="nav-tag">// Operator Content Guidelines</div>
+</nav>
+
+<div class="page-header">
+  <div class="ph-label">Mandatory Reading — All Operators</div>
+  <h1 class="ph-title">Content Guidelines<br>& Compliance Rules</h1>
+  <p class="ph-sub">Every operator in the Silent Syndicate network must follow these guidelines. They exist to protect you legally, protect the network's reputation, and ensure we attract the right people — not the wrong ones.</p>
+</div>
+
+<div class="wrap">
+
+  <div class="alert red">
+    <div class="alert-label">// CRITICAL — READ FIRST</div>
+    <div class="alert-body"><strong>Never make health claims about Kangen water or Enagic products.</strong> The health and wellness claims sometimes associated with alkaline/ionised water are not strongly supported by mainstream scientific consensus. Making these claims in your content exposes you personally to ACCC scrutiny under Australian Consumer Law, and exposes the entire network to compliance risk. Market the income opportunity. Let Enagic's own official product materials handle product education.</div>
+  </div>
+
+  <div class="alert amber">
+    <div class="alert-label">// IMPORTANT — INCOME REPRESENTATIONS</div>
+    <div class="alert-body"><strong>Any income figure you show must be accompanied by the income disclaimer.</strong> This applies to screenshots, numbers in captions, testimonial results, and projections. The disclaimer is not optional. Under Australian Consumer Law, unqualified income claims in marketing constitute misleading conduct. Always add: "Results are not typical. Individual results vary significantly. Most participants earn less."</div>
+  </div>
+
+  <!-- RULE 01 -->
+  <div class="rule-section">
+    <div class="rs-header"><div class="rs-num">01</div><div class="rs-title">What You're Selling — Get This Clear</div></div>
+    <p style="font-size:0.95rem;color:var(--muted);line-height:1.9;margin-bottom:1.5rem;">You are marketing a <strong style="color:var(--white)">business opportunity</strong> — specifically, the ability to become an Enagic authorised distributor and earn commissions through the Silent Syndicate AI-automated funnel system. You are not primarily marketing a water machine. The product is real and included — but it is not the hook.</p>
+    <div class="do-dont">
+      <div class="dd-col do">
+        <div class="dd-label">✓ LEAD WITH THIS</div>
+        <div class="dd-item"><span class="dd-icon">✓</span>High-ticket commission structure ($2,400–$6,330 per sale)</div>
+        <div class="dd-item"><span class="dd-icon">✓</span>AI-automated funnel — no cold calls required</div>
+        <div class="dd-item"><span class="dd-icon">✓</span>Network structure that compounds over time</div>
+        <div class="dd-item"><span class="dd-icon">✓</span>Enagic's 40-year operating history and global presence</div>
+        <div class="dd-item"><span class="dd-icon">✓</span>Real investment required — be upfront about $8,500–$20,000</div>
+      </div>
+      <div class="dd-col dont">
+        <div class="dd-label">✕ NEVER LEAD WITH THIS</div>
+        <div class="dd-item"><span class="dd-icon">✕</span>Health benefits of alkaline or ionised water</div>
+        <div class="dd-item"><span class="dd-icon">✕</span>Medical or wellness claims about Kangen machines</div>
+        <div class="dd-item"><span class="dd-icon">✕</span>Unqualified income guarantees or "you will earn" statements</div>
+        <div class="dd-item"><span class="dd-icon">✕</span>"This changed my health / cured / healed" language</div>
+        <div class="dd-item"><span class="dd-icon">✕</span>Hiding that this is a direct sales / network structure</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- RULE 02 -->
+  <div class="rule-section">
+    <div class="rs-header"><div class="rs-num">02</div><div class="rs-title">Income Claims — The Exact Rules</div></div>
+    <p style="font-size:0.95rem;color:var(--muted);line-height:1.9;margin-bottom:1.5rem;">You can share income figures. You must qualify every single one. Here's exactly how.</p>
+    <div class="example-block">
+      <div class="eb-label good">✓ COMPLIANT POST EXAMPLE</div>
+      <div class="eb-post good">"My pipeline hit $12,900 this month — 3 sales at the Launcher tier. Results like this aren't typical and depend entirely on how consistently you work the system. Most operators earn less. Here's exactly how the numbers work if you want to understand the model properly."</div>
+      <div class="eb-why">// WHY THIS WORKS: States the result, immediately qualifies it, directs to more information.</div>
+    </div>
+    <div class="example-block">
+      <div class="eb-label bad">✕ NON-COMPLIANT POST EXAMPLE</div>
+      <div class="eb-post bad">"$12,900 this month working from my phone 🔥 This system is printing money. DM me and I'll show you how to do the same."</div>
+      <div class="eb-why">// WHY THIS FAILS: Unqualified income claim, implies guaranteed replicability, no disclaimer.</div>
+    </div>
+    <div class="example-block">
+      <div class="eb-label bad">✕ NON-COMPLIANT POST EXAMPLE</div>
+      <div class="eb-post bad">"Quit your job in 90 days. The AI does everything. Passive income is real and I'm living proof."</div>
+      <div class="eb-why">// WHY THIS FAILS: False income guarantee, misrepresents the effort required, misleading under ACL.</div>
+    </div>
+  </div>
+
+  <!-- RULE 03 -->
+  <div class="rule-section">
+    <div class="rs-header"><div class="rs-num">03</div><div class="rs-title">Health Claims — Hard Stop</div></div>
+    <p style="font-size:0.95rem;color:var(--muted);line-height:1.9;margin-bottom:1.5rem;">This is a hard line. No operator in the Silent Syndicate network makes health claims. Not in content. Not in DMs. Not in captions. Not in chatbot conversations. Not anywhere.</p>
+    <table class="comp-table">
+      <thead><tr><th>Statement</th><th>Status</th><th>Why</th></tr></thead>
+      <tbody>
+        <tr><td>"Kangen water helped my energy levels"</td><td class="td-no">✕ PROHIBITED</td><td>Personal health claim — unverifiable and legally risky</td></tr>
+        <tr><td>"Alkaline water has health benefits"</td><td class="td-no">✕ PROHIBITED</td><td>Not supported by mainstream scientific consensus</td></tr>
+        <tr><td>"This machine changed my health"</td><td class="td-no">✕ PROHIBITED</td><td>Implied medical claim — ACCC exposure</td></tr>
+        <tr><td>"The machine is used in homes, restaurants and hospitals globally"</td><td class="td-ok">✓ PERMITTED</td><td>Factual statement about product usage</td></tr>
+        <tr><td>"Enagic has been manufacturing water ionisers since 1974"</td><td class="td-ok">✓ PERMITTED</td><td>Verifiable company fact</td></tr>
+        <tr><td>"The product is a premium water ionisation machine"</td><td class="td-ok">✓ PERMITTED</td><td>Accurate product description</td></tr>
+        <tr><td>"Many people enjoy the product"</td><td class="td-care">⚠ USE CAREFULLY</td><td>Fine if not tied to health outcomes</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- RULE 04 -->
+  <div class="rule-section">
+    <div class="rs-header"><div class="rs-num">04</div><div class="rs-title">Transparency — What You Must Always Disclose</div></div>
+    <p style="font-size:0.95rem;color:var(--muted);line-height:1.9;margin-bottom:1.5rem;">Full transparency is not just ethical — it's the strategy. The people who join after seeing the full picture are the people who stay, perform, and build real networks. Hiding the structure attracts the wrong operators.</p>
+    <div class="do-dont">
+      <div class="dd-col do">
+        <div class="dd-label">✓ ALWAYS DISCLOSE</div>
+        <div class="dd-item"><span class="dd-icon">✓</span>This is built on Enagic's distribution network — name it</div>
+        <div class="dd-item"><span class="dd-icon">✓</span>There is an investment required to join ($8,500–$20,000)</div>
+        <div class="dd-item"><span class="dd-icon">✓</span>There is a network/team structure with override commissions</div>
+        <div class="dd-item"><span class="dd-icon">✓</span>Income results vary — most people earn less than showcased results</div>
+        <div class="dd-item"><span class="dd-icon">✓</span>The system requires consistent content creation to drive traffic</div>
+      </div>
+      <div class="dd-col dont">
+        <div class="dd-label">✕ NEVER HIDE</div>
+        <div class="dd-item"><span class="dd-icon">✕</span>The MLM/network structure — own it or don't do this</div>
+        <div class="dd-item"><span class="dd-icon">✕</span>The investment amount — reveal it before anyone applies</div>
+        <div class="dd-item"><span class="dd-icon">✕</span>That commissions come from recruiting distributors</div>
+        <div class="dd-item"><span class="dd-icon">✕</span>The breakaway mechanic — explain rank protection honestly</div>
+        <div class="dd-item"><span class="dd-icon">✕</span>That this requires real work — there is no fully passive model</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- RULE 05 -->
+  <div class="rule-section">
+    <div class="rs-header"><div class="rs-num">05</div><div class="rs-title">The Breakaway Mechanic — How to Discuss It</div></div>
+    <p style="font-size:0.95rem;color:var(--muted);line-height:1.9;margin-bottom:1.5rem;">The breakaway mechanic is the most commonly misunderstood part of Enagic's structure. Here's how to explain it honestly when it comes up.</p>
+    <div class="alert amber" style="margin-bottom:1.5rem;">
+      <div class="alert-label">// WHAT IT IS</div>
+      <div class="alert-body">In Enagic's 8-point commission system, if a distributor in your downline achieves a higher rank than you, they begin capturing more commission points — including some that previously flowed to you. This is called the breakaway mechanic. <strong>It creates an incentive to keep building and stay active.</strong> It is not a hidden trap — it is a structural feature that rewards active operators and protects high performers.</div>
+    </div>
+    <div class="example-block">
+      <div class="eb-label good">✓ HOW TO EXPLAIN IT HONESTLY</div>
+      <div class="eb-post good">"The Enagic rank system rewards people who stay active and keep building. If someone in your network outranks you, they capture more of the commission structure — which is exactly why the system keeps operators motivated long-term. It's not a set-and-forget model. The more you build, the more protected and profitable your position becomes."</div>
+    </div>
+  </div>
+
+  <!-- RULE 06 -->
+  <div class="rule-section">
+    <div class="rs-header"><div class="rs-num">06</div><div class="rs-title">The Required Disclaimer</div></div>
+    <p style="font-size:0.95rem;color:var(--muted);line-height:1.9;margin-bottom:1.5rem;">This exact disclaimer must appear on every post, page, or piece of content that shows income figures.</p>
+    <div class="alert green">
+      <div class="alert-label">// COPY THIS EXACTLY</div>
+      <div class="alert-body" style="font-family:'Share Tech Mono',monospace;font-size:0.75rem;letter-spacing:0.05em;line-height:2;">Income Disclaimer: Results shown are not typical. Individual results vary significantly based on effort, consistency, market conditions, and execution. Most participants earn considerably less than figures shown. Commission amounts are based on Enagic's published distributor compensation structure and are subject to change. This is not a guaranteed income opportunity. Please conduct thorough due diligence before making any investment decision.</div>
+    </div>
+  </div>
+
+</div>
+
+<footer>
+  <div class="footer-brand">SS / GUIDELINES</div>
+  <div class="footer-tag">Operator Content Guidelines · Silent Syndicate</div>
+  <div class="footer-tag">© 2025</div>
+</footer>
+</body>
+</html>

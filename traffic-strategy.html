@@ -1,245 +1,342 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Traffic Strategy — Silent Syndicate</title>
-  <meta name="robots" content="noindex, nofollow">
-  <link rel="stylesheet" href="css/design-system.css">
-  <style>
-    .page-wrap { max-width: 860px; margin: 0 auto; padding: 60px 28px 80px; }
-    .page-eyebrow {
-      font-family: 'Share Tech Mono', monospace;
-      font-size: 0.7rem;
-      letter-spacing: 0.18em;
-      color: var(--pg);
-      margin-bottom: 14px;
-    }
-    .page-title {
-      font-family: 'Orbitron', monospace;
-      font-size: clamp(1.6rem, 4vw, 2.4rem);
-      font-weight: 900;
-      letter-spacing: 0.05em;
-      background: linear-gradient(135deg, var(--white) 30%, var(--pg));
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-      margin-bottom: 12px;
-    }
-    .page-lead {
-      font-size: 1.05rem;
-      color: var(--muted);
-      line-height: 1.7;
-      margin-bottom: 48px;
-      max-width: 640px;
-    }
-    .back-link {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      font-family: 'Share Tech Mono', monospace;
-      font-size: 0.72rem;
-      color: var(--dim);
-      text-decoration: none;
-      letter-spacing: 0.1em;
-      margin-bottom: 40px;
-      transition: color 0.2s;
-    }
-    .back-link:hover { color: var(--pg); }
-    .strat-section { margin-bottom: 52px; }
-    .strat-title {
-      font-family: 'Orbitron', monospace;
-      font-size: 0.85rem;
-      font-weight: 700;
-      color: var(--pg);
-      letter-spacing: 0.14em;
-      border-bottom: 1px solid var(--border);
-      padding-bottom: 10px;
-      margin-bottom: 24px;
-    }
-    .hook-card {
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: var(--radius-lg);
-      padding: 24px 28px;
-      margin-bottom: 16px;
-    }
-    .hook-label {
-      font-family: 'Share Tech Mono', monospace;
-      font-size: 0.65rem;
-      color: var(--dim);
-      letter-spacing: 0.14em;
-      margin-bottom: 8px;
-    }
-    .hook-text {
-      font-size: 1.05rem;
-      color: var(--white);
-      font-weight: 600;
-      line-height: 1.5;
-      margin-bottom: 10px;
-    }
-    .hook-note { font-size: 0.875rem; color: var(--muted); line-height: 1.65; }
-    .cadence-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 14px;
-      margin-bottom: 24px;
-    }
-    .cadence-card {
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 20px;
-    }
-    .cadence-day {
-      font-family: 'Orbitron', monospace;
-      font-size: 0.75rem;
-      font-weight: 700;
-      color: var(--pg);
-      letter-spacing: 0.1em;
-      margin-bottom: 8px;
-    }
-    .cadence-task {
-      font-size: 0.875rem;
-      color: var(--muted);
-      line-height: 1.6;
-    }
-    .channel-row {
-      display: grid;
-      grid-template-columns: 140px 1fr 100px;
-      gap: 16px;
-      align-items: start;
-      padding: 16px 0;
-      border-bottom: 1px solid rgba(168,85,247,0.07);
-    }
-    @media (max-width: 600px) { .channel-row { grid-template-columns: 1fr; } }
-    .channel-name {
-      font-family: 'Share Tech Mono', monospace;
-      font-size: 0.8rem;
-      color: var(--white);
-      letter-spacing: 0.06em;
-    }
-    .channel-desc { font-size: 0.875rem; color: var(--muted); line-height: 1.6; }
-    .channel-priority {
-      font-family: 'Share Tech Mono', monospace;
-      font-size: 0.68rem;
-      letter-spacing: 0.1em;
-      text-align: right;
-    }
-    .priority-primary { color: var(--green); }
-    .priority-secondary { color: var(--amber); }
-    .priority-optional { color: var(--dim); }
-    .disclaimer {
-      background: rgba(239,68,68,0.06);
-      border: 1px solid rgba(239,68,68,0.2);
-      border-radius: var(--radius);
-      padding: 16px 20px;
-      font-size: 0.8rem;
-      color: var(--dim);
-      line-height: 1.65;
-      margin-top: 48px;
-    }
-    .disclaimer strong { color: var(--red); }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Silent Syndicate — Traffic Strategy</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=DM+Sans:wght@300;400;500;600&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+<style>
+:root{
+  --black:#03010a;--bg:#05020e;--card:#0a0618;--card2:#0e0920;
+  --pm:#7c3aed;--pb:#a855f7;--pg:#c084fc;--pink:#ec4899;--pkb:#f472b6;
+  --cyan:#22d3ee;--green:#4ade80;--amber:#fbbf24;--red:#ef4444;
+  --white:#f0ecff;--muted:rgba(240,236,255,0.78);--dim:rgba(240,236,255,0.48);
+  --border:rgba(168,85,247,0.15);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{font-size:16px;scroll-behavior:smooth;}
+body{background:var(--bg);color:var(--white);font-family:'DM Sans',sans-serif;overflow-x:hidden;}
+body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(rgba(168,85,247,0.03) 1px,transparent 1px),linear-gradient(90deg,rgba(168,85,247,0.03) 1px,transparent 1px);background-size:50px 50px;pointer-events:none;z-index:0;}
+.orb{position:fixed;border-radius:50%;filter:blur(110px);pointer-events:none;z-index:0;}
+.o1{width:500px;height:500px;background:rgba(107,33,168,0.15);top:-100px;right:-100px;animation:od 20s ease-in-out infinite;}
+.o2{width:350px;height:350px;background:rgba(236,72,153,0.09);bottom:-80px;left:-80px;animation:od 25s ease-in-out infinite reverse;}
+@keyframes od{0%,100%{transform:translate(0,0);}50%{transform:translate(35px,-45px);}}
+section,nav,header,footer{position:relative;z-index:1;}
+
+nav{position:sticky;top:0;z-index:500;background:rgba(3,1,10,0.95);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);padding:0.9rem 5%;display:flex;justify-content:space-between;align-items:center;}
+.nav-brand{display:flex;align-items:center;gap:0.7rem;}
+.nav-hex{width:22px;height:22px;background:linear-gradient(135deg,var(--pm),var(--pink));clip-path:polygon(50% 0%,100% 25%,100% 75%,50% 100%,0% 75%,0% 25%);box-shadow:0 0 12px rgba(168,85,247,0.7);animation:hp 3s ease-in-out infinite;}
+@keyframes hp{0%,100%{box-shadow:0 0 12px rgba(168,85,247,0.5);}50%{box-shadow:0 0 25px rgba(168,85,247,1);}}
+.nav-name{font-family:'Orbitron',sans-serif;font-size:0.85rem;font-weight:900;letter-spacing:0.15em;background:linear-gradient(90deg,var(--pg),var(--pkb));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.nav-tag{font-family:'Share Tech Mono',monospace;font-size:0.6rem;letter-spacing:0.15em;color:var(--dim);}
+
+.page-header{padding:4rem 5% 3rem;text-align:center;}
+.ph-label{font-family:'Share Tech Mono',monospace;font-size:0.65rem;letter-spacing:0.25em;color:var(--pkb);margin-bottom:1rem;display:flex;align-items:center;justify-content:center;gap:0.8rem;}
+.ph-label::before,.ph-label::after{content:'';display:block;height:1px;width:30px;background:linear-gradient(90deg,transparent,var(--pkb));}
+.ph-label::after{background:linear-gradient(90deg,var(--pkb),transparent);}
+.ph-title{font-family:'Orbitron',sans-serif;font-size:clamp(1.8rem,4vw,3rem);font-weight:900;background:linear-gradient(135deg,var(--white),var(--pg) 50%,var(--pkb) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:1rem;line-height:1.1;}
+.ph-sub{font-size:1.05rem;color:var(--muted);max-width:640px;margin:0 auto;line-height:1.9;}
+
+.wrap{max-width:960px;margin:0 auto;padding:0 5% 6rem;}
+
+/* platform priority */
+.platform-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-bottom:4rem;}
+.platform-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:2rem;position:relative;overflow:hidden;transition:all 0.3s;}
+.platform-card:hover{border-color:rgba(168,85,247,0.4);transform:translateY(-4px);}
+.platform-card.primary{border-color:rgba(168,85,247,0.35);}
+.platform-card.primary::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--pb),var(--pkb));box-shadow:0 0 10px var(--pb);}
+.pc-rank{font-family:'Share Tech Mono',monospace;font-size:0.55rem;letter-spacing:0.2em;color:var(--dim);margin-bottom:0.5rem;}
+.pc-platform{display:flex;align-items:center;gap:0.7rem;margin-bottom:1rem;}
+.pc-icon{font-size:1.8rem;}
+.pc-name{font-family:'Orbitron',sans-serif;font-size:1rem;font-weight:700;color:var(--white);}
+.pc-why{font-size:0.92rem;color:var(--muted);line-height:1.8;margin-bottom:1.2rem;}
+.pc-stats{display:flex;flex-direction:column;gap:0.4rem;}
+.pc-stat{display:flex;justify-content:space-between;font-family:'Share Tech Mono',monospace;font-size:0.58rem;letter-spacing:0.08em;color:var(--dim);padding:0.3rem 0;border-bottom:1px solid rgba(168,85,247,0.06);}
+.pc-stat:last-child{border-bottom:none;}
+.pc-stat span{color:var(--white);}
+.pc-badge{display:inline-block;margin-top:1rem;font-family:'Share Tech Mono',monospace;font-size:0.55rem;letter-spacing:0.12em;padding:0.25rem 0.7rem;border-radius:4px;}
+.pc-badge.start{background:rgba(74,222,128,0.1);color:var(--green);border:1px solid rgba(74,222,128,0.25);}
+.pc-badge.scale{background:rgba(251,191,36,0.1);color:var(--amber);border:1px solid rgba(251,191,36,0.25);}
+.pc-badge.later{background:rgba(168,85,247,0.1);color:var(--pg);border:1px solid rgba(168,85,247,0.25);}
+
+/* section heads */
+.sec-head-wrap{margin-bottom:2rem;}
+.sec-label{font-family:'Share Tech Mono',monospace;font-size:0.62rem;letter-spacing:0.22em;color:var(--pkb);margin-bottom:0.5rem;display:flex;align-items:center;gap:0.8rem;}
+.sec-label::before{content:'';display:block;width:20px;height:1px;background:linear-gradient(90deg,var(--pkb),var(--pb));box-shadow:0 0 5px var(--pkb);}
+.sec-title{font-family:'Orbitron',sans-serif;font-size:clamp(1.4rem,3vw,2.2rem);font-weight:900;background:linear-gradient(135deg,var(--white),var(--pg));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:0.5rem;}
+.sec-sub{font-size:1rem;color:var(--muted);line-height:1.9;max-width:640px;}
+.sec-sub strong{color:var(--white);}
+
+/* content pillars */
+.pillars{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:4rem;}
+.pillar-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:2rem;transition:all 0.3s;}
+.pillar-card:hover{border-color:rgba(168,85,247,0.35);}
+.pillar-num{font-family:'Share Tech Mono',monospace;font-size:0.58rem;letter-spacing:0.2em;color:var(--pg);margin-bottom:0.5rem;}
+.pillar-name{font-family:'Orbitron',sans-serif;font-size:1rem;font-weight:700;color:var(--white);margin-bottom:0.8rem;letter-spacing:0.05em;}
+.pillar-desc{font-size:0.92rem;color:var(--muted);line-height:1.8;margin-bottom:1.2rem;}
+.pillar-examples{display:flex;flex-direction:column;gap:0.4rem;}
+.pe{font-family:'Share Tech Mono',monospace;font-size:0.65rem;letter-spacing:0.05em;color:var(--cyan);background:rgba(34,211,238,0.06);border:1px solid rgba(34,211,238,0.12);border-radius:4px;padding:0.35rem 0.7rem;}
+
+/* hook library */
+.hooks{display:flex;flex-direction:column;gap:0.6rem;margin-bottom:4rem;}
+.hook-item{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:1.2rem 1.5rem;display:flex;align-items:flex-start;gap:1rem;transition:all 0.2s;cursor:pointer;}
+.hook-item:hover{border-color:rgba(168,85,247,0.35);background:rgba(168,85,247,0.06);}
+.hi-platform{font-family:'Share Tech Mono',monospace;font-size:0.55rem;letter-spacing:0.12em;padding:0.2rem 0.5rem;border-radius:3px;flex-shrink:0;margin-top:2px;}
+.hi-platform.tt{background:rgba(255,0,80,0.1);color:#ff6090;border:1px solid rgba(255,0,80,0.2);}
+.hi-platform.ig{background:rgba(131,58,180,0.1);color:#c084fc;border:1px solid rgba(131,58,180,0.2);}
+.hi-platform.fb{background:rgba(24,119,242,0.1);color:#60a5fa;border:1px solid rgba(24,119,242,0.2);}
+.hi-platform.any{background:rgba(168,85,247,0.08);color:var(--pg);border:1px solid rgba(168,85,247,0.2);}
+.hi-hook{font-size:0.95rem;color:var(--white);line-height:1.6;flex:1;}
+.hi-type{font-family:'Share Tech Mono',monospace;font-size:0.52rem;letter-spacing:0.1em;color:var(--dim);margin-left:auto;flex-shrink:0;margin-top:3px;}
+
+/* weekly schedule */
+.week-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:0.5rem;margin-bottom:4rem;}
+.day-col{background:var(--card);border:1px solid var(--border);border-radius:10px;overflow:hidden;}
+.day-header{padding:0.6rem;text-align:center;border-bottom:1px solid rgba(168,85,247,0.08);background:rgba(168,85,247,0.06);}
+.dh-day{font-family:'Orbitron',sans-serif;font-size:0.62rem;font-weight:700;color:var(--white);}
+.day-tasks{padding:0.6rem;display:flex;flex-direction:column;gap:0.4rem;}
+.dt{font-size:0.72rem;color:var(--muted);line-height:1.4;background:rgba(168,85,247,0.05);border:1px solid rgba(168,85,247,0.1);border-radius:4px;padding:0.4rem 0.5rem;}
+.dt.primary{background:rgba(168,85,247,0.12);border-color:rgba(168,85,247,0.25);color:var(--white);}
+.dt.rest{color:var(--dim);background:none;border:none;font-family:'Share Tech Mono',monospace;font-size:0.6rem;letter-spacing:0.1em;}
+
+/* the 30 day plan */
+.thirty-day{display:flex;flex-direction:column;gap:1rem;margin-bottom:4rem;}
+.td-week{background:var(--card);border:1px solid var(--border);border-radius:12px;overflow:hidden;}
+.td-week-header{padding:1.2rem 1.8rem;background:rgba(168,85,247,0.07);border-bottom:1px solid rgba(168,85,247,0.1);display:flex;align-items:center;justify-content:space-between;}
+.tdwh-week{font-family:'Orbitron',sans-serif;font-size:0.85rem;font-weight:700;color:var(--white);}
+.tdwh-focus{font-family:'Share Tech Mono',monospace;font-size:0.6rem;letter-spacing:0.12em;color:var(--pg);}
+.tdwh-target{font-family:'Share Tech Mono',monospace;font-size:0.6rem;letter-spacing:0.1em;color:var(--green);background:rgba(74,222,128,0.08);border:1px solid rgba(74,222,128,0.2);padding:0.25rem 0.6rem;border-radius:4px;}
+.td-week-body{padding:1.5rem 1.8rem;display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;}
+.tdwb-col h4{font-size:0.88rem;font-weight:600;color:var(--white);margin-bottom:0.7rem;}
+.tdwb-items{display:flex;flex-direction:column;gap:0.4rem;}
+.tdi{display:flex;align-items:flex-start;gap:0.5rem;font-size:0.85rem;color:var(--muted);line-height:1.5;}
+.tdi::before{content:'→';color:var(--pb);flex-shrink:0;font-size:0.75rem;margin-top:2px;}
+
+/* the rule */
+.rule-box{background:linear-gradient(135deg,rgba(168,85,247,0.1),rgba(236,72,153,0.06));border:1px solid rgba(168,85,247,0.3);border-radius:14px;padding:2.5rem;text-align:center;margin-bottom:4rem;position:relative;overflow:hidden;}
+.rule-box::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--pb),var(--pkb));box-shadow:0 0 10px var(--pb);}
+.rb-label{font-family:'Share Tech Mono',monospace;font-size:0.62rem;letter-spacing:0.25em;color:var(--pg);margin-bottom:1rem;}
+.rb-rule{font-family:'Orbitron',sans-serif;font-size:clamp(1.4rem,3.5vw,2.5rem);font-weight:900;background:linear-gradient(90deg,var(--white),var(--pg) 50%,var(--pkb) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:1rem;line-height:1.1;}
+.rb-sub{font-size:1rem;color:var(--muted);max-width:560px;margin:0 auto;line-height:1.9;}
+
+footer{padding:2rem 5%;border-top:1px solid var(--border);display:flex;justify-content:space-between;flex-wrap:wrap;gap:1rem;}
+.footer-brand{font-family:'Orbitron',sans-serif;font-size:0.9rem;font-weight:900;letter-spacing:0.15em;background:linear-gradient(90deg,var(--pg),var(--pkb));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.footer-tag{font-family:'Share Tech Mono',monospace;font-size:0.58rem;letter-spacing:0.12em;color:var(--dim);}
+
+@media(max-width:768px){
+  .platform-grid,.pillars,.week-grid,.td-week-body{grid-template-columns:1fr;}
+  .week-grid{grid-template-columns:repeat(3,1fr);}
+}
+</style>
 </head>
 <body>
-  <div class="page-wrap">
-    <a href="hub.html" class="back-link">← BACK TO HUB</a>
-    <div class="page-eyebrow">RESOURCE // TRAFFIC</div>
-    <h1 class="page-title">Traffic Strategy</h1>
-    <p class="page-lead">How to generate consistent opt-ins using short-form organic content. No paid ads required. One skill: posting short videos with a transparency hook. The funnel does everything else.</p>
+<div class="orb o1"></div><div class="orb o2"></div>
 
-    <!-- Hook Formula -->
-    <div class="strat-section">
-      <div class="strat-title">THE TRANSPARENCY HOOK FORMULA</div>
-      <p style="font-size:0.925rem;color:var(--muted);margin-bottom:24px;line-height:1.7">The single most effective approach for this niche is radical transparency. Name the company, name the product, name the commissions. Audiences respond to specificity and honesty — especially when most people in this space are deliberately vague.</p>
+<nav>
+  <div class="nav-brand"><div class="nav-hex"></div><span class="nav-name">SILENT SYNDICATE</span></div>
+  <div class="nav-tag">// Traffic Strategy</div>
+<a href="hub.html" style="font-family:'Share Tech Mono',monospace;font-size:0.58rem;letter-spacing:0.12em;color:rgba(240,236,255,0.4);text-decoration:none;border:1px solid rgba(168,85,247,0.15);padding:0.35rem 0.8rem;border-radius:4px;transition:all 0.2s;" onmouseover="this.style.color='rgba(240,236,255,0.8)';this.style.borderColor='rgba(168,85,247,0.4)'" onmouseout="this.style.color='rgba(240,236,255,0.4)';this.style.borderColor='rgba(168,85,247,0.15)'">⬡ HUB</a>
+</nav>
 
-      <div class="hook-card">
-        <div class="hook-label">HOOK TYPE 01 — COMMISSION REVEAL</div>
-        <div class="hook-text">"I make $4,300 every time someone buys this water machine. Here's exactly how."</div>
-        <div class="hook-note">Works because it names a specific number and product category. Filters audience by curiosity and capital. The viewer who stays to the end is self-qualifying.</div>
+<div class="page-header">
+  <div class="ph-label">Getting Eyeballs On The Funnel</div>
+  <h1 class="ph-title">What To Post.<br>Where. How Often.</h1>
+  <p class="ph-sub">The funnel is built. The tech is connected. This is the part that fills it — a content strategy built specifically for attracting people who want financial freedom, are open to a new model, and are willing to invest in themselves.</p>
+</div>
+
+<div class="wrap">
+
+  <!-- PLATFORMS -->
+  <div class="sec-head-wrap">
+    <div class="sec-label">Where To Play</div>
+    <div class="sec-title">Platform Priority.</div>
+    <p class="sec-sub">Start with TikTok and Instagram. Master those first. Add the others as you scale.</p>
+  </div>
+
+  <div class="platform-grid">
+    <div class="platform-card primary">
+      <div class="pc-rank">// PRIORITY 01</div>
+      <div class="pc-platform"><span class="pc-icon">📱</span><span class="pc-name">TikTok</span></div>
+      <div class="pc-why">The highest organic reach of any platform in 2025. A single video can pull hundreds of opt-ins with zero ad spend. Your audience — people wanting financial freedom — is huge here.</div>
+      <div class="pc-stats">
+        <div class="pc-stat">Avg opt-in rate<span>3.5–5%</span></div>
+        <div class="pc-stat">Best content length<span>45–75 sec</span></div>
+        <div class="pc-stat">Post frequency<span>1–2 per day</span></div>
       </div>
-      <div class="hook-card">
-        <div class="hook-label">HOOK TYPE 02 — SYSTEM REVEAL</div>
-        <div class="hook-text">"I built an AI that talks to leads 24/7 so I don't have to. Here's how the whole thing works."</div>
-        <div class="hook-note">Appeals to operators and entrepreneurs. Leads with automation intrigue. Best performing hook for driving distributor inquiries vs consumer interest.</div>
-      </div>
-      <div class="hook-card">
-        <div class="hook-label">HOOK TYPE 03 — OBJECTION FLIP</div>
-        <div class="hook-text">"Everyone asks if this is an MLM. Let me show you the actual pay structure and you decide."</div>
-        <div class="hook-note">Pre-empts the biggest objection before it's raised. Builds trust immediately. High completion rate because it triggers pattern interruption.</div>
-      </div>
-      <div class="hook-card">
-        <div class="hook-label">HOOK TYPE 04 — INCOME TIMELINE</div>
-        <div class="hook-text">"Month 1: $0. Month 2: $4,300. Month 3: $12,900. This is what the ramp actually looks like."</div>
-        <div class="hook-note">Realistic timelines outperform hype. Shows the ramp honestly. Disqualifies impatient prospects before they enter the funnel — saving everyone's time.</div>
-      </div>
+      <span class="pc-badge start">START HERE</span>
     </div>
-
-    <!-- Content Cadence -->
-    <div class="strat-section">
-      <div class="strat-title">WEEKLY CONTENT CADENCE</div>
-      <p style="font-size:0.925rem;color:var(--muted);margin-bottom:20px;line-height:1.7">Minimum viable cadence: 1 video per day, 7 days a week. Results compound after 21–28 days of consistent posting. Do not expect significant lead volume in the first 2 weeks.</p>
-      <div class="cadence-grid">
-        <div class="cadence-card">
-          <div class="cadence-day">MON</div>
-          <div class="cadence-task">Commission reveal. Specific number + product + timeframe. Link in bio CTA.</div>
-        </div>
-        <div class="cadence-card">
-          <div class="cadence-day">TUE</div>
-          <div class="cadence-task">System walkthrough. Show the funnel flow. How AI handles leads end-to-end.</div>
-        </div>
-        <div class="cadence-card">
-          <div class="cadence-day">WED</div>
-          <div class="cadence-task">Objection video. Pick one objection (MLM, investment, time). Address it directly.</div>
-        </div>
-        <div class="cadence-card">
-          <div class="cadence-day">THU</div>
-          <div class="cadence-task">Day-in-the-life. 60 seconds showing your actual operator routine. Keeps it real.</div>
-        </div>
-        <div class="cadence-card">
-          <div class="cadence-day">FRI</div>
-          <div class="cadence-task">Numbers post. Commission screenshot, analytics, opt-in count. Always include income disclaimer.</div>
-        </div>
-        <div class="cadence-card">
-          <div class="cadence-day">SAT</div>
-          <div class="cadence-task">Testimonial or case study. Real operator story with realistic timeline and numbers.</div>
-        </div>
-        <div class="cadence-card">
-          <div class="cadence-day">SUN</div>
-          <div class="cadence-task">CTA push. Direct call to apply. Low-pressure, clear next step. Link in bio.</div>
-        </div>
+    <div class="platform-card primary">
+      <div class="pc-rank">// PRIORITY 02</div>
+      <div class="pc-platform"><span class="pc-icon">📸</span><span class="pc-name">Instagram</span></div>
+      <div class="pc-why">Reels compound over time and DMs convert well. The 25–45 demographic that can actually invest in a Launcher or Nuke licence lives here. Repurpose your TikTok content directly.</div>
+      <div class="pc-stats">
+        <div class="pc-stat">Avg opt-in rate<span>2.8–4%</span></div>
+        <div class="pc-stat">Best content length<span>30–60 sec reels</span></div>
+        <div class="pc-stat">Post frequency<span>1 reel/day + stories</span></div>
       </div>
+      <span class="pc-badge start">START HERE</span>
     </div>
-
-    <!-- Channels -->
-    <div class="strat-section">
-      <div class="strat-title">CHANNEL PRIORITY</div>
-      <div class="channel-row">
-        <div class="channel-name">TikTok</div>
-        <div class="channel-desc">Primary channel. Algorithm distributes content to non-followers. Best reach-per-effort for transparency hook content. 60-second vertical videos. Post between 6–9am and 7–10pm local time for best reach.</div>
-        <div class="channel-priority priority-primary">PRIMARY</div>
+    <div class="platform-card">
+      <div class="pc-rank">// PRIORITY 03</div>
+      <div class="pc-platform"><span class="pc-icon">👥</span><span class="pc-name">Facebook</span></div>
+      <div class="pc-why">Older demographic with higher disposable income — ideal for Launcher and Nuke buyers. Groups and Reels both work. Add this once TikTok and Instagram are consistent.</div>
+      <div class="pc-stats">
+        <div class="pc-stat">Avg opt-in rate<span>2–3%</span></div>
+        <div class="pc-stat">Best content type<span>Reels + Groups</span></div>
+        <div class="pc-stat">Post frequency<span>1 per day</span></div>
       </div>
-      <div class="channel-row">
-        <div class="channel-name">Instagram Reels</div>
-        <div class="channel-desc">Repurpose TikTok content without the watermark. Use SnapTik or similar to download, then upload natively to Instagram. Same hook formula works. Slightly older demographic — good for higher-capital prospects.</div>
-        <div class="channel-priority priority-secondary">SECONDARY</div>
-      </div>
-      <div class="channel-row">
-        <div class="channel-name">YouTube Shorts</div>
-        <div class="channel-desc">Repurpose from TikTok. Slower to compound but builds permanent search-indexed content. Good for long-tail discovery ("Enagic distributor income" searches). Worth adding once TikTok workflow is established.</div>
-        <div class="channel-priority priority-optional">OPTIONAL</div>
-      </div>
-      <div class="channel-row">
-        <div class="channel-name">Paid Ads</div>
-        <div class="channel-desc">Not recommended for new operators. Organic builds trust that ads cannot replicate. Run ads only after proving organic content converts. If using paid, retarget people who watched >50% of organic videos.</div>
-        <div class="channel-priority priority-optional">LATER</div>
-      </div>
-    </div>
-
-    <div class="disclaimer">
-      <strong>Income Disclaimer:</strong> Results shown are not typical. Individual results will vary based on content consistency, market conditions, capital invested, and operator effort. Most operators earn less than the examples shown, particularly in early months. This is a business opportunity, not a guaranteed income. Treat it as such.
+      <span class="pc-badge scale">ADD AT WEEK 3</span>
     </div>
   </div>
+
+  <!-- CONTENT PILLARS -->
+  <div class="sec-head-wrap">
+    <div class="sec-label">What To Post About</div>
+    <div class="sec-title">Four Content Pillars.</div>
+    <p class="sec-sub">Every piece of content you make fits into one of these four categories. <strong>Rotate between them.</strong> Never stay on one topic too long.</p>
+  </div>
+
+  <div class="pillars">
+    <div class="pillar-card">
+      <div class="pillar-num">// PILLAR 01</div>
+      <div class="pillar-name">PAIN & PROBLEM</div>
+      <div class="pillar-desc">Content that names the frustration your audience feels. Trading time for money. The content treadmill. Being stuck. This creates pattern interrupts and stops the scroll.</div>
+      <div class="pillar-examples">
+        <div class="pe">"Why posting every day is making you broke"</div>
+        <div class="pe">"The income model nobody talks about"</div>
+        <div class="pe">"Why your side hustle has a ceiling"</div>
+      </div>
+    </div>
+    <div class="pillar-card">
+      <div class="pillar-num">// PILLAR 02</div>
+      <div class="pillar-name">BELIEF SHIFT</div>
+      <div class="pillar-desc">Content that challenges assumptions and opens minds to a different way of thinking about income. Not a pitch — just a perspective shift that makes people think differently.</div>
+      <div class="pillar-examples">
+        <div class="pe">"The quiet operators are always winning"</div>
+        <div class="pe">"What a $6,000 commission feels like"</div>
+        <div class="pe">"Why I stopped creating content and started building systems"</div>
+      </div>
+    </div>
+    <div class="pillar-card">
+      <div class="pillar-num">// PILLAR 03</div>
+      <div class="pillar-name">PROOF & RESULTS</div>
+      <div class="pillar-desc">Real numbers, real timelines, real outcomes. Commission screenshots, pipeline screenshots, operator stories. People need to see it's real before they'll believe it's possible for them.</div>
+      <div class="pillar-examples">
+        <div class="pe">"Week 3 update — first HOT lead converted"</div>
+        <div class="pe">"How Sarah made $14,200 in month 3"</div>
+        <div class="pe">"What my pipeline looked like in month 1 vs month 4"</div>
+      </div>
+    </div>
+    <div class="pillar-card">
+      <div class="pillar-num">// PILLAR 04</div>
+      <div class="pillar-name">EDUCATION & SYSTEM</div>
+      <div class="pillar-desc">Content that explains how the system works — the AI funnel, the 4 stages, the callless model, the AIOS. This is your most shareable content and attracts the most serious leads.</div>
+      <div class="pillar-examples">
+        <div class="pe">"I explained the AI funnel in 60 seconds"</div>
+        <div class="pe">"How a lead goes from stranger to $4,300 commission"</div>
+        <div class="pe">"The 5 layers of the AIOS — quick breakdown"</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- HOOK LIBRARY -->
+  <div class="sec-head-wrap">
+    <div class="sec-label">Ready-To-Use Hooks</div>
+    <div class="sec-title">30 Opening Lines<br>That Stop The Scroll.</div>
+    <p class="sec-sub">The first 2 seconds determines everything. Use these exactly as written or tweak to your voice.</p>
+  </div>
+
+  <div class="hooks">
+    <div class="hook-item"><span class="hi-platform tt">TIKTOK</span><div class="hi-hook">"I made $12,900 this week and I didn't speak to a single person."</div><span class="hi-type">PROOF</span></div>
+    <div class="hook-item"><span class="hi-platform tt">TIKTOK</span><div class="hi-hook">"The problem with most side hustles is that they stop when you stop."</div><span class="hi-type">PAIN</span></div>
+    <div class="hook-item"><span class="hi-platform ig">REEL</span><div class="hi-hook">"Here's what an AI funnel looks like running in real time."</div><span class="hi-type">EDUCATION</span></div>
+    <div class="hook-item"><span class="hi-platform any">ANY</span><div class="hi-hook">"Nobody talks about this income model because it doesn't need an audience."</div><span class="hi-type">BELIEF</span></div>
+    <div class="hook-item"><span class="hi-platform tt">TIKTOK</span><div class="hi-hook">"I'm going to show you the exact funnel that converted 11 HOT leads this week."</div><span class="hi-type">EDUCATION</span></div>
+    <div class="hook-item"><span class="hi-platform ig">REEL</span><div class="hi-hook">"Most people build audiences. Quiet operators build systems. Big difference."</div><span class="hi-type">BELIEF</span></div>
+    <div class="hook-item"><span class="hi-platform any">ANY</span><div class="hi-hook">"What does $6,330 from one sale actually feel like? Let me show you."</div><span class="hi-type">PROOF</span></div>
+    <div class="hook-item"><span class="hi-platform tt">TIKTOK</span><div class="hi-hook">"My funnel got 34 opt-ins overnight while I was asleep. Here's how."</div><span class="hi-type">PROOF</span></div>
+    <div class="hook-item"><span class="hi-platform fb">FACEBOOK</span><div class="hi-hook">"If you're still trading hours for dollars in 2025, you need to see this."</div><span class="hi-type">PAIN</span></div>
+    <div class="hook-item"><span class="hi-platform any">ANY</span><div class="hi-hook">"The thing nobody tells you about high-ticket commissions."</div><span class="hi-type">BELIEF</span></div>
+    <div class="hook-item"><span class="hi-platform ig">REEL</span><div class="hi-hook">"I quit the content treadmill 4 months ago. Here's what happened."</div><span class="hi-type">PAIN</span></div>
+    <div class="hook-item"><span class="hi-platform tt">TIKTOK</span><div class="hi-hook">"This is what an AI operating system running a business looks like."</div><span class="hi-type">EDUCATION</span></div>
+    <div class="hook-item"><span class="hi-platform any">ANY</span><div class="hi-hook">"3 sales this month. No cold calls. No DMs. No followers needed."</div><span class="hi-type">PROOF</span></div>
+    <div class="hook-item"><span class="hi-platform fb">FACEBOOK</span><div class="hi-hook">"There's a model where one sale pays more than a week at work. This is it."</div><span class="hi-type">BELIEF</span></div>
+    <div class="hook-item"><span class="hi-platform tt">TIKTOK</span><div class="hi-hook">"I'm going to show my AIOS dashboard live — real numbers, no edits."</div><span class="hi-type">PROOF</span></div>
+    <div class="hook-item"><span class="hi-platform ig">REEL</span><div class="hi-hook">"The 4 stages of the AI funnel — explained in under 60 seconds."</div><span class="hi-type">EDUCATION</span></div>
+    <div class="hook-item"><span class="hi-platform any">ANY</span><div class="hi-hook">"Effort alone never created freedom. Systems do."</div><span class="hi-type">BELIEF</span></div>
+    <div class="hook-item"><span class="hi-platform tt">TIKTOK</span><div class="hi-hook">"My operator Sarah just hit $14,200 in month 3. This is her story."</div><span class="hi-type">PROOF</span></div>
+    <div class="hook-item"><span class="hi-platform fb">FACEBOOK</span><div class="hi-hook">"What if you could earn a month's salary from a single transaction?"</div><span class="hi-type">BELIEF</span></div>
+    <div class="hook-item"><span class="hi-platform any">ANY</span><div class="hi-hook">"Most people don't know this model exists. The ones who do get wealthy quietly."</div><span class="hi-type">BELIEF</span></div>
+  </div>
+
+  <!-- WEEKLY SCHEDULE -->
+  <div class="sec-head-wrap">
+    <div class="sec-label">The Weekly Routine</div>
+    <div class="sec-title">7 Days. One Hour Per Day.</div>
+    <p class="sec-sub">This is the minimum viable content schedule. One hour a day produces enough content to keep all three platforms fed.</p>
+  </div>
+
+  <div class="week-grid">
+    <div class="day-col"><div class="day-header"><div class="dh-day">MON</div></div><div class="day-tasks"><div class="dt primary">Film 2x TikToks</div><div class="dt">Post Reel on IG</div><div class="dt">Reply to comments</div></div></div>
+    <div class="day-col"><div class="day-header"><div class="dh-day">TUE</div></div><div class="day-tasks"><div class="dt primary">Post TikTok</div><div class="dt">Post IG Story</div><div class="dt">Check pipeline</div></div></div>
+    <div class="day-col"><div class="day-header"><div class="dh-day">WED</div></div><div class="day-tasks"><div class="dt primary">Film 2x TikToks</div><div class="dt">Post Reel on IG</div><div class="dt">FB post</div></div></div>
+    <div class="day-col"><div class="day-header"><div class="dh-day">THU</div></div><div class="day-tasks"><div class="dt primary">Post TikTok</div><div class="dt">Post IG Story</div><div class="dt">Review HOT leads</div></div></div>
+    <div class="day-col"><div class="day-header"><div class="dh-day">FRI</div></div><div class="day-tasks"><div class="dt primary">Film 3x TikToks</div><div class="dt">Post Reel on IG</div><div class="dt">FB post</div></div></div>
+    <div class="day-col"><div class="day-header"><div class="dh-day">SAT</div></div><div class="day-tasks"><div class="dt primary">Batch edit content</div><div class="dt">Schedule week ahead</div><div class="dt">Review analytics</div></div></div>
+    <div class="day-col"><div class="day-header"><div class="dh-day">SUN</div></div><div class="day-tasks"><div class="dt rest">REST</div><div class="dt">Check AIOS briefing</div><div class="dt">Plan next week</div></div></div>
+  </div>
+
+  <!-- 30 DAY PLAN -->
+  <div class="sec-head-wrap" style="margin-top:3rem;">
+    <div class="sec-label">The Launch Ramp</div>
+    <div class="sec-title">Your First 30 Days<br>Of Traffic.</div>
+    <p class="sec-sub">Week by week. What to focus on, what to post, what target to hit.</p>
+  </div>
+
+  <div class="thirty-day">
+    <div class="td-week">
+      <div class="td-week-header"><div class="tdwh-week">WEEK 1 — Days 1–7</div><div class="tdwh-focus">// FOUNDATION</div><div class="tdwh-target">Target: 50 opt-ins</div></div>
+      <div class="td-week-body">
+        <div class="tdwb-col"><h4>What to post</h4><div class="tdwb-items"><div class="tdi">3x Pain/Problem content — name the frustrations your audience feels</div><div class="tdi">2x Belief shift — "quiet operators", "systems vs hustle"</div><div class="tdi">1x Education — explain the funnel simply in 60 seconds</div></div></div>
+        <div class="tdwb-col"><h4>Focus on</h4><div class="tdwb-items"><div class="tdi">Consistency over perfection — post imperfectly and improve</div><div class="tdi">Watch your analytics — what's getting saves and shares?</div><div class="tdi">Link in bio pointing to page1-optin.html</div></div></div>
+      </div>
+    </div>
+    <div class="td-week">
+      <div class="td-week-header"><div class="tdwh-week">WEEK 2 — Days 8–14</div><div class="tdwh-focus">// DOUBLE DOWN</div><div class="tdwh-target">Target: 120 opt-ins total</div></div>
+      <div class="td-week-body">
+        <div class="tdwb-col"><h4>What to post</h4><div class="tdwb-items"><div class="tdi">Replicate whatever got the most saves/shares from Week 1</div><div class="tdi">2x Proof content — screenshot pipeline, share a number</div><div class="tdi">Start adding Facebook — repurpose your best TikToks</div></div></div>
+        <div class="tdwb-col"><h4>Focus on</h4><div class="tdwb-items"><div class="tdi">First leads entering your email sequence — watch open rates</div><div class="tdi">Any chatbot conversations — what questions are people asking?</div><div class="tdi">Refine your bio and CTA based on what's working</div></div></div>
+      </div>
+    </div>
+    <div class="td-week">
+      <div class="td-week-header"><div class="tdwh-week">WEEK 3 — Days 15–21</div><div class="tdwh-focus">// FIRST APPLICATIONS</div><div class="tdwh-target">Target: 220 opt-ins total</div></div>
+      <div class="td-week-body">
+        <div class="tdwb-col"><h4>What to post</h4><div class="tdwb-items"><div class="tdi">Push Education content harder — the AIOS, the 5 layers, the system</div><div class="tdi">Use chatbot questions as content ideas — answer them publicly</div><div class="tdi">1x transparent "Day X update" showing your pipeline or numbers</div></div></div>
+        <div class="tdwb-col"><h4>Focus on</h4><div class="tdwb-items"><div class="tdi">First HOT leads should be arriving in Stage 3 by now</div><div class="tdi">Check Zapier — are HOT leads getting routed to offer page?</div><div class="tdi">First potential commission within reach by end of week</div></div></div>
+      </div>
+    </div>
+    <div class="td-week">
+      <div class="td-week-header"><div class="tdwh-week">WEEK 4 — Days 22–30</div><div class="tdwh-focus">// FIRST SALE</div><div class="tdwh-target">Target: First commission</div></div>
+      <div class="td-week-body">
+        <div class="tdwb-col"><h4>What to post</h4><div class="tdwb-items"><div class="tdi">Post your first result — even a pipeline screenshot is powerful</div><div class="tdi">More proof, more system education, more belief content</div><div class="tdi">Start making content about what happens AFTER joining</div></div></div>
+        <div class="tdwb-col"><h4>Focus on</h4><div class="tdwb-items"><div class="tdi">Review your email open rates — what's getting clicks?</div><div class="tdi">Scale whatever content format is driving the most opt-ins</div><div class="tdi">Start planning paid ads with any first commission</div></div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- THE RULE -->
+  <div class="rule-box">
+    <div class="rb-label">// THE ONE RULE</div>
+    <div class="rb-rule">Volume Beats Perfection.<br>Every Time.</div>
+    <div class="rb-sub">The operators who get results fastest are not the ones who make the best content. They're the ones who make the most content. Post before you're ready. Improve as you go. The algorithm rewards frequency and punishes waiting.</div>
+  </div>
+
+</div>
+
+<footer>
+  <div class="footer-brand">SS / TRAFFIC</div>
+  <div class="footer-tag">Silent Syndicate Traffic Strategy</div>
+  <div class="footer-tag">© 2025</div>
+</footer>
 </body>
 </html>

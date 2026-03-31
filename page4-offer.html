@@ -1,695 +1,617 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Silent Syndicate — Your Offer</title>
-  <link rel="stylesheet" href="css/design-system.css">
-  <style>
-    body { padding-top: 80px; }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Silent Syndicate — Your Offer</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=DM+Sans:wght@300;400;500;600&family=Share+Tech+Mono&family=Cormorant+Garamond:ital,wght@0,300;1,300;1,400&display=swap" rel="stylesheet">
+<style>
+:root{
+  --black:#05020e;--card:#0d0820;--card2:#110930;
+  --pm:#7c3aed;--pb:#a855f7;--pg:#c084fc;
+  --pink:#ec4899;--pkb:#f472b6;
+  --cyan:#22d3ee;--green:#4ade80;--amber:#fbbf24;
+  --white:#f8f4ff;--muted:rgba(248,244,255,0.78);--dim:rgba(248,244,255,0.5);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{font-size:16px;scroll-behavior:smooth;}
+body{background:var(--black);color:var(--white);font-family:'DM Sans',sans-serif;overflow-x:hidden;}
 
-    .approved-bar {
-      background: linear-gradient(90deg, rgba(74,222,128,0.08), rgba(74,222,128,0.15), rgba(74,222,128,0.08));
-      border-bottom: 1px solid rgba(74,222,128,0.3);
-      padding: 14px 0;
-      text-align: center;
-      position: relative;
-      overflow: hidden;
-    }
-    .approved-bar::after {
-      content: '';
-      position: absolute;
-      top: 0; left: -100%; width: 60%; height: 100%;
-      background: linear-gradient(90deg, transparent, rgba(74,222,128,0.15), transparent);
-      animation: approvedShimmer 3s ease-in-out infinite;
-    }
-    @keyframes approvedShimmer {
-      0% { left: -100%; }
-      100% { left: 200%; }
-    }
+body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(rgba(168,85,247,0.03) 1px,transparent 1px),linear-gradient(90deg,rgba(168,85,247,0.03) 1px,transparent 1px);background-size:58px 58px;pointer-events:none;z-index:0;}
+body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,0.02) 2px,rgba(0,0,0,0.02) 4px);pointer-events:none;z-index:997;}
+.orb{position:fixed;border-radius:50%;filter:blur(110px);pointer-events:none;z-index:0;}
+.o1{width:600px;height:600px;background:rgba(107,33,168,0.2);top:-150px;left:-150px;animation:od 18s ease-in-out infinite;}
+.o2{width:480px;height:480px;background:rgba(236,72,153,0.12);bottom:-100px;right:-100px;animation:od 22s ease-in-out infinite reverse;}
+.o3{width:300px;height:300px;background:rgba(34,211,238,0.05);top:40%;left:55%;animation:od 28s ease-in-out infinite 5s;}
+@keyframes od{0%,100%{transform:translate(0,0);}33%{transform:translate(40px,-55px);}66%{transform:translate(-30px,30px);}}
+section,nav,footer{position:relative;z-index:1;}
 
-    .tier-card {
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: var(--radius-xl);
-      padding: 36px;
-      position: relative;
-      overflow: hidden;
-      transition: all 0.3s ease;
-      flex: 1;
-      min-width: 280px;
-    }
+/* ── APPROVED BANNER ── */
+.approved-bar{
+  background:linear-gradient(90deg,rgba(74,222,128,0.15),rgba(74,222,128,0.08),rgba(74,222,128,0.15));
+  border-bottom:1px solid rgba(74,222,128,0.3);
+  text-align:center;padding:0.8rem;
+  font-family:'Share Tech Mono',monospace;font-size:0.68rem;letter-spacing:0.18em;
+  color:var(--green);
+  animation:ab 3s ease-in-out infinite;
+}
+@keyframes ab{0%,100%{opacity:0.85;}50%{opacity:1;}}
+.approved-bar span{color:var(--white);font-weight:700;}
 
-    .tier-card::before {
-      content: '';
-      position: absolute;
-      top: 0; left: 0; right: 0;
-      height: 3px;
-    }
+/* ── NAV ── */
+nav{background:rgba(5,2,14,0.92);backdrop-filter:blur(20px);border-bottom:1px solid rgba(168,85,247,0.15);padding:0.9rem 5%;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;z-index:500;}
+.nav-logo{display:flex;align-items:center;gap:0.6rem;font-family:'Orbitron',sans-serif;font-size:0.88rem;font-weight:700;letter-spacing:0.15em;background:linear-gradient(90deg,var(--pg),var(--pkb));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.nav-hex{width:22px;height:22px;background:linear-gradient(135deg,var(--pm),var(--pink));clip-path:polygon(50% 0%,100% 25%,100% 75%,50% 100%,0% 75%,0% 25%);box-shadow:0 0 12px rgba(168,85,247,0.7);flex-shrink:0;animation:hp 3s ease-in-out infinite;}
+@keyframes hp{0%,100%{box-shadow:0 0 12px rgba(168,85,247,0.6);}50%{box-shadow:0 0 25px rgba(168,85,247,1),0 0 40px rgba(236,72,153,0.3);}}
+.nav-right{display:flex;align-items:center;gap:1rem;}
+.nav-steps{display:flex;gap:1.5rem;}
+.nsi{display:flex;align-items:center;gap:0.4rem;font-family:'Share Tech Mono',monospace;font-size:0.56rem;letter-spacing:0.12em;color:var(--dim);}
+.nsi.done .nsd{background:var(--green);box-shadow:0 0 6px var(--green);}
+.nsi.active{color:var(--pg);}
+.nsi.active .nsd{background:var(--pb);box-shadow:0 0 8px var(--pb);}
+.nsd{width:7px;height:7px;border-radius:50%;background:rgba(168,85,247,0.3);border:1px solid rgba(168,85,247,0.4);}
 
-    .tier-card.striker::before { background: linear-gradient(90deg, #6b7280, #9ca3af); }
-    .tier-card.launcher::before { background: linear-gradient(90deg, var(--pm), var(--pink)); }
-    .tier-card.nuke::before { background: linear-gradient(90deg, var(--cyan), var(--pm)); }
+/* ── HERO ── */
+.hero{padding:5rem 5% 4rem;text-align:center;position:relative;overflow:hidden;}
+.hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 50% 40%,rgba(168,85,247,0.08),transparent 60%);pointer-events:none;}
 
-    .tier-card.featured {
-      border-color: rgba(168,85,247,0.5);
-      box-shadow: 0 0 40px rgba(124,58,237,0.25), 0 -4px 20px rgba(124,58,237,0.2);
-    }
+.approved-badge{
+  display:inline-flex;align-items:center;gap:0.7rem;
+  background:rgba(74,222,128,0.08);border:1px solid rgba(74,222,128,0.3);
+  border-radius:100px;padding:0.55rem 1.4rem;
+  font-family:'Share Tech Mono',monospace;font-size:0.65rem;letter-spacing:0.15em;color:var(--green);
+  margin-bottom:2rem;opacity:0;animation:fu 0.6s ease 0.2s forwards;
+}
+.ab-dot{width:8px;height:8px;border-radius:50%;background:var(--green);box-shadow:0 0 10px var(--green);animation:pulse 1.5s ease-in-out infinite;}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1);}50%{opacity:0.5;transform:scale(0.8);}}
 
-    .tier-card:hover {
-      border-color: rgba(168,85,247,0.6);
-      transform: translateY(-6px);
-      box-shadow: 0 20px 50px rgba(0,0,0,0.5), 0 0 30px rgba(124,58,237,0.2);
-    }
+.hero-eyebrow{font-family:'Share Tech Mono',monospace;font-size:0.7rem;letter-spacing:0.22em;color:var(--pkb);text-transform:uppercase;margin-bottom:1.5rem;opacity:0;animation:fu 0.6s ease 0.3s forwards;}
 
-    .tier-card.featured:hover { transform: translateY(-8px); }
+.hero-title{font-family:'Orbitron',sans-serif;font-size:clamp(2rem,5.5vw,4.8rem);font-weight:900;line-height:1.0;margin-bottom:1.5rem;opacity:0;animation:fu 0.8s ease 0.4s forwards;}
+.ht1{display:block;background:linear-gradient(135deg,var(--white) 0%,var(--pg) 55%,var(--pkb) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;filter:drop-shadow(0 0 30px rgba(168,85,247,0.35));}
+.ht2{display:block;font-size:0.55em;color:var(--muted);-webkit-text-fill-color:var(--muted);background:none;font-weight:400;font-family:'DM Sans',sans-serif;letter-spacing:0;margin-top:0.5rem;}
 
-    .featured-badge {
-      position: absolute;
-      top: 16px; right: 16px;
-      background: linear-gradient(135deg, var(--pm), var(--pink));
-      padding: 4px 12px;
-      border-radius: 9999px;
-      font-size: 0.65rem;
-      font-weight: 700;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      color: white;
-    }
+.hero-sub{font-size:1.1rem;color:var(--muted);line-height:1.9;max-width:640px;margin:0 auto 2.5rem;opacity:0;animation:fu 0.8s ease 0.55s forwards;}
+.hero-sub strong{color:var(--white);}
 
-    .tier-name {
-      font-family: 'Orbitron', monospace;
-      font-size: var(--text-2xl);
-      font-weight: 900;
-      margin-bottom: 4px;
-    }
+/* price reveal */
+.price-reveal{
+  display:inline-flex;flex-direction:column;align-items:center;
+  background:linear-gradient(135deg,rgba(168,85,247,0.12),rgba(236,72,153,0.08));
+  border:1px solid rgba(168,85,247,0.35);
+  border-radius:16px;padding:2rem 3rem;
+  margin-bottom:2.5rem;
+  opacity:0;animation:fu 0.8s ease 0.7s forwards;
+  position:relative;overflow:hidden;
+}
+.price-reveal::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--pb),var(--pkb));box-shadow:0 0 12px var(--pb);}
+.pr-from{font-family:'Share Tech Mono',monospace;font-size:0.62rem;letter-spacing:0.2em;color:var(--dim);margin-bottom:0.3rem;}
+.pr-amount{font-family:'Orbitron',sans-serif;font-size:clamp(3rem,7vw,5.5rem);font-weight:900;background:linear-gradient(90deg,var(--pg),var(--pkb));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;filter:drop-shadow(0 0 25px rgba(168,85,247,0.5));line-height:1;}
+.pr-per{font-family:'Share Tech Mono',monospace;font-size:0.65rem;letter-spacing:0.15em;color:var(--dim);margin-top:0.3rem;}
+.pr-tiers{display:flex;gap:1.5rem;margin-top:1rem;flex-wrap:wrap;justify-content:center;}
+.pr-tier{font-family:'Share Tech Mono',monospace;font-size:0.62rem;letter-spacing:0.1em;color:var(--muted);background:rgba(168,85,247,0.08);border:1px solid rgba(168,85,247,0.2);padding:0.3rem 0.8rem;border-radius:4px;}
 
-    .tier-rank {
-      font-family: 'Share Tech Mono', monospace;
-      font-size: 0.7rem;
-      color: var(--dim);
-      letter-spacing: 0.1em;
-      margin-bottom: 24px;
-    }
+.hero-cta-wrap{opacity:0;animation:fu 0.8s ease 0.85s forwards;}
 
-    .tier-commission {
-      font-family: 'Orbitron', monospace;
-      font-size: var(--text-4xl);
-      font-weight: 900;
-      margin-bottom: 4px;
-    }
+/* ── MAIN CTA BUTTON ── */
+.btn-join{
+  display:inline-flex;align-items:center;gap:0.9rem;
+  background:linear-gradient(135deg,var(--pm),var(--pink));
+  color:var(--white);font-family:'Orbitron',sans-serif;
+  font-size:1rem;font-weight:700;letter-spacing:0.1em;
+  padding:1.3rem 3.5rem;border:none;border-radius:8px;
+  cursor:pointer;text-decoration:none;
+  box-shadow:0 0 50px rgba(168,85,247,0.5),0 8px 30px rgba(168,85,247,0.3);
+  transition:all 0.3s;position:relative;overflow:hidden;
+}
+.btn-join::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(255,255,255,0.12),transparent);opacity:0;transition:opacity 0.3s;}
+.btn-join:hover{box-shadow:0 0 70px rgba(168,85,247,0.8),0 12px 40px rgba(168,85,247,0.4);transform:translateY(-3px);}
+.btn-join:hover::before{opacity:1;}
+.btn-arrow{animation:baa 1.5s ease-in-out infinite;}
+@keyframes baa{0%,100%{transform:translateX(0);}50%{transform:translateX(6px);}}
 
-    .tier-per-sale {
-      font-size: var(--text-sm);
-      color: var(--dim);
-      margin-bottom: 20px;
-    }
+.cta-micro{font-family:'Share Tech Mono',monospace;font-size:0.62rem;color:var(--dim);letter-spacing:0.12em;margin-top:1rem;}
+.cta-micro span{color:var(--green);}
 
-    .tier-investment {
-      font-size: var(--text-sm);
-      color: var(--muted);
-      padding: 10px 14px;
-      background: rgba(255,255,255,0.04);
-      border-radius: var(--radius-sm);
-      margin-bottom: 20px;
-    }
+/* proof row */
+.proof-row{display:flex;align-items:center;gap:1rem;justify-content:center;margin-top:1.5rem;}
+.proof-avatars{display:flex;}
+.pa{width:30px;height:30px;border-radius:50%;border:2px solid var(--black);background:linear-gradient(135deg,var(--pm),var(--pink));margin-left:-8px;display:flex;align-items:center;justify-content:center;font-family:'Orbitron',sans-serif;font-size:0.55rem;font-weight:700;}
+.pa:first-child{margin-left:0;}
+.proof-text{font-family:'Share Tech Mono',monospace;font-size:0.62rem;color:var(--dim);letter-spacing:0.1em;}
+.proof-stars{color:var(--amber);}
 
-    .tier-features { list-style: none; }
-    .tier-features li {
-      display: flex; align-items: center; gap: 8px;
-      font-size: var(--text-sm); color: var(--muted);
-      padding: 6px 0;
-      border-bottom: 1px solid rgba(255,255,255,0.04);
-    }
-    .tier-features li::before { content: '✓'; color: var(--green); flex-shrink: 0; }
-    .tier-features li:last-child { border-bottom: none; }
+/* ── SECTION SHARED ── */
+.section{padding:6rem 5%;position:relative;z-index:1;}
+.section-alt{background:rgba(13,8,32,0.7);}
+.sec-label{font-family:'Share Tech Mono',monospace;font-size:0.62rem;letter-spacing:0.2em;color:var(--pb);text-transform:uppercase;margin-bottom:1rem;display:flex;align-items:center;gap:0.8rem;}
+.sec-label::before{content:'';display:block;width:20px;height:1px;background:linear-gradient(90deg,var(--pb),var(--pkb));box-shadow:0 0 5px var(--pb);}
+.sec-head{font-family:'Orbitron',sans-serif;font-size:clamp(1.6rem,3.5vw,2.8rem);font-weight:900;background:linear-gradient(135deg,var(--white),var(--pg));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:1rem;line-height:1.1;}
+.sec-sub{font-size:1.02rem;color:var(--muted);line-height:1.9;max-width:580px;margin-bottom:3rem;}
 
-    /* ROI Calculator */
-    .calc-card {
-      background: var(--card2);
-      border: 1px solid var(--border);
-      border-radius: var(--radius-xl);
-      padding: 48px;
-    }
+/* ── WHAT YOU GET ── */
+.tiers-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem;}
+.tier-card{
+  background:var(--card);border:1px solid rgba(168,85,247,0.2);
+  border-radius:16px;padding:2.5rem;
+  position:relative;overflow:hidden;transition:all 0.3s;
+}
+.tier-card:hover{border-color:rgba(168,85,247,0.45);transform:translateY(-5px);box-shadow:0 20px 50px rgba(168,85,247,0.12);}
+.tier-card.featured{border-color:var(--pb);background:rgba(168,85,247,0.08);}
+.tier-card.featured::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--pb),var(--pkb));box-shadow:0 0 15px var(--pb);}
+.tier-popular{position:absolute;top:1.2rem;right:1.2rem;font-family:'Share Tech Mono',monospace;font-size:0.55rem;letter-spacing:0.12em;color:var(--pkb);background:rgba(236,72,153,0.12);border:1px solid rgba(236,72,153,0.3);padding:0.25rem 0.6rem;border-radius:4px;}
+.tier-name{font-family:'Share Tech Mono',monospace;font-size:0.6rem;letter-spacing:0.25em;color:var(--pg);margin-bottom:0.8rem;}
+.tier-title{font-family:'Orbitron',sans-serif;font-size:1.3rem;font-weight:900;color:var(--white);margin-bottom:1.2rem;letter-spacing:0.05em;}
+.tier-price{font-family:'Orbitron',sans-serif;font-size:2.5rem;font-weight:900;background:linear-gradient(90deg,var(--pg),var(--pkb));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;line-height:1;margin-bottom:0.3rem;}
+.tier-commission{font-family:'Share Tech Mono',monospace;font-size:0.62rem;letter-spacing:0.12em;color:var(--green);margin-bottom:2rem;}
+.tier-features{display:flex;flex-direction:column;gap:0.7rem;margin-bottom:2rem;}
+.tf{display:flex;align-items:flex-start;gap:0.7rem;font-size:0.92rem;color:var(--muted);line-height:1.5;}
+.tf-check{color:var(--green);font-size:0.75rem;filter:drop-shadow(0 0 4px rgba(74,222,128,0.4));flex-shrink:0;margin-top:2px;}
+.tier-btn{
+  width:100%;background:rgba(168,85,247,0.1);border:1px solid rgba(168,85,247,0.35);
+  color:var(--white);font-family:'Orbitron',sans-serif;font-size:0.72rem;font-weight:700;
+  letter-spacing:0.12em;padding:1rem;border-radius:6px;cursor:pointer;
+  transition:all 0.3s;text-align:center;text-decoration:none;display:block;
+}
+.tier-btn:hover,.tier-card.featured .tier-btn{background:linear-gradient(135deg,var(--pm),var(--pink));border-color:transparent;box-shadow:0 0 25px rgba(168,85,247,0.4);}
 
-    .slider-label {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 12px;
-    }
+/* ── ROI CALCULATOR ── */
+.calc-wrap{
+  background:var(--card);border:1px solid rgba(168,85,247,0.2);
+  border-radius:16px;padding:3rem;max-width:800px;margin:0 auto;
+  position:relative;overflow:hidden;
+}
+.calc-wrap::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--pb),var(--pkb));box-shadow:0 0 12px var(--pb);}
 
-    .slider-val {
-      font-family: 'Orbitron', monospace;
-      font-size: var(--text-xl);
-      font-weight: 700;
-      color: var(--pb);
-    }
+.calc-title{font-family:'Orbitron',sans-serif;font-size:1.3rem;font-weight:900;background:linear-gradient(90deg,var(--white),var(--pg));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:0.5rem;}
+.calc-sub{font-size:0.95rem;color:var(--dim);margin-bottom:2.5rem;}
 
-    input[type=range] {
-      -webkit-appearance: none;
-      width: 100%;
-      height: 4px;
-      background: rgba(168,85,247,0.2);
-      border-radius: 2px;
-      outline: none;
-      margin-bottom: 32px;
-    }
+.calc-sliders{display:flex;flex-direction:column;gap:2rem;margin-bottom:2.5rem;}
+.slider-group label{font-family:'Share Tech Mono',monospace;font-size:0.62rem;letter-spacing:0.15em;color:var(--pg);display:flex;justify-content:space-between;margin-bottom:0.7rem;}
+.slider-group label span{color:var(--white);font-size:0.75rem;}
+input[type=range]{width:100%;appearance:none;height:4px;background:rgba(168,85,247,0.2);border-radius:4px;outline:none;}
+input[type=range]::-webkit-slider-thumb{appearance:none;width:18px;height:18px;border-radius:50%;background:linear-gradient(135deg,var(--pm),var(--pink));cursor:pointer;box-shadow:0 0 10px rgba(168,85,247,0.6);}
 
-    input[type=range]::-webkit-slider-thumb {
-      -webkit-appearance: none;
-      width: 20px; height: 20px;
-      border-radius: 50%;
-      background: linear-gradient(135deg, var(--pm), var(--pink));
-      cursor: pointer;
-      box-shadow: 0 0 10px rgba(124,58,237,0.5);
-    }
+.calc-result{
+  background:linear-gradient(135deg,rgba(168,85,247,0.12),rgba(236,72,153,0.08));
+  border:1px solid rgba(168,85,247,0.35);border-radius:12px;
+  padding:2rem;text-align:center;
+}
+.cr-label{font-family:'Share Tech Mono',monospace;font-size:0.62rem;letter-spacing:0.2em;color:var(--pg);margin-bottom:0.5rem;}
+.cr-amount{font-family:'Orbitron',sans-serif;font-size:clamp(2.5rem,6vw,4rem);font-weight:900;background:linear-gradient(90deg,var(--pg),var(--pkb));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;filter:drop-shadow(0 0 20px rgba(168,85,247,0.5));line-height:1;}
+.cr-period{font-family:'Share Tech Mono',monospace;font-size:0.62rem;letter-spacing:0.15em;color:var(--dim);margin-top:0.3rem;}
+.cr-breakdown{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-top:1.5rem;}
+.crb{text-align:center;}
+.crb-val{font-family:'Orbitron',sans-serif;font-size:1.2rem;font-weight:700;color:var(--white);}
+.crb-label{font-family:'Share Tech Mono',monospace;font-size:0.55rem;letter-spacing:0.1em;color:var(--dim);margin-top:0.2rem;}
 
-    .roi-output {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 24px;
-      margin-top: 24px;
-    }
+/* ── WHAT HAPPENS AFTER YOU JOIN ── */
+.journey-steps{display:flex;flex-direction:column;gap:0;max-width:700px;margin:0 auto;}
+.journey-step{display:grid;grid-template-columns:80px 1fr;gap:0;background:rgba(168,85,247,0.05);border:1px solid rgba(168,85,247,0.12);margin-bottom:2px;transition:all 0.3s;}
+.journey-step:hover{border-color:rgba(168,85,247,0.35);transform:translateX(8px);}
+.js-day{background:linear-gradient(180deg,var(--pm),#6b21a8);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:2rem 0;text-align:center;}
+.js-day-label{font-family:'Share Tech Mono',monospace;font-size:0.48rem;letter-spacing:0.12em;color:rgba(255,255,255,0.5);}
+.js-day-val{font-family:'Orbitron',sans-serif;font-size:1rem;font-weight:900;color:var(--white);}
+.js-body{padding:2rem 2.5rem;}
+.js-body h4{font-family:'Orbitron',sans-serif;font-size:1rem;font-weight:700;background:linear-gradient(90deg,var(--white),var(--pg));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:0.5rem;letter-spacing:0.05em;}
+.js-body p{font-size:0.95rem;color:var(--muted);line-height:1.8;}
 
-    .roi-box {
-      background: rgba(124,58,237,0.06);
-      border: 1px solid rgba(168,85,247,0.15);
-      border-radius: var(--radius);
-      padding: 24px;
-      text-align: center;
-    }
+/* ── OBJECTIONS ── */
+.obj-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;}
+.obj-card{background:var(--card);border:1px solid rgba(168,85,247,0.15);border-radius:12px;padding:2rem;transition:all 0.3s;}
+.obj-card:hover{border-color:rgba(168,85,247,0.35);transform:translateY(-3px);}
+.obj-q{font-family:'Orbitron',sans-serif;font-size:0.85rem;font-weight:700;color:var(--pkb);margin-bottom:1rem;letter-spacing:0.05em;}
+.obj-a{font-size:0.95rem;color:var(--muted);line-height:1.9;}
+.obj-a strong{color:var(--white);}
 
-    .roi-value {
-      font-family: 'Orbitron', monospace;
-      font-size: var(--text-3xl);
-      font-weight: 900;
-      background: linear-gradient(135deg, var(--pb), var(--pink));
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-    }
+/* ── TESTIMONIALS ── */
+.testi-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem;}
+.testi{background:var(--card);border:1px solid rgba(168,85,247,0.15);border-radius:12px;padding:2rem;position:relative;transition:all 0.3s;}
+.testi::before{content:'"';position:absolute;top:0.8rem;left:1.4rem;font-family:'Cormorant Garamond',serif;font-size:3.5rem;color:var(--pb);opacity:0.25;line-height:1;}
+.testi:hover{border-color:rgba(168,85,247,0.35);transform:translateY(-4px);}
+.testi-stars{color:var(--amber);font-size:0.85rem;margin-bottom:0.8rem;}
+.testi-text{font-size:0.95rem;color:var(--muted);line-height:1.9;font-style:italic;margin-bottom:1.5rem;}
+.testi-author{display:flex;align-items:center;gap:0.8rem;}
+.testi-avatar{width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,var(--pm),var(--pink));display:flex;align-items:center;justify-content:center;font-family:'Orbitron',sans-serif;font-size:0.65rem;font-weight:700;box-shadow:0 0 10px rgba(168,85,247,0.4);}
+.testi-name{font-family:'Orbitron',sans-serif;font-size:0.68rem;color:var(--pg);letter-spacing:0.1em;}
+.testi-loc{font-family:'Share Tech Mono',monospace;font-size:0.58rem;color:var(--dim);}
+.testi-result{font-family:'Share Tech Mono',monospace;font-size:0.6rem;letter-spacing:0.1em;color:var(--green);background:rgba(74,222,128,0.08);border:1px solid rgba(74,222,128,0.2);padding:0.2rem 0.6rem;border-radius:4px;display:inline-block;margin-top:0.4rem;}
 
-    /* Timeline */
-    .timeline-step {
-      display: grid;
-      grid-template-columns: 40px 1fr;
-      gap: 20px;
-      padding-bottom: 32px;
-      position: relative;
-    }
+/* ── CHAT WIDGET ── */
+.chat-widget{
+  position:fixed;bottom:2rem;right:2rem;z-index:998;
+  display:flex;flex-direction:column;align-items:flex-end;gap:0.8rem;
+}
+.chat-bubble{
+  background:var(--card);border:1px solid rgba(168,85,247,0.3);border-radius:16px;
+  padding:1rem 1.2rem;max-width:260px;font-size:0.88rem;color:var(--muted);line-height:1.5;
+  box-shadow:0 10px 30px rgba(0,0,0,0.4);
+  animation:chatIn 0.4s ease 3s both;
+}
+@keyframes chatIn{from{opacity:0;transform:translateY(15px) scale(0.95);}to{opacity:1;transform:translateY(0) scale(1);}}
+.chat-bubble strong{color:var(--white);}
+.chat-btn{
+  width:56px;height:56px;border-radius:50%;
+  background:linear-gradient(135deg,var(--pm),var(--pink));
+  border:none;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;font-size:1.4rem;
+  box-shadow:0 0 30px rgba(168,85,247,0.5);
+  animation:chatPulse 2s ease-in-out infinite;
+  transition:transform 0.3s;
+}
+.chat-btn:hover{transform:scale(1.1);}
+@keyframes chatPulse{0%,100%{box-shadow:0 0 30px rgba(168,85,247,0.5);}50%{box-shadow:0 0 50px rgba(168,85,247,0.9),0 0 70px rgba(236,72,153,0.3);}}
 
-    .timeline-step::after {
-      content: '';
-      position: absolute;
-      left: 19px; top: 40px;
-      bottom: 0;
-      width: 2px;
-      background: linear-gradient(180deg, var(--pm), transparent);
-    }
+/* chat panel */
+.chat-panel{
+  position:fixed;bottom:5.5rem;right:2rem;z-index:999;
+  width:320px;background:var(--card2);
+  border:1px solid rgba(168,85,247,0.3);border-radius:16px;
+  box-shadow:0 20px 60px rgba(0,0,0,0.5);
+  display:none;flex-direction:column;overflow:hidden;
+  animation:chatPanelIn 0.3s ease;
+}
+.chat-panel.open{display:flex;}
+@keyframes chatPanelIn{from{opacity:0;transform:translateY(15px);}to{opacity:1;transform:translateY(0);}}
+.cp-header{background:linear-gradient(135deg,var(--pm),var(--pink));padding:1.2rem 1.4rem;display:flex;align-items:center;justify-content:space-between;}
+.cp-header-info{display:flex;align-items:center;gap:0.8rem;}
+.cp-avatar{width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,0.2);display:flex;align-items:center;justify-content:center;font-size:1.1rem;}
+.cp-name{font-family:'Orbitron',sans-serif;font-size:0.75rem;font-weight:700;color:var(--white);}
+.cp-status{font-size:0.7rem;color:rgba(255,255,255,0.7);display:flex;align-items:center;gap:0.4rem;}
+.cp-status-dot{width:6px;height:6px;border-radius:50%;background:var(--green);box-shadow:0 0 6px var(--green);}
+.cp-close{background:none;border:none;color:rgba(255,255,255,0.7);cursor:pointer;font-size:1.2rem;line-height:1;}
+.cp-messages{flex:1;padding:1.2rem;display:flex;flex-direction:column;gap:0.8rem;max-height:300px;overflow-y:auto;}
+.cp-msg{padding:0.7rem 1rem;border-radius:10px;font-size:0.85rem;line-height:1.6;max-width:85%;}
+.cp-msg.bot{background:rgba(168,85,247,0.12);border:1px solid rgba(168,85,247,0.2);color:var(--muted);align-self:flex-start;}
+.cp-msg.user{background:linear-gradient(135deg,var(--pm),var(--pink));color:var(--white);align-self:flex-end;}
+.cp-input-row{padding:1rem;border-top:1px solid rgba(168,85,247,0.15);display:flex;gap:0.6rem;}
+.cp-input{flex:1;background:rgba(255,255,255,0.05);border:1px solid rgba(168,85,247,0.2);border-radius:8px;padding:0.7rem 1rem;color:var(--white);font-family:'DM Sans',sans-serif;font-size:0.88rem;outline:none;}
+.cp-input::placeholder{color:var(--dim);}
+.cp-send{width:36px;height:36px;border-radius:8px;background:linear-gradient(135deg,var(--pm),var(--pink));border:none;cursor:pointer;color:var(--white);font-size:1rem;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
 
-    .timeline-step:last-child::after { display: none; }
+/* ── FINAL CTA ── */
+.final-cta{padding:8rem 5%;text-align:center;position:relative;overflow:hidden;}
+.final-cta::before{content:'';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:700px;height:700px;border-radius:50%;background:radial-gradient(circle,rgba(168,85,247,0.1),transparent 65%);pointer-events:none;}
+.final-cta h2{font-family:'Orbitron',sans-serif;font-size:clamp(2rem,5vw,4rem);font-weight:900;background:linear-gradient(135deg,var(--white),var(--pg) 50%,var(--pkb) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:1.5rem;line-height:1.05;}
+.final-cta p{font-size:1.08rem;color:var(--muted);max-width:560px;margin:0 auto 3rem;line-height:1.9;}
 
-    .timeline-num {
-      width: 40px; height: 40px;
-      border-radius: 50%;
-      background: linear-gradient(135deg, var(--pm), var(--pink));
-      display: flex; align-items: center; justify-content: center;
-      font-family: 'Orbitron', monospace;
-      font-weight: 700;
-      font-size: var(--text-sm);
-      flex-shrink: 0;
-      position: relative;
-      z-index: 1;
-    }
+.disclaimer{font-family:'Share Tech Mono',monospace;font-size:0.62rem;color:var(--dim);letter-spacing:0.06em;max-width:700px;margin:3rem auto 0;line-height:1.9;border-top:1px solid rgba(168,85,247,0.1);padding-top:2.5rem;text-align:center;}
 
-    /* Tier grid responsive */
-    @media (max-width: 900px) {
-      .tier-grid { grid-template-columns: 1fr !important; }
-    }
+footer{padding:2rem 5%;border-top:1px solid rgba(168,85,247,0.12);display:flex;justify-content:space-between;flex-wrap:wrap;gap:1rem;position:relative;z-index:1;}
+.footer-logo{font-family:'Orbitron',sans-serif;font-size:0.95rem;font-weight:900;letter-spacing:0.18em;background:linear-gradient(90deg,var(--pg),var(--pkb));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.footer-tag{font-family:'Share Tech Mono',monospace;font-size:0.58rem;letter-spacing:0.15em;color:var(--dim);}
 
-    /* Objections */
-    .objection-card {
-      background: var(--card2);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 24px;
-    }
+@keyframes fu{from{opacity:0;transform:translateY(20px);}to{opacity:1;transform:translateY(0);}}
+.reveal{opacity:0;transform:translateY(24px);transition:opacity 0.7s ease,transform 0.7s ease;}
+.reveal.visible{opacity:1;transform:translateY(0);}
+.rd1{transition-delay:0.1s;}.rd2{transition-delay:0.2s;}.rd3{transition-delay:0.3s;}
 
-    .objection-q {
-      font-family: 'Orbitron', monospace;
-      font-size: var(--text-sm);
-      font-weight: 700;
-      color: var(--amber);
-      margin-bottom: 10px;
-    }
-  </style>
+@media(max-width:900px){
+  .tiers-grid,.testi-grid,.obj-grid{grid-template-columns:1fr;}
+  .nav-steps{display:none;}
+  .chat-widget{bottom:1rem;right:1rem;}
+  .chat-panel{right:1rem;width:290px;}
+}
+</style>
+
+<!-- ═══ ANALYTICS & TRACKING ═══ -->
+<!-- GA4: Replace G-XXXXXXXXXX with your real Measurement ID from analytics.google.com -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-XXXXXXXXXX');
+</script>
+<!-- Facebook Pixel: Replace XXXXXXXXXXXXXXX with your real Pixel ID from business.facebook.com -->
+<script>
+!function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;
+n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;
+t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,
+document,'script','https://connect.facebook.net/en_US/fbevents.js');
+fbq('init', 'XXXXXXXXXXXXXXX');
+fbq('track', 'PageView');
+</script>
+<noscript><img height="1" width="1" style="display:none" src="https://www.facebook.com/tr?id=XXXXXXXXXXXXXXX&ev=PageView&noscript=1"/></noscript>
+<!-- Tidio Chatbot: Replace xxxxxxxxxxxx with your real Tidio public key from tidio.com/panel/settings -->
+<script src="//code.tidio.co/xxxxxxxxxxxx.js" async></script>
+<!-- ═══════════════════════════ -->
 </head>
 <body>
-  <div class="orb orb-1"></div>
-  <div class="orb orb-2"></div>
+<div class="orb o1"></div><div class="orb o2"></div><div class="orb o3"></div>
 
-  <div class="approved-bar page-wrap">
-    <span style="color:var(--green);font-family:'Share Tech Mono',monospace;font-size:0.8rem;letter-spacing:0.1em;">
-      ✓ APPLICATION APPROVED — You've been cleared for the offer page
-    </span>
-  </div>
+<div class="approved-bar">✅ Application <span>Approved</span> — You've been selected. Your offer is below.</div>
 
-  <nav class="nav" style="top:41px;">
-    <a href="index.html" class="nav-brand">
-      <div class="hex-logo hex-logo-sm"><span>SS</span></div>
-      <span class="nav-brand-text">SILENT SYNDICATE</span>
-    </a>
-    <div class="step-progress">
-      <div class="step-dot complete"></div>
-      <div class="step-line"></div>
-      <div class="step-dot complete"></div>
-      <div class="step-line"></div>
-      <div class="step-dot complete"></div>
-      <div class="step-line"></div>
-      <div class="step-dot active"></div>
+<nav>
+  <div class="nav-logo"><div class="nav-hex"></div>Silent Syndicate</div>
+  <div class="nav-right">
+    <div class="nav-steps">
+      <div class="nsi done"><div class="nsd"></div>ACCESS</div>
+      <div class="nsi done"><div class="nsd"></div>SYSTEM</div>
+      <div class="nsi done"><div class="nsd"></div>APPLY</div>
+      <div class="nsi active"><div class="nsd"></div>OFFER</div>
     </div>
-    <span class="font-mono" style="font-size:0.7rem;color:var(--dim);">STEP 4 OF 4</span>
-  </nav>
+  </div>
+<a href="aios-sales.html" style="font-family:'Orbitron',sans-serif;font-size:0.62rem;font-weight:700;letter-spacing:0.1em;color:rgba(192,132,252,0.7);text-decoration:none;transition:color 0.2s;" onmouseover="this.style.color='#c084fc'" onmouseout="this.style.color='rgba(192,132,252,0.7)'">AIOS →</a>
+<a href="hub.html" style="font-family:'Share Tech Mono',monospace;font-size:0.58rem;letter-spacing:0.12em;color:rgba(240,236,255,0.35);text-decoration:none;border:1px solid rgba(168,85,247,0.15);padding:0.35rem 0.8rem;border-radius:4px;">⬡ HUB</a>
+</nav>
 
-  <div class="page-wrap" style="margin-top:41px;">
-    <!-- HERO -->
-    <section class="section">
-      <div class="container">
-        <div class="text-center reveal">
-          <div style="display:inline-flex;align-items:center;gap:8px;padding:6px 14px;background:rgba(74,222,128,0.08);border:1px solid rgba(74,222,128,0.2);border-radius:9999px;font-family:'Share Tech Mono',monospace;font-size:0.7rem;color:var(--green);letter-spacing:0.1em;margin-bottom:20px;">
-            ✓ APPROVED — YOUR INVITATION IS READY
-          </div>
-          <h1 style="font-family:'Orbitron',monospace;font-size:clamp(2rem,5vw,3.25rem);font-weight:900;line-height:1.1;margin-bottom:20px;">
-            Select Your <span class="gradient-text">Entry Tier</span>
-          </h1>
-          <p style="color:var(--muted);font-size:var(--text-lg);max-width:560px;margin:0 auto;line-height:1.65;">
-            Three tiers. Three commission levels. All built on Enagic's direct-sales infrastructure.
-            Select the tier that matches your capital and income goals.
-          </p>
-        </div>
-      </div>
-    </section>
+<!-- HERO -->
+<section class="hero">
+  <div class="approved-badge"><span class="ab-dot"></span>YOUR APPLICATION HAS BEEN APPROVED</div>
+  <p class="hero-eyebrow">Here's exactly what you're joining and what it costs</p>
+  <h1 class="hero-title">
+    <span class="ht1">Choose Your Entry Point.</span>
+    <span class="ht2">Three licence tiers. One system. No calls required.</span>
+  </h1>
+  <p class="hero-sub">Every tier makes you an <strong>authorised Enagic distributor</strong> with access to the Silent Syndicate AI automation system. Your tier determines your Enagic distributor rank, your commission per sale, and your position in the network. Commissions are paid directly by Enagic.</p>
 
-    <!-- TIER CARDS -->
-    <section style="padding:0 0 80px;">
-      <div class="container">
-        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:24px;" class="reveal tier-grid">
-          <!-- STRIKER -->
-          <div class="tier-card striker">
-            <div class="tier-name">STRIKER</div>
-            <div class="tier-rank">ENAGIC D3 RANK</div>
-            <div class="tier-commission" style="color:#9ca3af;">$2,400</div>
-            <div class="tier-per-sale">per direct sale</div>
-            <div class="tier-investment">
-              <strong>Investment:</strong> $8,500 (includes Enagic machine + distributor licence)
-            </div>
-            <ul class="tier-features">
-              <li>Enagic D3 distributor rank</li>
-              <li>Full AI funnel system access</li>
-              <li>7-day email sequence templates</li>
-              <li>Chatbot qualification scripts</li>
-              <li>Break-even: ~4 sales</li>
-            </ul>
-            <div style="margin-top:24px;">
-              <!-- REPLACE WITH YOUR ENAGIC STORE URL -->
-              <a href="join.html" data-tier="striker" class="btn btn-ghost btn-full">
-                Get Started — Striker →
-              </a>
-            </div>
-          </div>
-
-          <!-- LAUNCHER (FEATURED) -->
-          <div class="tier-card launcher featured">
-            <div class="featured-badge">MOST POPULAR</div>
-            <div class="tier-name gradient-text">LAUNCHER</div>
-            <div class="tier-rank" style="color:var(--pm);">ENAGIC 6A RANK</div>
-            <div class="tier-commission gradient-text">$4,300</div>
-            <div class="tier-per-sale">per direct sale</div>
-            <div class="tier-investment" style="border:1px solid rgba(168,85,247,0.2);background:rgba(124,58,237,0.06);">
-              <strong style="color:var(--pg);">Investment:</strong> $15,000 (includes Enagic machine + distributor licence)
-            </div>
-            <ul class="tier-features">
-              <li>Enagic 6A distributor rank</li>
-              <li>Full AI funnel system access</li>
-              <li>Priority onboarding support</li>
-              <li>Advanced email sequence library</li>
-              <li>Team override eligible</li>
-              <li>Break-even: ~4 sales</li>
-            </ul>
-            <div style="margin-top:24px;">
-              <!-- REPLACE WITH YOUR ENAGIC STORE URL -->
-              <a href="join.html" data-tier="launcher" class="btn btn-primary btn-full">
-                Get Started — Launcher →
-              </a>
-            </div>
-          </div>
-
-          <!-- NUKE -->
-          <div class="tier-card nuke">
-            <div class="tier-name" style="background:linear-gradient(135deg,var(--cyan),var(--pm));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">NUKE</div>
-            <div class="tier-rank" style="color:var(--cyan);">ENAGIC 6A-2 RANK</div>
-            <div class="tier-commission" style="background:linear-gradient(135deg,var(--cyan),var(--pm));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">$6,330</div>
-            <div class="tier-per-sale">per direct sale</div>
-            <div class="tier-investment">
-              <strong>Investment:</strong> $20,000 (includes Enagic machine + distributor licence)
-            </div>
-            <ul class="tier-features">
-              <li>Enagic 6A-2 distributor rank</li>
-              <li>Maximum commission per sale</li>
-              <li>Full network override structure</li>
-              <li>Priority queue all support</li>
-              <li>Custom funnel buildout</li>
-              <li>Break-even: ~4 sales</li>
-            </ul>
-            <div style="margin-top:24px;">
-              <!-- REPLACE WITH YOUR ENAGIC STORE URL -->
-              <a href="join.html" data-tier="nuke" class="btn btn-cyan btn-full">
-                Get Started — Nuke →
-              </a>
-            </div>
-          </div>
-        </div>
-
-        <p class="text-center reveal" style="color:var(--dim);font-size:var(--text-sm);margin-top:24px;">
-          All registration happens directly through Enagic's official platform. Silent Syndicate receives a distributor commission when your payment clears.
-        </p>
-      </div>
-    </section>
-
-    <!-- ROI CALCULATOR -->
-    <section class="section" style="padding-top:0;">
-      <div class="container-sm">
-        <div class="text-center mb-8 reveal">
-          <h2 style="font-family:'Orbitron',monospace;font-size:var(--text-3xl);font-weight:700;">
-            Income <span class="gradient-text">Calculator</span>
-          </h2>
-          <p style="color:var(--muted);margin-top:10px;">
-            Projection tool. Not a guarantee. Adjust sliders to model scenarios.
-          </p>
-        </div>
-        <div class="calc-card reveal">
-          <div class="slider-label">
-            <span style="color:var(--muted);font-size:var(--text-sm);">Sales per month</span>
-            <span class="slider-val" id="sales-val">2</span>
-          </div>
-          <input type="range" min="1" max="12" value="2" id="sales-slider" step="1">
-
-          <div class="slider-label">
-            <span style="color:var(--muted);font-size:var(--text-sm);">Tier</span>
-            <span class="slider-val" id="tier-val">Launcher ($4,300)</span>
-          </div>
-          <input type="range" min="1" max="3" value="2" id="tier-slider" step="1">
-
-          <div class="roi-output">
-            <div class="roi-box">
-              <div style="font-size:0.7rem;letter-spacing:0.1em;color:var(--dim);text-transform:uppercase;font-family:'Share Tech Mono',monospace;margin-bottom:8px;">Monthly Gross</div>
-              <div class="roi-value" id="monthly-output">$8,600</div>
-              <div style="font-size:0.7rem;color:var(--dim);margin-top:4px;">before expenses</div>
-            </div>
-            <div class="roi-box">
-              <div style="font-size:0.7rem;letter-spacing:0.1em;color:var(--dim);text-transform:uppercase;font-family:'Share Tech Mono',monospace;margin-bottom:8px;">Annual Gross</div>
-              <div class="roi-value" id="annual-output">$103,200</div>
-              <div style="font-size:0.7rem;color:var(--dim);margin-top:4px;">before expenses</div>
-            </div>
-          </div>
-
-          <div style="margin-top:20px;padding:14px;background:rgba(251,191,36,0.06);border:1px solid rgba(251,191,36,0.15);border-radius:var(--radius-sm);">
-            <p style="font-size:0.75rem;color:var(--amber);line-height:1.6;">
-              ⚠ Break-even note: At <span id="breakeven-output">~4 sales</span>, your investment is recovered at this tier.
-              These are gross commission projections — actual net income depends on traffic costs, tools, and time invested.
-            </p>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- 30-DAY JOURNEY -->
-    <section class="section">
-      <div class="container-sm">
-        <div class="text-center mb-8 reveal">
-          <h2 style="font-family:'Orbitron',monospace;font-size:var(--text-3xl);font-weight:700;">
-            Your First <span class="gradient-text">30 Days</span>
-          </h2>
-        </div>
-
-        <div class="timeline-step reveal">
-          <div class="timeline-num">1</div>
-          <div>
-            <div style="font-family:'Orbitron',monospace;font-weight:700;color:var(--pg);margin-bottom:6px;">WEEK 1 — Setup</div>
-            <p style="color:var(--muted);font-size:var(--text-sm);line-height:1.7;">
-              Register with Enagic. Connect your funnel. Configure ActiveCampaign email sequences.
-              Deploy your opt-in page. Create your first 3 content pieces.
-            </p>
-          </div>
-        </div>
-
-        <div class="timeline-step reveal">
-          <div class="timeline-num">2</div>
-          <div>
-            <div style="font-family:'Orbitron',monospace;font-weight:700;color:var(--pg);margin-bottom:6px;">WEEK 2 — Traffic</div>
-            <p style="color:var(--muted);font-size:var(--text-sm);line-height:1.7;">
-              Post daily on TikTok and Instagram. First opt-ins arrive. Email sequence fires.
-              Monitor open rates and click-throughs. Adjust hooks based on what's resonating.
-            </p>
-          </div>
-        </div>
-
-        <div class="timeline-step reveal">
-          <div class="timeline-num">3</div>
-          <div>
-            <div style="font-family:'Orbitron',monospace;font-weight:700;color:var(--pg);margin-bottom:6px;">WEEK 3 — First HOT Lead</div>
-            <p style="color:var(--muted);font-size:var(--text-sm);line-height:1.7;">
-              Applications start arriving. AI scoring routes HOT leads to the offer page automatically.
-              Chatbot handles objections. First conversation with a pre-qualified prospect.
-            </p>
-          </div>
-        </div>
-
-        <div class="timeline-step reveal">
-          <div class="timeline-num">4</div>
-          <div>
-            <div style="font-family:'Orbitron',monospace;font-weight:700;color:var(--pg);margin-bottom:6px;">WEEK 4 — First Sale</div>
-            <p style="color:var(--muted);font-size:var(--text-sm);line-height:1.7;">
-              First Enagic registration complete. Commission confirmed. System optimised based on data.
-              Week 5+ is scaling what's already working.
-            </p>
-          </div>
-        </div>
-
-        <div class="timeline-step reveal">
-          <div class="timeline-num">5</div>
-          <div>
-            <div style="font-family:'Orbitron',monospace;font-weight:700;color:var(--pg);margin-bottom:6px;">MONTH 2–3 — Scale</div>
-            <p style="color:var(--muted);font-size:var(--text-sm);line-height:1.7;">
-              Double down on winning content angles. Increase post frequency. Network referrals start.
-              Break-even achieved. Month 3 median for active operators: $8,600–$14,200 gross.
-            </p>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- OBJECTIONS -->
-    <section class="section" style="padding-top:0;">
-      <div class="container">
-        <div class="text-center mb-8 reveal">
-          <h2 style="font-family:'Orbitron',monospace;font-size:var(--text-3xl);font-weight:700;">
-            Real Questions, <span class="gradient-text">Straight Answers</span>
-          </h2>
-        </div>
-        <div class="grid-2">
-          <div class="objection-card reveal">
-            <div class="objection-q">"Is this an MLM?"</div>
-            <p style="color:var(--muted);font-size:var(--text-sm);line-height:1.7;">
-              Enagic is a direct-sales company, not a pyramid scheme. Your primary income is from direct sales
-              ($2,400–$6,330 per transaction), not from recruiting. The team override structure exists but
-              isn't required to earn well.
-            </p>
-          </div>
-          <div class="objection-card reveal reveal-delay-1">
-            <div class="objection-q">"The investment is too high."</div>
-            <p style="color:var(--muted);font-size:var(--text-sm);line-height:1.7;">
-              Break-even at the Launcher tier is ~4 sales ($15,000 ÷ $4,300 = 3.5 sales).
-              If you can't make 4 sales in 90 days, this isn't the right vehicle. If you can,
-              you're profitable by month 3.
-            </p>
-          </div>
-          <div class="objection-card reveal">
-            <div class="objection-q">"Do I have to recruit people?"</div>
-            <p style="color:var(--muted);font-size:var(--text-sm);line-height:1.7;">
-              No. You earn your full commission on every direct sale regardless of whether your buyers
-              become distributors. Building a network accelerates income but isn't required.
-            </p>
-          </div>
-          <div class="objection-card reveal reveal-delay-1">
-            <div class="objection-q">"I don't have an audience."</div>
-            <p style="color:var(--muted);font-size:var(--text-sm);line-height:1.7;">
-              The funnel is designed for cold traffic. TikTok's algorithm reaches non-followers organically.
-              You don't need existing followers — you need compelling content and a working funnel.
-            </p>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- TESTIMONIALS -->
-    <section class="section" style="padding-top:0;">
-      <div class="container">
-        <div class="grid-3 reveal">
-          <div class="card">
-            <div class="testimonial-quote" style="font-family:'Cormorant Garamond',serif;font-style:italic;font-size:var(--text-base);color:var(--muted);line-height:1.6;margin-bottom:16px;">
-              "Month 3 I cleared $14,200. The funnel works exactly as described. My job was content — the system handled everything else."
-            </div>
-            <div style="font-family:'Share Tech Mono',monospace;font-size:0.65rem;color:var(--pm);">SARAH K.</div>
-            <div style="font-size:0.75rem;color:var(--dim);">Brisbane — Launcher Tier</div>
-          </div>
-          <div class="card">
-            <div class="testimonial-quote" style="font-family:'Cormorant Garamond',serif;font-style:italic;font-size:var(--text-base);color:var(--muted);line-height:1.6;margin-bottom:16px;">
-              "The pre-qualification system means I only talk to people who already understand the model and are ready to move. Completely different from cold outreach."
-            </div>
-            <div style="font-family:'Share Tech Mono',monospace;font-size:0.65rem;color:var(--pm);">JAMES R.</div>
-            <div style="font-size:0.75rem;color:var(--dim);">Melbourne — Nuke Tier</div>
-          </div>
-          <div class="card">
-            <div class="testimonial-quote" style="font-family:'Cormorant Garamond',serif;font-style:italic;font-size:var(--text-base);color:var(--muted);line-height:1.6;margin-bottom:16px;">
-              "I'd tried other high-ticket programs. This is the first one that was honest about what it costs and what it takes. That's why I committed."
-            </div>
-            <div style="font-family:'Share Tech Mono',monospace;font-size:0.65rem;color:var(--pm);">MICHELLE T.</div>
-            <div style="font-size:0.75rem;color:var(--dim);">Perth — Striker Tier</div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- INCOME DISCLAIMER -->
-    <section class="section-sm">
-      <div class="container">
-        <div class="income-disclaimer">
-          <strong style="color:var(--amber);">Income Disclaimer:</strong> The commission amounts shown ($2,400, $4,300, $6,330) represent gross commissions before any costs including
-          advertising, software subscriptions, and operating expenses. The investment amounts ($8,500, $15,000, $20,000) are the entry costs to become an Enagic distributor
-          at the respective rank. Break-even calculations assume successful sales at the stated commission rate. Results are not typical — most new distributors earn $0–$2,400
-          in their first 30 days while building traffic and optimising their funnel. Testimonials shown are from real participants; their results may be above average.
-          Past performance does not guarantee future results. This is not a get-rich-quick scheme. Success requires consistent effort, capital, and sales ability.
-        </div>
-      </div>
-    </section>
-
-    <footer style="padding:40px 0;border-top:1px solid var(--border);">
-      <div class="container" style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:16px;">
-        <div style="display:flex;align-items:center;gap:12px;">
-          <div class="hex-logo hex-logo-sm"><span>SS</span></div>
-          <span style="font-family:'Share Tech Mono',monospace;font-size:0.75rem;color:var(--dim);">SILENT SYNDICATE © 2025</span>
-        </div>
-        <div style="font-size:0.75rem;color:var(--dim);">An authorised Enagic distributor network — AU &amp; NZ</div>
-      </div>
-    </footer>
+  <div class="price-reveal">
+    <div class="pr-from">// COMMISSIONS FROM</div>
+    <div class="pr-amount">$2,400</div>
+    <div class="pr-per">per qualified sale — earned directly through Enagic</div>
+    <div class="pr-tiers">
+      <span class="pr-tier">Striker · $2,400/sale</span>
+      <span class="pr-tier">Launcher · $4,300/sale</span>
+      <span class="pr-tier">Nuke · $6,330/sale</span>
+    </div>
   </div>
 
-  <!-- CHATBOT WIDGET -->
-  <div class="chat-widget">
-    <div class="chat-window" id="chat-window">
-      <div class="chat-header">
-        <div style="display:flex;align-items:center;gap:10px;">
-          <div class="status-dot live"></div>
-          <div>
-            <div style="font-family:'Orbitron',monospace;font-size:0.7rem;font-weight:700;">SS ASSISTANT</div>
-            <div style="font-size:0.65rem;color:var(--dim);">Typically replies instantly</div>
-          </div>
-        </div>
-        <button onclick="toggleChat()" style="background:none;border:none;color:var(--dim);cursor:pointer;font-size:1rem;">✕</button>
+  <div class="hero-cta-wrap">
+    <a href="join.html" class="btn-join">SEE THE THREE TIERS <span class="btn-arrow">→</span></a>
+    <div class="cta-micro">🔒 Secure. No calls needed. <span>Join directly online.</span></div>
+    <div class="proof-row">
+      <div class="proof-avatars">
+        <div class="pa">S</div><div class="pa">J</div><div class="pa">M</div><div class="pa">R</div><div class="pa">K</div>
       </div>
-      <div class="chat-messages" id="chat-messages"></div>
-      <div class="chat-options" id="chat-options"></div>
-      <div class="chat-input-row">
-        <input class="chat-input" id="chat-input" placeholder="Type a message..." />
-        <button class="chat-send" onclick="sendChatMessage()">→</button>
+      <div class="proof-text"><div class="proof-stars">★★★★★</div><div>2,400+ active operators across AU &amp; NZ</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- TIERS -->
+<section class="section section-alt" id="tiers">
+  <div class="sec-label reveal">Choose Your Tier</div>
+  <h2 class="sec-head reveal">Three Entry Points.<br>One System.</h2>
+  <p class="sec-sub reveal">Every tier includes full access to the AI funnel system, onboarding support, and the Silent Syndicate network. Higher tiers unlock higher commissions and faster rank progression.</p>
+
+  <div class="tiers-grid">
+    <div class="tier-card reveal">
+      <div class="tier-name">// TIER 01</div>
+      <div class="tier-title">STRIKER</div>
+      <div class="tier-price">$8,500</div>
+      <div class="tier-commission">↑ Earn $2,400 per sale · Enagic D3 rank</div>
+      <div class="tier-features">
+        <div class="tf"><span class="tf-check">✓</span>Full AI funnel system access</div>
+        <div class="tf"><span class="tf-check">✓</span>Pre-built email sequences</div>
+        <div class="tf"><span class="tf-check">✓</span>Enagic distributor licence (D3)</div>
+        <div class="tf"><span class="tf-check">✓</span>Silent Syndicate onboarding</div>
+        <div class="tf"><span class="tf-check">✓</span>Network community access</div>
+        <div class="tf"><span class="tf-check">✓</span>1 Enagic Kangen machine included</div>
+      </div>
+      <a href="join.html" class="tier-btn">START WITH STRIKER</a>
+    </div>
+
+    <div class="tier-card featured reveal rd1">
+      <span class="tier-popular">MOST CHOSEN</span>
+      <div class="tier-name">// TIER 02</div>
+      <div class="tier-title">LAUNCHER</div>
+      <div class="tier-price">$15,000</div>
+      <div class="tier-commission">↑ Earn $4,300 per sale · Enagic 6A rank</div>
+      <div class="tier-features">
+        <div class="tf"><span class="tf-check">✓</span>Everything in Striker</div>
+        <div class="tf"><span class="tf-check">✓</span>Enagic distributor licence (6A)</div>
+        <div class="tf"><span class="tf-check">✓</span>Higher network placement</div>
+        <div class="tf"><span class="tf-check">✓</span>Faster rank progression</div>
+        <div class="tf"><span class="tf-check">✓</span>Priority onboarding support</div>
+        <div class="tf"><span class="tf-check">✓</span>2 Kangen machines included</div>
+      </div>
+      <a href="join.html" class="tier-btn">START WITH LAUNCHER</a>
+    </div>
+
+    <div class="tier-card reveal rd2">
+      <div class="tier-name">// TIER 03</div>
+      <div class="tier-title">NUKE</div>
+      <div class="tier-price">$20,000</div>
+      <div class="tier-commission">↑ Earn $6,330 per sale · Enagic 6A-2 rank</div>
+      <div class="tier-features">
+        <div class="tf"><span class="tf-check">✓</span>Everything in Launcher</div>
+        <div class="tf"><span class="tf-check">✓</span>Top-tier network placement</div>
+        <div class="tf"><span class="tf-check">✓</span>Maximum commission rate</div>
+        <div class="tf"><span class="tf-check">✓</span>Royalty income eligibility</div>
+        <div class="tf"><span class="tf-check">✓</span>Dedicated launch support</div>
+        <div class="tf"><span class="tf-check">✓</span>Full Kangen product suite</div>
+      </div>
+      <a href="join.html" class="tier-btn">START WITH NUKE</a>
+    </div>
+  </div>
+</section>
+
+<!-- ROI CALCULATOR -->
+<section class="section">
+  <div class="sec-label reveal">Run The Numbers</div>
+  <h2 class="sec-head reveal">What Does Your Income Look Like?</h2>
+  <p class="sec-sub reveal">Move the sliders to model your own scenario. This is illustrative — individual results vary.</p>
+
+  <div class="calc-wrap reveal">
+    <div class="calc-title">Income Scenario Calculator</div>
+    <div class="calc-sub">Adjust sales per month and commission tier to see projected monthly income.</div>
+    <div class="calc-sliders">
+      <div class="slider-group">
+        <label>Sales per month <span id="salesVal">3</span></label>
+        <input type="range" min="1" max="10" value="3" id="salesSlider" oninput="calcIncome()">
+      </div>
+      <div class="slider-group">
+        <label>Commission tier
+          <select id="tierSelect" onchange="calcIncome()" style="background:var(--card);border:1px solid rgba(168,85,247,0.3);color:var(--white);padding:0.2rem 0.5rem;border-radius:4px;font-family:'Share Tech Mono',monospace;font-size:0.62rem;letter-spacing:0.1em;">
+            <option value="2400">Striker — $2,400/sale</option>
+            <option value="4300" selected>Launcher — $4,300/sale</option>
+            <option value="6330">Nuke — $6,330/sale</option>
+          </select>
+        </label>
       </div>
     </div>
-    <button class="chat-toggle" id="chat-toggle" onclick="toggleChat()" style="position:relative;">
-    💬
-    <span id="chat-notify" style="position:absolute;top:-3px;right:-3px;width:12px;height:12px;background:var(--red);border-radius:50%;border:2px solid var(--bg);box-shadow:0 0 6px rgba(239,68,68,0.7);"></span>
-  </button>
+    <div class="calc-result">
+      <div class="cr-label">// PROJECTED MONTHLY INCOME</div>
+      <div class="cr-amount" id="calcResult">$12,900</div>
+      <div class="cr-period">per month · based on your inputs</div>
+      <div class="cr-breakdown">
+        <div class="crb"><div class="crb-val" id="crSales">3</div><div class="crb-label">Sales/month</div></div>
+        <div class="crb"><div class="crb-val" id="crComm">$4,300</div><div class="crb-label">Per sale</div></div>
+        <div class="crb"><div class="crb-val" id="crAnnual">$154,800</div><div class="crb-label">Annual projection</div></div>
+      </div>
+    </div>
+    <p style="font-size:0.78rem;color:var(--dim);margin-top:1.2rem;text-align:center;line-height:1.7;">These figures are illustrative. Results depend on effort, traffic, and market conditions. Most participants earn less.</p>
   </div>
+</section>
 
-  <!-- STICKY MOBILE CTA -->
-  <div id="mobile-cta-bar" style="display:none;position:fixed;bottom:0;left:0;right:0;padding:12px 16px;background:rgba(5,2,14,0.97);border-top:1px solid rgba(168,85,247,0.3);z-index:500;backdrop-filter:blur(10px);">
-    <a href="join.html" class="btn btn-primary btn-full">Register Now — Select Your Tier →</a>
+<!-- JOURNEY AFTER JOINING -->
+<section class="section section-alt">
+  <div class="sec-label reveal">What Happens Next</div>
+  <h2 class="sec-head reveal">Your First 30 Days<br>After Joining.</h2>
+  <p class="sec-sub reveal">No calls. No hand-holding. A clear roadmap from day one.</p>
+  <div class="journey-steps">
+    <div class="journey-step reveal"><div class="js-day"><div class="js-day-label">DAY</div><div class="js-day-val">1</div></div><div class="js-body"><h4>Onboarded Instantly</h4><p>You receive your login, your funnel assets, your email sequence templates, and your Enagic distributor details — all automatically.</p></div></div>
+    <div class="journey-step reveal rd1"><div class="js-day"><div class="js-day-label">DAY</div><div class="js-day-val">2–5</div></div><div class="js-body"><h4>System Setup</h4><p>You connect your email platform, deploy your opt-in page, and activate the AI chatbot. Support docs guide every step. Average setup time: 3–4 hours.</p></div></div>
+    <div class="journey-step reveal rd2"><div class="js-day"><div class="js-day-label">DAY</div><div class="js-day-val">6–14</div></div><div class="js-body"><h4>First Traffic</h4><p>You start sending traffic — organic content, referrals, or paid ads. Leads begin entering your funnel. The automation takes over from here.</p></div></div>
+    <div class="journey-step reveal"><div class="js-day"><div class="js-day-label">DAY</div><div class="js-day-val">15–21</div></div><div class="js-body"><h4>First Qualified Applicants</h4><p>Your system has educated and filtered your leads. HOT applicants reach the offer page. Your first commission opportunity arrives.</p></div></div>
+    <div class="journey-step reveal rd1"><div class="js-day"><div class="js-day-label">DAY</div><div class="js-day-val">30</div></div><div class="js-body"><h4>System Running. You're Scaling.</h4><p>Your funnel is live, your pipeline is filling, and the machine is working independently. Now you focus on increasing traffic volume.</p></div></div>
   </div>
+</section>
 
-  <script src="js/chatbot.js"></script>
-  <script>
-    // Scroll reveal
-    const observer = new IntersectionObserver(entries => {
-      entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
-    }, { threshold: 0.1 });
-    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+<!-- OBJECTIONS -->
+<section class="section">
+  <div class="sec-label reveal">Still Thinking?</div>
+  <h2 class="sec-head reveal">Every Question. Answered.</h2>
+  <div class="obj-grid">
+    <div class="obj-card reveal"><div class="obj-q">"Do I need to get on a call to join?"</div><div class="obj-a">No. The entire process is online. Select your tier, complete the Enagic registration, and you're onboarded automatically. <strong>No calls, no appointments, no waiting.</strong></div></div>
+    <div class="obj-card reveal rd1"><div class="obj-q">"What if I need help setting up?"</div><div class="obj-a">Every step has a walkthrough doc and video. The community is active 24/7. And the setup itself only takes a few hours — <strong>it's designed for non-tech people.</strong></div></div>
+    <div class="obj-card reveal"><div class="obj-q">"Is this investment actually recoverable?"</div><div class="obj-a">At the Launcher tier, <strong>four sales covers your full investment</strong>. At Nuke, three sales does it. The math works — but only if you run the system properly.</div></div>
+    <div class="obj-card reveal rd1"><div class="obj-q">"What about the Enagic machines — do I have to sell them?"</div><div class="obj-a">Your buyers purchase a machine as part of joining the system. <strong>The product is real and functional</strong> — Enagic has been operating globally for 40+ years. You don't need to cold-sell machines separately.</div></div>
+  </div>
+</section>
 
-    // ROI Calculator
-    const tiers = [
-      { name: 'Striker ($2,400)', commission: 2400, investment: 8500 },
-      { name: 'Launcher ($4,300)', commission: 4300, investment: 15000 },
-      { name: 'Nuke ($6,330)', commission: 6330, investment: 20000 }
-    ];
+<!-- TESTIMONIALS -->
+<section class="section section-alt">
+  <div class="sec-label reveal">They Were Where You Are</div>
+  <h2 class="sec-head reveal">Real Operators. Real Results.</h2>
+  <div class="testi-grid">
+    <div class="testi reveal"><div class="testi-stars">★★★★★</div><p class="testi-text">I was nervous about the investment. But I ran the numbers — three sales and I've covered it. I hit my third sale at week six. The system genuinely does the heavy lifting.</p><div class="testi-author"><div class="testi-avatar">S</div><div><div class="testi-name">SARAH K.</div><div class="testi-loc">Brisbane, QLD</div><div class="testi-result">$14,200/mo by month 3</div></div></div></div>
+    <div class="testi reveal rd1"><div class="testi-stars">★★★★★</div><p class="testi-text">No tech background. No audience. No prior experience. I followed the setup docs exactly. My first HOT lead came through on Day 18 and converted that same week.</p><div class="testi-author"><div class="testi-avatar">J</div><div><div class="testi-name">JAMES R.</div><div class="testi-loc">Melbourne, VIC</div><div class="testi-result">First sale: Day 19</div></div></div></div>
+    <div class="testi reveal rd2"><div class="testi-stars">★★★★★</div><p class="testi-text">The callless model was the thing that sold me. I hate sales calls. The fact that the system filters and converts without me in the loop — that's the whole point.</p><div class="testi-author"><div class="testi-avatar">M</div><div><div class="testi-name">MICHELLE T.</div><div class="testi-loc">Perth, WA</div><div class="testi-result">$6,100 first commission</div></div></div></div>
+  </div>
+</section>
 
-    function updateCalc() {
-      const sales = parseInt(document.getElementById('sales-slider').value);
-      const tierIdx = parseInt(document.getElementById('tier-slider').value) - 1;
-      const tier = tiers[tierIdx];
-      const monthly = sales * tier.commission;
-      const annual = monthly * 12;
-      const breakeven = Math.ceil(tier.investment / tier.commission);
+<!-- FINAL CTA -->
+<section class="final-cta" id="join">
+  <h2 class="reveal">Ready To Start?<br>Choose Your Tier Below.</h2>
+  <p class="reveal">No call needed. No waiting for approval. You've already been reviewed — this is your invitation to join.</p>
+  <a href="#tiers" class="btn-join reveal">START REGISTRATION <span class="btn-arrow">→</span></a>
+  <div class="disclaimer">
+    <strong>Income Disclaimer:</strong> All income figures shown are illustrative and not guaranteed. Individual results vary significantly based on effort, experience, market conditions, and other factors. Most participants earn considerably less. This is not a get-rich-quick scheme. Please conduct thorough due diligence before committing any funds. Enagic is a separate company — Silent Syndicate does not guarantee Enagic's product performance or commission structure.
+  </div>
+</section>
 
-      document.getElementById('sales-val').textContent = sales;
-      document.getElementById('tier-val').textContent = tier.name;
-      document.getElementById('monthly-output').textContent = '$' + monthly.toLocaleString();
-      document.getElementById('annual-output').textContent = '$' + annual.toLocaleString();
-      document.getElementById('breakeven-output').textContent = '~' + breakeven + ' sales';
-    }
+<footer>
+  <div class="footer-logo">SS</div>
+  <div class="footer-tag">Silent Syndicate — Offer Page</div>
+  <div class="footer-tag">© 2025 · All Rights Reserved</div>
+<!-- commission link -->
+<div style="width:100%;border-top:1px solid rgba(168,85,247,0.08);padding-top:1rem;margin-top:0.5rem;display:flex;gap:1.5rem;flex-wrap:wrap;">
+  <a href="privacy-policy.html" style="font-family:'Share Tech Mono',monospace;font-size:0.55rem;letter-spacing:0.1em;color:rgba(240,236,255,0.3);text-decoration:none;">Privacy Policy</a>
+  <a href="terms.html" style="font-family:'Share Tech Mono',monospace;font-size:0.55rem;letter-spacing:0.1em;color:rgba(240,236,255,0.3);text-decoration:none;">Terms of Service</a>
+  <a href="operator-guidelines.html" style="font-family:'Share Tech Mono',monospace;font-size:0.55rem;letter-spacing:0.1em;color:rgba(240,236,255,0.3);text-decoration:none;">Operator Guidelines</a>
+  <a href="commission-structure.html" style="font-family:'Share Tech Mono',monospace;font-size:0.55rem;letter-spacing:0.1em;color:rgba(240,236,255,0.3);text-decoration:none;">Income Disclosure</a>
+</div>
+</footer>
 
-    document.getElementById('sales-slider').addEventListener('input', updateCalc);
-    document.getElementById('tier-slider').addEventListener('input', updateCalc);
-    updateCalc();
+<!-- CHAT WIDGET -->
+<div class="chat-widget">
+  <div class="chat-bubble" id="chatBubble"><strong>Got a question?</strong><br>Message us — we typically reply within a few minutes.</div>
+  <button class="chat-btn" onclick="toggleChat()" id="chatBtn">💬</button>
+</div>
 
-    // Mobile CTA bar
-    if (window.innerWidth <= 768) {
-      document.getElementById('mobile-cta-bar').style.display = 'block';
-    }
+<div class="chat-panel" id="chatPanel">
+  <div class="cp-header">
+    <div class="cp-header-info">
+      <div class="cp-avatar">🤖</div>
+      <div>
+        <div class="cp-name">SS Support</div>
+        <div class="cp-status"><span class="cp-status-dot"></span>Online now</div>
+      </div>
+    </div>
+    <button class="cp-close" onclick="toggleChat()">✕</button>
+  </div>
+  <div class="cp-messages" id="cpMessages">
+    <div class="cp-msg bot">👋 Hey! You've been approved — nice work getting here. What questions do you have before joining?</div>
+  </div>
+  <div class="cp-input-row">
+    <input type="text" class="cp-input" id="cpInput" placeholder="Type your question..." onkeydown="if(event.key==='Enter')sendMsg()">
+    <button class="cp-send" onclick="sendMsg()">→</button>
+  </div>
+</div>
 
-    // Chat auto-open after 30s
-    setTimeout(() => {
-      if (typeof initChatbot === 'function') {
-        initChatbot();
-        document.getElementById('chat-window').classList.add('open');
-        document.getElementById('chat-toggle').textContent = '✕';
-      }
-    }, 30000);
+<script>
+// Calculator
+function calcIncome(){
+  const sales = parseInt(document.getElementById('salesSlider').value);
+  const comm = parseInt(document.getElementById('tierSelect').value);
+  const monthly = sales * comm;
+  const annual = monthly * 12;
+  document.getElementById('salesVal').textContent = sales;
+  document.getElementById('calcResult').textContent = '$' + monthly.toLocaleString();
+  document.getElementById('crSales').textContent = sales;
+  document.getElementById('crComm').textContent = '$' + comm.toLocaleString();
+  document.getElementById('crAnnual').textContent = '$' + annual.toLocaleString();
+}
 
-    function toggleChat() {
-      const w = document.getElementById('chat-window');
-      const isOpen = w.classList.contains('open');
-      w.classList.toggle('open');
-      document.getElementById('chat-toggle').textContent = isOpen ? '💬' : '✕';
-      if (!isOpen && typeof initChatbot === 'function') {
-        initChatbot();
-      }
-      // Hide notification dot when opened
-      const dot = document.getElementById('chat-notify');
-      if (dot) dot.style.display = 'none';
-    }
+// Chat
+function toggleChat(){
+  const panel = document.getElementById('chatPanel');
+  const bubble = document.getElementById('chatBubble');
+  const isOpen = panel.classList.contains('open');
+  panel.classList.toggle('open');
+  bubble.style.display = isOpen ? 'block' : 'none';
+}
 
-    function sendChatMessage() {
-      const input = document.getElementById('chat-input');
-      const msg = input.value.trim();
-      if (msg && typeof handleChatInput === 'function') {
-        handleChatInput(msg);
-        input.value = '';
-      }
-    }
+const autoReplies = [
+  "Great question! The system is designed to run without any sales calls — everything from education to conversion is automated.",
+  "Once you join, you'll get instant access to all funnel assets, email templates, and setup docs. Most people are live within 48 hours.",
+  "The investment covers your Enagic licence, machine, and full Silent Syndicate system access. Three to four sales recovers the full amount.",
+  "No prior experience needed. The docs walk you through every step. The community is also very active if you get stuck.",
+  "You can start sending traffic as soon as your funnel is live — usually Day 2–5 after joining."
+];
+let replyIdx = 0;
 
-    document.getElementById('chat-input').addEventListener('keypress', function(e) {
-      if (e.key === 'Enter') sendChatMessage();
-    });
-  </script>
+function sendMsg(){
+  const input = document.getElementById('cpInput');
+  const msgs = document.getElementById('cpMessages');
+  const text = input.value.trim();
+  if(!text) return;
+  msgs.innerHTML += `<div class="cp-msg user">${text}</div>`;
+  input.value = '';
+  msgs.scrollTop = msgs.scrollHeight;
+  setTimeout(() => {
+    msgs.innerHTML += `<div class="cp-msg bot">${autoReplies[replyIdx % autoReplies.length]}</div>`;
+    replyIdx++;
+    msgs.scrollTop = msgs.scrollHeight;
+  }, 900);
+}
+
+// Scroll reveal
+const obs = new IntersectionObserver(entries => {
+  entries.forEach(e => { if(e.isIntersecting){ e.target.classList.add('visible'); obs.unobserve(e.target); }});
+},{threshold:0.1});
+document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+</script>
+
+<!-- INCOME DISCLOSURE FOOTER -->
+<div style="background:rgba(3,1,10,0.98);border-top:1px solid rgba(168,85,247,0.1);padding:2rem 5%;position:relative;z-index:1;">
+  <div style="max-width:900px;margin:0 auto;display:flex;align-items:flex-start;gap:1.5rem;flex-wrap:wrap;">
+    <div style="font-family:'Share Tech Mono',monospace;font-size:0.52rem;letter-spacing:0.18em;color:rgba(74,222,128,0.6);flex-shrink:0;padding-top:2px;white-space:nowrap;">// INCOME DISCLOSURE</div>
+    <div style="font-family:'Share Tech Mono',monospace;font-size:0.58rem;letter-spacing:0.05em;color:rgba(240,236,255,0.28);line-height:1.9;flex:1;">Results are not typical. Individual results vary significantly. Most participants earn considerably less than figures shown or earn nothing. Commission amounts are based on Enagic's published distributor compensation structure and are subject to change. This is not a guaranteed income opportunity. Conduct thorough due diligence before any investment. <a href="commission-structure.html" style="color:rgba(168,85,247,0.5);text-decoration:none;">Full income disclosure →</a></div>
+  </div>
+</div>
 </body>
 </html>

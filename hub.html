@@ -1,561 +1,458 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Silent Syndicate — Master Hub</title>
-  <meta name="robots" content="noindex, nofollow">
-  <link rel="stylesheet" href="css/design-system.css">
-  <style>
-    /* ── Layout ── */
-    .hub-header {
-      background: var(--card);
-      border-bottom: 1px solid var(--border);
-      padding: 16px 0;
-      position: sticky;
-      top: 0;
-      z-index: 100;
-      backdrop-filter: blur(20px);
-    }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Silent Syndicate — Master Hub</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=DM+Sans:wght@300;400;500;600&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+<style>
+:root{
+  --black:#03010a;--bg:#05020e;--card:#0a0618;--card2:#0e0920;
+  --pm:#7c3aed;--pb:#a855f7;--pg:#c084fc;--pink:#ec4899;--pkb:#f472b6;
+  --cyan:#22d3ee;--green:#4ade80;--amber:#fbbf24;--red:#ef4444;
+  --white:#f0ecff;--muted:rgba(240,236,255,0.75);--dim:rgba(240,236,255,0.42);
+  --border:rgba(168,85,247,0.15);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{font-size:16px;scroll-behavior:smooth;}
+body{background:var(--bg);color:var(--white);font-family:'DM Sans',sans-serif;overflow-x:hidden;min-height:100vh;}
 
-    .hub-header-inner {
-      max-width: 1400px;
-      margin: 0 auto;
-      padding: 0 32px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
+body::before{content:'';position:fixed;inset:0;
+  background-image:linear-gradient(rgba(168,85,247,0.035) 1px,transparent 1px),
+  linear-gradient(90deg,rgba(168,85,247,0.035) 1px,transparent 1px);
+  background-size:48px 48px;pointer-events:none;z-index:0;animation:gs 40s linear infinite;}
+@keyframes gs{to{background-position:48px 48px;}}
+body::after{content:'';position:fixed;inset:0;
+  background:repeating-linear-gradient(0deg,transparent,transparent 3px,rgba(0,0,0,0.025) 3px,rgba(0,0,0,0.025) 4px);
+  pointer-events:none;z-index:998;}
 
-    .ss-logo {
-      font-family: 'Orbitron', monospace;
-      font-weight: 900;
-      font-size: 1.25rem;
-      letter-spacing: 0.08em;
-      background: linear-gradient(135deg, var(--pg), var(--pink));
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-    }
+.orb{position:fixed;border-radius:50%;filter:blur(120px);pointer-events:none;z-index:0;}
+.o1{width:600px;height:600px;background:rgba(107,33,168,0.18);top:-150px;left:-150px;animation:od 22s ease-in-out infinite;}
+.o2{width:450px;height:450px;background:rgba(236,72,153,0.1);bottom:-100px;right:-100px;animation:od 28s ease-in-out infinite reverse;}
+.o3{width:300px;height:300px;background:rgba(34,211,238,0.055);top:45%;left:55%;animation:od 32s ease-in-out infinite 6s;}
+@keyframes od{0%,100%{transform:translate(0,0);}33%{transform:translate(45px,-55px);}66%{transform:translate(-30px,30px);}}
 
-    .private-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      padding: 6px 16px;
-      background: rgba(239, 68, 68, 0.12);
-      border: 1px solid rgba(239, 68, 68, 0.35);
-      border-radius: var(--radius-full);
-      font-family: 'Share Tech Mono', monospace;
-      font-size: 0.7rem;
-      color: var(--red);
-      letter-spacing: 0.12em;
-      animation: pulse-red 2.5s ease-in-out infinite;
-    }
+nav,section,footer{position:relative;z-index:1;}
 
-    @keyframes pulse-red {
-      0%, 100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.0); }
-      50%       { box-shadow: 0 0 12px 4px rgba(239, 68, 68, 0.18); }
-    }
+/* ── TOP BAR ── */
+.topbar{
+  position:sticky;top:0;z-index:500;
+  background:rgba(3,1,10,0.96);backdrop-filter:blur(24px);
+  border-bottom:1px solid var(--border);
+  padding:0.85rem 5%;
+  display:flex;align-items:center;justify-content:space-between;
+}
+.tb-brand{display:flex;align-items:center;gap:0.8rem;}
+.tb-hex{width:24px;height:24px;background:linear-gradient(135deg,var(--pm),var(--pink));
+  clip-path:polygon(50% 0%,100% 25%,100% 75%,50% 100%,0% 75%,0% 25%);
+  box-shadow:0 0 14px rgba(168,85,247,0.8);animation:hp 3s ease-in-out infinite;}
+@keyframes hp{0%,100%{box-shadow:0 0 14px rgba(168,85,247,0.6);}50%{box-shadow:0 0 28px rgba(168,85,247,1),0 0 45px rgba(236,72,153,0.4);}}
+.tb-name{font-family:'Orbitron',sans-serif;font-size:0.9rem;font-weight:900;letter-spacing:0.18em;
+  background:linear-gradient(90deg,var(--pg),var(--pkb));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.tb-tag{font-family:'Share Tech Mono',monospace;font-size:0.58rem;letter-spacing:0.15em;color:var(--dim);}
+.tb-right{display:flex;align-items:center;gap:0.8rem;}
+.tb-status{display:flex;align-items:center;gap:0.4rem;font-family:'Share Tech Mono',monospace;font-size:0.58rem;letter-spacing:0.1em;color:var(--dim);}
+.tb-dot{width:5px;height:5px;border-radius:50%;animation:blink 2s ease-in-out infinite;}
+.tb-dot.g{background:var(--green);box-shadow:0 0 5px var(--green);}
+@keyframes blink{0%,100%{opacity:1;}50%{opacity:0.25;}}
 
-    .private-dot {
-      width: 7px;
-      height: 7px;
-      background: var(--red);
-      border-radius: 50%;
-      animation: blink 1.2s step-start infinite;
-    }
+/* ── HERO ── */
+.hero{padding:5rem 5% 4rem;text-align:center;position:relative;overflow:hidden;}
+.hero::before{content:'';position:absolute;inset:0;
+  background:radial-gradient(ellipse at 50% 30%,rgba(168,85,247,0.07),transparent 60%);pointer-events:none;}
 
-    @keyframes blink {
-      0%, 100% { opacity: 1; }
-      50%       { opacity: 0.2; }
-    }
+.hero-sys{font-family:'Share Tech Mono',monospace;font-size:0.65rem;letter-spacing:0.3em;color:var(--cyan);
+  margin-bottom:1.5rem;opacity:0;animation:fu 0.6s ease 0.2s forwards;}
+.hero-title{font-family:'Orbitron',sans-serif;font-size:clamp(2.5rem,8vw,7rem);font-weight:900;
+  line-height:0.9;margin-bottom:1.5rem;opacity:0;animation:fu 0.9s ease 0.35s forwards;}
+.ht-ss{display:block;background:linear-gradient(135deg,var(--white) 0%,var(--pg) 45%,var(--pkb) 100%);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+  filter:drop-shadow(0 0 40px rgba(168,85,247,0.4));}
+.ht-hub{display:block;font-size:0.28em;font-family:'Share Tech Mono',monospace;font-weight:400;
+  letter-spacing:0.35em;color:var(--dim);-webkit-text-fill-color:var(--dim);
+  background:none;margin-top:1.2rem;}
 
-    /* ── Hero ── */
-    .hub-hero {
-      max-width: 1400px;
-      margin: 0 auto;
-      padding: 60px 32px 32px;
-      text-align: center;
-    }
+.hero-sub{font-size:1.08rem;color:var(--muted);max-width:580px;margin:0 auto 3rem;line-height:1.9;
+  opacity:0;animation:fu 0.8s ease 0.55s forwards;}
 
-    .hub-title {
-      font-family: 'Orbitron', monospace;
-      font-size: clamp(1.6rem, 4vw, 2.8rem);
-      font-weight: 900;
-      letter-spacing: 0.06em;
-      background: linear-gradient(135deg, var(--white) 30%, var(--pg));
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-      margin-bottom: 10px;
-    }
+/* status tiles */
+.status-tiles{display:flex;gap:1px;background:rgba(168,85,247,0.12);border:1px solid rgba(168,85,247,0.18);
+  border-radius:10px;overflow:hidden;max-width:700px;margin:0 auto 3.5rem;
+  opacity:0;animation:fu 0.8s ease 0.7s forwards;}
+.st{flex:1;background:rgba(3,1,10,0.95);padding:1.2rem;text-align:center;}
+.st-val{font-family:'Orbitron',sans-serif;font-size:1.3rem;font-weight:900;display:block;
+  background:linear-gradient(90deg,var(--pg),var(--pkb));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.st-label{font-family:'Share Tech Mono',monospace;font-size:0.52rem;letter-spacing:0.12em;color:var(--dim);display:block;margin-top:0.2rem;}
 
-    .hub-subtitle {
-      font-family: 'Share Tech Mono', monospace;
-      font-size: 0.85rem;
-      color: var(--dim);
-      letter-spacing: 0.1em;
-      margin-bottom: 32px;
-    }
+/* ── SECTION SHARED ── */
+.section{padding:3.5rem 5%;position:relative;z-index:1;}
+.section-alt{background:rgba(10,6,24,0.6);}
+.sec-label{font-family:'Share Tech Mono',monospace;font-size:0.6rem;letter-spacing:0.22em;
+  color:var(--cyan);display:flex;align-items:center;gap:0.7rem;margin-bottom:0.6rem;}
+.sec-label::before{content:'';width:16px;height:1px;background:linear-gradient(90deg,var(--cyan),var(--pb));}
+.sec-title{font-family:'Orbitron',sans-serif;font-size:clamp(1.3rem,3vw,2rem);font-weight:900;
+  background:linear-gradient(135deg,var(--white),var(--pg));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+  margin-bottom:0.5rem;}
+.sec-sub{font-size:0.98rem;color:var(--muted);line-height:1.85;max-width:600px;margin-bottom:2rem;}
 
-    .warning-banner {
-      display: inline-flex;
-      align-items: center;
-      gap: 10px;
-      padding: 10px 24px;
-      background: rgba(239, 68, 68, 0.08);
-      border: 1px solid rgba(239, 68, 68, 0.25);
-      border-radius: var(--radius);
-      font-family: 'Share Tech Mono', monospace;
-      font-size: 0.78rem;
-      color: var(--red);
-      letter-spacing: 0.08em;
-      margin-bottom: 48px;
-    }
+/* ── FUNNEL FLOW BAR ── */
+.funnel-flow{display:flex;align-items:center;gap:0;max-width:900px;margin:0 auto 0.8rem;
+  background:var(--card);border:1px solid var(--border);border-radius:10px;overflow:hidden;}
+.ff-step{flex:1;padding:1.2rem 0.8rem;text-align:center;position:relative;
+  border-right:1px solid rgba(168,85,247,0.1);transition:all 0.3s;cursor:pointer;text-decoration:none;display:block;}
+.ff-step:last-child{border-right:none;}
+.ff-step:hover{background:rgba(168,85,247,0.08);}
+.ff-step.active-step{background:rgba(168,85,247,0.12);}
+.ff-step::after{content:'→';position:absolute;right:-8px;top:50%;transform:translateY(-50%);
+  font-size:0.7rem;color:rgba(168,85,247,0.4);z-index:2;}
+.ff-step:last-child::after{display:none;}
+.ffs-num{font-family:'Share Tech Mono',monospace;font-size:0.5rem;letter-spacing:0.15em;color:var(--dim);margin-bottom:0.3rem;}
+.ffs-name{font-family:'Orbitron',sans-serif;font-size:0.65rem;font-weight:700;color:var(--white);margin-bottom:0.2rem;letter-spacing:0.05em;}
+.ffs-file{font-family:'Share Tech Mono',monospace;font-size:0.48rem;letter-spacing:0.06em;color:var(--cyan);}
+.funnel-note{font-family:'Share Tech Mono',monospace;font-size:0.56rem;letter-spacing:0.1em;color:var(--dim);text-align:center;max-width:900px;margin:0 auto;}
 
-    /* ── Main content ── */
-    .hub-main {
-      max-width: 1400px;
-      margin: 0 auto;
-      padding: 0 32px 80px;
-    }
+/* ── CARD GRIDS ── */
+.cards-3{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;}
+.cards-2{display:grid;grid-template-columns:repeat(2,1fr);gap:1rem;}
+.cards-4{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;}
 
-    /* ── Section labels ── */
-    .section-label {
-      font-family: 'Share Tech Mono', monospace;
-      font-size: 0.7rem;
-      letter-spacing: 0.18em;
-      color: var(--pg);
-      text-transform: uppercase;
-      margin-bottom: 16px;
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
+.hub-card{
+  background:var(--card);border:1px solid var(--border);border-radius:12px;
+  padding:1.8rem;text-decoration:none;display:flex;flex-direction:column;gap:0.8rem;
+  transition:all 0.3s;position:relative;overflow:hidden;
+}
+.hub-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;
+  background:linear-gradient(90deg,var(--pb),var(--pkb));
+  transform:scaleX(0);transition:transform 0.3s;transform-origin:left;}
+.hub-card:hover{border-color:rgba(168,85,247,0.4);transform:translateY(-4px);
+  box-shadow:0 16px 40px rgba(168,85,247,0.1);}
+.hub-card:hover::before{transform:scaleX(1);}
+.hub-card.cyan-accent::before{background:linear-gradient(90deg,var(--cyan),var(--pb));}
+.hub-card.green-accent::before{background:linear-gradient(90deg,var(--green),var(--cyan));}
+.hub-card.pink-accent::before{background:linear-gradient(90deg,var(--pink),var(--pb));}
 
-    .section-label::after {
-      content: '';
-      flex: 1;
-      height: 1px;
-      background: var(--border);
-    }
+.hc-badge{font-family:'Share Tech Mono',monospace;font-size:0.52rem;letter-spacing:0.15em;
+  padding:0.2rem 0.6rem;border-radius:3px;display:inline-block;align-self:flex-start;}
+.hc-badge.funnel{color:var(--pb);background:rgba(168,85,247,0.08);border:1px solid rgba(168,85,247,0.2);}
+.hc-badge.aios{color:var(--cyan);background:rgba(34,211,238,0.07);border:1px solid rgba(34,211,238,0.18);}
+.hc-badge.ops{color:var(--green);background:rgba(74,222,128,0.07);border:1px solid rgba(74,222,128,0.18);}
+.hc-badge.ref{color:var(--dim);background:rgba(168,85,247,0.05);border:1px solid rgba(168,85,247,0.12);}
+.hc-badge.live{color:var(--green);background:rgba(74,222,128,0.08);border:1px solid rgba(74,222,128,0.2);}
+.hc-badge.ready{color:var(--amber);background:rgba(251,191,36,0.07);border:1px solid rgba(251,191,36,0.18);}
+.hc-badge.todo{color:var(--dim);background:rgba(168,85,247,0.04);border:1px solid rgba(168,85,247,0.1);}
 
-    /* ── Card grid ── */
-    .card-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-      gap: 16px;
-      margin-bottom: 48px;
-    }
+.hc-icon{font-size:2rem;}
+.hc-title{font-family:'Orbitron',sans-serif;font-size:0.88rem;font-weight:700;color:var(--white);letter-spacing:0.05em;}
+.hc-desc{font-size:0.85rem;color:var(--muted);line-height:1.7;flex:1;}
+.hc-link{font-family:'Share Tech Mono',monospace;font-size:0.55rem;letter-spacing:0.1em;
+  color:var(--cyan);display:flex;align-items:center;gap:0.4rem;margin-top:auto;}
+.hub-card:hover .hc-link{color:var(--white);}
 
-    .hub-card {
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: var(--radius-lg);
-      padding: 24px;
-      text-decoration: none;
-      display: block;
-      transition: border-color 0.25s, transform 0.2s, box-shadow 0.25s;
-      position: relative;
-      overflow: hidden;
-    }
+/* ── LAUNCH STATUS ── */
+.launch-status{max-width:800px;margin:0 auto;}
+.ls-item{display:flex;align-items:center;gap:1rem;padding:1rem 1.5rem;
+  background:var(--card);border:1px solid var(--border);border-radius:8px;
+  margin-bottom:0.5rem;transition:all 0.2s;}
+.ls-item:hover{border-color:rgba(168,85,247,0.3);}
+.ls-num{font-family:'Orbitron',sans-serif;font-size:0.75rem;font-weight:700;
+  width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.ls-num.done{background:rgba(74,222,128,0.15);color:var(--green);border:1px solid rgba(74,222,128,0.3);}
+.ls-num.built{background:rgba(168,85,247,0.12);color:var(--pg);border:1px solid rgba(168,85,247,0.25);}
+.ls-num.next{background:rgba(251,191,36,0.1);color:var(--amber);border:1px solid rgba(251,191,36,0.25);}
+.ls-num.todo{background:rgba(168,85,247,0.05);color:var(--dim);border:1px solid rgba(168,85,247,0.1);}
+.ls-body{flex:1;}
+.ls-title{font-size:0.95rem;font-weight:600;color:var(--white);}
+.ls-desc{font-size:0.82rem;color:var(--dim);margin-top:0.15rem;}
+.ls-status{font-family:'Share Tech Mono',monospace;font-size:0.55rem;letter-spacing:0.1em;
+  padding:0.2rem 0.6rem;border-radius:3px;flex-shrink:0;}
+.ls-status.built{color:var(--pg);background:rgba(168,85,247,0.08);border:1px solid rgba(168,85,247,0.2);}
+.ls-status.next{color:var(--amber);background:rgba(251,191,36,0.08);border:1px solid rgba(251,191,36,0.2);}
+.ls-status.todo{color:var(--dim);background:rgba(168,85,247,0.04);border:1px solid rgba(168,85,247,0.1);}
 
-    .hub-card::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      height: 2px;
-      background: linear-gradient(90deg, var(--pm), var(--pb));
-      opacity: 0;
-      transition: opacity 0.25s;
-    }
+/* ── QUICK LINKS ── */
+.quick-links{display:flex;flex-wrap:wrap;gap:0.6rem;margin-top:2rem;}
+.ql{font-family:'Share Tech Mono',monospace;font-size:0.62rem;letter-spacing:0.1em;
+  padding:0.5rem 1rem;border-radius:5px;text-decoration:none;transition:all 0.2s;
+  display:flex;align-items:center;gap:0.5rem;}
+.ql.primary{background:linear-gradient(135deg,var(--pm),var(--pink));color:var(--white);
+  box-shadow:0 0 20px rgba(168,85,247,0.3);}
+.ql.primary:hover{box-shadow:0 0 30px rgba(168,85,247,0.5);transform:translateY(-2px);}
+.ql.secondary{background:rgba(168,85,247,0.08);border:1px solid rgba(168,85,247,0.25);color:var(--muted);}
+.ql.secondary:hover{border-color:rgba(168,85,247,0.5);color:var(--white);}
+.ql.cyan{background:rgba(34,211,238,0.07);border:1px solid rgba(34,211,238,0.2);color:var(--cyan);}
+.ql.cyan:hover{background:rgba(34,211,238,0.12);border-color:rgba(34,211,238,0.4);}
 
-    .hub-card:hover {
-      border-color: rgba(168, 85, 247, 0.45);
-      transform: translateY(-3px);
-      box-shadow: 0 8px 32px rgba(124, 58, 237, 0.2);
-    }
+footer{padding:2rem 5%;border-top:1px solid var(--border);
+  display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem;
+  position:relative;z-index:1;}
+.footer-brand{font-family:'Orbitron',sans-serif;font-size:0.9rem;font-weight:900;letter-spacing:0.18em;
+  background:linear-gradient(90deg,var(--pg),var(--pkb));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.footer-tag{font-family:'Share Tech Mono',monospace;font-size:0.58rem;letter-spacing:0.12em;color:var(--dim);}
 
-    .hub-card:hover::before {
-      opacity: 1;
-    }
+@keyframes fu{from{opacity:0;transform:translateY(18px);}to{opacity:1;transform:translateY(0);}}
+.reveal{opacity:0;transform:translateY(20px);transition:opacity 0.6s ease,transform 0.6s ease;}
+.reveal.visible{opacity:1;transform:translateY(0);}
+.rd1{transition-delay:0.08s;}.rd2{transition-delay:0.16s;}.rd3{transition-delay:0.24s;}.rd4{transition-delay:0.32s;}
 
-    .card-icon {
-      font-size: 1.6rem;
-      margin-bottom: 12px;
-      display: block;
-    }
-
-    .card-name {
-      font-family: 'Orbitron', monospace;
-      font-size: 0.78rem;
-      font-weight: 700;
-      color: var(--white);
-      letter-spacing: 0.06em;
-      margin-bottom: 6px;
-    }
-
-    .card-desc {
-      font-size: 0.8rem;
-      color: var(--dim);
-      line-height: 1.5;
-      margin-bottom: 14px;
-    }
-
-    .card-url {
-      font-family: 'Share Tech Mono', monospace;
-      font-size: 0.68rem;
-      color: var(--pg);
-      opacity: 0.7;
-    }
-
-    .card-tag {
-      display: inline-block;
-      padding: 2px 10px;
-      border-radius: var(--radius-full);
-      font-family: 'Share Tech Mono', monospace;
-      font-size: 0.62rem;
-      letter-spacing: 0.08em;
-      margin-bottom: 12px;
-    }
-
-    .tag-public  { background: rgba(74, 222, 128, 0.12); color: var(--green); border: 1px solid rgba(74,222,128,0.25); }
-    .tag-private { background: rgba(251,191,36,0.12); color: var(--amber); border: 1px solid rgba(251,191,36,0.25); }
-    .tag-resource{ background: rgba(34,211,238,0.10); color: var(--cyan); border: 1px solid rgba(34,211,238,0.22); }
-
-    /* ── Status section ── */
-    .status-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-      gap: 12px;
-      margin-bottom: 48px;
-    }
-
-    .status-item {
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 16px 20px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
-
-    .status-name {
-      font-family: 'Share Tech Mono', monospace;
-      font-size: 0.72rem;
-      color: var(--muted);
-      letter-spacing: 0.06em;
-    }
-
-    .status-dot {
-      width: 9px;
-      height: 9px;
-      border-radius: 50%;
-      background: var(--green);
-      box-shadow: 0 0 8px var(--green);
-      animation: pulse-green 2s ease-in-out infinite;
-    }
-
-    @keyframes pulse-green {
-      0%, 100% { box-shadow: 0 0 4px var(--green); }
-      50%       { box-shadow: 0 0 14px var(--green); }
-    }
-
-    .status-label {
-      font-family: 'Share Tech Mono', monospace;
-      font-size: 0.65rem;
-      color: var(--green);
-      letter-spacing: 0.08em;
-    }
-
-    .status-right {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    /* ── Stats section ── */
-    .stats-bar {
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: var(--radius-lg);
-      padding: 28px 32px;
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-      gap: 24px;
-      margin-bottom: 48px;
-    }
-
-    .stat-block {
-      display: flex;
-      flex-direction: column;
-      gap: 4px;
-    }
-
-    .stat-block-label {
-      font-family: 'Share Tech Mono', monospace;
-      font-size: 0.65rem;
-      color: var(--dim);
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-    }
-
-    .stat-block-value {
-      font-family: 'Share Tech Mono', monospace;
-      font-size: 1.4rem;
-      font-weight: 400;
-      color: var(--pg);
-    }
-
-    .stat-block-sub {
-      font-family: 'Share Tech Mono', monospace;
-      font-size: 0.62rem;
-      color: var(--dim);
-    }
-
-    /* ── Footer note ── */
-    .hub-footer {
-      text-align: center;
-      padding: 32px;
-      border-top: 1px solid var(--border);
-      font-family: 'Share Tech Mono', monospace;
-      font-size: 0.7rem;
-      color: var(--dim);
-      letter-spacing: 0.08em;
-    }
-
-    /* ── Responsive ── */
-    @media (max-width: 768px) {
-      .hub-header-inner { padding: 0 16px; }
-      .hub-hero { padding: 40px 16px 24px; }
-      .hub-main { padding: 0 16px 60px; }
-      .stats-bar { padding: 20px; }
-    }
-  </style>
+@media(max-width:900px){
+  .cards-3,.cards-4{grid-template-columns:1fr 1fr;}
+  .funnel-flow{flex-direction:column;}
+  .ff-step::after{display:none;}
+  .ff-step{border-right:none;border-bottom:1px solid rgba(168,85,247,0.1);}
+}
+@media(max-width:600px){
+  .cards-3,.cards-4,.cards-2{grid-template-columns:1fr;}
+  .status-tiles{flex-wrap:wrap;}
+}
+</style>
 </head>
 <body>
+<div class="orb o1"></div><div class="orb o2"></div><div class="orb o3"></div>
 
-  <!-- NAV -->
-  <header class="hub-header">
-    <div class="hub-header-inner">
-      <div class="ss-logo">SS</div>
-      <div style="display:flex;align-items:center;gap:16px;">
-        <span style="font-family:'Share Tech Mono',monospace;font-size:0.7rem;color:var(--dim);" id="live-clock"></span>
-        <div class="private-badge">
-          <div class="private-dot"></div>
-          PRIVATE — Do not share this URL
-        </div>
-      </div>
-    </div>
-  </header>
+<!-- TOP BAR -->
+<div class="topbar">
+  <div class="tb-brand">
+    <div class="tb-hex"></div>
+    <span class="tb-name">SILENT SYNDICATE</span>
+    <span style="color:rgba(168,85,247,0.3);margin:0 0.3rem">/</span>
+    <span class="tb-tag">MASTER HUB</span>
+  </div>
+  <div class="tb-right">
+    <div class="tb-status"><div class="tb-dot g"></div>ALL FILES BUILT</div>
+    <div class="tb-status" id="tbTime" style="color:var(--dim);font-family:'Share Tech Mono',monospace;font-size:0.58rem;letter-spacing:0.1em;"></div>
+  </div>
+</div>
 
-  <!-- HERO -->
-  <div class="hub-hero">
-    <h1 class="hub-title">SILENT SYNDICATE — MASTER HUB</h1>
-    <p class="hub-subtitle">Private Operations Centre — Not Public</p>
-    <div class="warning-banner">
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
-      PRIVATE — Do not share this URL with leads or the public
-    </div>
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-sys">// SILENT SYNDICATE — COMPLETE SYSTEM</div>
+  <h1 class="hero-title">
+    <span class="ht-ss">Master Hub</span>
+    <span class="ht-hub">EVERY PAGE · EVERY TOOL · EVERY LINK — IN ONE PLACE</span>
+  </h1>
+  <p class="hero-sub">Your entire Silent Syndicate operation — the funnel, the AIOS, the ops docs — all connected and accessible from here. This is your command centre.</p>
+
+  <div class="status-tiles">
+    <div class="st"><span class="st-val">6</span><span class="st-label">Funnel Pages</span></div>
+    <div class="st"><span class="st-val">1</span><span class="st-label">AI Dashboard</span></div>
+    <div class="st"><span class="st-val">4</span><span class="st-label">Ops Docs</span></div>
+    <div class="st"><span class="st-val">∞</span><span class="st-label">Ready To Deploy</span></div>
   </div>
 
-  <main class="hub-main">
+  <div class="quick-links" style="justify-content:center;">
+    <a href="page1-optin.html" class="ql primary">▶ LAUNCH FUNNEL</a>
+    <a href="aios-dashboard.html" class="ql cyan">⬡ OPEN AIOS</a>
+    <a href="tech-stack-guide.html" class="ql secondary">⚙ SETUP GUIDE</a>
+    <a href="funnel-flow-diagram.html" class="ql secondary">◈ FLOW DIAGRAM</a>
+    
+    <a href="join.html" class="ql secondary" style="border-color:rgba(74,222,128,0.3);color:rgba(74,222,128,0.8);">📋 JOIN GUIDE</a>
+    <a href="commission-structure.html" class="ql secondary" style="border-color:rgba(34,211,238,0.3);color:rgba(34,211,238,0.8);">◈ COMMISSION STRUCTURE</a>
+    <a href="operator-guidelines.html" class="ql secondary" style="border-color:rgba(251,191,36,0.3);color:rgba(251,191,36,0.8);">⚠ OPERATOR GUIDELINES</a>
+    <a href="overview.html" class="ql secondary" style="border-color:rgba(201,168,76,0.3);color:rgba(201,168,76,0.8);">📋 COMPANY OVERVIEW</a>
+    <a href="distributors.html" class="ql secondary" style="border-color:rgba(74,222,128,0.3);color:rgba(74,222,128,0.8);">⚡ RECRUITER PAGE</a>
+  </div>
+</section>
 
-    <!-- QUICK STATS -->
-    <div class="section-label">Quick Stats</div>
-    <div class="stats-bar">
-      <div class="stat-block">
-        <span class="stat-block-label">Active Pages</span>
-        <span class="stat-block-value">09</span>
-        <span class="stat-block-sub">In production</span>
-      </div>
-      <div class="stat-block">
-        <span class="stat-block-label">API Endpoints</span>
-        <span class="stat-block-value">04</span>
-        <span class="stat-block-sub">/subscribe /apply /score /webhook</span>
-      </div>
-      <div class="stat-block">
-        <span class="stat-block-label">Funnel Stages</span>
-        <span class="stat-block-value">04</span>
-        <span class="stat-block-sub">Index → Manifesto → Apply → Offer</span>
-      </div>
-      <div class="stat-block">
-        <span class="stat-block-label">Email Sequence</span>
-        <span class="stat-block-value">07</span>
-        <span class="stat-block-sub">Days (automated)</span>
-      </div>
-      <div class="stat-block">
-        <span class="stat-block-label">Lead Score Range</span>
-        <span class="stat-block-value">0–100</span>
-        <span class="stat-block-sub">HOT / WARM / COLD</span>
-      </div>
-      <div class="stat-block">
-        <span class="stat-block-label">Commission Range</span>
-        <span class="stat-block-value">$2.4k+</span>
-        <span class="stat-block-sub">Per closed sale</span>
-      </div>
+<!-- THE FUNNEL FLOW -->
+<section class="section section-alt">
+  <div class="sec-label reveal">The Funnel — Live Pages</div>
+  <div class="sec-title reveal">Step-By-Step Customer Journey.</div>
+  <p class="sec-sub reveal">Every page is connected. A cold lead enters at Step 1 and exits at Step 4 as a paying operator — fully automated, no calls.</p>
+
+  <div class="funnel-flow reveal">
+    <a href="page1-optin.html" class="ff-step">
+      <div class="ffs-num">STEP 1</div>
+      <div class="ffs-name">OPT-IN</div>
+      <div class="ffs-file">page1-optin.html</div>
+    </a>
+    <a href="page2-manifesto.html" class="ff-step">
+      <div class="ffs-num">STEP 2</div>
+      <div class="ffs-name">MANIFESTO</div>
+      <div class="ffs-file">page2-manifesto.html</div>
+    </a>
+    <a href="page3-apply.html" class="ff-step">
+      <div class="ffs-num">STEP 3</div>
+      <div class="ffs-name">APPLY</div>
+      <div class="ffs-file">page3-apply.html</div>
+    </a>
+    <a href="page4-offer.html" class="ff-step">
+      <div class="ffs-num">STEP 4</div>
+      <div class="ffs-name">OFFER</div>
+      <div class="ffs-file">page4-offer.html</div>
+    </a>
+    <a href="aios-sales.html" class="ff-step">
+      <div class="ffs-num">BONUS</div>
+      <div class="ffs-name">AIOS PAGE</div>
+      <div class="ffs-file">aios-sales.html</div>
+    </a>
+  </div>
+  <div class="funnel-note reveal">→ Each page links to the next automatically. Page 1 → Page 2 on form submit. Page 2 → Page 3 via CTA. Page 3 → Page 4 on application approval. Page 4 → Enagic registration.</div>
+</section>
+
+<!-- AIOS SECTION -->
+<section class="section">
+  <div class="sec-label reveal">The Operating System</div>
+  <div class="sec-title reveal">Your AI Command Centre.</div>
+  <p class="sec-sub reveal">The AIOS is the brain of the operation. Dashboard for you — and a separate instance for every operator in your network.</p>
+
+  <div class="cards-2">
+    <a href="aios-dashboard.html" class="hub-card cyan-accent reveal">
+      <span class="hc-badge aios">LIVE DASHBOARD</span>
+      <div class="hc-icon">⬡</div>
+      <div class="hc-title">AIOS Dashboard</div>
+      <div class="hc-desc">Full mission-control interface. Lead pipeline, email sequences, chatbot conversations, commissions, operator network, content performance. Morning briefing included.</div>
+      <div class="hc-link">aios-dashboard.html →</div>
+    </a>
+    <a href="aios-sales.html" class="hub-card reveal rd1">
+      <span class="hc-badge aios">SALES PAGE</span>
+      <div class="hc-icon">📡</div>
+      <div class="hc-title">AIOS Sales Page</div>
+      <div class="hc-desc">The page that sells access to the AIOS. Explains the 5 compounding layers, morning briefing demo, master vs operator versions. Links to the offer page.</div>
+      <div class="hc-link">aios-sales.html →</div>
+    </a>
+  </div>
+</section>
+
+<!-- OPS DOCS -->
+<section class="section section-alt">
+  <div class="sec-label reveal">Operations</div>
+  <div class="sec-title reveal">Docs To Go Live.</div>
+  <p class="sec-sub reveal">Everything you need to connect the funnel, drive traffic, and deploy the AI chatbot.</p>
+
+  <div class="cards-3">
+    <a href="tech-stack-guide.html" class="hub-card green-accent reveal">
+      <span class="hc-badge ops">SETUP GUIDE</span>
+      <div class="hc-icon">⚙️</div>
+      <div class="hc-title">Tech Stack Guide</div>
+      <div class="hc-desc">5-phase setup: Netlify hosting, ActiveCampaign, Zapier automations, Typeform application, Tidio chatbot. Interactive checklist. Zero code required.</div>
+      <div class="hc-link">tech-stack-guide.html →</div>
+    </a>
+    <a href="traffic-strategy.html" class="hub-card green-accent reveal rd1">
+      <span class="hc-badge ops">TRAFFIC</span>
+      <div class="hc-icon">📡</div>
+      <div class="hc-title">Traffic Strategy</div>
+      <div class="hc-desc">TikTok-first platform playbook. 4 content pillars, 20 ready-to-use scroll-stopping hooks, weekly schedule, and a 30-day launch ramp with weekly targets.</div>
+      <div class="hc-link">traffic-strategy.html →</div>
+    </a>
+    <a href="chatbot-script.html" class="hub-card green-accent reveal rd2">
+      <span class="hc-badge ops">CHATBOT</span>
+      <div class="hc-icon">🤖</div>
+      <div class="hc-title">AI Chatbot Script</div>
+      <div class="hc-desc">Complete qualification script. Opening flows, objection handlers for 12 pushbacks, 6 Tidio knowledge base entries ready to copy-paste, lead scoring logic.</div>
+      <div class="hc-link">chatbot-script.html →</div>
+    </a>
+  </div>
+
+  <div class="cards-2" style="margin-top:1rem;">
+    <a href="funnel-flow-diagram.html" class="hub-card reveal">
+      <span class="hc-badge ref">REFERENCE</span>
+      <div class="hc-icon">◈</div>
+      <div class="hc-title">Funnel Flow Diagram</div>
+      <div class="hc-desc">Interactive visual breakdown of all 4 automation stages — Capture, Educate, Qualify, Convert. Tool stack, metrics, and callless conversion path.</div>
+      <div class="hc-link">funnel-flow-diagram.html →</div>
+    </a>
+    <a href="email-sequence.html" class="hub-card reveal rd1" style="opacity:0.6;">
+      <span class="hc-badge todo">TO BUILD</span>
+      <div class="hc-icon">📧</div>
+      <div class="hc-title">7-Day Email Sequence</div>
+      <div class="hc-desc">The 7 emails that go into ActiveCampaign — one per day, educating and converting leads automatically. The last missing piece before you go live.</div>
+      <div class="hc-link" style="color:var(--dim);">Not yet built — next priority</div>
+    </a>
+  </div>
+</section>
+
+<!-- LAUNCH STATUS -->
+<section class="section">
+  <div class="sec-label reveal">Where You're At</div>
+  <div class="sec-title reveal">Launch Status.</div>
+  <p class="sec-sub reveal">What's built, what needs connecting, what's left to do.</p>
+
+  <div class="launch-status">
+    <div class="ls-item reveal">
+      <div class="ls-num built">✓</div>
+      <div class="ls-body"><div class="ls-title">Funnel Pages (4) — All built and linked</div><div class="ls-desc">Opt-in → Manifesto → Apply → Offer. Full funnel flow with step progress indicators.</div></div>
+      <span class="ls-status built">BUILT</span>
     </div>
-
-    <!-- SYSTEM STATUS -->
-    <div class="section-label">System Status</div>
-    <div class="status-grid">
-      <div class="status-item">
-        <span class="status-name">Netlify Deploy</span>
-        <div class="status-right"><div class="status-dot"></div><span class="status-label">LIVE</span></div>
-      </div>
-      <div class="status-item">
-        <span class="status-name">Subscribe API</span>
-        <div class="status-right"><div class="status-dot"></div><span class="status-label">LIVE</span></div>
-      </div>
-      <div class="status-item">
-        <span class="status-name">Apply API</span>
-        <div class="status-right"><div class="status-dot"></div><span class="status-label">LIVE</span></div>
-      </div>
-      <div class="status-item">
-        <span class="status-name">Score API</span>
-        <div class="status-right"><div class="status-dot"></div><span class="status-label">LIVE</span></div>
-      </div>
-      <div class="status-item">
-        <span class="status-name">Webhook API</span>
-        <div class="status-right"><div class="status-dot"></div><span class="status-label">LIVE</span></div>
-      </div>
-      <div class="status-item">
-        <span class="status-name">Email Sequences</span>
-        <div class="status-right"><div class="status-dot"></div><span class="status-label">LIVE</span></div>
-      </div>
-      <div class="status-item">
-        <span class="status-name">Lead Scoring</span>
-        <div class="status-right"><div class="status-dot"></div><span class="status-label">LIVE</span></div>
-      </div>
-      <div class="status-item">
-        <span class="status-name">AIOS Dashboard</span>
-        <div class="status-right"><div class="status-dot"></div><span class="status-label">LIVE</span></div>
-      </div>
+    <div class="ls-item reveal rd1">
+      <div class="ls-num built">✓</div>
+      <div class="ls-body"><div class="ls-title">AIOS — Sales page + dashboard built</div><div class="ls-desc">Interactive dashboard with 7 live modules. Sales page explaining the 5 layers.</div></div>
+      <span class="ls-status built">BUILT</span>
     </div>
-
-    <!-- CONSUMER FUNNEL -->
-    <div class="section-label">Consumer Funnel</div>
-    <div class="card-grid">
-      <a href="index.html" class="hub-card">
-        <span class="card-icon">🏠</span>
-        <div class="card-tag tag-public">PUBLIC</div>
-        <div class="card-name">Landing Page</div>
-        <div class="card-desc">Top of funnel. Email capture with AI Income Blueprint lead magnet. Triggers Day 0 email.</div>
-        <div class="card-url">index.html</div>
-      </a>
-      <a href="page2-manifesto.html" class="hub-card">
-        <span class="card-icon">📜</span>
-        <div class="card-tag tag-public">PUBLIC</div>
-        <div class="card-name">The Manifesto</div>
-        <div class="card-desc">Conviction builder. Details the model, commissions, and automation philosophy. Warms leads.</div>
-        <div class="card-url">page2-manifesto.html</div>
-      </a>
-      <a href="page3-apply.html" class="hub-card">
-        <span class="card-icon">📋</span>
-        <div class="card-tag tag-public">PUBLIC</div>
-        <div class="card-name">Application</div>
-        <div class="card-desc">Multi-step qualifying application. Triggers AI lead scoring. Routes HOT → Offer, WARM/COLD → nurture.</div>
-        <div class="card-url">page3-apply.html</div>
-      </a>
-      <a href="page4-offer.html" class="hub-card">
-        <span class="card-icon">💎</span>
-        <div class="card-tag tag-public">PUBLIC</div>
-        <div class="card-name">The Offer</div>
-        <div class="card-desc">Final conversion page for HOT leads. Enagic registration CTA with full compensation breakdown.</div>
-        <div class="card-url">page4-offer.html</div>
-      </a>
+    <div class="ls-item reveal rd2">
+      <div class="ls-num built">✓</div>
+      <div class="ls-body"><div class="ls-title">Ops Docs — Tech guide, traffic strategy, chatbot script</div><div class="ls-desc">Step-by-step setup, content playbook, full chatbot qualification flows.</div></div>
+      <span class="ls-status built">BUILT</span>
     </div>
-
-    <!-- DISTRIBUTOR -->
-    <div class="section-label">Distributor</div>
-    <div class="card-grid">
-      <a href="distributors.html" class="hub-card">
-        <span class="card-icon">🤝</span>
-        <div class="card-tag tag-private">PRIVATE</div>
-        <div class="card-name">Distributor Onboarding</div>
-        <div class="card-desc">Resources, training, and setup guide for new Silent Syndicate operators joining the network.</div>
-        <div class="card-url">distributors.html</div>
-      </a>
+    <div class="ls-item reveal">
+      <div class="ls-num next">→</div>
+      <div class="ls-body"><div class="ls-title">Host all files on Netlify — go live</div><div class="ls-desc">Upload everything to Netlify. Takes 5 minutes. Funnel is live and accessible on any device.</div></div>
+      <span class="ls-status next">NEXT STEP</span>
     </div>
-
-    <!-- DASHBOARD -->
-    <div class="section-label">Dashboard</div>
-    <div class="card-grid">
-      <a href="aios-dashboard.html" class="hub-card">
-        <span class="card-icon">🖥️</span>
-        <div class="card-tag tag-private">PRIVATE</div>
-        <div class="card-name">AIOS Dashboard</div>
-        <div class="card-desc">AI Operating System. 7-view mission control: Morning Briefing, Pipeline, Email, Chatbot, Commissions, Network, Content.</div>
-        <div class="card-url">aios-dashboard.html</div>
-      </a>
-      <a href="aios-sales.html" class="hub-card">
-        <span class="card-icon">⚙️</span>
-        <div class="card-tag tag-public">PUBLIC</div>
-        <div class="card-name">AIOS Product Page</div>
-        <div class="card-desc">Public-facing page explaining what AIOS is and how it works. Drives traffic to dashboard sign-up.</div>
-        <div class="card-url">aios-sales.html</div>
-      </a>
+    <div class="ls-item reveal rd1">
+      <div class="ls-num next">→</div>
+      <div class="ls-body"><div class="ls-title">Connect ActiveCampaign + Zapier + Typeform</div><div class="ls-desc">Follow the tech stack guide phase by phase. ~48 hours total setup time.</div></div>
+      <span class="ls-status next">DO THIS</span>
     </div>
-
-    <!-- RESOURCES -->
-    <div class="section-label">Resources & Documentation</div>
-    <div class="card-grid">
-      <a href="tech-stack-guide.html" class="hub-card">
-        <span class="card-icon">🔧</span>
-        <div class="card-tag tag-resource">RESOURCE</div>
-        <div class="card-name">Tech Stack Guide</div>
-        <div class="card-desc">Complete breakdown of the tools, integrations, and infrastructure powering the funnel.</div>
-        <div class="card-url">tech-stack-guide.html</div>
-      </a>
-      <a href="traffic-strategy.html" class="hub-card">
-        <span class="card-icon">📈</span>
-        <div class="card-tag tag-resource">RESOURCE</div>
-        <div class="card-name">Traffic Strategy</div>
-        <div class="card-desc">Organic and paid traffic playbook. Content channels, posting cadence, and audience targeting.</div>
-        <div class="card-url">traffic-strategy.html</div>
-      </a>
-      <a href="chatbot-script.html" class="hub-card">
-        <span class="card-icon">🤖</span>
-        <div class="card-tag tag-resource">RESOURCE</div>
-        <div class="card-name">Chatbot Script</div>
-        <div class="card-desc">Full AI chatbot conversation flows, objection handling scripts, and qualifying question sequences.</div>
-        <div class="card-url">chatbot-script.html</div>
-      </a>
-      <a href="funnel-flow-diagram.html" class="hub-card">
-        <span class="card-icon">🗺️</span>
-        <div class="card-tag tag-resource">RESOURCE</div>
-        <div class="card-name">Funnel Flow Diagram</div>
-        <div class="card-desc">Interactive visual map of the entire funnel. Clickable nodes, API call indicators, email sequence timeline.</div>
-        <div class="card-url">funnel-flow-diagram.html</div>
-      </a>
+    <div class="ls-item reveal rd2">
+      <div class="ls-num next">→</div>
+      <div class="ls-body"><div class="ls-title">Write and load 7-day email sequence</div><div class="ls-desc">The emails that fire automatically after opt-in. Last remaining content asset.</div></div>
+      <span class="ls-status next">DO THIS</span>
     </div>
+    <div class="ls-item reveal">
+      <div class="ls-num next">→</div>
+      <div class="ls-body"><div class="ls-title">Install Tidio chatbot on all 4 pages</div><div class="ls-desc">Add snippet, train with chatbot script, test end-to-end conversation.</div></div>
+      <span class="ls-status next">DO THIS</span>
+    </div>
+    <div class="ls-item reveal rd1">
+      <div class="ls-num todo">○</div>
+      <div class="ls-body"><div class="ls-title">Start posting content — TikTok first</div><div class="ls-desc">Follow the traffic strategy. 1 hour per day. Volume beats perfection.</div></div>
+      <span class="ls-status todo">AFTER SETUP</span>
+    </div>
+  </div>
+</section>
 
-  </main>
+<!-- ALL FILES -->
+<section class="section section-alt">
+  <div class="sec-label reveal">Complete File Index</div>
+  <div class="sec-title reveal">Every Asset In One Place.</div>
 
-  <footer class="hub-footer">
-    SILENT SYNDICATE — PRIVATE OPERATIONS CENTRE &nbsp;|&nbsp; DO NOT SHARE THIS URL
-    &nbsp;|&nbsp; <span id="footer-date"></span>
-  </footer>
+  <div class="cards-4">
+    <a href="page1-optin.html" class="hub-card reveal"><span class="hc-badge funnel">FUNNEL</span><div class="hc-icon">📥</div><div class="hc-title">Opt-In Page</div><div class="hc-desc">Cold traffic landing. Free blueprint offer.</div><div class="hc-link">page1-optin.html →</div></a>
+    <a href="page2-manifesto.html" class="hub-card reveal rd1"><span class="hc-badge funnel">FUNNEL</span><div class="hc-icon">📖</div><div class="hc-title">Manifesto</div><div class="hc-desc">Brand story. System explainer. CTA to apply.</div><div class="hc-link">page2-manifesto.html →</div></a>
+    <a href="page3-apply.html" class="hub-card reveal rd2"><span class="hc-badge funnel">FUNNEL</span><div class="hc-icon">📋</div><div class="hc-title">Application</div><div class="hc-desc">7-question form. Instant approval. Routes to offer.</div><div class="hc-link">page3-apply.html →</div></a>
+    <a href="page4-offer.html" class="hub-card reveal rd3"><span class="hc-badge funnel">FUNNEL</span><div class="hc-icon">💰</div><div class="hc-title">Offer Page</div><div class="hc-desc">3 tiers, ROI calc, 30-day journey. Callless close.</div><div class="hc-link">page4-offer.html →</div></a>
+    <a href="aios-dashboard.html" class="hub-card cyan-accent reveal"><span class="hc-badge aios">AIOS</span><div class="hc-icon">⬡</div><div class="hc-title">AIOS Dashboard</div><div class="hc-desc">7-module mission control. Full operating system.</div><div class="hc-link">aios-dashboard.html →</div></a>
+    <a href="aios-sales.html" class="hub-card cyan-accent reveal rd1"><span class="hc-badge aios">AIOS</span><div class="hc-icon">📡</div><div class="hc-title">AIOS Sales Page</div><div class="hc-desc">Sells the operating system. 5 layers explained.</div><div class="hc-link">aios-sales.html →</div></a>
+    <a href="tech-stack-guide.html" class="hub-card green-accent reveal rd2"><span class="hc-badge ops">OPS</span><div class="hc-icon">⚙️</div><div class="hc-title">Tech Stack Guide</div><div class="hc-desc">5-phase setup. Interactive checklist.</div><div class="hc-link">tech-stack-guide.html →</div></a>
+    <a href="traffic-strategy.html" class="hub-card green-accent reveal rd3"><span class="hc-badge ops">OPS</span><div class="hc-icon">📱</div><div class="hc-title">Traffic Strategy</div><div class="hc-desc">Platform playbook. 30-day launch plan.</div><div class="hc-link">traffic-strategy.html →</div></a>
+    <a href="chatbot-script.html" class="hub-card green-accent reveal"><span class="hc-badge ops">OPS</span><div class="hc-icon">🤖</div><div class="hc-title">Chatbot Script</div><div class="hc-desc">12 objections. Qualification flows. Tidio ready.</div><div class="hc-link">chatbot-script.html →</div></a>
+    <a href="funnel-flow-diagram.html" class="hub-card reveal rd1"><span class="hc-badge ref">REF</span><div class="hc-icon">◈</div><div class="hc-title">Funnel Diagram</div><div class="hc-desc">Visual 4-stage automation map. Interactive.</div><div class="hc-link">funnel-flow-diagram.html →</div></a>
+  </div>
+</section>
 
-  <script>
-    // Live clock
-    function updateClock() {
-      const now = new Date();
-      const ts = now.toISOString().replace('T', ' ').slice(0, 19) + ' UTC';
-      document.getElementById('live-clock').textContent = ts;
-    }
-    updateClock();
-    setInterval(updateClock, 1000);
+<footer>
+  <div class="footer-brand">SS / MASTER HUB</div>
+  <div class="footer-tag">Silent Syndicate — Complete System</div>
+  <div class="footer-tag" id="footerTime"></div>
+</footer>
 
-    // Footer date
-    document.getElementById('footer-date').textContent = new Date().toLocaleDateString('en-GB', {
-      day: '2-digit', month: 'short', year: 'numeric'
-    }).toUpperCase();
-  </script>
+<script>
+// Clock
+function updateTime(){
+  const now = new Date();
+  const t = now.toLocaleTimeString('en-AU',{hour:'2-digit',minute:'2-digit',hour12:false}) + ' AEST';
+  document.getElementById('tbTime').textContent = t;
+  document.getElementById('footerTime').textContent = '© 2025 · ' + now.getFullYear();
+}
+updateTime();
+setInterval(updateTime, 30000);
 
+// Scroll reveal
+const obs = new IntersectionObserver(entries=>{
+  entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('visible');obs.unobserve(e.target);}});
+},{threshold:0.08});
+document.querySelectorAll('.reveal').forEach(el=>obs.observe(el));
+</script>
 </body>
 </html>

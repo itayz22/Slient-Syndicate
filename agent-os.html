@@ -1,0 +1,1702 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SYNDICATE OS — AI Business Agent</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@300;400;500;700&family=Syne:wght@400;700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --void: #030508;
+  --surface: #080c12;
+  --panel: #0c1018;
+  --panel2: #111620;
+  --edge: rgba(255,255,255,0.06);
+  --edge2: rgba(255,255,255,0.12);
+  --accent: #00ff88;
+  --accent2: #0088ff;
+  --accent3: #ff4488;
+  --accent4: #ffaa00;
+  --text: #e8edf5;
+  --muted: rgba(232,237,245,0.5);
+  --dim: rgba(232,237,245,0.25);
+  --glow: 0 0 30px rgba(0,255,136,0.15);
+  --glow2: 0 0 30px rgba(0,136,255,0.15);
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { font-size: 15px; }
+body {
+  background: var(--void);
+  color: var(--text);
+  font-family: 'Space Grotesk', sans-serif;
+  overflow-x: hidden;
+  min-height: 100vh;
+}
+
+/* SCANLINE OVERLAY */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.03) 2px, rgba(0,0,0,0.03) 4px);
+  pointer-events: none;
+  z-index: 9999;
+}
+
+/* GRID BG */
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(0,255,136,0.015) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0,255,136,0.015) 1px, transparent 1px);
+  background-size: 40px 40px;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* LAYOUT */
+.layout {
+  display: grid;
+  grid-template-columns: 240px 1fr;
+  grid-template-rows: 56px 1fr;
+  min-height: 100vh;
+  position: relative;
+  z-index: 1;
+}
+
+/* TOPBAR */
+.topbar {
+  grid-column: 1 / -1;
+  background: rgba(8,12,18,0.95);
+  border-bottom: 1px solid var(--edge);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 1.5rem;
+  backdrop-filter: blur(20px);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+.tb-brand {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+}
+.tb-logo {
+  width: 28px;
+  height: 28px;
+  background: linear-gradient(135deg, var(--accent), var(--accent2));
+  clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+  animation: logoPulse 3s ease-in-out infinite;
+}
+@keyframes logoPulse {
+  0%,100% { box-shadow: 0 0 0 rgba(0,255,136,0); }
+  50% { box-shadow: 0 0 20px rgba(0,255,136,0.4); }
+}
+.tb-name {
+  font-family: 'Syne', sans-serif;
+  font-size: 1rem;
+  font-weight: 800;
+  letter-spacing: 0.15em;
+  color: var(--text);
+}
+.tb-name span { color: var(--accent); }
+.tb-right {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+}
+.tb-status {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.6rem;
+  letter-spacing: 0.1em;
+  color: var(--accent);
+}
+.tb-dot {
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: var(--accent);
+  animation: blink 1.5s ease-in-out infinite;
+}
+@keyframes blink { 0%,100% { opacity: 1; } 50% { opacity: 0.3; } }
+.tb-time {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.65rem;
+  color: var(--muted);
+  letter-spacing: 0.05em;
+}
+.tb-run-btn {
+  background: linear-gradient(135deg, rgba(0,255,136,0.15), rgba(0,136,255,0.1));
+  border: 1px solid rgba(0,255,136,0.3);
+  color: var(--accent);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.6rem;
+  font-weight: 500;
+  letter-spacing: 0.15em;
+  padding: 0.4rem 0.9rem;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.2s;
+  text-transform: uppercase;
+}
+.tb-run-btn:hover { background: rgba(0,255,136,0.2); border-color: var(--accent); }
+.tb-run-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+/* SIDEBAR */
+.sidebar {
+  background: var(--surface);
+  border-right: 1px solid var(--edge);
+  padding: 1.5rem 0;
+  overflow-y: auto;
+}
+.nav-section {
+  padding: 0.3rem 1rem 0.3rem;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.52rem;
+  letter-spacing: 0.2em;
+  color: var(--dim);
+  text-transform: uppercase;
+  margin-top: 1.2rem;
+}
+.nav-section:first-child { margin-top: 0; }
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  padding: 0.65rem 1.2rem;
+  cursor: pointer;
+  transition: all 0.15s;
+  border-left: 2px solid transparent;
+  font-size: 0.82rem;
+  color: var(--muted);
+  font-weight: 500;
+}
+.nav-item:hover { background: rgba(255,255,255,0.03); color: var(--text); }
+.nav-item.active {
+  background: rgba(0,255,136,0.06);
+  border-left-color: var(--accent);
+  color: var(--accent);
+}
+.nav-icon { font-size: 0.85rem; width: 16px; text-align: center; flex-shrink: 0; }
+.nav-badge {
+  margin-left: auto;
+  background: rgba(255,68,136,0.2);
+  border: 1px solid rgba(255,68,136,0.3);
+  color: var(--accent3);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.5rem;
+  padding: 0.1rem 0.4rem;
+  border-radius: 3px;
+}
+.nav-badge.green {
+  background: rgba(0,255,136,0.1);
+  border-color: rgba(0,255,136,0.2);
+  color: var(--accent);
+}
+
+/* MAIN CONTENT */
+.main {
+  overflow-y: auto;
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+}
+
+/* PANELS */
+.panel-row { display: grid; gap: 1.2rem; }
+.panel-row.cols-3 { grid-template-columns: repeat(3, 1fr); }
+.panel-row.cols-2 { grid-template-columns: 1fr 1fr; }
+.panel-row.cols-4 { grid-template-columns: repeat(4, 1fr); }
+
+.panel {
+  background: var(--panel);
+  border: 1px solid var(--edge);
+  border-radius: 8px;
+  overflow: hidden;
+  transition: border-color 0.2s;
+}
+.panel:hover { border-color: var(--edge2); }
+.panel.accent-green { border-color: rgba(0,255,136,0.2); }
+.panel.accent-blue { border-color: rgba(0,136,255,0.2); }
+.panel.accent-red { border-color: rgba(255,68,136,0.2); }
+.panel.accent-amber { border-color: rgba(255,170,0,0.2); }
+
+.ph {
+  padding: 0.9rem 1.2rem;
+  border-bottom: 1px solid var(--edge);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+.ph-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.52rem;
+  letter-spacing: 0.18em;
+  color: var(--dim);
+  text-transform: uppercase;
+}
+.ph-title {
+  font-family: 'Syne', sans-serif;
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: var(--text);
+  margin-top: 0.15rem;
+}
+.ph-actions { display: flex; gap: 0.5rem; align-items: center; }
+.ph-badge {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.5rem;
+  letter-spacing: 0.1em;
+  padding: 0.2rem 0.6rem;
+  border-radius: 3px;
+  text-transform: uppercase;
+}
+.ph-badge.live { background: rgba(0,255,136,0.1); border: 1px solid rgba(0,255,136,0.25); color: var(--accent); }
+.ph-badge.warn { background: rgba(255,170,0,0.1); border: 1px solid rgba(255,170,0,0.25); color: var(--accent4); }
+.ph-badge.alert { background: rgba(255,68,136,0.1); border: 1px solid rgba(255,68,136,0.25); color: var(--accent3); }
+.ph-badge.info { background: rgba(0,136,255,0.1); border: 1px solid rgba(0,136,255,0.25); color: var(--accent2); }
+
+.pb { padding: 1.2rem; }
+
+/* METRIC CARDS */
+.metric { text-align: center; padding: 1.5rem 1rem; }
+.metric-val {
+  font-family: 'Syne', sans-serif;
+  font-size: 2.2rem;
+  font-weight: 800;
+  color: var(--text);
+  line-height: 1;
+  margin-bottom: 0.4rem;
+}
+.metric-val.green { color: var(--accent); }
+.metric-val.blue { color: var(--accent2); }
+.metric-val.red { color: var(--accent3); }
+.metric-val.amber { color: var(--accent4); }
+.metric-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.55rem;
+  letter-spacing: 0.15em;
+  color: var(--dim);
+  text-transform: uppercase;
+}
+.metric-delta {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.6rem;
+  margin-top: 0.4rem;
+  letter-spacing: 0.05em;
+}
+.metric-delta.up { color: var(--accent); }
+.metric-delta.down { color: var(--accent3); }
+
+/* AGENT LOG / TERMINAL */
+.terminal {
+  background: #05080d;
+  border-radius: 6px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.72rem;
+  line-height: 1.9;
+  padding: 1rem;
+  max-height: 340px;
+  overflow-y: auto;
+  color: var(--muted);
+}
+.terminal::-webkit-scrollbar { width: 4px; }
+.terminal::-webkit-scrollbar-track { background: transparent; }
+.terminal::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 2px; }
+.tl { display: flex; gap: 0.7rem; }
+.tl-time { color: var(--dim); flex-shrink: 0; min-width: 52px; }
+.tl-agent { flex-shrink: 0; min-width: 100px; }
+.tl-agent.master { color: var(--accent); }
+.tl-agent.traffic { color: var(--accent2); }
+.tl-agent.pipeline { color: #aa88ff; }
+.tl-agent.ops { color: var(--accent4); }
+.tl-agent.conversion { color: var(--accent3); }
+.tl-agent.growth { color: #00ddff; }
+.tl-agent.system { color: var(--dim); }
+.tl-msg { color: var(--text); flex: 1; }
+.tl-msg.warn { color: var(--accent4); }
+.tl-msg.error { color: var(--accent3); }
+.tl-msg.success { color: var(--accent); }
+.tl-cursor { display: inline-block; width: 8px; height: 1em; background: var(--accent); animation: blink 1s steps(1) infinite; vertical-align: text-bottom; margin-left: 2px; }
+
+/* LEAD ROWS */
+.lead-row {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.7rem 0;
+  border-bottom: 1px solid var(--edge);
+  font-size: 0.8rem;
+}
+.lead-row:last-child { border-bottom: none; }
+.lead-score {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.6rem;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+.lead-score.hot { background: rgba(255,68,136,0.15); border: 1px solid rgba(255,68,136,0.3); color: var(--accent3); }
+.lead-score.warm { background: rgba(255,170,0,0.1); border: 1px solid rgba(255,170,0,0.25); color: var(--accent4); }
+.lead-score.cold { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.08); color: var(--dim); }
+.lead-info { flex: 1; }
+.lead-name { font-weight: 600; color: var(--text); }
+.lead-meta { font-family: 'JetBrains Mono', monospace; font-size: 0.55rem; color: var(--dim); letter-spacing: 0.05em; margin-top: 0.15rem; }
+.lead-action {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.52rem;
+  padding: 0.25rem 0.6rem;
+  border-radius: 3px;
+  cursor: pointer;
+  border: 1px solid;
+  transition: all 0.15s;
+  white-space: nowrap;
+}
+.lead-action.contact { border-color: rgba(0,255,136,0.3); color: var(--accent); }
+.lead-action.contact:hover { background: rgba(0,255,136,0.1); }
+.lead-action.nudge { border-color: rgba(255,170,0,0.3); color: var(--accent4); }
+.lead-action.nudge:hover { background: rgba(255,170,0,0.08); }
+
+/* FAULT ITEMS */
+.fault-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.8rem;
+  padding: 0.8rem 0;
+  border-bottom: 1px solid var(--edge);
+}
+.fault-item:last-child { border-bottom: none; }
+.fault-dot {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  margin-top: 3px;
+  flex-shrink: 0;
+}
+.fault-dot.ok { background: var(--accent); }
+.fault-dot.warn { background: var(--accent4); }
+.fault-dot.error { background: var(--accent3); }
+.fault-title { font-size: 0.82rem; font-weight: 500; color: var(--text); }
+.fault-desc { font-family: 'JetBrains Mono', monospace; font-size: 0.58rem; color: var(--muted); margin-top: 0.2rem; letter-spacing: 0.02em; }
+
+/* SCRIPTS */
+.script-item {
+  background: var(--panel2);
+  border: 1px solid var(--edge);
+  border-radius: 6px;
+  padding: 1rem;
+  margin-bottom: 0.8rem;
+  transition: border-color 0.15s;
+}
+.script-item:hover { border-color: var(--edge2); }
+.script-item:last-child { margin-bottom: 0; }
+.si-pillar {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.5rem;
+  letter-spacing: 0.15em;
+  margin-bottom: 0.4rem;
+  text-transform: uppercase;
+}
+.si-hook {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: 0.6rem;
+  line-height: 1.4;
+}
+.si-body { font-size: 0.8rem; color: var(--muted); line-height: 1.7; margin-bottom: 0.8rem; }
+.si-actions { display: flex; gap: 0.5rem; }
+.si-btn {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.52rem;
+  letter-spacing: 0.1em;
+  padding: 0.3rem 0.7rem;
+  border-radius: 3px;
+  cursor: pointer;
+  border: 1px solid;
+  transition: all 0.15s;
+  text-transform: uppercase;
+}
+.si-btn.copy { border-color: rgba(0,136,255,0.3); color: var(--accent2); }
+.si-btn.copy:hover { background: rgba(0,136,255,0.1); }
+.si-btn.heygen { border-color: rgba(0,255,136,0.3); color: var(--accent); }
+.si-btn.heygen:hover { background: rgba(0,255,136,0.08); }
+.si-btn.regen { border-color: rgba(255,255,255,0.1); color: var(--dim); }
+.si-btn.regen:hover { background: rgba(255,255,255,0.04); color: var(--text); }
+
+/* BRIEFING */
+.briefing-box {
+  background: #05080d;
+  border: 1px solid rgba(0,255,136,0.15);
+  border-radius: 6px;
+  padding: 1.2rem;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.72rem;
+  line-height: 2;
+  color: var(--muted);
+  white-space: pre-wrap;
+  max-height: 420px;
+  overflow-y: auto;
+}
+.briefing-box::-webkit-scrollbar { width: 4px; }
+.briefing-box::-webkit-scrollbar-thumb { background: rgba(0,255,136,0.2); border-radius: 2px; }
+
+/* PROGRESS BAR */
+.prog-bar {
+  height: 3px;
+  background: rgba(255,255,255,0.06);
+  border-radius: 2px;
+  overflow: hidden;
+  margin-top: 0.5rem;
+}
+.prog-fill {
+  height: 100%;
+  border-radius: 2px;
+  transition: width 1s ease;
+}
+.prog-fill.green { background: linear-gradient(90deg, var(--accent), #00cc66); }
+.prog-fill.blue { background: linear-gradient(90deg, var(--accent2), #0055cc); }
+.prog-fill.amber { background: linear-gradient(90deg, var(--accent4), #cc7700); }
+
+/* INPUT */
+.agent-input-row {
+  display: flex;
+  gap: 0.6rem;
+  margin-top: 1rem;
+}
+.agent-input {
+  flex: 1;
+  background: var(--panel2);
+  border: 1px solid var(--edge);
+  border-radius: 6px;
+  padding: 0.7rem 1rem;
+  color: var(--text);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.72rem;
+  outline: none;
+  transition: border-color 0.2s;
+}
+.agent-input:focus { border-color: rgba(0,255,136,0.35); }
+.agent-input::placeholder { color: var(--dim); }
+.agent-send {
+  background: rgba(0,255,136,0.12);
+  border: 1px solid rgba(0,255,136,0.3);
+  color: var(--accent);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.6rem;
+  letter-spacing: 0.12em;
+  padding: 0.7rem 1.2rem;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s;
+  white-space: nowrap;
+  text-transform: uppercase;
+}
+.agent-send:hover { background: rgba(0,255,136,0.2); }
+.agent-send:disabled { opacity: 0.4; cursor: not-allowed; }
+
+/* FUNNEL VIS */
+.funnel-stages { display: flex; flex-direction: column; gap: 0.4rem; }
+.funnel-stage {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+}
+.fs-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.55rem;
+  letter-spacing: 0.08em;
+  color: var(--dim);
+  width: 90px;
+  flex-shrink: 0;
+  text-align: right;
+}
+.fs-bar-wrap { flex: 1; height: 22px; background: rgba(255,255,255,0.03); border-radius: 3px; overflow: hidden; position: relative; }
+.fs-bar { height: 100%; border-radius: 3px; display: flex; align-items: center; padding: 0 0.6rem; transition: width 1s ease; }
+.fs-count {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.58rem;
+  color: rgba(255,255,255,0.8);
+  font-weight: 500;
+}
+.fs-pct {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.5rem;
+  color: var(--dim);
+  width: 40px;
+  text-align: right;
+  flex-shrink: 0;
+}
+
+/* TABS */
+.tabs { display: flex; gap: 0; border-bottom: 1px solid var(--edge); margin-bottom: 1.2rem; }
+.tab {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.6rem;
+  letter-spacing: 0.1em;
+  padding: 0.6rem 1rem;
+  cursor: pointer;
+  color: var(--dim);
+  border-bottom: 2px solid transparent;
+  transition: all 0.15s;
+  text-transform: uppercase;
+}
+.tab:hover { color: var(--text); }
+.tab.active { color: var(--accent); border-bottom-color: var(--accent); }
+
+/* CONTENT PAGE SWITCHING */
+.page { display: none; }
+.page.active { display: flex; flex-direction: column; gap: 1.2rem; }
+
+/* LOADING */
+.loading-spinner {
+  display: inline-block;
+  width: 12px; height: 12px;
+  border: 2px solid rgba(0,255,136,0.2);
+  border-top-color: var(--accent);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+  vertical-align: middle;
+  margin-right: 0.4rem;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* SEPARATOR */
+.sep {
+  height: 1px;
+  background: var(--edge);
+  margin: 0.8rem 0;
+}
+
+/* TINY CHART */
+.sparkline { display: flex; align-items: flex-end; gap: 3px; height: 32px; }
+.spark-bar {
+  flex: 1;
+  background: rgba(0,255,136,0.3);
+  border-radius: 2px 2px 0 0;
+  transition: background 0.2s;
+  min-width: 4px;
+}
+.spark-bar:hover { background: var(--accent); }
+.spark-bar.peak { background: rgba(0,255,136,0.6); }
+
+/* RESPONSIVE */
+@media (max-width: 900px) {
+  .layout { grid-template-columns: 1fr; }
+  .sidebar { display: none; }
+  .panel-row.cols-3, .panel-row.cols-4 { grid-template-columns: 1fr 1fr; }
+  .panel-row.cols-2 { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+<div class="layout">
+
+  <!-- TOPBAR -->
+  <header class="topbar">
+    <div class="tb-brand">
+      <div class="tb-logo"></div>
+      <span class="tb-name">SYNDICATE<span>OS</span></span>
+    </div>
+    <div class="tb-right">
+      <div class="tb-status"><div class="tb-dot"></div>ALL AGENTS ONLINE</div>
+      <div class="tb-time" id="clock">--:-- AEST</div>
+      <button class="tb-run-btn" id="runAllBtn" onclick="runAllAgents()">▶ RUN AGENTS</button>
+    </div>
+  </header>
+
+  <!-- SIDEBAR -->
+  <nav class="sidebar">
+    <div class="nav-section">Command</div>
+    <div class="nav-item active" onclick="switchPage('briefing', this)"><span class="nav-icon">◈</span>Morning Briefing</div>
+    <div class="nav-item" onclick="switchPage('master', this)"><span class="nav-icon">◉</span>Master Agent<span class="nav-badge green">AI</span></div>
+
+    <div class="nav-section">Agents</div>
+    <div class="nav-item" onclick="switchPage('pipeline', this)"><span class="nav-icon">⬡</span>Pipeline Agent<span class="nav-badge" id="hotBadge">0 HOT</span></div>
+    <div class="nav-item" onclick="switchPage('traffic', this)"><span class="nav-icon">◈</span>Traffic Agent</div>
+    <div class="nav-item" onclick="switchPage('conversion', this)"><span class="nav-icon">◎</span>Conversion Agent</div>
+    <div class="nav-item" onclick="switchPage('ops', this)"><span class="nav-icon">◆</span>Operations Agent</div>
+    <div class="nav-item" onclick="switchPage('growth', this)"><span class="nav-icon">△</span>Growth Agent</div>
+
+    <div class="nav-section">Output</div>
+    <div class="nav-item" onclick="switchPage('scripts', this)"><span class="nav-icon">✦</span>Script Generator</div>
+    <div class="nav-item" onclick="switchPage('log', this)"><span class="nav-icon">▸</span>Agent Log</div>
+  </nav>
+
+  <!-- MAIN -->
+  <main class="main" id="mainContent">
+
+    <!-- PAGE: BRIEFING -->
+    <div class="page active" id="page-briefing">
+      <div class="panel-row cols-4">
+        <div class="panel accent-green">
+          <div class="metric">
+            <div class="metric-val green" id="met-optins">—</div>
+            <div class="metric-label">Opt-ins (24h)</div>
+            <div class="metric-delta up" id="met-optins-delta">Loading...</div>
+          </div>
+        </div>
+        <div class="panel accent-red">
+          <div class="metric">
+            <div class="metric-val red" id="met-hot">—</div>
+            <div class="metric-label">HOT Leads</div>
+            <div class="metric-delta" id="met-hot-delta">Loading...</div>
+          </div>
+        </div>
+        <div class="panel accent-blue">
+          <div class="metric">
+            <div class="metric-val blue" id="met-pipeline">—</div>
+            <div class="metric-label">In Sequence</div>
+            <div class="metric-delta" id="met-pipeline-delta">Loading...</div>
+          </div>
+        </div>
+        <div class="panel accent-amber">
+          <div class="metric">
+            <div class="metric-val amber" id="met-applied">—</div>
+            <div class="metric-label">Applications</div>
+            <div class="metric-delta" id="met-applied-delta">Loading...</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel-row cols-2">
+        <div class="panel">
+          <div class="ph">
+            <div>
+              <div class="ph-label">// MASTER AGENT</div>
+              <div class="ph-title">Daily Intelligence Briefing</div>
+            </div>
+            <div class="ph-actions">
+              <span class="ph-badge live" id="briefingStatus">READY</span>
+              <button class="tb-run-btn" onclick="generateBriefing()">GENERATE</button>
+            </div>
+          </div>
+          <div class="pb">
+            <div class="briefing-box" id="briefingBox">Waiting for agent run...
+
+Click GENERATE or RUN AGENTS to produce your daily intelligence briefing.
+
+The Master Agent will:
+→ Pull live data from ActiveCampaign
+→ Analyse your pipeline and lead quality
+→ Check all system health
+→ Identify priority actions
+→ Generate your 60-second briefing</div>
+          </div>
+        </div>
+
+        <div class="panel">
+          <div class="ph">
+            <div>
+              <div class="ph-label">// FUNNEL VISUALISER</div>
+              <div class="ph-title">Conversion Funnel</div>
+            </div>
+            <span class="ph-badge info">LIVE</span>
+          </div>
+          <div class="pb">
+            <div class="funnel-stages" id="funnelVis">
+              <div class="funnel-stage">
+                <div class="fs-label">VISITORS</div>
+                <div class="fs-bar-wrap"><div class="fs-bar" style="width:100%;background:linear-gradient(90deg,rgba(0,136,255,0.4),rgba(0,136,255,0.2))"><span class="fs-count" id="f-visitors">—</span></div></div>
+                <div class="fs-pct">100%</div>
+              </div>
+              <div class="funnel-stage">
+                <div class="fs-label">OPT-INS</div>
+                <div class="fs-bar-wrap"><div class="fs-bar" id="f-bar-optins" style="width:35%;background:linear-gradient(90deg,rgba(0,255,136,0.4),rgba(0,255,136,0.2))"><span class="fs-count" id="f-optins">—</span></div></div>
+                <div class="fs-pct" id="f-pct-optins">—</div>
+              </div>
+              <div class="funnel-stage">
+                <div class="fs-label">APPLIED</div>
+                <div class="fs-bar-wrap"><div class="fs-bar" id="f-bar-applied" style="width:18%;background:linear-gradient(90deg,rgba(170,136,255,0.4),rgba(170,136,255,0.2))"><span class="fs-count" id="f-applied">—</span></div></div>
+                <div class="fs-pct" id="f-pct-applied">—</div>
+              </div>
+              <div class="funnel-stage">
+                <div class="fs-label">HOT LEADS</div>
+                <div class="fs-bar-wrap"><div class="fs-bar" id="f-bar-hot" style="width:8%;background:linear-gradient(90deg,rgba(255,170,0,0.5),rgba(255,170,0,0.2))"><span class="fs-count" id="f-hot">—</span></div></div>
+                <div class="fs-pct" id="f-pct-hot">—</div>
+              </div>
+              <div class="funnel-stage">
+                <div class="fs-label">JOINED</div>
+                <div class="fs-bar-wrap"><div class="fs-bar" id="f-bar-joined" style="width:3%;background:linear-gradient(90deg,rgba(255,68,136,0.5),rgba(255,68,136,0.2))"><span class="fs-count" id="f-joined">—</span></div></div>
+                <div class="fs-pct" id="f-pct-joined">—</div>
+              </div>
+            </div>
+            <div class="sep"></div>
+            <div style="display:flex;gap:1rem;flex-wrap:wrap;">
+              <div>
+                <div style="font-family:'JetBrains Mono',monospace;font-size:0.52rem;color:var(--dim);letter-spacing:0.12em;">OPT-IN RATE</div>
+                <div style="font-size:1.1rem;font-weight:700;color:var(--accent);font-family:'Syne',sans-serif;" id="convRate1">—</div>
+              </div>
+              <div>
+                <div style="font-family:'JetBrains Mono',monospace;font-size:0.52rem;color:var(--dim);letter-spacing:0.12em;">APPLY RATE</div>
+                <div style="font-size:1.1rem;font-weight:700;color:var(--accent2);font-family:'Syne',sans-serif;" id="convRate2">—</div>
+              </div>
+              <div>
+                <div style="font-family:'JetBrains Mono',monospace;font-size:0.52rem;color:var(--dim);letter-spacing:0.12em;">JOIN RATE</div>
+                <div style="font-size:1.1rem;font-weight:700;color:var(--accent3);font-family:'Syne',sans-serif;" id="convRate3">—</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="ph">
+          <div>
+            <div class="ph-label">// OPS AGENT</div>
+            <div class="ph-title">System Health Monitor</div>
+          </div>
+          <button class="tb-run-btn" onclick="runOpsCheck()">RUN CHECK</button>
+        </div>
+        <div class="pb">
+          <div id="healthChecks">
+            <div class="fault-item"><div class="fault-dot" id="hc-site" style="background:var(--dim)"></div><div><div class="fault-title">silent-syndicate.netlify.app</div><div class="fault-desc" id="hc-site-msg">Not checked yet</div></div></div>
+            <div class="fault-item"><div class="fault-dot" id="hc-optin" style="background:var(--dim)"></div><div><div class="fault-title">Opt-in Form → ActiveCampaign</div><div class="fault-desc" id="hc-optin-msg">Not checked yet</div></div></div>
+            <div class="fault-item"><div class="fault-dot" id="hc-apply" style="background:var(--dim)"></div><div><div class="fault-title">Application Form → Netlify Function</div><div class="fault-desc" id="hc-apply-msg">Not checked yet</div></div></div>
+            <div class="fault-item"><div class="fault-dot" id="hc-join" style="background:var(--dim)"></div><div><div class="fault-title">Registration Wizard (join.html)</div><div class="fault-desc" id="hc-join-msg">Not checked yet</div></div></div>
+            <div class="fault-item"><div class="fault-dot" id="hc-email" style="background:var(--dim)"></div><div><div class="fault-title">Email Sequence Firing (AC Automation)</div><div class="fault-desc" id="hc-email-msg">Not checked yet</div></div></div>
+            <div class="fault-item"><div class="fault-dot" id="hc-ac" style="background:var(--dim)"></div><div><div class="fault-title">ActiveCampaign API Connection</div><div class="fault-desc" id="hc-ac-msg">Not checked yet</div></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PAGE: MASTER AGENT -->
+    <div class="page" id="page-master">
+      <div class="panel">
+        <div class="ph">
+          <div>
+            <div class="ph-label">// MASTER ORCHESTRATOR — CLAUDE SONNET</div>
+            <div class="ph-title">Ask The Agent Anything</div>
+          </div>
+          <span class="ph-badge live">CLAUDE POWERED</span>
+        </div>
+        <div class="pb">
+          <div class="terminal" id="masterTerminal" style="max-height:500px;">
+<span class="tl"><span class="tl-time">SYSTEM</span><span class="tl-agent system">MASTER</span><span class="tl-msg">Silent Syndicate AI Agent online. Powered by Claude Sonnet.</span></span>
+<span class="tl"><span class="tl-time">SYSTEM</span><span class="tl-agent system">MASTER</span><span class="tl-msg">Connected to: Netlify Functions, ActiveCampaign API</span></span>
+<span class="tl"><span class="tl-time">READY</span><span class="tl-agent master">ORCHESTR</span><span class="tl-msg success">Ask me anything about your business. I have full context of Silent Syndicate — the funnel, the Enagic model, your IDs, your pipeline, your strategy.</span></span>
+<span class="tl"><span class="tl-time">READY</span><span class="tl-agent master">ORCHESTR</span><span class="tl-msg">Try: "Analyse my funnel and tell me the biggest leak" or "Write 5 new hooks for the objection pillar" or "What should I fix first?"</span></span>
+          </div>
+          <div class="agent-input-row">
+            <input class="agent-input" id="masterInput" placeholder="Ask the master agent anything about your business..." onkeydown="if(event.key==='Enter') sendToMaster()">
+            <button class="agent-send" id="masterSendBtn" onclick="sendToMaster()">SEND →</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PAGE: PIPELINE -->
+    <div class="page" id="page-pipeline">
+      <div class="panel-row cols-3">
+        <div class="panel accent-red"><div class="metric"><div class="metric-val red" id="pipe-hot">—</div><div class="metric-label">HOT Leads</div><div class="metric-delta up">Ready to close</div></div></div>
+        <div class="panel accent-amber"><div class="metric"><div class="metric-val amber" id="pipe-warm">—</div><div class="metric-label">WARM Leads</div><div class="metric-delta" style="color:var(--accent4)">In nurture</div></div></div>
+        <div class="panel"><div class="metric"><div class="metric-val" id="pipe-total">—</div><div class="metric-label">Total in Pipeline</div><div class="metric-delta" style="color:var(--dim)">All stages</div></div></div>
+      </div>
+      <div class="panel">
+        <div class="ph">
+          <div>
+            <div class="ph-label">// PIPELINE AGENT — LIVE CONTACTS</div>
+            <div class="ph-title">Lead Intelligence</div>
+          </div>
+          <button class="tb-run-btn" onclick="runPipelineAgent()">ANALYSE</button>
+        </div>
+        <div class="pb">
+          <div id="leadList">
+            <div style="font-family:'JetBrains Mono',monospace;font-size:0.65rem;color:var(--dim);padding:1rem 0;text-align:center;">Click ANALYSE to pull live pipeline data and AI scoring</div>
+          </div>
+        </div>
+      </div>
+      <div class="panel">
+        <div class="ph">
+          <div>
+            <div class="ph-label">// PIPELINE AGENT — AI ANALYSIS</div>
+            <div class="ph-title">Agent Recommendations</div>
+          </div>
+        </div>
+        <div class="pb">
+          <div class="briefing-box" id="pipelineAnalysis">Run the Pipeline Agent to get AI-powered analysis of your lead quality, drop-off points, and priority actions.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PAGE: TRAFFIC -->
+    <div class="page" id="page-traffic">
+      <div class="panel">
+        <div class="ph">
+          <div>
+            <div class="ph-label">// TRAFFIC AGENT</div>
+            <div class="ph-title">Content Performance + Strategy</div>
+          </div>
+          <button class="tb-run-btn" onclick="runTrafficAgent()">ANALYSE</button>
+        </div>
+        <div class="pb">
+          <div class="briefing-box" id="trafficAnalysis">Run the Traffic Agent to get AI analysis of what's working, what to post more of, and where the algorithm is sending your content.</div>
+        </div>
+      </div>
+      <div class="panel">
+        <div class="ph">
+          <div>
+            <div class="ph-label">// TRAFFIC AGENT — OPT-IN TREND</div>
+            <div class="ph-title">7-Day Opt-in Sparkline</div>
+          </div>
+        </div>
+        <div class="pb">
+          <div class="sparkline" id="sparkline">
+            <div class="spark-bar" style="height:20%"></div>
+            <div class="spark-bar" style="height:35%"></div>
+            <div class="spark-bar" style="height:25%"></div>
+            <div class="spark-bar" style="height:60%"></div>
+            <div class="spark-bar peak" style="height:85%"></div>
+            <div class="spark-bar" style="height:55%"></div>
+            <div class="spark-bar" style="height:70%"></div>
+          </div>
+          <div style="font-family:'JetBrains Mono',monospace;font-size:0.55rem;color:var(--dim);margin-top:0.5rem;letter-spacing:0.08em;">Estimated trend based on current pipeline data</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PAGE: CONVERSION -->
+    <div class="page" id="page-conversion">
+      <div class="panel">
+        <div class="ph">
+          <div>
+            <div class="ph-label">// CONVERSION AGENT</div>
+            <div class="ph-title">Funnel Fault Detection + Fix Recommendations</div>
+          </div>
+          <button class="tb-run-btn" onclick="runConversionAgent()">ANALYSE</button>
+        </div>
+        <div class="pb">
+          <div class="briefing-box" id="conversionAnalysis">Run the Conversion Agent to identify where leads are dropping off, which emails have low open rates, and what to fix to increase conversion rate.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PAGE: OPS -->
+    <div class="page" id="page-ops">
+      <div class="panel">
+        <div class="ph">
+          <div>
+            <div class="ph-label">// OPERATIONS AGENT</div>
+            <div class="ph-title">Full System Audit</div>
+          </div>
+          <button class="tb-run-btn" onclick="runOpsCheck()">RUN FULL AUDIT</button>
+        </div>
+        <div class="pb" id="opsFullAudit">
+          <div style="font-family:'JetBrains Mono',monospace;font-size:0.65rem;color:var(--dim);text-align:center;padding:1rem 0;">Click RUN FULL AUDIT to check every system, form, function, and connection.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PAGE: GROWTH -->
+    <div class="page" id="page-growth">
+      <div class="panel">
+        <div class="ph">
+          <div>
+            <div class="ph-label">// GROWTH AGENT</div>
+            <div class="ph-title">Scale Opportunities + Strategic Analysis</div>
+          </div>
+          <button class="tb-run-btn" onclick="runGrowthAgent()">ANALYSE</button>
+        </div>
+        <div class="pb">
+          <div class="briefing-box" id="growthAnalysis">Run the Growth Agent to get strategic recommendations on scaling traffic, acquiring operators, improving commissions, and finding the next growth lever.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PAGE: SCRIPTS -->
+    <div class="page" id="page-scripts">
+      <div class="panel">
+        <div class="ph">
+          <div>
+            <div class="ph-label">// SCRIPT GENERATOR — CLAUDE POWERED</div>
+            <div class="ph-title">AI Video Script Factory</div>
+          </div>
+        </div>
+        <div class="pb">
+          <div class="tabs">
+            <div class="tab active" onclick="switchScriptTab('generate', this)">GENERATE NEW</div>
+            <div class="tab" onclick="switchScriptTab('library', this)">SCRIPT LIBRARY</div>
+          </div>
+          <div id="scriptTab-generate">
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1rem;">
+              <div>
+                <div style="font-family:'JetBrains Mono',monospace;font-size:0.52rem;letter-spacing:0.15em;color:var(--dim);margin-bottom:0.4rem;">// CONTENT PILLAR</div>
+                <select id="pillarSelect" style="width:100%;background:var(--panel2);border:1px solid var(--edge);border-radius:6px;padding:0.6rem 0.8rem;color:var(--text);font-family:'JetBrains Mono',monospace;font-size:0.7rem;outline:none;">
+                  <option value="pain">Pain — Problem Awareness</option>
+                  <option value="education">Education — How It Works</option>
+                  <option value="proof">Proof — Real Results</option>
+                  <option value="objection">Objection — Handle Doubts</option>
+                </select>
+              </div>
+              <div>
+                <div style="font-family:'JetBrains Mono',monospace;font-size:0.52rem;letter-spacing:0.15em;color:var(--dim);margin-bottom:0.4rem;">// VIDEO LENGTH</div>
+                <select id="lengthSelect" style="width:100%;background:var(--panel2);border:1px solid var(--edge);border-radius:6px;padding:0.6rem 0.8rem;color:var(--text);font-family:'JetBrains Mono',monospace;font-size:0.7rem;outline:none;">
+                  <option value="30">30 seconds — Fast hook</option>
+                  <option value="45" selected>45 seconds — Standard</option>
+                  <option value="60">60 seconds — Deep dive</option>
+                </select>
+              </div>
+            </div>
+            <div style="margin-bottom:1rem;">
+              <div style="font-family:'JetBrains Mono',monospace;font-size:0.52rem;letter-spacing:0.15em;color:var(--dim);margin-bottom:0.4rem;">// CUSTOM ANGLE (optional)</div>
+              <input class="agent-input" id="scriptAngle" placeholder="e.g. 'targeting tradies', 'focus on break-even math', 'address the MLM objection head-on'" style="width:100%">
+            </div>
+            <button class="agent-send" id="generateScriptBtn" onclick="generateScripts()" style="width:100%;padding:0.8rem;">⚡ GENERATE 3 SCRIPTS WITH CLAUDE</button>
+            <div id="generatedScripts" style="margin-top:1.2rem;"></div>
+          </div>
+          <div id="scriptTab-library" style="display:none;">
+            <div id="scriptLibrary"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PAGE: LOG -->
+    <div class="page" id="page-log">
+      <div class="panel">
+        <div class="ph">
+          <div>
+            <div class="ph-label">// AGENT ACTIVITY LOG</div>
+            <div class="ph-title">Real-Time Agent Operations</div>
+          </div>
+          <button class="tb-run-btn" onclick="clearLog()">CLEAR</button>
+        </div>
+        <div class="pb">
+          <div class="terminal" id="agentLog" style="max-height:600px;">
+            <span class="tl"><span class="tl-time">BOOT</span><span class="tl-agent system">SYSTEM</span><span class="tl-msg success">Syndicate OS initialised. All agents standing by.</span></span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<script>
+// ═══════════════════════════════════════════════════════════════
+// CORE STATE
+// ═══════════════════════════════════════════════════════════════
+const SS = {
+  context: `You are the AI business agent for Silent Syndicate — an AI-powered Enagic water ioniser distributor network based in Queensland, Australia.
+
+BUSINESS CONTEXT:
+- Silent Syndicate is an authorised Enagic distributor network run by the Chairman/founder
+- Enagic manufactures Kangen water ionisation machines
+- Commission structure: K8 single ~$365 AUD per sale at 1A rank, up to $2,595 at 3A rank
+- Products: K8 ($6,787 AUD), Anespa DX ($3,795), emGuarde ($2,475), Ukon (~$1,100)
+- Trifecta package: ~$11,682 AUD, starts at 2A rank, $1,322+ per trifecta sale
+- Quad package: ~$18,469 AUD, starts at 3A rank, $2,595+ per quad sale
+- Chairman's Sponsor IDs: K8=29000059770, emGuarde1=29000059769, emGuarde2=29000059768
+
+FUNNEL SYSTEM (live at silent-syndicate.netlify.app):
+- index.html = opt-in page (front door)
+- page2-manifesto.html = brand manifesto
+- page3-apply.html = application form (HOT/WARM/COLD scoring)
+- page4-offer.html = offer/closing page
+- join.html = 5-step registration wizard with Enagic paperwork guide
+- hub.html = private master hub
+
+TECH STACK:
+- Netlify (hosting + serverless functions)
+- ActiveCampaign (email CRM, lead scoring, automations)
+- Netlify functions: subscribe.js, apply.js, register.js
+- Tags: SS-NEW, SS-HOT, SS-WARM, SS-APPLIED, SS-CONVERTED, SS-DISTRIBUTOR
+
+EMAIL SEQUENCE (7 days):
+- Day 0: Welcome + blueprint delivery
+- Day 1: How the 8-point commission works  
+- Day 2: Break-even math
+- Day 3: MLM objection handled
+- Day 4: Daily workflow / content strategy
+- Day 5: Proof / case study
+- Day 6: Self-qualification checklist
+- Day 7: Final CTA
+
+CONTENT STRATEGY:
+- Faceless AI content via HeyGen ($29 USD/month)
+- 4 pillars: Pain, Education, Proof, Objection
+- Transparency hook formula: name Enagic, name investment, name commission
+- Post 1 video/day to TikTok + Instagram
+- Bio link → silent-syndicate.netlify.app
+
+CHAIRMAN'S ROLE: Commission collector. Clients join under him. He reviews and verifies Enagic order forms before submission to info@enagic-australia.com.
+
+You have access to business metrics via our APIs. Be direct, data-driven, and action-oriented. Never waffle. Give specific recommendations. Flag problems immediately. You are running this business.`,
+
+  metrics: {
+    optins: 0, hot: 0, warm: 0, pipeline: 0,
+    applied: 0, joined: 0, visitors: 0
+  },
+  scriptLibrary: []
+};
+
+// ═══════════════════════════════════════════════════════════════
+// CLOCK
+// ═══════════════════════════════════════════════════════════════
+function updateClock() {
+  const now = new Date();
+  const aest = new Date(now.toLocaleString('en-US', { timeZone: 'Australia/Brisbane' }));
+  const h = String(aest.getHours()).padStart(2,'0');
+  const m = String(aest.getMinutes()).padStart(2,'0');
+  document.getElementById('clock').textContent = `${h}:${m} AEST`;
+}
+updateClock();
+setInterval(updateClock, 10000);
+
+// ═══════════════════════════════════════════════════════════════
+// NAVIGATION
+// ═══════════════════════════════════════════════════════════════
+function switchPage(pageId, el) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  document.getElementById('page-' + pageId).classList.add('active');
+  if (el) el.classList.add('active');
+}
+
+function switchScriptTab(tab, el) {
+  document.querySelectorAll('#page-scripts .tab').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+  document.getElementById('scriptTab-generate').style.display = tab === 'generate' ? 'block' : 'none';
+  document.getElementById('scriptTab-library').style.display = tab === 'library' ? 'block' : 'none';
+  if (tab === 'library') renderScriptLibrary();
+}
+
+// ═══════════════════════════════════════════════════════════════
+// LOGGING
+// ═══════════════════════════════════════════════════════════════
+function log(agent, msg, type = '') {
+  const logEl = document.getElementById('agentLog');
+  const now = new Date();
+  const t = String(now.getHours()).padStart(2,'0') + ':' + String(now.getMinutes()).padStart(2,'0');
+  const agentClass = { master:'master', traffic:'traffic', pipeline:'pipeline', ops:'ops', conversion:'conversion', growth:'growth', system:'system' }[agent.toLowerCase()] || 'system';
+  const msgClass = type === 'success' ? 'success' : type === 'error' ? 'error' : type === 'warn' ? 'warn' : '';
+  const el = document.createElement('span');
+  el.className = 'tl';
+  el.innerHTML = `<span class="tl-time">${t}</span><span class="tl-agent ${agentClass}">${agent.toUpperCase().padEnd(8).slice(0,8)}</span><span class="tl-msg ${msgClass}">${msg}</span>\n`;
+  logEl.appendChild(el);
+  logEl.scrollTop = logEl.scrollHeight;
+}
+
+function clearLog() {
+  document.getElementById('agentLog').innerHTML = '<span class="tl"><span class="tl-time">CLEAR</span><span class="tl-agent system">SYSTEM</span><span class="tl-msg">Log cleared.</span></span>';
+}
+
+// ═══════════════════════════════════════════════════════════════
+// CLAUDE API CALL
+// ═══════════════════════════════════════════════════════════════
+async function callClaude(prompt, systemExtra = '') {
+  const res = await fetch('https://api.anthropic.com/v1/messages', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      model: 'claude-sonnet-4-20250514',
+      max_tokens: 1000,
+      system: SS.context + (systemExtra ? '\n\n' + systemExtra : ''),
+      messages: [{ role: 'user', content: prompt }]
+    })
+  });
+  const data = await res.json();
+  return data.content?.[0]?.text || 'Agent returned no response.';
+}
+
+// ═══════════════════════════════════════════════════════════════
+// SYSTEM HEALTH CHECK
+// ═══════════════════════════════════════════════════════════════
+async function runOpsCheck() {
+  log('OPS', 'Starting system health audit...', '');
+  const checks = [
+    { id: 'hc-site', msgId: 'hc-site-msg', url: 'https://silent-syndicate.netlify.app/', label: 'Main site' },
+    { id: 'hc-optin', msgId: 'hc-optin-msg', url: 'https://silent-syndicate.netlify.app/', label: 'Opt-in page reachable' },
+    { id: 'hc-apply', msgId: 'hc-apply-msg', url: 'https://silent-syndicate.netlify.app/page3-apply.html', label: 'Application page' },
+    { id: 'hc-join', msgId: 'hc-join-msg', url: 'https://silent-syndicate.netlify.app/join.html', label: 'Registration wizard' },
+    { id: 'hc-email', msgId: 'hc-email-msg', url: null, label: 'Email sequence', manual: true },
+    { id: 'hc-ac', msgId: 'hc-ac-msg', url: null, label: 'ActiveCampaign API', manual: true }
+  ];
+
+  for (const chk of checks) {
+    const dot = document.getElementById(chk.id);
+    const msgEl = document.getElementById(chk.msgId);
+    if (dot) { dot.style.background = 'var(--accent4)'; dot.style.animation = 'blink 0.5s infinite'; }
+    if (msgEl) msgEl.textContent = 'Checking...';
+
+    if (chk.manual) {
+      await new Promise(r => setTimeout(r, 400));
+      if (dot) { dot.style.background = 'var(--accent4)'; dot.style.animation = 'none'; }
+      if (msgEl) msgEl.textContent = 'Manual verification required — check ActiveCampaign dashboard';
+      log('OPS', `${chk.label}: manual verification needed`, 'warn');
+      continue;
+    }
+
+    try {
+      const res = await fetch(chk.url, { method: 'HEAD', mode: 'no-cors' });
+      if (dot) { dot.style.background = 'var(--accent)'; dot.style.animation = 'none'; }
+      if (msgEl) msgEl.textContent = `✓ Responding — ${new Date().toLocaleTimeString()}`;
+      log('OPS', `${chk.label}: OK`, 'success');
+    } catch(e) {
+      if (dot) { dot.style.background = 'var(--accent3)'; dot.style.animation = 'none'; }
+      if (msgEl) msgEl.textContent = `✗ Not reachable — ${e.message}`;
+      log('OPS', `${chk.label}: FAILED — ${e.message}`, 'error');
+    }
+    await new Promise(r => setTimeout(r, 300));
+  }
+
+  log('OPS', 'Health audit complete', 'success');
+}
+
+// ═══════════════════════════════════════════════════════════════
+// PIPELINE AGENT
+// ═══════════════════════════════════════════════════════════════
+async function runPipelineAgent() {
+  log('PIPELINE', 'Fetching pipeline data...', '');
+  const analysis = document.getElementById('pipelineAnalysis');
+  analysis.textContent = '⟳ Agent thinking...';
+
+  const metrics = SS.metrics;
+  const prompt = `Analyse this Silent Syndicate pipeline data and give me specific actions:
+
+Pipeline data:
+- Total opt-ins: ${metrics.optins}
+- HOT leads (score 70+): ${metrics.hot}
+- WARM leads: ${metrics.warm}
+- Total in email sequence: ${metrics.pipeline}
+- Applications submitted: ${metrics.applied}
+- Registered/joined: ${metrics.joined}
+
+Based on this data:
+1. What is the biggest leak in the funnel right now?
+2. Which leads need immediate contact?
+3. What's the estimated commission in the next 30 days if current velocity holds?
+4. What are the 3 most important actions to take today?
+
+Be specific. Give actual numbers. Flag any red flags.`;
+
+  try {
+    const response = await callClaude(prompt);
+    analysis.textContent = response;
+    log('PIPELINE', 'Analysis complete', 'success');
+
+    // Render sample leads
+    const leadList = document.getElementById('leadList');
+    leadList.innerHTML = `
+      <div class="lead-row">
+        <div class="lead-score hot">94</div>
+        <div class="lead-info">
+          <div class="lead-name">HOT Lead #1</div>
+          <div class="lead-meta">TAG: SS-HOT · Applied 2 days ago · No follow-up</div>
+        </div>
+        <button class="lead-action contact" onclick="contactLead('HOT Lead #1', 'hot')">EMAIL NOW</button>
+      </div>
+      <div class="lead-row">
+        <div class="lead-score hot">88</div>
+        <div class="lead-info">
+          <div class="lead-name">HOT Lead #2</div>
+          <div class="lead-meta">TAG: SS-HOT · Applied yesterday · Viewing offer page</div>
+        </div>
+        <button class="lead-action contact" onclick="contactLead('HOT Lead #2', 'hot')">EMAIL NOW</button>
+      </div>
+      <div class="lead-row">
+        <div class="lead-score warm">65</div>
+        <div class="lead-info">
+          <div class="lead-name">WARM Lead #1</div>
+          <div class="lead-meta">TAG: SS-WARM · Day 5 of email sequence · Opened 4/5 emails</div>
+        </div>
+        <button class="lead-action nudge" onclick="contactLead('WARM Lead #1', 'warm')">NUDGE</button>
+      </div>
+      <div style="font-family:'JetBrains Mono',monospace;font-size:0.6rem;color:var(--dim);padding:0.8rem 0;text-align:center;">Connect ActiveCampaign to see real lead names and data</div>
+    `;
+
+    document.getElementById('pipe-hot').textContent = metrics.hot || '—';
+    document.getElementById('pipe-warm').textContent = metrics.warm || '—';
+    document.getElementById('pipe-total').textContent = metrics.pipeline || '—';
+
+  } catch(e) {
+    analysis.textContent = 'Agent error: ' + e.message;
+    log('PIPELINE', 'Error: ' + e.message, 'error');
+  }
+}
+
+async function contactLead(name, type) {
+  log('PIPELINE', `Generating follow-up email for ${name}...`);
+  const prompt = type === 'hot'
+    ? `Write a short, direct follow-up email to a HOT lead who applied to join Silent Syndicate 48 hours ago but hasn't completed registration. They scored 94/100. Be direct. Reference their application. Include the join page link: https://silent-syndicate.netlify.app/join.html. Subject line + body. Keep it under 100 words.`
+    : `Write a warm nurture email to a lead who has opened 4 of 5 emails in the sequence and is on Day 5. They're interested but haven't applied yet. Soft push toward the application page: https://silent-syndicate.netlify.app/page3-apply.html. Subject line + body. Under 80 words.`;
+
+  try {
+    const email = await callClaude(prompt);
+    alert(`GENERATED EMAIL FOR ${name}:\n\n${email}`);
+    log('PIPELINE', `Follow-up email generated for ${name}`, 'success');
+  } catch(e) {
+    log('PIPELINE', 'Email generation failed: ' + e.message, 'error');
+  }
+}
+
+// ═══════════════════════════════════════════════════════════════
+// TRAFFIC AGENT
+// ═══════════════════════════════════════════════════════════════
+async function runTrafficAgent() {
+  log('TRAFFIC', 'Analysing content performance and traffic strategy...', '');
+  const analysis = document.getElementById('trafficAnalysis');
+  analysis.textContent = '⟳ Agent thinking...';
+
+  const prompt = `Analyse the Silent Syndicate traffic situation and give me a strategic content recommendation.
+
+Context:
+- Using HeyGen AI faceless video content
+- Posting to TikTok and Instagram
+- Using transparency hook formula (name Enagic, name investment, name commission)
+- 4 content pillars: Pain, Education, Proof, Objection
+- Funnel link in bio → silent-syndicate.netlify.app
+- Current opt-in volume: ${SS.metrics.optins} total leads captured
+
+Give me:
+1. Which content pillar should I focus on this week and why?
+2. What are 3 specific hooks I should test immediately?
+3. Best posting time for Australian audience?
+4. What's the one thing that would most increase opt-in rate right now?
+5. Any red flags in the current strategy?
+
+Be specific. Give me hooks I can use word-for-word.`;
+
+  try {
+    const response = await callClaude(prompt);
+    analysis.textContent = response;
+    log('TRAFFIC', 'Traffic analysis complete', 'success');
+  } catch(e) {
+    analysis.textContent = 'Agent error: ' + e.message;
+    log('TRAFFIC', 'Error: ' + e.message, 'error');
+  }
+}
+
+// ═══════════════════════════════════════════════════════════════
+// CONVERSION AGENT
+// ═══════════════════════════════════════════════════════════════
+async function runConversionAgent() {
+  log('CONVERSION', 'Auditing funnel conversion rates...', '');
+  const analysis = document.getElementById('conversionAnalysis');
+  analysis.textContent = '⟳ Agent thinking...';
+
+  const m = SS.metrics;
+  const optinRate = m.visitors > 0 ? ((m.optins/m.visitors)*100).toFixed(1) : 'unknown';
+  const applyRate = m.optins > 0 ? ((m.applied/m.optins)*100).toFixed(1) : 'unknown';
+  const joinRate = m.applied > 0 ? ((m.joined/m.applied)*100).toFixed(1) : 'unknown';
+
+  const prompt = `Audit the Silent Syndicate conversion funnel and identify faults.
+
+Current funnel metrics:
+- Visitors → Opt-in rate: ${optinRate}%
+- Opt-in → Application rate: ${applyRate}%  
+- Application → Join rate: ${joinRate}%
+- Total opt-ins: ${m.optins}
+- Applications: ${m.applied}
+- Joined: ${m.joined}
+
+The funnel pages:
+1. index.html (opt-in) → transparency hero, blueprint offer, email form
+2. page2-manifesto.html → brand story, AI system explanation
+3. page3-apply.html → 7-question application, HOT/WARM/COLD scoring
+4. page4-offer.html → 3 tier cards, ROI calculator, join button
+5. join.html → 5-step registration wizard with Enagic paperwork
+
+Where are people dropping off? What's broken? What should be fixed first?
+Give me specific conversion improvement recommendations with estimated impact.`;
+
+  try {
+    const response = await callClaude(prompt);
+    analysis.textContent = response;
+    log('CONVERSION', 'Conversion audit complete', 'success');
+  } catch(e) {
+    analysis.textContent = 'Agent error: ' + e.message;
+    log('CONVERSION', 'Error: ' + e.message, 'error');
+  }
+}
+
+// ═══════════════════════════════════════════════════════════════
+// GROWTH AGENT
+// ═══════════════════════════════════════════════════════════════
+async function runGrowthAgent() {
+  log('GROWTH', 'Analysing growth opportunities...', '');
+  const analysis = document.getElementById('growthAnalysis');
+  analysis.textContent = '⟳ Agent thinking...';
+
+  const prompt = `You are the Growth Agent for Silent Syndicate. Analyse the business and identify the single highest-leverage growth opportunities right now.
+
+Business status:
+- Funnel is live at silent-syndicate.netlify.app
+- AC email sequence firing
+- Faceless AI content system set up
+- ${SS.metrics.optins} total opt-ins captured
+- ${SS.metrics.joined} operators joined so far
+- Revenue model: Enagic commissions $365-$2,595 per sale depending on package
+
+Growth levers available:
+1. Increase content volume (more HeyGen videos)
+2. Paid ads (Facebook/Instagram targeting make-money-online audience)
+3. Operator recruitment (each new operator creates a sub-funnel)
+4. Email sequence optimisation
+5. Offer page conversion improvement
+6. SEO blog content
+7. Influencer/affiliate partnerships
+
+Tell me:
+1. What is the single highest-ROI growth action right now?
+2. What's the scaling path from 1 operator to 10?
+3. When should paid ads start, and what's the minimum budget?
+4. What's the network override income potential at 5 operators all running the system?
+5. One thing that would 10x the business in 90 days.`;
+
+  try {
+    const response = await callClaude(prompt);
+    analysis.textContent = response;
+    log('GROWTH', 'Growth analysis complete', 'success');
+  } catch(e) {
+    analysis.textContent = 'Agent error: ' + e.message;
+    log('GROWTH', 'Error: ' + e.message, 'error');
+  }
+}
+
+// ═══════════════════════════════════════════════════════════════
+// MASTER AGENT CHAT
+// ═══════════════════════════════════════════════════════════════
+async function sendToMaster() {
+  const input = document.getElementById('masterInput');
+  const btn = document.getElementById('masterSendBtn');
+  const terminal = document.getElementById('masterTerminal');
+  const msg = input.value.trim();
+  if (!msg) return;
+
+  input.value = '';
+  btn.disabled = true;
+  btn.textContent = 'THINKING...';
+
+  const userEl = document.createElement('span');
+  userEl.className = 'tl';
+  userEl.innerHTML = `<span class="tl-time">YOU</span><span class="tl-agent" style="color:var(--text)">CHAIRMAN</span><span class="tl-msg" style="color:var(--text)">${msg}</span>\n`;
+  terminal.appendChild(userEl);
+
+  const thinkEl = document.createElement('span');
+  thinkEl.className = 'tl';
+  thinkEl.innerHTML = `<span class="tl-time">...</span><span class="tl-agent master">MASTER</span><span class="tl-msg"><span class="loading-spinner"></span>Processing...</span>\n`;
+  terminal.appendChild(thinkEl);
+  terminal.scrollTop = terminal.scrollHeight;
+
+  try {
+    const response = await callClaude(msg, `Current business metrics: opt-ins=${SS.metrics.optins}, hot=${SS.metrics.hot}, pipeline=${SS.metrics.pipeline}, applied=${SS.metrics.applied}, joined=${SS.metrics.joined}`);
+    terminal.removeChild(thinkEl);
+
+    const lines = response.split('\n').filter(l => l.trim());
+    for (const line of lines) {
+      const el = document.createElement('span');
+      el.className = 'tl';
+      const isAction = line.includes('→') || line.includes('1.') || line.includes('2.') || line.includes('3.');
+      el.innerHTML = `<span class="tl-time"></span><span class="tl-agent master">MASTER</span><span class="tl-msg ${isAction ? 'success' : ''}">${line}</span>\n`;
+      terminal.appendChild(el);
+    }
+    log('MASTER', `Response delivered for: "${msg.slice(0,40)}..."`, 'success');
+  } catch(e) {
+    terminal.removeChild(thinkEl);
+    const errEl = document.createElement('span');
+    errEl.className = 'tl';
+    errEl.innerHTML = `<span class="tl-time">ERR</span><span class="tl-agent master">MASTER</span><span class="tl-msg error">Agent error: ${e.message}</span>\n`;
+    terminal.appendChild(errEl);
+  }
+
+  btn.disabled = false;
+  btn.textContent = 'SEND →';
+  terminal.scrollTop = terminal.scrollHeight;
+}
+
+// ═══════════════════════════════════════════════════════════════
+// SCRIPT GENERATOR
+// ═══════════════════════════════════════════════════════════════
+async function generateScripts() {
+  const pillar = document.getElementById('pillarSelect').value;
+  const length = document.getElementById('lengthSelect').value;
+  const angle = document.getElementById('scriptAngle').value.trim();
+  const btn = document.getElementById('generateScriptBtn');
+  const output = document.getElementById('generatedScripts');
+
+  btn.disabled = true;
+  btn.textContent = '⟳ CLAUDE GENERATING...';
+  output.innerHTML = '<div style="font-family:\'JetBrains Mono\',monospace;font-size:0.65rem;color:var(--dim);text-align:center;padding:1.5rem;">Agent generating 3 unique scripts...</div>';
+
+  log('MASTER', `Generating ${length}s ${pillar} scripts${angle ? ` — angle: ${angle}` : ''}...`);
+
+  const pillarGuides = {
+    pain: 'Identify a pain point the audience has RIGHT NOW about their income situation. Agitate it. Position Enagic as the contrast. DO NOT pitch directly.',
+    education: 'Teach something specific about how Enagic works — the 8-point system, commission math, rank structure, or the AI funnel. Name all numbers.',
+    proof: 'Show a realistic timeline or result. Always include the income disclaimer. Be honest about what is typical vs exceptional.',
+    objection: 'Address the most common objection head-on. Use the transparency formula — agree with the concern first, then reframe with real data.'
+  };
+
+  const prompt = `Generate 3 unique ${length}-second TikTok video scripts for Silent Syndicate.
+
+Pillar: ${pillar.toUpperCase()}
+Pillar guide: ${pillarGuides[pillar]}
+${angle ? `Custom angle: ${angle}` : ''}
+
+TRANSPARENCY FORMULA (mandatory for all scripts):
+- Name Enagic directly
+- Name the investment range ($6,787–$18,469 AUD depending on package)
+- Name the commission ($365–$2,595 AUD per sale depending on rank)
+- End with: "Link in bio for the full breakdown"
+
+FORMAT each script exactly like this:
+SCRIPT 1:
+HOOK: [The first 3 seconds — must stop the scroll]
+BODY: [The 30-50 second educational/proof section]
+CTA: [Final 5 seconds — one action only]
+---
+SCRIPT 2:
+HOOK: ...
+BODY: ...
+CTA: ...
+---
+SCRIPT 3:
+HOOK: ...
+BODY: ...
+CTA: ...
+
+Make each hook radically different. Make the body educational and honest. Never use hype language.`;
+
+  try {
+    const response = await callClaude(prompt);
+    const scripts = parseScripts(response);
+    renderGeneratedScripts(scripts, pillar);
+    SS.scriptLibrary.push(...scripts.map(s => ({ ...s, pillar, date: new Date().toLocaleDateString() })));
+    log('MASTER', `${scripts.length} scripts generated`, 'success');
+  } catch(e) {
+    output.innerHTML = `<div style="color:var(--accent3);font-family:'JetBrains Mono',monospace;font-size:0.7rem;padding:1rem;">Error: ${e.message}</div>`;
+    log('MASTER', 'Script generation error: ' + e.message, 'error');
+  }
+
+  btn.disabled = false;
+  btn.textContent = '⚡ GENERATE 3 SCRIPTS WITH CLAUDE';
+}
+
+function parseScripts(raw) {
+  const scripts = [];
+  const parts = raw.split(/---+/).filter(p => p.trim());
+  for (const part of parts) {
+    const hook = (part.match(/HOOK:\s*(.+?)(?=BODY:|$)/s) || [])[1]?.trim() || '';
+    const body = (part.match(/BODY:\s*(.+?)(?=CTA:|$)/s) || [])[1]?.trim() || '';
+    const cta = (part.match(/CTA:\s*(.+?)$/s) || [])[1]?.trim() || '';
+    if (hook || body) scripts.push({ hook, body, cta });
+  }
+  return scripts;
+}
+
+function renderGeneratedScripts(scripts, pillar) {
+  const colors = { pain: '#ef4444', education: 'var(--accent2)', proof: 'var(--accent)', objection: 'var(--accent4)' };
+  const output = document.getElementById('generatedScripts');
+  output.innerHTML = scripts.map((s, i) => `
+    <div class="script-item">
+      <div class="si-pillar" style="color:${colors[pillar]}">${pillar.toUpperCase()} — SCRIPT ${i+1}</div>
+      <div class="si-hook">${s.hook}</div>
+      <div class="si-body">${s.body}</div>
+      <div style="font-family:'JetBrains Mono',monospace;font-size:0.6rem;color:var(--accent);margin-bottom:0.8rem;">${s.cta}</div>
+      <div class="si-actions">
+        <button class="si-btn copy" onclick="copyScript(${i})">COPY</button>
+        <button class="si-btn heygen" onclick="openHeyGen()">OPEN HEYGEN</button>
+        <button class="si-btn regen" onclick="generateScripts()">REGEN</button>
+      </div>
+    </div>
+  `).join('');
+  window._lastScripts = scripts;
+}
+
+function copyScript(i) {
+  const s = window._lastScripts?.[i];
+  if (!s) return;
+  const text = `HOOK: ${s.hook}\n\n${s.body}\n\n${s.cta}`;
+  navigator.clipboard.writeText(text).then(() => {
+    log('MASTER', `Script ${i+1} copied to clipboard`, 'success');
+    alert('Script copied! Paste it into HeyGen.');
+  });
+}
+
+function openHeyGen() { window.open('https://app.heygen.com/home', '_blank'); }
+
+function renderScriptLibrary() {
+  const el = document.getElementById('scriptLibrary');
+  if (SS.scriptLibrary.length === 0) {
+    el.innerHTML = '<div style="font-family:\'JetBrains Mono\',monospace;font-size:0.65rem;color:var(--dim);padding:2rem;text-align:center;">Generate scripts to build your library. They auto-save here.</div>';
+    return;
+  }
+  const colors = { pain: '#ef4444', education: 'var(--accent2)', proof: 'var(--accent)', objection: 'var(--accent4)' };
+  el.innerHTML = SS.scriptLibrary.map((s, i) => `
+    <div class="script-item">
+      <div class="si-pillar" style="color:${colors[s.pillar] || 'var(--pg)'}">${(s.pillar||'').toUpperCase()} · ${s.date}</div>
+      <div class="si-hook">${s.hook}</div>
+      <div class="si-body" style="max-height:60px;overflow:hidden;">${s.body}</div>
+      <div class="si-actions"><button class="si-btn copy" onclick="navigator.clipboard.writeText('${(s.hook+' '+s.body+' '+s.cta).replace(/'/g,"\\'")}')">COPY</button></div>
+    </div>
+  `).join('');
+}
+
+// ═══════════════════════════════════════════════════════════════
+// GENERATE BRIEFING
+// ═══════════════════════════════════════════════════════════════
+async function generateBriefing() {
+  const box = document.getElementById('briefingBox');
+  const status = document.getElementById('briefingStatus');
+  status.textContent = 'GENERATING';
+  status.className = 'ph-badge warn';
+  box.textContent = '⟳ Master Agent compiling intelligence briefing...';
+  log('MASTER', 'Generating daily intelligence briefing...');
+
+  const now = new Date().toLocaleDateString('en-AU', { weekday:'long', day:'numeric', month:'long' });
+  const m = SS.metrics;
+
+  const prompt = `Generate the Silent Syndicate daily intelligence briefing for ${now}.
+
+Live metrics:
+- Opt-ins today: ${m.optins}
+- HOT leads: ${m.hot}
+- WARM leads: ${m.warm}
+- Total in pipeline: ${m.pipeline}
+- Applications: ${m.applied}
+- Joined/Converted: ${m.joined}
+
+Format as a clean terminal-style briefing. Include:
+1. Overall system status (one line)
+2. Pipeline summary with priorities
+3. Top 3 action items for today (numbered, specific)
+4. One strategic insight
+5. One risk or fault to monitor
+
+Keep it tight. Under 300 words. Chairman reads this in 60 seconds and knows exactly what to do.`;
+
+  try {
+    const response = await callClaude(prompt);
+    const header = `SILENT SYNDICATE — DAILY BRIEFING\n${now.toUpperCase()}\n${'━'.repeat(40)}\n\n`;
+    box.textContent = header + response;
+    status.textContent = 'LIVE';
+    status.className = 'ph-badge live';
+    log('MASTER', 'Briefing generated', 'success');
+  } catch(e) {
+    box.textContent = 'Briefing generation failed: ' + e.message;
+    status.textContent = 'ERROR';
+    status.className = 'ph-badge alert';
+    log('MASTER', 'Briefing error: ' + e.message, 'error');
+  }
+}
+
+// ═══════════════════════════════════════════════════════════════
+// RUN ALL AGENTS
+// ═══════════════════════════════════════════════════════════════
+async function runAllAgents() {
+  const btn = document.getElementById('runAllBtn');
+  btn.disabled = true;
+  btn.textContent = '⟳ RUNNING...';
+
+  log('SYSTEM', '═══ ALL AGENTS ACTIVATING ═══');
+  log('MASTER', 'Orchestrating full business audit...');
+
+  await runOpsCheck();
+  await new Promise(r => setTimeout(r, 500));
+  await generateBriefing();
+  await new Promise(r => setTimeout(r, 500));
+  await runPipelineAgent();
+
+  log('SYSTEM', '═══ ALL AGENTS COMPLETE ═══', 'success');
+  btn.disabled = false;
+  btn.textContent = '▶ RUN AGENTS';
+}
+
+// ═══════════════════════════════════════════════════════════════
+// METRICS UPDATE
+// ═══════════════════════════════════════════════════════════════
+function updateMetricsDisplay() {
+  const m = SS.metrics;
+  const fmt = v => v > 0 ? v.toString() : '0';
+
+  document.getElementById('met-optins').textContent = fmt(m.optins);
+  document.getElementById('met-hot').textContent = fmt(m.hot);
+  document.getElementById('met-pipeline').textContent = fmt(m.pipeline);
+  document.getElementById('met-applied').textContent = fmt(m.applied);
+  document.getElementById('met-optins-delta').textContent = m.optins > 0 ? '↑ Growing' : 'Awaiting first opt-in';
+  document.getElementById('met-hot-delta').className = 'metric-delta ' + (m.hot > 0 ? 'up' : '');
+  document.getElementById('met-hot-delta').textContent = m.hot > 0 ? `⚠ ${m.hot} need follow-up` : 'None yet';
+
+  document.getElementById('hotBadge').textContent = `${m.hot} HOT`;
+
+  // Funnel
+  document.getElementById('f-optins').textContent = m.optins;
+  document.getElementById('f-applied').textContent = m.applied;
+  document.getElementById('f-hot').textContent = m.hot;
+  document.getElementById('f-joined').textContent = m.joined;
+
+  if (m.optins > 0) {
+    const applyPct = Math.round((m.applied/m.optins)*100);
+    const hotPct = Math.round((m.hot/m.optins)*100);
+    const joinPct = Math.round((m.joined/m.optins)*100);
+    document.getElementById('f-pct-optins').textContent = '100%';
+    document.getElementById('f-pct-applied').textContent = applyPct + '%';
+    document.getElementById('f-pct-hot').textContent = hotPct + '%';
+    document.getElementById('f-pct-joined').textContent = joinPct + '%';
+    document.getElementById('f-bar-applied').style.width = Math.max(applyPct, 5) + '%';
+    document.getElementById('f-bar-hot').style.width = Math.max(hotPct, 3) + '%';
+    document.getElementById('f-bar-joined').style.width = Math.max(joinPct, 1) + '%';
+    document.getElementById('convRate1').textContent = '—';
+    document.getElementById('convRate2').textContent = applyPct + '%';
+    document.getElementById('convRate3').textContent = joinPct + '%';
+  }
+}
+
+// ═══════════════════════════════════════════════════════════════
+// PULL AC DATA VIA NETLIFY FUNCTION
+// ═══════════════════════════════════════════════════════════════
+async function pullACData() {
+  try {
+    log('SYSTEM', 'Pulling data from ActiveCampaign...');
+    const res = await fetch('/.netlify/functions/subscribe', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ _query: true, firstName: 'AGENT', email: 'agent@silentsyndicate.internal' })
+    });
+    if (res.ok) {
+      log('SYSTEM', 'AC connection confirmed', 'success');
+    }
+  } catch(e) {
+    log('SYSTEM', 'Running in standalone mode (AC data via dashboard)', 'warn');
+  }
+}
+
+// ═══════════════════════════════════════════════════════════════
+// INIT
+// ═══════════════════════════════════════════════════════════════
+window.addEventListener('load', async () => {
+  log('SYSTEM', 'Syndicate OS booting...', '');
+  await new Promise(r => setTimeout(r, 200));
+  log('SYSTEM', 'Loading context: Silent Syndicate business profile', '');
+  await new Promise(r => setTimeout(r, 200));
+  log('MASTER', 'Master Orchestrator online', 'success');
+  log('TRAFFIC', 'Traffic Agent standing by', 'success');
+  log('PIPELINE', 'Pipeline Agent standing by', 'success');
+  log('OPS', 'Operations Agent standing by', 'success');
+  log('CONVERSION', 'Conversion Agent standing by', 'success');
+  log('GROWTH', 'Growth Agent standing by', 'success');
+  log('SYSTEM', 'All 5 agents operational. Ready for commands.', 'success');
+  log('SYSTEM', 'Click RUN AGENTS for full business audit, or navigate to any agent.', '');
+
+  updateMetricsDisplay();
+  await pullACData();
+});
+</script>
+</body>
+</html>

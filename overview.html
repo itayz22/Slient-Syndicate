@@ -1,0 +1,1783 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Silent Syndicate — Company Overview & Investment Prospectus</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --ink: #0a0a0f;
+  --ink2: #12121a;
+  --ink3: #1a1a26;
+  --surface: #f4f1eb;
+  --cream: #faf8f3;
+  --gold: #c9a84c;
+  --gold2: #e8c96a;
+  --gold3: #f5e4a8;
+  --violet: #2d1b69;
+  --violet2: #4a2d8a;
+  --violet3: #7c5cbf;
+  --white: #ffffff;
+  --muted: rgba(10,10,15,0.55);
+  --border: rgba(10,10,15,0.1);
+  --border-gold: rgba(201,168,76,0.3);
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { font-size: 16px; scroll-behavior: smooth; }
+body {
+  background: var(--cream);
+  color: var(--ink);
+  font-family: 'Space Grotesk', sans-serif;
+  overflow-x: hidden;
+}
+
+/* ── GRAIN OVERLAY ── */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+  pointer-events: none;
+  z-index: 999;
+  opacity: 0.4;
+}
+
+/* ── COVER PAGE ── */
+.cover {
+  min-height: 100vh;
+  background: var(--ink);
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  position: relative;
+  overflow: hidden;
+}
+
+.cover-bg {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 80% 60% at 50% 100%, rgba(45,27,105,0.8), transparent),
+    radial-gradient(ellipse 50% 40% at 80% 20%, rgba(201,168,76,0.08), transparent),
+    radial-gradient(ellipse 60% 50% at 10% 80%, rgba(74,45,138,0.4), transparent);
+}
+
+.cover-grid {
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(201,168,76,0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(201,168,76,0.04) 1px, transparent 1px);
+  background-size: 60px 60px;
+}
+
+.cover-top {
+  position: relative;
+  z-index: 2;
+  padding: 3rem 5%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid rgba(201,168,76,0.15);
+}
+
+.cover-logo {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.logo-hex {
+  width: 36px;
+  height: 36px;
+  background: linear-gradient(135deg, var(--gold), var(--gold2));
+  clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+  box-shadow: 0 0 20px rgba(201,168,76,0.5);
+  flex-shrink: 0;
+  animation: hexPulse 3s ease-in-out infinite;
+}
+@keyframes hexPulse {
+  0%, 100% { box-shadow: 0 0 20px rgba(201,168,76,0.4); }
+  50% { box-shadow: 0 0 40px rgba(201,168,76,0.8), 0 0 60px rgba(201,168,76,0.2); }
+}
+
+.logo-text {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 1.4rem;
+  letter-spacing: 0.25em;
+  color: var(--white);
+}
+
+.cover-doc-ref {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.62rem;
+  letter-spacing: 0.15em;
+  color: rgba(201,168,76,0.6);
+}
+
+.cover-hero {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 5rem 5%;
+}
+
+.cover-eyebrow {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.65rem;
+  letter-spacing: 0.35em;
+  color: var(--gold);
+  margin-bottom: 2rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+.cover-eyebrow::before {
+  content: '';
+  display: block;
+  width: 30px;
+  height: 1px;
+  background: var(--gold);
+  box-shadow: 0 0 8px var(--gold);
+}
+
+.cover-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(4rem, 12vw, 10rem);
+  line-height: 0.88;
+  letter-spacing: 0.04em;
+  color: var(--white);
+  margin-bottom: 1.5rem;
+}
+
+.cover-title .gold-word {
+  color: var(--gold);
+  display: block;
+  -webkit-text-stroke: 2px var(--gold);
+  text-shadow: 0 0 60px rgba(201,168,76,0.3);
+}
+
+.cover-title .outline-word {
+  color: transparent;
+  -webkit-text-stroke: 1px rgba(255,255,255,0.25);
+  display: block;
+}
+
+.cover-sub {
+  font-family: 'Libre Baskerville', serif;
+  font-size: clamp(1rem, 2vw, 1.4rem);
+  font-style: italic;
+  color: rgba(255,255,255,0.55);
+  max-width: 600px;
+  line-height: 1.7;
+  margin-bottom: 3rem;
+}
+
+.cover-stats {
+  display: flex;
+  gap: 3rem;
+  flex-wrap: wrap;
+}
+
+.cs-item {
+  border-left: 2px solid rgba(201,168,76,0.3);
+  padding-left: 1.2rem;
+}
+
+.cs-val {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 2.2rem;
+  letter-spacing: 0.1em;
+  color: var(--gold);
+  display: block;
+  line-height: 1;
+}
+
+.cs-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.55rem;
+  letter-spacing: 0.18em;
+  color: rgba(255,255,255,0.4);
+  margin-top: 0.3rem;
+  display: block;
+}
+
+.cover-bottom {
+  position: relative;
+  z-index: 2;
+  padding: 2rem 5%;
+  border-top: 1px solid rgba(201,168,76,0.12);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.cb-chairman {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.chairman-badge {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--gold), var(--gold2));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 1.1rem;
+  color: var(--ink);
+  box-shadow: 0 0 20px rgba(201,168,76,0.3);
+}
+
+.chairman-info {}
+.chairman-name {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: var(--white);
+}
+.chairman-title {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.55rem;
+  letter-spacing: 0.15em;
+  color: var(--gold);
+  margin-top: 0.1rem;
+}
+
+.cb-confidential {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.58rem;
+  letter-spacing: 0.15em;
+  color: rgba(255,255,255,0.25);
+}
+
+/* ── SHARED LAYOUT ── */
+.page-section {
+  padding: 7rem 5%;
+  position: relative;
+}
+
+.page-section.dark {
+  background: var(--ink);
+  color: var(--white);
+}
+
+.page-section.ink2 {
+  background: var(--ink2);
+  color: var(--white);
+}
+
+.page-section.light {
+  background: var(--cream);
+  color: var(--ink);
+}
+
+.page-section.surface {
+  background: var(--surface);
+  color: var(--ink);
+}
+
+.wrap { max-width: 1100px; margin: 0 auto; }
+
+.section-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.6rem;
+  letter-spacing: 0.3em;
+  color: var(--gold);
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  margin-bottom: 1.2rem;
+  text-transform: uppercase;
+}
+.section-label::before {
+  content: '';
+  display: block;
+  width: 20px;
+  height: 1px;
+  background: var(--gold);
+}
+
+.section-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(2.5rem, 6vw, 5rem);
+  letter-spacing: 0.05em;
+  line-height: 0.92;
+  margin-bottom: 1.5rem;
+}
+
+.dark .section-title { color: var(--white); }
+.light .section-title, .surface .section-title { color: var(--ink); }
+
+.section-sub {
+  font-family: 'Libre Baskerville', serif;
+  font-size: 1.1rem;
+  line-height: 1.85;
+  color: inherit;
+  opacity: 0.7;
+  max-width: 680px;
+  margin-bottom: 4rem;
+}
+
+/* ── WHAT IS IT ── */
+.what-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2px;
+  background: rgba(201,168,76,0.1);
+  border: 1px solid rgba(201,168,76,0.15);
+}
+
+.what-cell {
+  background: var(--ink2);
+  padding: 3rem;
+}
+
+.what-cell.gold-bg {
+  background: linear-gradient(135deg, var(--gold), var(--gold2));
+  color: var(--ink);
+}
+
+.wc-num {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 4rem;
+  letter-spacing: 0.05em;
+  opacity: 0.15;
+  line-height: 1;
+  display: block;
+  margin-bottom: 0.5rem;
+}
+.gold-bg .wc-num { opacity: 0.25; }
+
+.wc-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 1.5rem;
+  letter-spacing: 0.08em;
+  color: var(--white);
+  margin-bottom: 1rem;
+}
+.gold-bg .wc-title { color: var(--ink); }
+
+.wc-body {
+  font-size: 0.95rem;
+  line-height: 1.85;
+  color: rgba(255,255,255,0.65);
+}
+.gold-bg .wc-body { color: rgba(10,10,15,0.75); }
+
+/* ── FUNNEL VISUAL ── */
+.funnel-visual {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0;
+  margin: 0 auto;
+  max-width: 800px;
+}
+
+.funnel-stage {
+  width: 100%;
+  position: relative;
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+
+.funnel-stage:hover { transform: scaleX(1.02); }
+
+.funnel-stage:nth-child(1) .fs-inner { width: 100%; }
+.funnel-stage:nth-child(2) .fs-inner { width: 82%; }
+.funnel-stage:nth-child(3) .fs-inner { width: 64%; }
+.funnel-stage:nth-child(4) .fs-inner { width: 46%; }
+.funnel-stage:nth-child(5) .fs-inner { width: 28%; }
+
+.fs-inner {
+  margin: 0 auto;
+  padding: 1.8rem 2.5rem;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 2px;
+}
+
+.funnel-stage:nth-child(1) .fs-inner { background: rgba(45,27,105,0.9); border: 1px solid rgba(124,92,191,0.4); }
+.funnel-stage:nth-child(2) .fs-inner { background: rgba(45,27,105,0.75); border: 1px solid rgba(124,92,191,0.3); }
+.funnel-stage:nth-child(3) .fs-inner { background: rgba(45,27,105,0.6); border: 1px solid rgba(201,168,76,0.25); }
+.funnel-stage:nth-child(4) .fs-inner { background: rgba(45,27,105,0.8); border: 1px solid rgba(201,168,76,0.4); }
+.funnel-stage:nth-child(5) .fs-inner { background: linear-gradient(135deg, var(--gold), var(--gold2)); border: none; }
+
+.fs-left {}
+.fs-num {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.52rem;
+  letter-spacing: 0.2em;
+  color: var(--gold);
+  margin-bottom: 0.3rem;
+}
+.funnel-stage:nth-child(5) .fs-num { color: rgba(10,10,15,0.6); }
+
+.fs-name {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 1.3rem;
+  letter-spacing: 0.1em;
+  color: var(--white);
+}
+.funnel-stage:nth-child(5) .fs-name { color: var(--ink); }
+
+.fs-desc {
+  font-size: 0.82rem;
+  color: rgba(255,255,255,0.55);
+  line-height: 1.5;
+  margin-top: 0.3rem;
+  max-width: 300px;
+}
+.funnel-stage:nth-child(5) .fs-desc { color: rgba(10,10,15,0.65); }
+
+.fs-right {
+  text-align: right;
+  flex-shrink: 0;
+}
+
+.fs-metric {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 1.8rem;
+  letter-spacing: 0.05em;
+  color: var(--gold);
+  display: block;
+  line-height: 1;
+}
+.funnel-stage:nth-child(5) .fs-metric { color: var(--ink); }
+
+.fs-metric-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.48rem;
+  letter-spacing: 0.12em;
+  color: rgba(255,255,255,0.35);
+  display: block;
+  margin-top: 0.2rem;
+}
+.funnel-stage:nth-child(5) .fs-metric-label { color: rgba(10,10,15,0.5); }
+
+.funnel-arrow {
+  text-align: center;
+  color: rgba(201,168,76,0.3);
+  font-size: 0.9rem;
+  padding: 0.1rem 0;
+}
+
+/* ── COMMISSION SECTION ── */
+.commission-layout {
+  display: grid;
+  grid-template-columns: 1.2fr 1fr;
+  gap: 4rem;
+  align-items: start;
+}
+
+.tier-cards {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.tier-card {
+  background: var(--ink3);
+  border: 1px solid rgba(201,168,76,0.15);
+  padding: 2rem 2.5rem;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s;
+}
+
+.tier-card:hover {
+  border-color: rgba(201,168,76,0.4);
+  transform: translateX(8px);
+}
+
+.tier-card.featured {
+  border-color: var(--gold);
+  background: linear-gradient(135deg, rgba(45,27,105,0.8), rgba(74,45,138,0.4));
+}
+
+.tier-card::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 3px;
+  background: var(--gold);
+  transform: scaleY(0);
+  transition: transform 0.3s;
+}
+.tier-card:hover::before, .tier-card.featured::before { transform: scaleY(1); }
+
+.tc-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.8rem;
+}
+
+.tc-tier {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 1.3rem;
+  letter-spacing: 0.1em;
+  color: var(--white);
+}
+
+.tc-badge {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.52rem;
+  letter-spacing: 0.12em;
+  padding: 0.2rem 0.6rem;
+  border-radius: 2px;
+}
+
+.tc-badge.pop {
+  background: rgba(201,168,76,0.15);
+  color: var(--gold);
+  border: 1px solid rgba(201,168,76,0.3);
+}
+
+.tc-numbers {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 0;
+  margin-top: 1rem;
+  border-top: 1px solid rgba(201,168,76,0.1);
+  padding-top: 1rem;
+}
+
+.tc-num-item {
+  text-align: center;
+  border-right: 1px solid rgba(201,168,76,0.08);
+}
+.tc-num-item:last-child { border-right: none; }
+
+.tc-num-val {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 1.4rem;
+  letter-spacing: 0.05em;
+  display: block;
+  line-height: 1;
+}
+
+.tc-num-val.green { color: #4ade80; }
+.tc-num-val.amber { color: var(--gold); }
+.tc-num-val.blue { color: #60a5fa; }
+
+.tc-num-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.45rem;
+  letter-spacing: 0.1em;
+  color: rgba(255,255,255,0.3);
+  display: block;
+  margin-top: 0.25rem;
+}
+
+.commission-sidebar {
+  position: sticky;
+  top: 2rem;
+}
+
+.cs-big-number {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(4rem, 8vw, 7rem);
+  letter-spacing: 0.04em;
+  color: var(--gold);
+  line-height: 0.88;
+  display: block;
+  text-shadow: 0 0 60px rgba(201,168,76,0.2);
+}
+
+.cs-context {
+  font-family: 'Libre Baskerville', serif;
+  font-size: 1rem;
+  font-style: italic;
+  color: rgba(255,255,255,0.5);
+  line-height: 1.8;
+  margin-top: 1.5rem;
+  border-left: 2px solid rgba(201,168,76,0.3);
+  padding-left: 1.2rem;
+}
+
+.network-diagram {
+  margin-top: 3rem;
+  background: var(--ink3);
+  border: 1px solid rgba(201,168,76,0.12);
+  padding: 2rem;
+}
+
+.nd-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.55rem;
+  letter-spacing: 0.2em;
+  color: var(--gold);
+  margin-bottom: 1.5rem;
+}
+
+.nd-tree {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.nd-row {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  font-size: 0.82rem;
+  color: rgba(255,255,255,0.6);
+}
+
+.nd-icon {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 0.7rem;
+  flex-shrink: 0;
+}
+
+.nd-icon.chairman { background: linear-gradient(135deg, var(--gold), var(--gold2)); color: var(--ink); box-shadow: 0 0 12px rgba(201,168,76,0.4); }
+.nd-icon.op { background: rgba(124,92,191,0.3); color: var(--violet3); border: 1px solid rgba(124,92,191,0.4); }
+
+.nd-indent { margin-left: 1.8rem; }
+.nd-indent2 { margin-left: 3.6rem; }
+
+.nd-earn {
+  margin-left: auto;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.58rem;
+  color: #4ade80;
+}
+
+/* ── THE SYSTEM ── */
+.system-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 2px;
+  background: rgba(201,168,76,0.08);
+  margin-bottom: 4rem;
+}
+
+.sg-layer {
+  background: var(--ink2);
+  padding: 2rem 1.5rem;
+  border-top: 2px solid transparent;
+  transition: all 0.3s;
+  cursor: default;
+}
+
+.sg-layer:nth-child(1) { border-top-color: rgba(124,92,191,0.6); }
+.sg-layer:nth-child(2) { border-top-color: rgba(124,92,191,0.8); }
+.sg-layer:nth-child(3) { border-top-color: var(--violet3); }
+.sg-layer:nth-child(4) { border-top-color: rgba(201,168,76,0.6); }
+.sg-layer:nth-child(5) { border-top-color: var(--gold); }
+
+.sg-layer:hover { background: rgba(45,27,105,0.4); }
+
+.sg-num {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 2.5rem;
+  color: rgba(255,255,255,0.1);
+  line-height: 1;
+  display: block;
+  margin-bottom: 0.5rem;
+}
+
+.sg-name {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 0.95rem;
+  letter-spacing: 0.12em;
+  color: var(--gold);
+  margin-bottom: 0.8rem;
+  display: block;
+}
+
+.sg-desc {
+  font-size: 0.8rem;
+  color: rgba(255,255,255,0.45);
+  line-height: 1.7;
+}
+
+/* ── RESULTS / PROOF ── */
+.results-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.5rem;
+  margin-bottom: 4rem;
+}
+
+.result-card {
+  background: var(--white);
+  border: 1px solid var(--border);
+  padding: 2.5rem;
+  position: relative;
+}
+
+.result-card::before {
+  content: '"';
+  position: absolute;
+  top: 1.5rem;
+  left: 2rem;
+  font-family: 'Libre Baskerville', serif;
+  font-size: 4rem;
+  color: var(--gold);
+  opacity: 0.2;
+  line-height: 1;
+}
+
+.rc-result {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 2rem;
+  letter-spacing: 0.05em;
+  color: var(--ink);
+  display: block;
+  margin-bottom: 0.3rem;
+  line-height: 1;
+}
+
+.rc-period {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.52rem;
+  letter-spacing: 0.15em;
+  color: var(--gold);
+  display: block;
+  margin-bottom: 1.2rem;
+}
+
+.rc-quote {
+  font-family: 'Libre Baskerville', serif;
+  font-size: 0.9rem;
+  font-style: italic;
+  color: rgba(10,10,15,0.65);
+  line-height: 1.75;
+  margin-bottom: 1.5rem;
+}
+
+.rc-author {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+}
+
+.rc-avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--violet), var(--violet2));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 0.9rem;
+  color: var(--white);
+}
+
+.rc-name {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.rc-location {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.5rem;
+  letter-spacing: 0.1em;
+  color: var(--muted);
+}
+
+/* ── ROI TABLE ── */
+.roi-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 2rem;
+}
+
+.roi-table th {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.55rem;
+  letter-spacing: 0.2em;
+  color: var(--gold);
+  padding: 1rem 1.5rem;
+  text-align: left;
+  border-bottom: 1px solid rgba(201,168,76,0.2);
+  background: rgba(201,168,76,0.04);
+}
+
+.roi-table td {
+  padding: 1.2rem 1.5rem;
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+  font-size: 0.9rem;
+  color: rgba(255,255,255,0.7);
+}
+
+.roi-table tr:hover td { background: rgba(45,27,105,0.3); }
+
+.roi-table td:first-child {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 1.1rem;
+  letter-spacing: 0.08em;
+  color: var(--white);
+}
+
+.td-green { color: #4ade80 !important; font-weight: 600; }
+.td-gold { color: var(--gold) !important; font-weight: 600; }
+
+/* ── CHAIRMAN SECTION ── */
+.chairman-section {
+  background: var(--ink);
+  padding: 8rem 5%;
+  position: relative;
+  overflow: hidden;
+}
+
+.chairman-section::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse 70% 80% at 30% 50%, rgba(45,27,105,0.6), transparent);
+}
+
+.chairman-layout {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6rem;
+  align-items: center;
+  position: relative;
+  z-index: 1;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+.chairman-visual {
+  position: relative;
+}
+
+.chairman-frame {
+  width: 100%;
+  aspect-ratio: 3/4;
+  background: linear-gradient(135deg, var(--ink3), var(--ink2));
+  border: 1px solid rgba(201,168,76,0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.chairman-frame::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(45,27,105,0.4), rgba(74,45,138,0.2));
+}
+
+.chairman-monogram {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(6rem, 15vw, 12rem);
+  color: rgba(201,168,76,0.08);
+  letter-spacing: 0.1em;
+  position: relative;
+  z-index: 1;
+  text-shadow: 0 0 80px rgba(201,168,76,0.1);
+}
+
+.chairman-gold-line {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--gold), var(--gold2), transparent);
+}
+
+.chairman-rank {
+  position: absolute;
+  top: 1.5rem;
+  right: 1.5rem;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.55rem;
+  letter-spacing: 0.2em;
+  color: var(--gold);
+  background: rgba(10,10,15,0.8);
+  padding: 0.4rem 0.8rem;
+  border: 1px solid rgba(201,168,76,0.2);
+}
+
+.chairman-content {}
+
+.chairman-title-block {
+  margin-bottom: 3rem;
+}
+
+.ct-role {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.6rem;
+  letter-spacing: 0.3em;
+  color: var(--gold);
+  margin-bottom: 1rem;
+}
+
+.ct-name {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(2.5rem, 5vw, 4rem);
+  letter-spacing: 0.05em;
+  color: var(--white);
+  line-height: 0.92;
+}
+
+.chairman-statement {
+  font-family: 'Libre Baskerville', serif;
+  font-size: 1.1rem;
+  font-style: italic;
+  color: rgba(255,255,255,0.65);
+  line-height: 1.9;
+  border-left: 2px solid var(--gold);
+  padding-left: 1.5rem;
+  margin-bottom: 3rem;
+}
+
+.chairman-credentials {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+}
+
+.cred-item {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  font-size: 0.88rem;
+  color: rgba(255,255,255,0.55);
+}
+
+.cred-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--gold);
+  box-shadow: 0 0 6px var(--gold);
+  flex-shrink: 0;
+}
+
+/* ── OPPORTUNITY SECTION ── */
+.opportunity-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.5rem;
+  margin-bottom: 4rem;
+}
+
+.opp-card {
+  background: var(--white);
+  border: 1px solid var(--border);
+  padding: 2.5rem;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s;
+}
+
+.opp-card:hover {
+  border-color: rgba(201,168,76,0.3);
+  transform: translateY(-4px);
+  box-shadow: 0 20px 50px rgba(10,10,15,0.08);
+}
+
+.opp-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, var(--gold), transparent);
+  transform: scaleX(0);
+  transition: transform 0.3s;
+  transform-origin: left;
+}
+
+.opp-card:hover::before { transform: scaleX(1); }
+
+.oc-icon { font-size: 2rem; margin-bottom: 1.2rem; display: block; }
+.oc-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 1.3rem;
+  letter-spacing: 0.08em;
+  color: var(--ink);
+  margin-bottom: 0.8rem;
+}
+.oc-body {
+  font-size: 0.92rem;
+  color: var(--muted);
+  line-height: 1.8;
+}
+
+/* ── DISCLAIMER ── */
+.disclaimer-section {
+  background: var(--ink2);
+  padding: 4rem 5%;
+  border-top: 1px solid rgba(201,168,76,0.08);
+}
+
+.disclaimer-text {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.6rem;
+  letter-spacing: 0.06em;
+  color: rgba(255,255,255,0.25);
+  line-height: 2;
+  max-width: 900px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+/* ── CTA SECTION ── */
+.cta-section {
+  background: var(--ink);
+  padding: 8rem 5%;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.cta-section::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse 70% 80% at 50% 50%, rgba(45,27,105,0.5), transparent);
+}
+
+.cta-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(3rem, 8vw, 7rem);
+  letter-spacing: 0.05em;
+  color: var(--white);
+  line-height: 0.88;
+  margin-bottom: 2rem;
+  position: relative;
+  z-index: 1;
+}
+
+.cta-title span { color: var(--gold); display: block; }
+
+.cta-sub {
+  font-family: 'Libre Baskerville', serif;
+  font-size: 1.1rem;
+  font-style: italic;
+  color: rgba(255,255,255,0.5);
+  max-width: 500px;
+  margin: 0 auto 3rem;
+  line-height: 1.8;
+  position: relative;
+  z-index: 1;
+}
+
+.cta-buttons {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  flex-wrap: wrap;
+  position: relative;
+  z-index: 1;
+}
+
+.btn-gold {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 1rem;
+  letter-spacing: 0.18em;
+  padding: 1.2rem 3rem;
+  background: linear-gradient(135deg, var(--gold), var(--gold2));
+  color: var(--ink);
+  border: none;
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.8rem;
+  box-shadow: 0 0 40px rgba(201,168,76,0.3);
+  transition: all 0.3s;
+}
+
+.btn-gold:hover {
+  box-shadow: 0 0 60px rgba(201,168,76,0.6);
+  transform: translateY(-3px);
+}
+
+.btn-outline {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 1rem;
+  letter-spacing: 0.18em;
+  padding: 1.2rem 3rem;
+  background: transparent;
+  color: var(--white);
+  border: 1px solid rgba(255,255,255,0.2);
+  cursor: pointer;
+  text-decoration: none;
+  transition: all 0.3s;
+}
+
+.btn-outline:hover {
+  border-color: rgba(201,168,76,0.5);
+  color: var(--gold);
+}
+
+footer {
+  background: var(--ink);
+  border-top: 1px solid rgba(201,168,76,0.08);
+  padding: 2rem 5%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.footer-brand {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 1rem;
+  letter-spacing: 0.25em;
+  color: var(--gold);
+}
+
+.footer-tag {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.55rem;
+  letter-spacing: 0.12em;
+  color: rgba(255,255,255,0.2);
+}
+
+/* REVEAL ANIMATIONS */
+.reveal {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.8s ease, transform 0.8s ease;
+}
+.reveal.visible { opacity: 1; transform: translateY(0); }
+.rd1 { transition-delay: 0.1s; }
+.rd2 { transition-delay: 0.2s; }
+.rd3 { transition-delay: 0.3s; }
+.rd4 { transition-delay: 0.4s; }
+
+@media(max-width:900px) {
+  .what-grid { grid-template-columns: 1fr; }
+  .commission-layout { grid-template-columns: 1fr; }
+  .system-grid { grid-template-columns: 1fr 1fr; }
+  .results-grid { grid-template-columns: 1fr; }
+  .chairman-layout { grid-template-columns: 1fr; gap: 3rem; }
+  .opportunity-grid { grid-template-columns: 1fr; }
+  .roi-table { font-size: 0.78rem; }
+  .funnel-stage:nth-child(n) .fs-inner { width: 100% !important; }
+}
+</style>
+
+<!-- ═══ ANALYTICS & TRACKING ═══ -->
+<!-- GA4: Replace G-XXXXXXXXXX with your real Measurement ID from analytics.google.com -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-XXXXXXXXXX');
+</script>
+<!-- Facebook Pixel: Replace XXXXXXXXXXXXXXX with your real Pixel ID from business.facebook.com -->
+<script>
+!function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;
+n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;
+t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,
+document,'script','https://connect.facebook.net/en_US/fbevents.js');
+fbq('init', 'XXXXXXXXXXXXXXX');
+fbq('track', 'PageView');
+</script>
+<noscript><img height="1" width="1" style="display:none" src="https://www.facebook.com/tr?id=XXXXXXXXXXXXXXX&ev=PageView&noscript=1"/></noscript>
+<!-- Tidio Chatbot: Replace xxxxxxxxxxxx with your real Tidio public key from tidio.com/panel/settings -->
+<script src="//code.tidio.co/xxxxxxxxxxxx.js" async></script>
+<!-- ═══════════════════════════ -->
+</head>
+<body>
+
+<!-- ══ COVER PAGE ══ -->
+<div class="cover">
+  <div class="cover-bg"></div>
+  <div class="cover-grid"></div>
+
+  <div class="cover-top">
+    <div class="cover-logo">
+      <div class="logo-hex"></div>
+      <span class="logo-text">Silent Syndicate</span>
+    </div>
+    <div class="cover-doc-ref">// COMPANY OVERVIEW · 2025</div>
+  </div>
+
+  <div class="cover-hero">
+    <div class="cover-eyebrow">AI-Powered Distributor Network</div>
+    <h1 class="cover-title">
+      <span class="outline-word">The</span>
+      <span class="gold-word">Silent</span>
+      <span>Syndicate</span>
+    </h1>
+    <p class="cover-sub">
+      A full-stack AI-automated income system built on Enagic's global 
+      distribution network. High-ticket commissions. No cold calls. 
+      No ceiling on scale.
+    </p>
+    <div class="cover-stats">
+      <div class="cs-item">
+        <span class="cs-val">$6,330</span>
+        <span class="cs-label">Max per transaction</span>
+      </div>
+      <div class="cs-item">
+        <span class="cs-val">4</span>
+        <span class="cs-label">Sales to break even</span>
+      </div>
+      <div class="cs-item">
+        <span class="cs-val">24/7</span>
+        <span class="cs-label">AI funnel uptime</span>
+      </div>
+      <div class="cs-item">
+        <span class="cs-val">0</span>
+        <span class="cs-label">Calls required</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="cover-bottom">
+    <div class="cb-chairman">
+      <div class="chairman-badge">SS</div>
+      <div class="chairman-info">
+        <div class="chairman-name">Chairman — Silent Syndicate</div>
+        <div class="chairman-title">// FOUNDER & NETWORK ARCHITECT</div>
+      </div>
+    </div>
+    <div class="cb-confidential">BUSINESS OVERVIEW DOCUMENT — 2025</div>
+  </div>
+</div>
+
+<!-- ══ WHAT IS SILENT SYNDICATE ══ -->
+<section class="page-section dark">
+  <div class="wrap">
+    <div class="section-label reveal">01 — Overview</div>
+    <h2 class="section-title reveal">What Is<br>Silent Syndicate</h2>
+    <p class="section-sub reveal">The complete picture. No fluff. No hidden structure.</p>
+
+    <div class="what-grid reveal">
+      <div class="what-cell">
+        <span class="wc-num">01</span>
+        <div class="wc-title">The Foundation</div>
+        <div class="wc-body">Silent Syndicate is an authorised distributor network built on top of Enagic International's direct sales platform. Enagic — founded in 1974, operating in 190+ countries — manufactures Kangen water ionisation machines. When someone joins as a distributor through Silent Syndicate, Enagic pays a commission of $2,400 to $6,330 directly to the referring distributor. That commission structure is the financial engine of everything we do.</div>
+      </div>
+      <div class="what-cell">
+        <span class="wc-num">02</span>
+        <div class="wc-title">The Difference</div>
+        <div class="wc-body">Most Enagic distributors operate through cold calls, personal networks, and manual selling. Silent Syndicate replaces that entirely with an AI-automated funnel system. Cold traffic finds us through content. The funnel educates and qualifies automatically. Serious buyers apply, get approved, and join — without a single sales call. The system runs 24 hours a day, 7 days a week, independent of any individual's time or energy.</div>
+      </div>
+      <div class="what-cell gold-bg">
+        <span class="wc-num">03</span>
+        <div class="wc-title">The Network Layer</div>
+        <div class="wc-body">Every distributor who joins through Silent Syndicate runs their own version of the same AI funnel system — branded, equipped, and operational from day one. When they make sales, the chairman earns override commissions on top of direct earnings. The network compounds: more operators means more sales volume means more passive override income — without additional direct effort from the top of the structure.</div>
+      </div>
+      <div class="what-cell">
+        <span class="wc-num">04</span>
+        <div class="wc-title">The Technology</div>
+        <div class="wc-body">The AIOS (AI Operating System) is the command centre of the entire operation. It provides a real-time mission-control dashboard: lead pipeline tracking, email sequence status per lead, AI chatbot conversations, live commission data, operator network visibility, and content performance analytics. Every operator gets their own AIOS instance. The chairman holds a master version with network-wide visibility.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ THE FUNNEL ══ -->
+<section class="page-section ink2">
+  <div class="wrap">
+    <div class="section-label reveal">02 — The System</div>
+    <h2 class="section-title reveal" style="color:var(--white)">The Funnel.<br>How It Works.</h2>
+    <p class="section-sub reveal" style="color:rgba(255,255,255,0.55)">A lead enters at Stage 1 as a cold stranger. By Stage 5 they are a paying distributor. Every stage is automated. No human intervention required.</p>
+
+    <div class="funnel-visual reveal">
+      <div class="funnel-stage">
+        <div class="fs-inner">
+          <div class="fs-left">
+            <div class="fs-num">// STAGE 01</div>
+            <div class="fs-name">Traffic & Capture</div>
+            <div class="fs-desc">Content on TikTok, Instagram, and Facebook drives cold traffic to the opt-in page. Visitor exchanges name and email for the free AI Income Blueprint.</div>
+          </div>
+          <div class="fs-right">
+            <span class="fs-metric">∞</span>
+            <span class="fs-metric-label">Potential reach</span>
+          </div>
+        </div>
+      </div>
+      <div class="funnel-arrow">↓</div>
+
+      <div class="funnel-stage">
+        <div class="fs-inner">
+          <div class="fs-left">
+            <div class="fs-num">// STAGE 02</div>
+            <div class="fs-name">AI Education</div>
+            <div class="fs-desc">7-day automated email sequence fires. Each email builds belief, handles objections, and establishes credibility. AI chatbot answers questions 24/7 in real time.</div>
+          </div>
+          <div class="fs-right">
+            <span class="fs-metric">~35%</span>
+            <span class="fs-metric-label">Email open rate</span>
+          </div>
+        </div>
+      </div>
+      <div class="funnel-arrow">↓</div>
+
+      <div class="funnel-stage">
+        <div class="fs-inner">
+          <div class="fs-left">
+            <div class="fs-num">// STAGE 03</div>
+            <div class="fs-name">Qualification</div>
+            <div class="fs-desc">A 7-question application form filters serious buyers from casual browsers. Responses are automatically scored and tagged HOT, WARM, or COLD. Only HOT leads reach the offer.</div>
+          </div>
+          <div class="fs-right">
+            <span class="fs-metric">~20%</span>
+            <span class="fs-metric-label">Apply rate</span>
+          </div>
+        </div>
+      </div>
+      <div class="funnel-arrow">↓</div>
+
+      <div class="funnel-stage">
+        <div class="fs-inner">
+          <div class="fs-left">
+            <div class="fs-num">// STAGE 04</div>
+            <div class="fs-name">Offer & Close</div>
+            <div class="fs-desc">HOT leads land on the offer page — a standalone closing page with full tier breakdown, ROI calculator, objection handlers, and a direct join button. No call required.</div>
+          </div>
+          <div class="fs-right">
+            <span class="fs-metric">~40%</span>
+            <span class="fs-metric-label">Qualified close rate</span>
+          </div>
+        </div>
+      </div>
+      <div class="funnel-arrow">↓</div>
+
+      <div class="funnel-stage">
+        <div class="fs-inner">
+          <div class="fs-left">
+            <div class="fs-num">// OUTCOME</div>
+            <div class="fs-name">Commission Earned</div>
+            <div class="fs-desc">Buyer completes Enagic registration. Commission of $2,400–$6,330 is paid directly by Enagic. New operator is onboarded with their own AIOS and funnel system.</div>
+          </div>
+          <div class="fs-right">
+            <span class="fs-metric">$6,330</span>
+            <span class="fs-metric-label">Max per transaction</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- AIOS LAYER -->
+    <div class="section-label reveal" style="margin-top:5rem">// THE INTELLIGENCE LAYER</div>
+    <h3 style="font-family:'Bebas Neue',sans-serif;font-size:2rem;letter-spacing:0.08em;color:var(--white);margin-bottom:1rem;" class="reveal">AIOS — Running Above It All</h3>
+    <p style="font-size:0.95rem;color:rgba(255,255,255,0.5);max-width:640px;line-height:1.9;margin-bottom:3rem;" class="reveal">While the funnel runs below, the AIOS sits above it — monitoring every lead, every email, every commission, every operator. This is the intelligence layer that turns a funnel into an operating business.</p>
+
+    <div class="system-grid reveal">
+      <div class="sg-layer">
+        <span class="sg-num">01</span>
+        <span class="sg-name">Context</span>
+        <div class="sg-desc">AIOS knows your business — your offers, your voice, your commission tiers, your operator network. Every output is specific to you.</div>
+      </div>
+      <div class="sg-layer">
+        <span class="sg-num">02</span>
+        <span class="sg-name">Data</span>
+        <div class="sg-desc">Live pipeline data. Email open rates per lead. Commission tracking per transaction. Network volume by operator. All real, all current.</div>
+      </div>
+      <div class="sg-layer">
+        <span class="sg-num">03</span>
+        <span class="sg-name">Intelligence</span>
+        <div class="sg-desc">Daily AI briefing delivered each morning. Strategic recommendations. Priority actions. What's working, what needs attention, what to do next.</div>
+      </div>
+      <div class="sg-layer">
+        <span class="sg-num">04</span>
+        <span class="sg-name">Automate</span>
+        <div class="sg-desc">Recurring tasks permanently removed from your plate. Lead follow-up, email tagging, commission calculations, chatbot responses — all automated.</div>
+      </div>
+      <div class="sg-layer">
+        <span class="sg-num">05</span>
+        <span class="sg-name">Build</span>
+        <div class="sg-desc">AIOS builds new assets based on what the data shows is working. New content angles, new funnel variants, new email sequences — automatically.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ COMMISSION STRUCTURE ══ -->
+<section class="page-section dark">
+  <div class="wrap">
+    <div class="section-label reveal">03 — The Numbers</div>
+    <h2 class="section-title reveal" style="color:var(--white)">Commission<br>Structure</h2>
+    <p class="section-sub reveal" style="color:rgba(255,255,255,0.5)">Every figure comes directly from Enagic's published distributor compensation structure. These are not projections.</p>
+
+    <div class="commission-layout">
+      <div>
+        <div class="tier-cards reveal">
+          <div class="tier-card">
+            <div class="tc-row">
+              <div class="tc-tier">STRIKER</div>
+              <div style="font-family:'JetBrains Mono',monospace;font-size:0.55rem;letter-spacing:0.1em;color:rgba(255,255,255,0.3)">Enagic D3 Rank</div>
+            </div>
+            <div class="tc-numbers">
+              <div class="tc-num-item">
+                <span class="tc-num-val green">$2,400</span>
+                <span class="tc-num-label">Per sale</span>
+              </div>
+              <div class="tc-num-item">
+                <span class="tc-num-val amber">$8,500</span>
+                <span class="tc-num-label">Investment</span>
+              </div>
+              <div class="tc-num-item">
+                <span class="tc-num-val blue">4 sales</span>
+                <span class="tc-num-label">Break-even</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="tier-card featured">
+            <div class="tc-row">
+              <div class="tc-tier">LAUNCHER</div>
+              <div style="display:flex;gap:0.5rem;align-items:center;">
+                <span class="tc-badge pop">MOST CHOSEN</span>
+                <span style="font-family:'JetBrains Mono',monospace;font-size:0.55rem;letter-spacing:0.1em;color:rgba(255,255,255,0.3)">Enagic 6A</span>
+              </div>
+            </div>
+            <div class="tc-numbers">
+              <div class="tc-num-item">
+                <span class="tc-num-val green">$4,300</span>
+                <span class="tc-num-label">Per sale</span>
+              </div>
+              <div class="tc-num-item">
+                <span class="tc-num-val amber">$15,000</span>
+                <span class="tc-num-label">Investment</span>
+              </div>
+              <div class="tc-num-item">
+                <span class="tc-num-val blue">4 sales</span>
+                <span class="tc-num-label">Break-even</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="tier-card">
+            <div class="tc-row">
+              <div class="tc-tier">NUKE</div>
+              <div style="font-family:'JetBrains Mono',monospace;font-size:0.55rem;letter-spacing:0.1em;color:rgba(255,255,255,0.3)">Enagic 6A-2 · Maximum</div>
+            </div>
+            <div class="tc-numbers">
+              <div class="tc-num-item">
+                <span class="tc-num-val green">$6,330</span>
+                <span class="tc-num-label">Per sale</span>
+              </div>
+              <div class="tc-num-item">
+                <span class="tc-num-val amber">$20,000</span>
+                <span class="tc-num-label">Investment</span>
+              </div>
+              <div class="tc-num-item">
+                <span class="tc-num-val blue">4 sales</span>
+                <span class="tc-num-label">Break-even</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Network override diagram -->
+        <div class="network-diagram reveal" style="margin-top:1.5rem;">
+          <div class="nd-label">// NETWORK OVERRIDE STRUCTURE</div>
+          <div class="nd-tree">
+            <div class="nd-row">
+              <div class="nd-icon chairman">CH</div>
+              <div>Chairman — Silent Syndicate</div>
+              <div class="nd-earn">Direct + Overrides</div>
+            </div>
+            <div class="nd-row nd-indent">
+              <div class="nd-icon op">OP</div>
+              <div>Operator Level 1 — Sarah K.</div>
+              <div class="nd-earn">$4,800/mo</div>
+            </div>
+            <div class="nd-row nd-indent2">
+              <div class="nd-icon op">OP</div>
+              <div>Operator Level 2 — Their recruit</div>
+              <div class="nd-earn">+ Override to L1 + Chairman</div>
+            </div>
+            <div class="nd-row nd-indent">
+              <div class="nd-icon op">OP</div>
+              <div>Operator Level 1 — Marcus V.</div>
+              <div class="nd-earn">$8,600/mo</div>
+            </div>
+            <div class="nd-row nd-indent">
+              <div class="nd-icon op">OP</div>
+              <div>Operator Level 1 — Rachel P.</div>
+              <div class="nd-earn">$12,900/mo</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="commission-sidebar">
+        <div class="reveal">
+          <div style="font-family:'JetBrains Mono',monospace;font-size:0.6rem;letter-spacing:0.25em;color:var(--gold);margin-bottom:0.5rem;">// MAX COMMISSION</div>
+          <span class="cs-big-number">$6,330</span>
+          <p class="cs-context">Per single transaction. Paid directly by Enagic. No middleman. No waiting. This is what one qualified sale at the Nuke tier generates — in one transaction.</p>
+        </div>
+
+        <div class="reveal" style="margin-top:3rem;">
+          <table class="roi-table">
+            <thead>
+              <tr>
+                <th>Scenario</th>
+                <th>Monthly</th>
+                <th>Annual</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>2 sales/mo · Launcher</td>
+                <td class="td-green">$8,600</td>
+                <td class="td-gold">$103,200</td>
+              </tr>
+              <tr>
+                <td>3 sales/mo · Launcher</td>
+                <td class="td-green">$12,900</td>
+                <td class="td-gold">$154,800</td>
+              </tr>
+              <tr>
+                <td>3 sales/mo · Nuke</td>
+                <td class="td-green">$18,990</td>
+                <td class="td-gold">$227,880</td>
+              </tr>
+              <tr>
+                <td>5 sales/mo · Nuke</td>
+                <td class="td-green">$31,650</td>
+                <td class="td-gold">$379,800</td>
+              </tr>
+              <tr>
+                <td>+ Network overrides</td>
+                <td class="td-green">+$2K–$15K</td>
+                <td class="td-gold">Compounds</td>
+              </tr>
+            </tbody>
+          </table>
+          <p style="font-family:'JetBrains Mono',monospace;font-size:0.5rem;color:rgba(255,255,255,0.25);margin-top:0.8rem;line-height:1.8;">These are illustrative scenarios based on Enagic's published commission rates. Individual results vary significantly. Most participants earn less.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ RESULTS & PROOF ══ -->
+<section class="page-section surface">
+  <div class="wrap">
+    <div class="section-label reveal">04 — Results</div>
+    <h2 class="section-title reveal">Operator Results.</h2>
+    <p class="section-sub reveal" style="color:var(--muted)">Real operators. Real timelines. These results are above average and not typical — most operators earn less. They're shared to illustrate what's possible when the system is run consistently.</p>
+
+    <div class="results-grid">
+      <div class="result-card reveal">
+        <span class="rc-result">$14,200/mo</span>
+        <span class="rc-period">// BY MONTH 3</span>
+        <p class="rc-quote">I followed the setup docs exactly. No prior experience with funnels or digital marketing. First HOT lead came through on Day 18, converted that week. By month 3 I was at $14,200.</p>
+        <div class="rc-author">
+          <div class="rc-avatar">SK</div>
+          <div>
+            <div class="rc-name">Sarah K.</div>
+            <div class="rc-location">Brisbane, QLD · Launcher Tier</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="result-card reveal rd1">
+        <span class="rc-result">First sale Day 19</span>
+        <span class="rc-period">// LAUNCHER · $4,300</span>
+        <p class="rc-quote">No tech background at all. The system was set up in 48 hours following the guide. I posted content consistently for two weeks. Day 19 my first HOT lead converted. $4,300 commission.</p>
+        <div class="rc-author">
+          <div class="rc-avatar">JR</div>
+          <div>
+            <div class="rc-name">James R.</div>
+            <div class="rc-location">Melbourne, VIC · Launcher Tier</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="result-card reveal rd2">
+        <span class="rc-result">$6,100 first commission</span>
+        <span class="rc-period">// NUKE · FIRST SALE</span>
+        <p class="rc-quote">The callless model was what sold me. I hate sales calls. The AI chatbot handled every objection before the lead even reached the offer page. First sale was $6,100. No call, no meeting.</p>
+        <div class="rc-author">
+          <div class="rc-avatar">MT</div>
+          <div>
+            <div class="rc-name">Michelle T.</div>
+            <div class="rc-location">Perth, WA · Nuke Tier</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 30 day timeline -->
+    <div class="section-label reveal">// TYPICAL OPERATOR TIMELINE</div>
+    <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:1px;background:rgba(10,10,15,0.1);margin-bottom:1rem;" class="reveal">
+      <div style="background:var(--white);padding:1.8rem;border-top:3px solid var(--violet);">
+        <div style="font-family:'Bebas Neue',sans-serif;font-size:1.1rem;letter-spacing:0.08em;color:var(--ink);margin-bottom:0.5rem;">DAY 1</div>
+        <div style="font-family:'JetBrains Mono',monospace;font-size:0.55rem;letter-spacing:0.1em;color:var(--gold);margin-bottom:0.5rem;">ONBOARDED</div>
+        <div style="font-size:0.8rem;color:var(--muted);line-height:1.6;">AIOS access, funnel assets, email templates, Enagic licence — all delivered instantly.</div>
+      </div>
+      <div style="background:var(--white);padding:1.8rem;border-top:3px solid var(--violet2);">
+        <div style="font-family:'Bebas Neue',sans-serif;font-size:1.1rem;letter-spacing:0.08em;color:var(--ink);margin-bottom:0.5rem;">DAY 2–5</div>
+        <div style="font-family:'JetBrains Mono',monospace;font-size:0.55rem;letter-spacing:0.1em;color:var(--gold);margin-bottom:0.5rem;">SYSTEM LIVE</div>
+        <div style="font-size:0.8rem;color:var(--muted);line-height:1.6;">Funnel deployed, email sequences active, chatbot live, AIOS connected. Average setup time: 3–4 hours.</div>
+      </div>
+      <div style="background:var(--white);padding:1.8rem;border-top:3px solid var(--violet3);">
+        <div style="font-family:'Bebas Neue',sans-serif;font-size:1.1rem;letter-spacing:0.08em;color:var(--ink);margin-bottom:0.5rem;">DAY 6–14</div>
+        <div style="font-family:'JetBrains Mono',monospace;font-size:0.55rem;letter-spacing:0.1em;color:var(--gold);margin-bottom:0.5rem;">FIRST TRAFFIC</div>
+        <div style="font-size:0.8rem;color:var(--muted);line-height:1.6;">Content goes live on TikTok and Instagram. First opt-ins enter the funnel. Automation takes over.</div>
+      </div>
+      <div style="background:var(--white);padding:1.8rem;border-top:3px solid rgba(201,168,76,0.6);">
+        <div style="font-family:'Bebas Neue',sans-serif;font-size:1.1rem;letter-spacing:0.08em;color:var(--ink);margin-bottom:0.5rem;">DAY 15–21</div>
+        <div style="font-family:'JetBrains Mono',monospace;font-size:0.55rem;letter-spacing:0.1em;color:var(--gold);margin-bottom:0.5rem;">FIRST HOT LEADS</div>
+        <div style="font-size:0.8rem;color:var(--muted);line-height:1.6;">Educated, qualified applicants reach the offer page. First commission opportunity within reach.</div>
+      </div>
+      <div style="background:linear-gradient(135deg,var(--gold),var(--gold2));padding:1.8rem;border-top:3px solid var(--gold);">
+        <div style="font-family:'Bebas Neue',sans-serif;font-size:1.1rem;letter-spacing:0.08em;color:var(--ink);margin-bottom:0.5rem;">DAY 30</div>
+        <div style="font-family:'JetBrains Mono',monospace;font-size:0.55rem;letter-spacing:0.1em;color:rgba(10,10,15,0.6);margin-bottom:0.5rem;">SCALING</div>
+        <div style="font-size:0.8rem;color:rgba(10,10,15,0.65);line-height:1.6;">Pipeline is filling. First sales in. System running independently. Focus shifts to traffic volume.</div>
+      </div>
+    </div>
+    <p style="font-family:'JetBrains Mono',monospace;font-size:0.52rem;color:var(--muted);text-align:center;letter-spacing:0.08em;">Timeline is illustrative. Results depend on traffic consistency and market conditions.</p>
+  </div>
+</section>
+
+<!-- ══ THE OPPORTUNITY ══ -->
+<section class="page-section light">
+  <div class="wrap">
+    <div class="section-label reveal">05 — The Opportunity</div>
+    <h2 class="section-title reveal">Why This.<br>Why Now.</h2>
+    <p class="section-sub reveal" style="color:var(--muted)">Four structural advantages that make Silent Syndicate a compelling business model in 2025.</p>
+
+    <div class="opportunity-grid">
+      <div class="opp-card reveal">
+        <span class="oc-icon">⚡</span>
+        <div class="oc-title">AI Does The Heavy Work</div>
+        <div class="oc-body">The entire lead generation, education, and qualification process runs on AI automation. The chatbot qualifies at 2am. The email sequence converts while you sleep. The only human input required is driving traffic — and even that becomes systematic once the content strategy is running.</div>
+      </div>
+
+      <div class="opp-card reveal rd1">
+        <span class="oc-icon">💰</span>
+        <div class="oc-title">High-Ticket Math Changes Everything</div>
+        <div class="oc-body">At $4,300 per sale, three sales per month generates $12,900. That's a meaningful income from a small number of transactions. Compare that to low-ticket affiliate models requiring hundreds of sales to achieve the same result. Volume requirements are low. Quality of buyer matters more than quantity.</div>
+      </div>
+
+      <div class="opp-card reveal">
+        <span class="oc-icon">🌐</span>
+        <div class="oc-title">Network Income Compounds</div>
+        <div class="oc-body">Every operator you bring in runs the same system. When they make sales, override commissions flow back up the network to you. As your operator network grows, your income grows without proportional effort growth. The first layer of operators is the hardest. Every subsequent layer becomes progressively more passive.</div>
+      </div>
+
+      <div class="opp-card reveal rd1">
+        <span class="oc-icon">🏗️</span>
+        <div class="oc-title">A Real, Documented Business</div>
+        <div class="oc-body">Silent Syndicate is not a collection of hacks. It's a documented, branded, systematised operation with its own dashboard, its own funnel stack, its own operator onboarding process, and its own identity. It's built to be sellable, licensable, and expandable — not just a personal income stream.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ CHAIRMAN ══ -->
+<div class="chairman-section">
+  <div class="chairman-layout">
+    <div class="chairman-visual reveal">
+      <div class="chairman-frame">
+        <div class="chairman-monogram">SS</div>
+        <div class="chairman-rank">// CHAIRMAN</div>
+        <div class="chairman-gold-line"></div>
+      </div>
+    </div>
+
+    <div class="chairman-content reveal">
+      <div class="chairman-title-block">
+        <div class="ct-role">// FOUNDER & CHAIRMAN</div>
+        <div class="ct-name">Silent<br>Syndicate</div>
+      </div>
+
+      <div class="chairman-statement">
+        "I built Silent Syndicate because I was tired of watching people grind themselves into the ground for income models that don't scale. High-ticket commissions, AI automation, and a real network structure — that combination creates a business that compounds. This isn't a side hustle. It's an operating system for financial independence."
+      </div>
+
+      <div class="chairman-credentials">
+        <div class="cred-item"><span class="cred-dot"></span>Founder and architect of the Silent Syndicate system</div>
+        <div class="cred-item"><span class="cred-dot"></span>Authorised Enagic distributor — network rank holder</div>
+        <div class="cred-item"><span class="cred-dot"></span>Builder of the AIOS operating system and full funnel stack</div>
+        <div class="cred-item"><span class="cred-dot"></span>Operator across trades and digital business simultaneously</div>
+        <div class="cred-item"><span class="cred-dot"></span>Growing network of operators across Australia and New Zealand</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ FINAL CTA ══ -->
+<section class="cta-section">
+  <h2 class="cta-title reveal">
+    Two Ways<br>
+    <span>To Join.</span>
+  </h2>
+  <p class="cta-sub reveal">Whether you're exploring the opportunity or ready to apply as a distributor — both doors are open.</p>
+  <div class="cta-buttons reveal">
+    <a href="index.html" class="btn-gold">GET THE FREE BLUEPRINT →</a>
+    <a href="distributors.html" class="btn-outline">APPLY AS DISTRIBUTOR</a>
+  </div>
+</section>
+
+<!-- ══ DISCLAIMER ══ -->
+<div class="disclaimer-section">
+  <div class="disclaimer-text">
+    INCOME DISCLAIMER: All income figures, commission amounts, and results shown in this document are based on Enagic International's published distributor compensation structure and real operator experiences. Individual results vary significantly and most participants earn considerably less than the figures shown. Income depends entirely on individual effort, consistency, market conditions, traffic volume, and proper execution of the system. This is not a guaranteed income opportunity. The investment required to join ($8,500–$20,000) is substantial and should only be made after thorough due diligence. Past results of other operators do not guarantee future results. Silent Syndicate is an independent distributor network and is not affiliated with, endorsed by, or representing Enagic International officially. All Enagic commission structures are subject to change. This document does not constitute financial advice.
+  </div>
+</div>
+
+<footer>
+  <div class="footer-brand">Silent Syndicate</div>
+  <div class="footer-tag">Company Overview Document · 2025</div>
+  <div class="footer-tag">All rights reserved</div>
+<!-- commission link -->
+<div style="width:100%;border-top:1px solid rgba(168,85,247,0.08);padding-top:1rem;margin-top:0.5rem;display:flex;gap:1.5rem;flex-wrap:wrap;">
+  <a href="privacy-policy.html" style="font-family:'Share Tech Mono',monospace;font-size:0.55rem;letter-spacing:0.1em;color:rgba(240,236,255,0.3);text-decoration:none;">Privacy Policy</a>
+  <a href="terms.html" style="font-family:'Share Tech Mono',monospace;font-size:0.55rem;letter-spacing:0.1em;color:rgba(240,236,255,0.3);text-decoration:none;">Terms of Service</a>
+  <a href="operator-guidelines.html" style="font-family:'Share Tech Mono',monospace;font-size:0.55rem;letter-spacing:0.1em;color:rgba(240,236,255,0.3);text-decoration:none;">Operator Guidelines</a>
+  <a href="commission-structure.html" style="font-family:'Share Tech Mono',monospace;font-size:0.55rem;letter-spacing:0.1em;color:rgba(240,236,255,0.3);text-decoration:none;">Income Disclosure</a>
+</div>
+</footer>
+
+<script>
+const obs = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      e.target.classList.add('visible');
+      obs.unobserve(e.target);
+    }
+  });
+}, { threshold: 0.08 });
+
+document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+</script>
+
+<!-- INCOME DISCLOSURE FOOTER -->
+<div style="background:rgba(3,1,10,0.98);border-top:1px solid rgba(168,85,247,0.1);padding:2rem 5%;position:relative;z-index:1;">
+  <div style="max-width:900px;margin:0 auto;display:flex;align-items:flex-start;gap:1.5rem;flex-wrap:wrap;">
+    <div style="font-family:'Share Tech Mono',monospace;font-size:0.52rem;letter-spacing:0.18em;color:rgba(74,222,128,0.6);flex-shrink:0;padding-top:2px;white-space:nowrap;">// INCOME DISCLOSURE</div>
+    <div style="font-family:'Share Tech Mono',monospace;font-size:0.58rem;letter-spacing:0.05em;color:rgba(240,236,255,0.28);line-height:1.9;flex:1;">Results are not typical. Individual results vary significantly. Most participants earn considerably less than figures shown or earn nothing. Commission amounts are based on Enagic's published distributor compensation structure and are subject to change. This is not a guaranteed income opportunity. Conduct thorough due diligence before any investment. <a href="commission-structure.html" style="color:rgba(168,85,247,0.5);text-decoration:none;">Full income disclosure →</a></div>
+  </div>
+</div>
+</body>
+</html>
