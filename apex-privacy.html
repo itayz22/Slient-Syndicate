@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Apex Network — Privacy Policy</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Mono:wght@300;400;500&family=Archivo:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --black:#050505;--surface:#0a0a0a;--panel:#111111;
+  --edge:rgba(255,255,255,0.07);--blue:#0066ff;--blue2:#0044cc;
+  --white:#f0f0f0;--muted:rgba(240,240,240,0.55);--dim:rgba(240,240,240,0.28);
+  --green:#00ff88;--amber:#f59e0b;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{font-size:16px;scroll-behavior:smooth;}
+body{background:var(--black);color:var(--white);font-family:'Archivo',sans-serif;overflow-x:hidden;cursor:crosshair;}
+body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(rgba(0,102,255,0.04) 1px,transparent 1px),linear-gradient(90deg,rgba(0,102,255,0.04) 1px,transparent 1px);background-size:80px 80px;pointer-events:none;z-index:0;}
+body::after{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");pointer-events:none;z-index:0;opacity:0.4;}
+
+nav{position:sticky;top:0;z-index:500;background:rgba(5,5,5,0.95);backdrop-filter:blur(20px);border-bottom:1px solid var(--edge);padding:0 5%;height:60px;display:flex;justify-content:space-between;align-items:center;}
+.nav-brand{display:flex;align-items:center;gap:0.7rem;}
+.nav-mark{width:20px;height:20px;background:var(--blue);clip-path:polygon(50% 0%,100% 50%,50% 100%,0% 50%);}
+.nav-name{font-family:'Bebas Neue',sans-serif;font-size:1.1rem;letter-spacing:0.18em;color:var(--white);}
+.nav-back{font-family:'DM Mono',monospace;font-size:0.62rem;letter-spacing:0.12em;color:var(--dim);text-decoration:none;transition:color 0.2s;}
+.nav-back:hover{color:var(--blue);}
+
+.hero{padding:4rem 5% 3rem;position:relative;z-index:1;}
+.hero-tag{font-family:'DM Mono',monospace;font-size:0.58rem;letter-spacing:0.2em;color:var(--blue);margin-bottom:1rem;}
+.hero-title{font-family:'Bebas Neue',sans-serif;font-size:clamp(3rem,8vw,5rem);letter-spacing:0.06em;color:var(--white);line-height:0.95;margin-bottom:1rem;}
+.hero-meta{font-family:'DM Mono',monospace;font-size:0.6rem;letter-spacing:0.12em;color:var(--dim);}
+
+.content{max-width:760px;margin:0 auto;padding:0 5% 6rem;position:relative;z-index:1;}
+
+.section{margin-bottom:3rem;}
+.section-num{font-family:'DM Mono',monospace;font-size:0.52rem;letter-spacing:0.2em;color:var(--blue);margin-bottom:0.6rem;}
+.section-title{font-family:'Bebas Neue',sans-serif;font-size:1.6rem;letter-spacing:0.06em;color:var(--white);margin-bottom:1.2rem;}
+.section-divider{height:1px;background:var(--edge);margin-bottom:1.8rem;}
+
+p{font-size:0.92rem;color:var(--muted);line-height:1.9;margin-bottom:1rem;}
+p:last-child{margin-bottom:0;}
+strong{color:var(--white);}
+a{color:var(--blue);text-decoration:none;}
+a:hover{text-decoration:underline;}
+
+.data-table{width:100%;border-collapse:collapse;margin:1rem 0;}
+.data-table th{font-family:'DM Mono',monospace;font-size:0.52rem;letter-spacing:0.15em;color:var(--blue);text-align:left;padding:0.7rem 1rem;border-bottom:1px solid rgba(0,102,255,0.2);background:rgba(0,102,255,0.04);}
+.data-table td{font-size:0.84rem;color:var(--muted);padding:0.8rem 1rem;border-bottom:1px solid var(--edge);vertical-align:top;line-height:1.7;}
+.data-table td strong{color:var(--white);}
+.data-table tr:last-child td{border-bottom:none;}
+
+.third-party-list{display:flex;flex-direction:column;gap:0.8rem;margin:1rem 0;}
+.tp-item{background:var(--panel);border:1px solid var(--edge);padding:1.1rem 1.3rem;position:relative;}
+.tp-item::before{content:'';position:absolute;top:-1px;left:-1px;width:6px;height:6px;border-top:1px solid var(--blue);border-left:1px solid var(--blue);}
+.tp-name{font-family:'DM Mono',monospace;font-size:0.6rem;letter-spacing:0.12em;color:var(--white);margin-bottom:0.3rem;}
+.tp-purpose{font-size:0.83rem;color:var(--muted);line-height:1.6;margin-bottom:0.3rem;}
+.tp-policy{font-family:'DM Mono',monospace;font-size:0.52rem;letter-spacing:0.08em;color:var(--dim);}
+.tp-policy a{color:var(--blue);}
+
+.callout{background:rgba(0,102,255,0.05);border:1px solid rgba(0,102,255,0.2);padding:1.2rem 1.4rem;margin:1.2rem 0;position:relative;}
+.callout::before{content:'';position:absolute;top:-1px;left:-1px;width:8px;height:8px;border-top:1px solid var(--blue);border-left:1px solid var(--blue);}
+.callout-label{font-family:'DM Mono',monospace;font-size:0.5rem;letter-spacing:0.18em;color:var(--blue);margin-bottom:0.5rem;}
+.callout p{font-size:0.85rem;}
+
+.rights-grid{display:grid;grid-template-columns:1fr 1fr;gap:0.8rem;margin:1rem 0;}
+.right-item{background:rgba(255,255,255,0.02);border:1px solid var(--edge);padding:1rem;}
+.right-label{font-family:'DM Mono',monospace;font-size:0.52rem;letter-spacing:0.12em;color:var(--blue);margin-bottom:0.4rem;}
+.right-text{font-size:0.82rem;color:var(--muted);line-height:1.6;}
+
+footer{padding:1.8rem 5%;border-top:1px solid var(--edge);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem;position:relative;z-index:1;}
+.footer-brand{font-family:'Bebas Neue',sans-serif;font-size:1rem;letter-spacing:0.15em;color:var(--muted);}
+.footer-links{display:flex;gap:1.5rem;flex-wrap:wrap;}
+.footer-links a{font-family:'DM Mono',monospace;font-size:0.52rem;letter-spacing:0.1em;color:var(--dim);text-decoration:none;transition:color 0.2s;}
+.footer-links a:hover{color:var(--blue);}
+.footer-copy{font-family:'DM Mono',monospace;font-size:0.5rem;letter-spacing:0.08em;color:var(--dim);}
+
+@media(max-width:600px){.rights-grid{grid-template-columns:1fr;}.data-table th,.data-table td{padding:0.6rem 0.7rem;}}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-brand">
+    <div class="nav-mark"></div>
+    <span class="nav-name">APEX NETWORK</span>
+  </div>
+  <a href="apex-index.html" class="nav-back">← Home</a>
+</nav>
+
+<div class="hero">
+  <div class="hero-tag">// LEGAL</div>
+  <h1 class="hero-title">Privacy<br>Policy</h1>
+  <div class="hero-meta">Last updated: May 2025 &nbsp;|&nbsp; Australian Privacy Act 1988 (Cth) compliant</div>
+</div>
+
+<div class="content">
+
+  <div class="section">
+    <div class="section-num">// 01</div>
+    <div class="section-title">Overview</div>
+    <div class="section-divider"></div>
+    <p>Apex Network is committed to protecting the privacy of individuals who interact with this website and submit applications to join the network. This Privacy Policy explains what personal information we collect, how we use it, and your rights in relation to it.</p>
+    <p>This policy is compliant with the <strong>Australian Privacy Act 1988 (Cth)</strong> and the Australian Privacy Principles (APPs). By submitting any form on this website, you consent to the collection and use of your information as described in this policy.</p>
+    <div class="callout">
+      <div class="callout-label">// WHO WE ARE</div>
+      <p>Apex Network is operated by an independent Enagic authorised distributor based in Queensland, Australia. We are not a corporation. This policy applies to data collected through the website hosted at silent-syndicate.netlify.app (and any future custom domain).</p>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-num">// 02</div>
+    <div class="section-title">Information We Collect</div>
+    <div class="section-divider"></div>
+    <p>We collect different categories of information depending on how you interact with this website:</p>
+
+    <p style="font-family:'DM Mono',monospace;font-size:0.55rem;letter-spacing:0.15em;color:var(--blue);margin-bottom:0.8rem;">// OPT-IN / LEAD CAPTURE (apex-index.html)</p>
+    <table class="data-table">
+      <tr><th>Data Point</th><th>Why Collected</th></tr>
+      <tr><td><strong>First name</strong></td><td>To personalise email communications</td></tr>
+      <tr><td><strong>Email address</strong></td><td>To send the information sequence and follow-up communications via ActiveCampaign</td></tr>
+    </table>
+
+    <p style="font-family:'DM Mono',monospace;font-size:0.55rem;letter-spacing:0.15em;color:var(--blue);margin-bottom:0.8rem;margin-top:1.5rem;">// APPLICATION FORM (apex-apply.html)</p>
+    <table class="data-table">
+      <tr><th>Data Point</th><th>Why Collected</th></tr>
+      <tr><td><strong>Full name</strong></td><td>Identity verification and application processing</td></tr>
+      <tr><td><strong>Email address</strong></td><td>Application follow-up and communications</td></tr>
+      <tr><td><strong>Phone number</strong></td><td>Direct follow-up contact</td></tr>
+      <tr><td><strong>Investment readiness</strong></td><td>To assess application suitability and assign appropriate follow-up</td></tr>
+      <tr><td><strong>Income goal</strong></td><td>To ensure alignment with network expectations</td></tr>
+    </table>
+
+    <p style="font-family:'DM Mono',monospace;font-size:0.55rem;letter-spacing:0.15em;color:var(--blue);margin-bottom:0.8rem;margin-top:1.5rem;">// REGISTRATION WIZARD (apex-join.html)</p>
+    <table class="data-table">
+      <tr><th>Data Point</th><th>Why Collected</th></tr>
+      <tr><td><strong>Full legal name</strong></td><td>Required for Enagic Australia distributor application</td></tr>
+      <tr><td><strong>Date of birth</strong></td><td>Required by Enagic Australia for age verification</td></tr>
+      <tr><td><strong>Driver's licence or passport number</strong></td><td>Required by Enagic Australia for identity verification</td></tr>
+      <tr><td><strong>Residential address</strong></td><td>Required for Enagic application and product delivery</td></tr>
+      <tr><td><strong>Mobile number & email</strong></td><td>Required for Enagic application and operator communications</td></tr>
+      <tr><td><strong>Bank name, BSB, account number, account name</strong></td><td>Required for Enagic commission payment setup</td></tr>
+      <tr><td><strong>Photo ID uploads (front & back)</strong></td><td>Required by Enagic Australia for all distributor registrations</td></tr>
+      <tr><td><strong>Payment method details</strong></td><td>To determine which additional Enagic forms are required for your application</td></tr>
+    </table>
+
+    <p style="margin-top:1rem;">We do <strong>not</strong> collect or store your credit/debit card numbers directly. Card copies submitted as part of payment documentation are handled solely for inclusion in your Enagic application package and are not retained beyond that purpose.</p>
+  </div>
+
+  <div class="section">
+    <div class="section-num">// 03</div>
+    <div class="section-title">How We Use Your Information</div>
+    <div class="section-divider"></div>
+    <p>Your information is used only for the following purposes:</p>
+    <table class="data-table">
+      <tr><th>Purpose</th><th>Data Used</th></tr>
+      <tr><td><strong>Compiling your Enagic Australia distributor application package</strong></td><td>Full registration data including legal name, ID, bank details, photo ID</td></tr>
+      <tr><td><strong>Email onboarding sequence</strong></td><td>Name, email address — via ActiveCampaign automation</td></tr>
+      <tr><td><strong>Direct follow-up communications</strong></td><td>Name, email, phone — from application and registration forms</td></tr>
+      <tr><td><strong>Network operations and operator support</strong></td><td>Contact details, package selection, onboarding status</td></tr>
+      <tr><td><strong>Compliance and record keeping</strong></td><td>Application data retained as required under Australian law</td></tr>
+    </table>
+    <p>We do not use your information for targeted advertising, data brokerage, or any purpose unrelated to the above. We do not sell your personal information.</p>
+  </div>
+
+  <div class="section">
+    <div class="section-num">// 04</div>
+    <div class="section-title">Third Party Disclosure</div>
+    <div class="section-divider"></div>
+    <p>Your information is shared with the following third parties only as necessary for the stated purposes:</p>
+
+    <div class="third-party-list">
+      <div class="tp-item">
+        <div class="tp-name">ENAGIC AUSTRALIA PTY LTD</div>
+        <div class="tp-purpose">Your full registration data (legal name, ID, bank details, photo ID, selected products) is provided to Enagic Australia for the sole purpose of processing your distributor application. Enagic Australia is subject to its own privacy policy and Enagic International's data handling practices.</div>
+        <div class="tp-policy">Contact: info@enagic-australia.com &nbsp;|&nbsp; +61 2 9878 1200</div>
+      </div>
+      <div class="tp-item">
+        <div class="tp-name">ACTIVECAMPAIGN (EMAIL CRM)</div>
+        <div class="tp-purpose">Your name and email address are stored in ActiveCampaign, our email customer relationship management platform. This is used to send onboarding emails and operational communications. ActiveCampaign is a US-based service subject to its own Privacy Policy and the EU-US Privacy Framework.</div>
+        <div class="tp-policy">Privacy policy: <a href="https://www.activecampaign.com/legal/privacy-policy" target="_blank" rel="noopener">activecampaign.com/legal/privacy-policy</a></div>
+      </div>
+      <div class="tp-item">
+        <div class="tp-name">NETLIFY (WEBSITE HOSTING)</div>
+        <div class="tp-purpose">This website is hosted on Netlify. Form submissions are processed through Netlify Functions (serverless). Netlify may collect standard server logs including IP addresses in accordance with their privacy policy.</div>
+        <div class="tp-policy">Privacy policy: <a href="https://www.netlify.com/privacy/" target="_blank" rel="noopener">netlify.com/privacy</a></div>
+      </div>
+    </div>
+
+    <p>We do not share your information with any other third parties. We do not disclose information to overseas recipients other than as described above (ActiveCampaign — USA).</p>
+  </div>
+
+  <div class="section">
+    <div class="section-num">// 05</div>
+    <div class="section-title">Data Storage & Security</div>
+    <div class="section-divider"></div>
+    <p>We take reasonable steps to protect your personal information from misuse, interference, and loss, and from unauthorised access, modification, or disclosure.</p>
+    <p>Specific measures include:</p>
+    <table class="data-table">
+      <tr><th>Measure</th><th>Detail</th></tr>
+      <tr><td><strong>HTTPS encryption</strong></td><td>All data transmitted to this website is encrypted in transit via TLS/SSL</td></tr>
+      <tr><td><strong>Access controls</strong></td><td>Registration data is accessible only to the network operator for application processing purposes</td></tr>
+      <tr><td><strong>Third party security</strong></td><td>ActiveCampaign and Netlify maintain their own security certifications and compliance programmes</td></tr>
+      <tr><td><strong>Retention</strong></td><td>Registration data is retained for as long as necessary to process your application and comply with applicable record-keeping requirements, after which it is securely deleted</td></tr>
+    </table>
+    <p>If you become aware of any unauthorised access to your information, please contact us immediately at <a href="mailto:support@apexnetwork.com.au">support@apexnetwork.com.au</a>.</p>
+  </div>
+
+  <div class="section">
+    <div class="section-num">// 06</div>
+    <div class="section-title">Cookies & Tracking</div>
+    <div class="section-divider"></div>
+    <p>This website does not currently use advertising cookies or cross-site tracking scripts. Standard browser session data and Netlify platform logs may be retained as part of normal website operation.</p>
+    <p>If analytics or tracking tools are added in future, this policy will be updated accordingly before implementation.</p>
+  </div>
+
+  <div class="section">
+    <div class="section-num">// 07</div>
+    <div class="section-title">Your Rights</div>
+    <div class="section-divider"></div>
+    <p>Under the Australian Privacy Act 1988 and the Australian Privacy Principles, you have the following rights in relation to your personal information:</p>
+    <div class="rights-grid">
+      <div class="right-item">
+        <div class="right-label">// ACCESS</div>
+        <div class="right-text">You may request a copy of the personal information we hold about you at any time.</div>
+      </div>
+      <div class="right-item">
+        <div class="right-label">// CORRECTION</div>
+        <div class="right-text">You may request that we correct personal information that is inaccurate, out of date, or incomplete.</div>
+      </div>
+      <div class="right-item">
+        <div class="right-label">// DELETION</div>
+        <div class="right-text">You may request deletion of your personal information, subject to our legal record-keeping obligations.</div>
+      </div>
+      <div class="right-item">
+        <div class="right-label">// UNSUBSCRIBE</div>
+        <div class="right-text">You may unsubscribe from email communications at any time via the unsubscribe link in any email we send.</div>
+      </div>
+      <div class="right-item">
+        <div class="right-label">// COMPLAINT</div>
+        <div class="right-text">If you believe we have breached the Australian Privacy Principles, you may lodge a complaint with the Office of the Australian Information Commissioner (OAIC) at oaic.gov.au.</div>
+      </div>
+      <div class="right-item">
+        <div class="right-label">// CONTACT US</div>
+        <div class="right-text">To exercise any of these rights, email <a href="mailto:support@apexnetwork.com.au">support@apexnetwork.com.au</a> with your request. We will respond within 30 days.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-num">// 08</div>
+    <div class="section-title">Changes to This Policy</div>
+    <div class="section-divider"></div>
+    <p>We may update this Privacy Policy from time to time. Changes will be indicated by a new "Last updated" date at the top of this page. We encourage you to review this policy periodically. Continued use of this website after any changes constitutes your acceptance of the updated policy.</p>
+  </div>
+
+  <div class="section">
+    <div class="section-num">// 09</div>
+    <div class="section-title">Contact</div>
+    <div class="section-divider"></div>
+    <p>For any privacy-related questions, access requests, or complaints:<br>
+    <strong>Email:</strong> <a href="mailto:support@apexnetwork.com.au">support@apexnetwork.com.au</a><br>
+    <strong>Location:</strong> Queensland, Australia<br>
+    <strong>Response time:</strong> Within 30 days of receiving your request</p>
+  </div>
+
+</div>
+
+<footer>
+  <div class="footer-brand">APEX NETWORK</div>
+  <div class="footer-links">
+    <a href="apex-privacy.html">Privacy Policy</a>
+    <a href="apex-terms.html">Terms of Service</a>
+    <a href="apex-disclosure.html">Income Disclosure</a>
+  </div>
+  <div class="footer-copy">© 2025 Apex Network. Independent distributor network.</div>
+</footer>
+
+</body>
+</html>
