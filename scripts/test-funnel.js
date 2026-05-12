@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /* ============================================================
-   SILENT SYNDICATE — Funnel Test Script
+   APEX NETWORK — Funnel Test Script
    Run: node scripts/test-funnel.js
    Requires: NETLIFY_SITE_URL or defaults to localhost:8888
    ============================================================ */
@@ -139,7 +139,7 @@ async function testApply() {
 
 /* ── Main ── */
 async function main() {
-  console.log(`\nSilent Syndicate — Funnel Test Suite`);
+  console.log(`\nApex Network — Funnel Test Suite`);
   console.log(`Target: ${API}`);
   console.log('─'.repeat(50));
 

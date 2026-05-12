@@ -1,5 +1,5 @@
 /* ============================================================
-   SILENT SYNDICATE — AIOS DASHBOARD DATA & STATE
+   APEX NETWORK — AIOS DASHBOARD DATA & STATE
    All data marked as DEMO — replace with live API calls
    ============================================================ */
 

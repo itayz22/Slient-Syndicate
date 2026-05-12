@@ -1,5 +1,5 @@
 /**
- * Silent Syndicate — Local Development Server
+ * Apex Network — Local Development Server
  * Serves static files and proxies API routes to Netlify function handlers.
  * Usage: node server.js
  */
@@ -288,7 +288,7 @@ const server = http.createServer(async (req, res) => {
 server.listen(PORT, () => {
   console.log('');
   console.log('  ╔══════════════════════════════════════════════╗');
-  console.log('  ║   SILENT SYNDICATE — Local Dev Server        ║');
+  console.log('  ║   APEX NETWORK — Local Dev Server        ║');
   console.log(`  ║   http://localhost:${PORT}                      ║`);
   console.log('  ╚══════════════════════════════════════════════╝');
   console.log('');

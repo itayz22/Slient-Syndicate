@@ -1,5 +1,5 @@
 /* ============================================================
-   SILENT SYNDICATE — CHATBOT CONVERSATION ENGINE
+   APEX NETWORK — CHATBOT CONVERSATION ENGINE
    Qualification flow + 12 objection handlers
    ============================================================ */
 

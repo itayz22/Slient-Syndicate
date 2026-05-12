@@ -119,7 +119,7 @@ function getRedirectUrl(score) {
 
 function formatNoteContent(data, score) {
   return `
-=== SILENT SYNDICATE APPLICATION ===
+=== APEX NETWORK APPLICATION ===
 Score: ${score}
 Submitted: ${new Date().toISOString()}
 

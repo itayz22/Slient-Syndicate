@@ -139,7 +139,7 @@ async function notifyOwner(b) {
 
   const subject = `🔥 NEW REGISTRATION — ${b.firstName} ${b.lastName} — ${b.productName}`;
   const body = `
-NEW SILENT SYNDICATE REGISTRATION
+NEW APEX NETWORK REGISTRATION
 Submitted: ${new Date(b.submittedAt).toLocaleString('en-AU')}
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -196,7 +196,7 @@ Enagic AU: info@enagic-australia.com | +61-2-9878-1200
 async function confirmClient(b) {
   if (!b.email) return;
 
-  const subject = `Your Silent Syndicate Registration — ${b.productName}`;
+  const subject = `Your Apex Network Registration — ${b.productName}`;
   const body = `
 Hi ${b.firstName},
 
@@ -218,7 +218,7 @@ WHAT HAPPENS NEXT
 
 3. Once Enagic processes your order (7–10 business days), your machine ships and your Distributor ID is issued.
 
-4. Your Silent Syndicate AIOS dashboard and funnel access activates on the same day.
+4. Your Apex Network AIOS dashboard and funnel access activates on the same day.
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━
 EXTRA DOCUMENTS (if applicable)
@@ -227,7 +227,7 @@ ${(b.extraDocs || []).length > 0 ? 'Your payment method requires these additiona
 
 Questions? Reply to this email or contact us at hello@silentsyndicate.com.au
 
-— Silent Syndicate Chairman
+— Apex Network Chairman
 `;
 
   await sendEmail(b.email, subject, body);
@@ -243,7 +243,7 @@ async function sendEmail(to, subject, text) {
       method: 'POST',
       headers: { 'Api-Token': process.env.AC_API_KEY, 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        email: { subject, fromEmail: process.env.OWNER_EMAIL || 'hello@silentsyndicate.com.au', fromName: 'Silent Syndicate', to, body: text.replace(/\n/g,'<br>'), bodyText: text }
+        email: { subject, fromEmail: process.env.OWNER_EMAIL || 'hello@silentsyndicate.com.au', fromName: 'Apex Network', to, body: text.replace(/\n/g,'<br>'), bodyText: text }
       })
     });
   } catch(e) {
