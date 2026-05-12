@@ -1,0 +1,689 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Apex Network — Build Tracker</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Mono:wght@300;400;500&family=Archivo:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --black:#050505;--surface:#0a0a0a;--panel:#111111;--panel2:#161616;
+  --edge:rgba(255,255,255,0.07);--edge2:rgba(255,255,255,0.14);
+  --blue:#0066ff;--blue2:#0044cc;
+  --white:#f0f0f0;--muted:rgba(240,240,240,0.55);--dim:rgba(240,240,240,0.28);
+  --green:#00ff88;--amber:#f59e0b;--red:#ef4444;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{font-size:16px;scroll-behavior:smooth;}
+body{background:var(--black);color:var(--white);font-family:'Archivo',sans-serif;overflow-x:hidden;cursor:crosshair;min-height:100vh;}
+
+body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(rgba(0,102,255,0.04) 1px,transparent 1px),linear-gradient(90deg,rgba(0,102,255,0.04) 1px,transparent 1px);background-size:80px 80px;pointer-events:none;z-index:0;}
+body::after{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");pointer-events:none;z-index:9999;opacity:0.4;}
+
+/* GATE */
+#gate{position:fixed;inset:0;background:var(--black);z-index:10000;display:flex;align-items:center;justify-content:center;}
+.gate-inner{text-align:center;padding:2rem;}
+.gate-logo{font-family:'Bebas Neue',sans-serif;font-size:2.2rem;letter-spacing:0.12em;margin-bottom:0.4rem;}
+.gate-logo span{color:var(--blue);}
+.gate-sub{font-family:'DM Mono',monospace;font-size:0.58rem;letter-spacing:0.2em;color:var(--dim);margin-bottom:2.5rem;}
+.gate-label{font-family:'DM Mono',monospace;font-size:0.55rem;letter-spacing:0.18em;color:var(--blue);margin-bottom:0.7rem;}
+.gate-input{background:rgba(255,255,255,0.03);border:1px solid var(--edge2);color:var(--white);font-family:'DM Mono',monospace;font-size:1.2rem;letter-spacing:0.3em;text-align:center;width:220px;padding:0.9rem 1rem;outline:none;display:block;margin:0 auto 1rem;text-transform:uppercase;}
+.gate-input:focus{border-color:var(--blue);background:rgba(0,102,255,0.04);}
+.gate-btn{background:var(--blue);color:var(--white);font-family:'DM Mono',monospace;font-size:0.65rem;letter-spacing:0.15em;text-transform:uppercase;padding:0.8rem 2rem;border:none;cursor:pointer;width:220px;display:block;margin:0 auto;transition:background 0.2s;}
+.gate-btn:hover{background:var(--blue2);}
+.gate-error{font-family:'DM Mono',monospace;font-size:0.55rem;letter-spacing:0.1em;color:var(--red);margin-top:0.6rem;display:none;}
+.gate-hint{font-family:'DM Mono',monospace;font-size:0.5rem;letter-spacing:0.08em;color:var(--dim);margin-top:1.5rem;}
+
+/* NAV */
+nav{position:sticky;top:0;z-index:500;background:rgba(5,5,5,0.97);backdrop-filter:blur(20px);border-bottom:1px solid var(--edge);padding:0 5%;height:60px;display:flex;justify-content:space-between;align-items:center;}
+.nav-brand{display:flex;align-items:center;gap:0.8rem;}
+.nav-logo-mark{width:22px;height:22px;flex-shrink:0;}
+.nav-name{font-family:'Bebas Neue',sans-serif;font-size:1.2rem;letter-spacing:0.12em;}
+.nav-name span{color:var(--blue);}
+.nav-divider{width:1px;height:18px;background:var(--edge2);}
+.nav-tag{font-family:'DM Mono',monospace;font-size:0.55rem;letter-spacing:0.2em;color:var(--dim);}
+.nav-right{display:flex;align-items:center;gap:1.4rem;}
+.nav-link{font-family:'DM Mono',monospace;font-size:0.55rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--muted);text-decoration:none;transition:color 0.2s;}
+.nav-link:hover{color:var(--white);}
+.save-ind{font-family:'DM Mono',monospace;font-size:0.5rem;letter-spacing:0.1em;color:var(--dim);display:flex;align-items:center;gap:0.4rem;}
+.save-dot{width:5px;height:5px;border-radius:50%;background:var(--green);box-shadow:0 0 6px var(--green);}
+
+/* HERO */
+.hero{padding:3.5rem 5% 3rem;border-bottom:1px solid var(--edge);position:relative;z-index:1;}
+.hero-eyebrow{font-family:'DM Mono',monospace;font-size:0.6rem;letter-spacing:0.25em;color:var(--blue);margin-bottom:0.8rem;display:flex;align-items:center;gap:0.8rem;}
+.hero-eyebrow::before{content:'';width:20px;height:1px;background:var(--blue);}
+h1.hero-title{font-family:'Bebas Neue',sans-serif;font-size:clamp(3rem,7vw,5rem);letter-spacing:0.04em;line-height:0.92;margin-bottom:2rem;}
+h1.hero-title span{color:var(--blue);}
+
+/* STAT TILES */
+.stat-tiles{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--edge);border:1px solid var(--edge);max-width:720px;margin-bottom:2rem;}
+.stat-tile{background:var(--panel);padding:1.2rem 1.4rem;}
+.st-val{font-family:'Bebas Neue',sans-serif;font-size:2.2rem;letter-spacing:0.04em;color:var(--white);display:block;line-height:1;}
+.st-val.blue{color:var(--blue);}
+.st-val.green{color:var(--green);}
+.st-val.amber{color:var(--amber);}
+.st-label{font-family:'DM Mono',monospace;font-size:0.5rem;letter-spacing:0.15em;color:var(--dim);display:block;margin-top:0.3rem;text-transform:uppercase;}
+
+/* MASTER PROGRESS BAR */
+.master-bar-wrap{max-width:720px;}
+.master-bar-label{display:flex;justify-content:space-between;align-items:center;margin-bottom:0.5rem;}
+.mbl-text{font-family:'DM Mono',monospace;font-size:0.55rem;letter-spacing:0.15em;color:var(--muted);text-transform:uppercase;}
+.mbl-pct{font-family:'Bebas Neue',sans-serif;font-size:1.1rem;letter-spacing:0.04em;color:var(--blue);}
+.master-bar{height:3px;background:var(--edge);width:100%;position:relative;}
+.master-bar-fill{height:100%;background:var(--blue);transition:width 0.5s ease;}
+
+/* NEXT ACTION */
+.next-action-wrap{padding:2.5rem 5%;border-bottom:1px solid var(--edge);position:relative;z-index:1;}
+.na-card{border:1px solid var(--blue);background:rgba(0,102,255,0.04);padding:1.8rem 2rem;max-width:860px;position:relative;}
+.na-card::before,.na-card::after{content:'';position:absolute;width:10px;height:10px;border-color:var(--blue);border-style:solid;}
+.na-card::before{top:-1px;left:-1px;border-width:2px 0 0 2px;}
+.na-card::after{bottom:-1px;right:-1px;border-width:0 2px 2px 0;}
+.na-eyebrow{font-family:'DM Mono',monospace;font-size:0.52rem;letter-spacing:0.25em;color:var(--blue);margin-bottom:0.5rem;text-transform:uppercase;}
+.na-task{font-family:'Bebas Neue',sans-serif;font-size:clamp(1.5rem,3.5vw,2rem);letter-spacing:0.04em;color:var(--white);margin-bottom:0.5rem;line-height:1.1;}
+.na-meta{display:flex;align-items:center;gap:0.8rem;flex-wrap:wrap;margin-bottom:0.8rem;}
+.na-section-badge{font-family:'DM Mono',monospace;font-size:0.5rem;letter-spacing:0.15em;color:var(--muted);padding:0.2rem 0.6rem;border:1px solid var(--edge2);text-transform:uppercase;}
+.na-desc{font-family:'Archivo',sans-serif;font-size:0.85rem;color:var(--muted);line-height:1.8;margin-bottom:1.1rem;max-width:620px;}
+.na-complete-btn{font-family:'DM Mono',monospace;font-size:0.62rem;letter-spacing:0.15em;text-transform:uppercase;padding:0.7rem 1.6rem;background:var(--blue);color:var(--white);border:none;cursor:pointer;transition:background 0.2s;}
+.na-complete-btn:hover{background:var(--blue2);}
+.na-all-done{font-family:'Bebas Neue',sans-serif;font-size:2rem;letter-spacing:0.08em;color:var(--green);}
+.na-all-done-sub{font-family:'DM Mono',monospace;font-size:0.55rem;letter-spacing:0.15em;color:var(--dim);margin-top:0.3rem;}
+
+/* QUICK LINKS */
+.quick-links-wrap{padding:1.8rem 5%;border-bottom:1px solid var(--edge);background:rgba(10,10,10,0.6);position:relative;z-index:1;}
+.ql-label{font-family:'DM Mono',monospace;font-size:0.52rem;letter-spacing:0.2em;color:var(--dim);margin-bottom:0.8rem;text-transform:uppercase;}
+.ql-row{display:flex;flex-wrap:wrap;gap:0.5rem;}
+.ql-link{font-family:'DM Mono',monospace;font-size:0.52rem;letter-spacing:0.1em;text-transform:uppercase;padding:0.4rem 0.85rem;border:1px solid var(--edge);color:var(--muted);text-decoration:none;transition:all 0.2s;display:inline-flex;align-items:center;gap:0.35rem;}
+.ql-link:hover{border-color:var(--blue);color:var(--white);}
+.ql-link.tool{border-color:rgba(0,102,255,0.3);color:var(--blue);}
+.ql-link.tool:hover{background:rgba(0,102,255,0.08);}
+
+/* TRACKER SECTIONS */
+.tracker-wrap{padding:0 5% 1rem;position:relative;z-index:1;}
+.tracker-section{border-bottom:1px solid var(--edge);}
+
+.section-header{display:flex;justify-content:space-between;align-items:center;padding:2rem 0 1.2rem;cursor:pointer;user-select:none;}
+.section-header:hover .sh-title{color:var(--blue);}
+.sh-left{flex:1;}
+.sh-eyebrow{font-family:'DM Mono',monospace;font-size:0.52rem;letter-spacing:0.22em;color:var(--blue);margin-bottom:0.3rem;text-transform:uppercase;}
+.sh-title{font-family:'Bebas Neue',sans-serif;font-size:1.7rem;letter-spacing:0.04em;transition:color 0.2s;}
+.sh-right{display:flex;align-items:center;gap:1.2rem;}
+.sh-stat{font-family:'DM Mono',monospace;font-size:0.55rem;letter-spacing:0.1em;color:var(--muted);}
+.sh-pct{font-family:'DM Mono',monospace;font-size:0.55rem;letter-spacing:0.1em;color:var(--blue);min-width:36px;text-align:right;}
+.sh-toggle{font-family:'DM Mono',monospace;font-size:0.75rem;color:var(--dim);transition:transform 0.25s;width:16px;text-align:center;}
+
+/* SECTION BAR */
+.sec-bar{height:2px;background:var(--edge);margin-bottom:1rem;}
+.sec-bar-fill{height:100%;background:var(--blue);transition:width 0.4s ease;}
+
+/* TASK LIST */
+.section-body{overflow:hidden;transition:max-height 0.35s ease;}
+.task-list{display:flex;flex-direction:column;padding-bottom:1.5rem;}
+.task-item{display:flex;align-items:flex-start;gap:0.9rem;padding:0.65rem 0.5rem;border-bottom:1px solid rgba(255,255,255,0.025);transition:background 0.15s;margin:0 -0.5rem;}
+.task-item:last-child{border-bottom:none;}
+.task-item:hover{background:rgba(255,255,255,0.018);}
+.task-check{width:15px;height:15px;border:1px solid var(--edge2);background:transparent;cursor:pointer;flex-shrink:0;margin-top:3px;transition:all 0.15s;appearance:none;-webkit-appearance:none;position:relative;}
+.task-check:checked{background:var(--blue);border-color:var(--blue);}
+.task-check:checked::after{content:'✓';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-size:9px;color:#fff;font-family:'DM Mono',monospace;line-height:1;}
+.task-check:hover:not(:checked){border-color:rgba(0,102,255,0.6);background:rgba(0,102,255,0.06);}
+.task-body{flex:1;}
+.task-label{font-family:'Archivo',sans-serif;font-size:0.87rem;color:var(--white);line-height:1.5;transition:color 0.15s;}
+.task-item.done .task-label{color:var(--dim);text-decoration:line-through;text-decoration-color:rgba(240,240,240,0.2);}
+.task-badge{display:inline-block;font-family:'DM Mono',monospace;font-size:0.42rem;letter-spacing:0.1em;padding:0.15rem 0.45rem;border:1px solid;text-transform:uppercase;margin-left:0.5rem;vertical-align:middle;position:relative;top:-1px;}
+.badge-done{color:var(--green);border-color:rgba(0,255,136,0.3);background:rgba(0,255,136,0.05);}
+.badge-critical{color:var(--red);border-color:rgba(239,68,68,0.3);background:rgba(239,68,68,0.05);}
+.badge-phase2{color:var(--dim);border-color:var(--edge);}
+
+/* NOTES */
+.notes-wrap{padding:2.5rem 5% 3.5rem;border-top:1px solid var(--edge);position:relative;z-index:1;}
+.notes-header{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:1rem;}
+.notes-eyebrow{font-family:'DM Mono',monospace;font-size:0.52rem;letter-spacing:0.22em;color:var(--blue);margin-bottom:0.3rem;text-transform:uppercase;}
+.notes-title{font-family:'Bebas Neue',sans-serif;font-size:1.6rem;letter-spacing:0.04em;}
+.notes-autosave{font-family:'DM Mono',monospace;font-size:0.48rem;letter-spacing:0.1em;color:var(--dim);}
+.notes-textarea{width:100%;max-width:860px;height:160px;background:var(--panel);border:1px solid var(--edge);color:var(--white);font-family:'DM Mono',monospace;font-size:0.78rem;padding:1rem 1.1rem;resize:vertical;outline:none;line-height:1.8;transition:border-color 0.2s;}
+.notes-textarea:focus{border-color:var(--blue);}
+.notes-textarea::placeholder{color:var(--dim);}
+
+/* FOOTER ACTIONS */
+.footer-bar{padding:0 5% 3rem;display:flex;justify-content:flex-end;gap:0.8rem;position:relative;z-index:1;}
+.action-btn{font-family:'DM Mono',monospace;font-size:0.55rem;letter-spacing:0.12em;text-transform:uppercase;padding:0.5rem 1rem;background:transparent;border:1px solid var(--edge);color:var(--dim);cursor:pointer;transition:all 0.2s;}
+.action-btn:hover{border-color:var(--edge2);color:var(--muted);}
+.action-btn.danger:hover{border-color:rgba(239,68,68,0.5);color:var(--red);}
+</style>
+</head>
+<body>
+
+<!-- GATE -->
+<div id="gate">
+  <div class="gate-inner">
+    <div class="gate-logo">APEX <span>NETWORK</span></div>
+    <div class="gate-sub">BUILD TRACKER — INTERNAL ACCESS</div>
+    <div class="gate-label">ENTER ACCESS CODE</div>
+    <input type="password" class="gate-input" id="gateInput" placeholder="••••••••••" maxlength="20" autocomplete="off">
+    <button class="gate-btn" onclick="checkGate()">AUTHENTICATE</button>
+    <div class="gate-error" id="gateError">INVALID ACCESS CODE</div>
+    <div class="gate-hint">Hint: dog's name + year</div>
+  </div>
+</div>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-brand">
+    <svg class="nav-logo-mark" viewBox="0 0 24 24" fill="none">
+      <polygon points="12,2 22,20 2,20" stroke="#0066ff" stroke-width="1.5" fill="none"/>
+      <line x1="12" y1="8" x2="12" y2="14" stroke="#0066ff" stroke-width="1.5"/>
+      <circle cx="12" cy="17" r="1" fill="#0066ff"/>
+    </svg>
+    <span class="nav-name">APEX <span>NETWORK</span></span>
+    <div class="nav-divider"></div>
+    <span class="nav-tag">BUILD TRACKER</span>
+  </div>
+  <div class="nav-right">
+    <span class="save-ind"><span class="save-dot"></span>AUTO-SAVED</span>
+    <a href="apex-hub.html" class="nav-link">← HUB</a>
+    <a href="apex-agent-os.html" class="nav-link">AGENT OS</a>
+  </div>
+</nav>
+
+<!-- MAIN -->
+<div id="mainContent">
+
+  <!-- HERO -->
+  <div class="hero">
+    <div class="hero-eyebrow">APEX NETWORK — INTERNAL</div>
+    <h1 class="hero-title">BUILD <span>TRACKER</span></h1>
+    <div class="stat-tiles">
+      <div class="stat-tile">
+        <span class="st-val" id="statTotal">—</span>
+        <span class="st-label">Total Tasks</span>
+      </div>
+      <div class="stat-tile">
+        <span class="st-val green" id="statDone">—</span>
+        <span class="st-label">Completed</span>
+      </div>
+      <div class="stat-tile">
+        <span class="st-val amber" id="statRemaining">—</span>
+        <span class="st-label">Remaining</span>
+      </div>
+      <div class="stat-tile">
+        <span class="st-val blue" id="statPct">—</span>
+        <span class="st-label">Progress</span>
+      </div>
+    </div>
+    <div class="master-bar-wrap">
+      <div class="master-bar-label">
+        <span class="mbl-text">Overall completion</span>
+        <span class="mbl-pct" id="masterBarPct">0%</span>
+      </div>
+      <div class="master-bar"><div class="master-bar-fill" id="masterBarFill" style="width:0%"></div></div>
+    </div>
+  </div>
+
+  <!-- NEXT ACTION -->
+  <div class="next-action-wrap">
+    <div class="na-card" id="naCard">
+      <div id="naContent"></div>
+    </div>
+  </div>
+
+  <!-- QUICK LINKS -->
+  <div class="quick-links-wrap">
+    <div class="ql-label">Quick Links — All Live Pages</div>
+    <div class="ql-row">
+      <a href="apex-front-door.html" class="ql-link" target="_blank">Front Door</a>
+      <a href="apex-vsl.html" class="ql-link" target="_blank">VSL</a>
+      <a href="apex-optin.html" class="ql-link" target="_blank">Opt-In</a>
+      <a href="apex-bridge.html" class="ql-link" target="_blank">Bridge</a>
+      <a href="apex-apply.html" class="ql-link" target="_blank">Application</a>
+      <a href="apex-thank-you.html" class="ql-link" target="_blank">Thank You</a>
+      <a href="apex-join.html" class="ql-link" target="_blank">Register</a>
+      <a href="apex-terms.html" class="ql-link" target="_blank">Terms</a>
+      <a href="apex-privacy.html" class="ql-link" target="_blank">Privacy</a>
+      <a href="apex-disclosure.html" class="ql-link" target="_blank">Disclosure</a>
+      <a href="apex-hub.html" class="ql-link tool" target="_blank">⬡ Hub</a>
+      <a href="apex-agent-os.html" class="ql-link tool" target="_blank">⬡ Agent OS</a>
+    </div>
+  </div>
+
+  <!-- TASK SECTIONS -->
+  <div class="tracker-wrap" id="sectionsContainer"></div>
+
+  <!-- NOTES -->
+  <div class="notes-wrap">
+    <div class="notes-header">
+      <div>
+        <div class="notes-eyebrow">Session Notes</div>
+        <div class="notes-title">NOTES</div>
+      </div>
+      <span class="notes-autosave">AUTOSAVED TO LOCALSTORAGE</span>
+    </div>
+    <textarea id="notesArea" class="notes-textarea" placeholder="Session notes, blockers, ideas, follow-ups..."></textarea>
+  </div>
+
+  <!-- FOOTER -->
+  <div class="footer-bar">
+    <button class="action-btn" onclick="exportProgress()">EXPORT STATE</button>
+    <button class="action-btn danger" onclick="resetProgress()">RESET TO DEFAULT</button>
+  </div>
+
+</div>
+
+<script>
+const ACCESS_CODE = 'DIESEL2025';
+const LS_KEY = 'apex_tracker_v1';
+
+/* ─── GATE ─────────────────────────────────────────────────── */
+function checkGate() {
+  const val = document.getElementById('gateInput').value.toUpperCase().trim();
+  if (val === ACCESS_CODE) {
+    sessionStorage.setItem('apex_gate', 'true');
+    document.getElementById('gate').style.display = 'none';
+  } else {
+    document.getElementById('gateError').style.display = 'block';
+    document.getElementById('gateInput').style.borderColor = 'var(--red)';
+    setTimeout(() => { document.getElementById('gateInput').style.borderColor = ''; }, 1200);
+  }
+}
+document.getElementById('gateInput').addEventListener('keydown', e => { if (e.key === 'Enter') checkGate(); });
+
+/* ─── DATA ──────────────────────────────────────────────────── */
+const SECTIONS = [
+  {
+    id: 'infrastructure',
+    eyebrow: '01 — Infrastructure',
+    title: 'Infrastructure',
+    tasks: [
+      { id: 'infra-github',      label: 'GitHub repo created (Slient-Syndicate)',                          badge: 'DONE' },
+      { id: 'infra-netlify',     label: 'Netlify connected to GitHub repo',                                badge: 'DONE' },
+      { id: 'infra-autodeploy',  label: 'Auto-deploy on push to main configured',                          badge: 'DONE' },
+      { id: 'infra-functions',   label: 'Netlify functions set up (subscribe.js / apply.js / register.js)', badge: 'DONE' },
+      { id: 'infra-env-vars',    label: 'Set AC_BASE_URL, AC_API_KEY, OWNER_EMAIL in Netlify environment variables', badge: 'CRITICAL' },
+      { id: 'infra-redeploy',    label: 'Trigger Netlify redeploy after env vars are set',                  badge: null },
+      { id: 'infra-domain',      label: 'Configure custom domain apexnetwork.com.au',                      badge: 'PHASE 2' },
+    ]
+  },
+  {
+    id: 'activecampaign',
+    eyebrow: '02 — ActiveCampaign',
+    title: 'ActiveCampaign',
+    tasks: [
+      { id: 'ac-account',        label: 'ActiveCampaign account active',                                   badge: 'DONE' },
+      { id: 'ac-tag-new',        label: 'Create tag: SS-NEW',                                              badge: 'CRITICAL' },
+      { id: 'ac-tag-warm',       label: 'Create tag: SS-WARM',                                             badge: 'CRITICAL' },
+      { id: 'ac-tag-hot',        label: 'Create tag: SS-HOT',                                              badge: 'CRITICAL' },
+      { id: 'ac-tag-applied',    label: 'Create tag: SS-APPLIED',                                          badge: 'CRITICAL' },
+      { id: 'ac-tag-converted',  label: 'Create tag: SS-CONVERTED',                                        badge: 'CRITICAL' },
+      { id: 'ac-tag-distributor',label: 'Create tag: SS-DISTRIBUTOR',                                      badge: 'CRITICAL' },
+      { id: 'ac-automation',     label: 'Create "Apex Welcome Sequence" automation (trigger: SS-NEW tag)',  badge: null },
+      { id: 'ac-email-load',     label: 'Load 7-email nurture sequence into automation',                    badge: null },
+      { id: 'ac-test',           label: 'Test opt-in form end-to-end: subscribe → AC tag → automation fires', badge: null },
+    ]
+  },
+  {
+    id: 'funnel',
+    eyebrow: '03 — Funnel Pages',
+    title: 'Funnel Pages',
+    tasks: [
+      { id: 'page-front-door',   label: 'apex-front-door.html — Front Door / Traffic Entry',               badge: 'DONE' },
+      { id: 'page-vsl',          label: 'apex-vsl.html — Video Sales Letter',                              badge: 'DONE' },
+      { id: 'page-optin',        label: 'apex-optin.html — Opt-In / Lead Capture',                         badge: 'DONE' },
+      { id: 'page-bridge',       label: 'apex-bridge.html — Bridge / Pre-sell',                            badge: 'DONE' },
+      { id: 'page-apply',        label: 'apex-apply.html — Operator Application',                          badge: 'DONE' },
+      { id: 'page-thank-you',    label: 'apex-thank-you.html — Thank You / Next Steps',                    badge: 'DONE' },
+      { id: 'page-join',         label: 'apex-join.html — Operator Registration Wizard (5-step)',           badge: 'DONE' },
+      { id: 'page-terms',        label: 'apex-terms.html — Terms of Use',                                  badge: 'DONE' },
+      { id: 'page-privacy',      label: 'apex-privacy.html — Privacy Policy',                              badge: 'DONE' },
+      { id: 'page-disclosure',   label: 'apex-disclosure.html — Income Disclosure Statement',              badge: 'DONE' },
+    ]
+  },
+  {
+    id: 'tools',
+    eyebrow: '04 — Operator Tools',
+    title: 'Operator Tools',
+    tasks: [
+      { id: 'tool-hub',          label: 'apex-hub.html — Command Centre',                                  badge: 'DONE' },
+      { id: 'tool-agent-os',     label: 'apex-agent-os.html — AI Business Agent (8 modules)',              badge: 'DONE' },
+      { id: 'tool-tracker',      label: 'apex-tracker.html — Build Tracker (current)',                     badge: 'DONE' },
+      { id: 'tool-emails',       label: 'email-sequence.html — Apex branded email templates',              badge: null },
+      { id: 'tool-onboarding',   label: 'operator-onboarding-emails.html — Post-registration email sequence', badge: null },
+    ]
+  },
+  {
+    id: 'content',
+    eyebrow: '05 — Content Machine',
+    title: 'Content Machine',
+    tasks: [
+      { id: 'content-heygen',    label: 'Sign up HeyGen Creator plan ($29 USD/mo)',                        badge: null },
+      { id: 'content-tiktok',    label: 'Create TikTok business account',                                  badge: null },
+      { id: 'content-instagram', label: 'Create Instagram business account',                               badge: null },
+      { id: 'content-bio-links', label: 'Set bio links on TikTok + Instagram → apex-front-door.html',     badge: null },
+      { id: 'content-avatar',    label: 'Create AI avatar in HeyGen (upload 3-5min video sample)',         badge: null },
+      { id: 'content-capcut',    label: 'Set up CapCut for video editing + captions',                      badge: null },
+      { id: 'content-first-vid', label: 'Generate first video (Problem / Mechanism / Proof / CTA)',        badge: null },
+      { id: 'content-later',     label: 'Set up Later for cross-platform scheduling',                      badge: null },
+      { id: 'content-publish',   label: 'Publish first piece of content',                                  badge: null },
+    ]
+  },
+  {
+    id: 'operators',
+    eyebrow: '06 — Operator System',
+    title: 'Operator System',
+    tasks: [
+      { id: 'ops-sponsor-ids',   label: 'Sponsor IDs hardcoded in all funnel + join pages',                badge: 'DONE' },
+      { id: 'ops-disclosure',    label: 'Commission structure documented in apex-disclosure.html',         badge: 'DONE' },
+      { id: 'ops-first-app',     label: 'First operator application received (SS-HOT tag in AC)',          badge: null },
+      { id: 'ops-first-convert', label: 'First operator converted — Enagic registration submitted',       badge: null },
+      { id: 'ops-first-sale',    label: 'First converted operator makes their own first sale',             badge: null },
+      { id: 'ops-leaderboard',   label: 'Operator leaderboard dashboard built',                            badge: 'PHASE 2' },
+      { id: 'ops-telegram',      label: 'Telegram operator community set up and seeded',                  badge: 'PHASE 2' },
+    ]
+  },
+  {
+    id: 'enagic',
+    eyebrow: '07 — Enagic',
+    title: 'Enagic',
+    tasks: [
+      { id: 'enagic-status',     label: 'Enagic independent distributor status confirmed',                 badge: 'DONE' },
+      { id: 'enagic-ids',        label: 'Sponsor IDs documented: 29000059770 / 29000059769 / 29000059768', badge: 'DONE' },
+      { id: 'enagic-email',      label: 'Send intro email to Enagic AU (info@enagic-australia.com)',       badge: null },
+      { id: 'enagic-call',       label: 'Book onboarding call with Enagic AU (1300 886 803)',              badge: null },
+      { id: 'enagic-first-comm', label: 'First Enagic commission payment received',                       badge: null },
+      { id: 'enagic-team-reg',   label: 'First team member registered and confirmed with Enagic',         badge: null },
+      { id: 'enagic-phase2',     label: 'Phase 2: n8n + Bland.ai voice agent integration',                badge: 'PHASE 2' },
+    ]
+  },
+];
+
+const DEFAULT_COMPLETED = new Set([
+  'infra-github','infra-netlify','infra-autodeploy','infra-functions',
+  'ac-account',
+  'page-front-door','page-vsl','page-optin','page-bridge','page-apply',
+  'page-thank-you','page-join','page-terms','page-privacy','page-disclosure',
+  'tool-hub','tool-agent-os','tool-tracker',
+  'ops-sponsor-ids','ops-disclosure',
+  'enagic-status','enagic-ids',
+]);
+
+const PRIORITY = [
+  'infra-env-vars','infra-redeploy',
+  'ac-tag-new','ac-tag-warm','ac-tag-hot','ac-tag-applied','ac-tag-converted','ac-tag-distributor',
+  'ac-automation','ac-email-load','ac-test',
+  'content-heygen','content-tiktok','content-instagram','content-bio-links',
+  'content-avatar','content-capcut','content-first-vid','content-later','content-publish',
+  'tool-emails','tool-onboarding',
+  'enagic-email','enagic-call',
+  'ops-first-app','ops-first-convert','ops-first-sale',
+  'enagic-first-comm','enagic-team-reg',
+  'infra-domain','ops-leaderboard','ops-telegram','enagic-phase2',
+];
+
+const TASK_DESCS = {
+  'infra-env-vars':    'Netlify → Site settings → Environment variables. Add three vars: AC_BASE_URL (your ActiveCampaign URL, e.g. https://youraccountname.activehosted.com), AC_API_KEY (from AC → Settings → Developer), OWNER_EMAIL (your email). All 3 required for form submissions to capture leads.',
+  'infra-redeploy':    'After setting all 3 env vars: Netlify → Deploys → Trigger deploy → Deploy site. Functions only read new env vars after a fresh deploy.',
+  'ac-tag-new':        'ActiveCampaign → Contacts → Tags → Add a tag. Exact name: SS-NEW (case-sensitive). This tag fires on every opt-in form submission from apex-optin.html.',
+  'ac-tag-warm':       'ActiveCampaign → Contacts → Tags → Add a tag. Exact name: SS-WARM. Used when a lead engages with content or views the bridge page.',
+  'ac-tag-hot':        'ActiveCampaign → Contacts → Tags → Add a tag. Exact name: SS-HOT. Fires when a lead submits the application form on apex-apply.html.',
+  'ac-tag-applied':    'ActiveCampaign → Contacts → Tags → Add a tag. Exact name: SS-APPLIED. Applied and contacted but not yet converted.',
+  'ac-tag-converted':  'ActiveCampaign → Contacts → Tags → Add a tag. Exact name: SS-CONVERTED. Fires when an operator submits registration on apex-join.html.',
+  'ac-tag-distributor':'ActiveCampaign → Contacts → Tags → Add a tag. Exact name: SS-DISTRIBUTOR. Set manually after Enagic AU confirms the registration is processed.',
+  'ac-automation':     'ActiveCampaign → Automations → New automation. Name it "Apex Welcome Sequence". Set trigger: Contact tag is added → SS-NEW. Add 7 email send steps with 1-day delays between each.',
+  'ac-email-load':     'Load all 7 email templates into the "Apex Welcome Sequence" automation. Use email-sequence.html (once built) as your copy reference.',
+  'ac-test':           'Submit a test email on apex-optin.html. Confirm: contact appears in AC with SS-NEW tag, welcome automation fires, you receive owner notification email.',
+  'content-heygen':    'Go to heygen.com. Sign up for the Creator plan ($29 USD/mo). You need this to generate AI avatar videos for TikTok and Instagram.',
+  'content-tiktok':    'Create a TikTok account. Switch to Business account (Settings → Manage account → Switch to business). Username should align with the Apex Network brand.',
+  'content-instagram': 'Create an Instagram account. Switch to Business account (Settings → Account → Switch to professional account). Keep username consistent with TikTok.',
+  'content-bio-links': 'On both TikTok and Instagram, add your Netlify URL (apex-front-door.html) to the bio link. This is the entire traffic → funnel entry point.',
+  'content-avatar':    'In HeyGen: Avatar Studio → Create new avatar. Upload a 3–5 minute video of yourself talking to camera. Processing takes 24 hours. This becomes the face of all content.',
+  'content-capcut':    'Download CapCut (desktop at capcut.com or mobile). Use it to add captions, B-roll, background music, and split-screen elements to HeyGen videos.',
+  'content-first-vid': 'In HeyGen: create your first video using the Problem → Mechanism → Proof → CTA format. Keep it under 90 seconds. Script it in Agent OS → Module 8 (Script Generator).',
+  'content-later':     'Set up Later (later.com) — connect both your TikTok and Instagram business accounts. Use it to schedule posts and analyse performance.',
+  'content-publish':   'Publish your first piece of content. Keep it hook-heavy, curiosity-driven, no income claims. Check that the bio link goes to apex-front-door.html.',
+  'tool-emails':       'Build email-sequence.html — Apex Network branded page showing all 7 nurture email templates. Same design system. Same passcode gate.',
+  'tool-onboarding':   'Build operator-onboarding-emails.html — the post-registration onboarding sequence for new operators. Steps, checklist, what to expect.',
+  'enagic-email':      'Send intro email to Enagic AU at info@enagic-australia.com. Introduce yourself, confirm your distributor status, ask about registration processing times and required docs.',
+  'enagic-call':       'Book onboarding call with Enagic AU. Phone: 1300 886 803. Mon–Fri 9am–5pm AEST. Confirm commission processing schedule and support contact.',
+  'ops-first-app':     'First operator application comes through apex-apply.html. They\'ll appear in ActiveCampaign tagged SS-HOT. Follow up within 24 hours.',
+  'ops-first-convert': 'First operator completes apex-join.html and submits Enagic registration. They\'ll be tagged SS-CONVERTED. Forward their docs to Enagic AU.',
+  'ops-first-sale':    'Your first converted operator makes their own first sale. You receive an override commission from Enagic. This proves the network model.',
+  'enagic-first-comm': 'Your first direct commission from Enagic AU. Typically 7–14 business days after registration paperwork is processed and confirmed.',
+  'enagic-team-reg':   'Your operator\'s Enagic registration is officially confirmed. You begin receiving override commissions from their future sales.',
+};
+
+/* ─── STATE ─────────────────────────────────────────────────── */
+// Build flat task map
+const ALL_TASKS = {};
+SECTIONS.forEach(s => s.tasks.forEach(t => { ALL_TASKS[t.id] = { ...t, sectionId: s.id, sectionTitle: s.title }; }));
+
+let state = { completed: new Set(), notes: '' };
+
+function loadState() {
+  try {
+    const saved = localStorage.getItem(LS_KEY);
+    if (saved) {
+      const data = JSON.parse(saved);
+      state.completed = new Set(data.completed || []);
+      state.notes = data.notes || '';
+    } else {
+      state.completed = new Set(DEFAULT_COMPLETED);
+      state.notes = '';
+    }
+  } catch(e) {
+    state.completed = new Set(DEFAULT_COMPLETED);
+  }
+}
+
+function saveState() {
+  localStorage.setItem(LS_KEY, JSON.stringify({ completed: [...state.completed], notes: state.notes }));
+}
+
+/* ─── LOGIC ─────────────────────────────────────────────────── */
+function getNextAction() {
+  for (const id of PRIORITY) {
+    if (!state.completed.has(id) && ALL_TASKS[id]) return ALL_TASKS[id];
+  }
+  return null;
+}
+
+function markNextDone() {
+  const next = getNextAction();
+  if (!next) return;
+  state.completed.add(next.id);
+  // Update checkbox if visible
+  const cb = document.getElementById('cb_' + next.id);
+  if (cb) {
+    cb.checked = true;
+    cb.closest('.task-item')?.classList.add('done');
+  }
+  saveState();
+  updateStats();
+  updateNextAction();
+  updateSectionBars();
+}
+
+function toggleTask(id, checked) {
+  if (checked) state.completed.add(id);
+  else state.completed.delete(id);
+  saveState();
+  updateStats();
+  updateNextAction();
+  updateSectionBars();
+}
+
+/* ─── RENDER ─────────────────────────────────────────────────── */
+function getBadgeHTML(badge) {
+  if (!badge) return '';
+  const cls = badge === 'DONE' ? 'badge-done' : badge === 'CRITICAL' ? 'badge-critical' : 'badge-phase2';
+  return `<span class="task-badge ${cls}">${badge}</span>`;
+}
+
+function renderTask(t) {
+  const done = state.completed.has(t.id);
+  return `
+  <div class="task-item${done ? ' done' : ''}" id="ti_${t.id}">
+    <input type="checkbox" class="task-check" id="cb_${t.id}"${done ? ' checked' : ''}>
+    <div class="task-body">
+      <span class="task-label">${t.label}${getBadgeHTML(t.badge)}</span>
+    </div>
+  </div>`;
+}
+
+const sectionOpen = {};
+
+function renderSection(s) {
+  const total = s.tasks.length;
+  const done = s.tasks.filter(t => state.completed.has(t.id)).length;
+  const pct = total ? Math.round(done / total * 100) : 0;
+  return `
+  <div class="tracker-section" id="sec_${s.id}">
+    <div class="section-header" id="sh_${s.id}">
+      <div class="sh-left">
+        <div class="sh-eyebrow">${s.eyebrow}</div>
+        <div class="sh-title">${s.title}</div>
+      </div>
+      <div class="sh-right">
+        <span class="sh-stat" id="sp_${s.id}">${done}/${total}</span>
+        <span class="sh-pct" id="spct_${s.id}">${pct}%</span>
+        <span class="sh-toggle" id="stg_${s.id}">▾</span>
+      </div>
+    </div>
+    <div class="sec-bar"><div class="sec-bar-fill" id="sbf_${s.id}" style="width:${pct}%"></div></div>
+    <div class="section-body" id="sb_${s.id}" style="max-height:9999px;">
+      <div class="task-list">
+        ${s.tasks.map(t => renderTask(t)).join('')}
+      </div>
+    </div>
+  </div>`;
+}
+
+function renderSections() {
+  const container = document.getElementById('sectionsContainer');
+  container.innerHTML = SECTIONS.map(s => renderSection(s)).join('');
+
+  SECTIONS.forEach(s => {
+    sectionOpen[s.id] = true;
+
+    // Checkbox listeners
+    s.tasks.forEach(t => {
+      const cb = document.getElementById('cb_' + t.id);
+      if (!cb) return;
+      cb.addEventListener('change', () => {
+        const item = cb.closest('.task-item');
+        if (cb.checked) item?.classList.add('done');
+        else item?.classList.remove('done');
+        toggleTask(t.id, cb.checked);
+      });
+    });
+
+    // Section header toggle
+    document.getElementById('sh_' + s.id)?.addEventListener('click', () => toggleSection(s.id));
+  });
+}
+
+function toggleSection(id) {
+  const body = document.getElementById('sb_' + id);
+  const tog = document.getElementById('stg_' + id);
+  if (!body) return;
+  sectionOpen[id] = !sectionOpen[id];
+  if (sectionOpen[id]) {
+    body.style.maxHeight = '9999px';
+    if (tog) tog.style.transform = '';
+  } else {
+    body.style.maxHeight = '0';
+    if (tog) tog.style.transform = 'rotate(-90deg)';
+  }
+}
+
+/* ─── UPDATES ────────────────────────────────────────────────── */
+function updateStats() {
+  const total = Object.keys(ALL_TASKS).length;
+  const done = [...state.completed].filter(id => ALL_TASKS[id]).length;
+  const remaining = total - done;
+  const pct = Math.round(done / total * 100);
+
+  document.getElementById('statTotal').textContent = total;
+  document.getElementById('statDone').textContent = done;
+  document.getElementById('statRemaining').textContent = remaining;
+  document.getElementById('statPct').textContent = pct + '%';
+  document.getElementById('masterBarFill').style.width = pct + '%';
+  document.getElementById('masterBarPct').textContent = pct + '%';
+}
+
+function updateSectionBars() {
+  SECTIONS.forEach(s => {
+    const total = s.tasks.length;
+    const done = s.tasks.filter(t => state.completed.has(t.id)).length;
+    const pct = total ? Math.round(done / total * 100) : 0;
+    const bar = document.getElementById('sbf_' + s.id);
+    const sp = document.getElementById('sp_' + s.id);
+    const spct = document.getElementById('spct_' + s.id);
+    if (bar) bar.style.width = pct + '%';
+    if (sp) sp.textContent = `${done}/${total}`;
+    if (spct) spct.textContent = pct + '%';
+  });
+}
+
+function updateNextAction() {
+  const el = document.getElementById('naContent');
+  if (!el) return;
+  const next = getNextAction();
+  if (!next) {
+    el.innerHTML = `
+      <div class="na-all-done">ALL TASKS COMPLETE</div>
+      <div class="na-all-done-sub">Phase 1 build is done. Start Phase 2.</div>`;
+    return;
+  }
+  const desc = TASK_DESCS[next.id] || '';
+  el.innerHTML = `
+    <div class="na-eyebrow">Next Action</div>
+    <div class="na-task">${next.label}</div>
+    <div class="na-meta">
+      <span class="na-section-badge">${next.sectionTitle}</span>
+    </div>
+    ${desc ? `<div class="na-desc">${desc}</div>` : ''}
+    <button class="na-complete-btn" onclick="markNextDone()">MARK COMPLETE</button>`;
+}
+
+/* ─── TOOLS ──────────────────────────────────────────────────── */
+function exportProgress() {
+  const data = { completed: [...state.completed], notes: state.notes, exported: new Date().toISOString() };
+  const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'apex-tracker-' + new Date().toISOString().slice(0,10) + '.json';
+  a.click();
+}
+
+function resetProgress() {
+  if (!confirm('Reset all progress to defaults? Custom completions will be cleared.')) return;
+  state.completed = new Set(DEFAULT_COMPLETED);
+  state.notes = '';
+  saveState();
+  renderSections();
+  updateStats();
+  updateNextAction();
+  updateSectionBars();
+  document.getElementById('notesArea').value = '';
+}
+
+/* ─── INIT ───────────────────────────────────────────────────── */
+document.addEventListener('DOMContentLoaded', () => {
+  if (sessionStorage.getItem('apex_gate') === 'true') {
+    document.getElementById('gate').style.display = 'none';
+  }
+
+  loadState();
+  renderSections();
+  updateStats();
+  updateNextAction();
+
+  // Notes
+  const notesArea = document.getElementById('notesArea');
+  notesArea.value = state.notes;
+  let notesTimer;
+  notesArea.addEventListener('input', () => {
+    clearTimeout(notesTimer);
+    notesTimer = setTimeout(() => { state.notes = notesArea.value; saveState(); }, 400);
+  });
+});
+</script>
+</body>
+</html>
