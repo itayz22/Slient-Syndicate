@@ -1,0 +1,1479 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Apex Network — Operator Registration</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Mono:wght@300;400;500&family=Archivo:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --black:#050505;
+  --surface:#0a0a0a;
+  --panel:#111111;
+  --edge:rgba(255,255,255,0.07);
+  --blue:#0066ff;
+  --blue2:#0044cc;
+  --white:#f0f0f0;
+  --muted:rgba(240,240,240,0.55);
+  --dim:rgba(240,240,240,0.28);
+  --green:#00ff88;
+  --amber:#f59e0b;
+  --red:#ef4444;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{font-size:16px;scroll-behavior:smooth;}
+body{
+  background:var(--black);
+  color:var(--white);
+  font-family:'Archivo',sans-serif;
+  overflow-x:hidden;
+  cursor:crosshair;
+}
+
+/* NOISE + GRID */
+body::before{
+  content:'';
+  position:fixed;inset:0;
+  background-image:
+    linear-gradient(rgba(0,102,255,0.04) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(0,102,255,0.04) 1px,transparent 1px);
+  background-size:80px 80px;
+  pointer-events:none;z-index:0;
+}
+body::after{
+  content:'';
+  position:fixed;inset:0;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+  pointer-events:none;z-index:0;opacity:0.4;
+}
+
+/* NAV */
+nav{
+  position:sticky;top:0;z-index:500;
+  background:rgba(5,5,5,0.95);
+  backdrop-filter:blur(20px);
+  border-bottom:1px solid var(--edge);
+  padding:0 5%;
+  height:60px;
+  display:flex;justify-content:space-between;align-items:center;
+}
+.nav-brand{display:flex;align-items:center;gap:0.7rem;}
+.nav-mark{
+  width:20px;height:20px;
+  background:var(--blue);
+  clip-path:polygon(50% 0%,100% 50%,50% 100%,0% 50%);
+}
+.nav-name{
+  font-family:'Bebas Neue',sans-serif;
+  font-size:1.1rem;letter-spacing:0.18em;color:var(--white);
+}
+.nav-dot{
+  width:6px;height:6px;border-radius:50%;
+  background:var(--green);
+  box-shadow:0 0 8px var(--green);
+  animation:blink 2s ease-in-out infinite;
+}
+.nav-back{
+  font-family:'DM Mono',monospace;
+  font-size:0.62rem;letter-spacing:0.12em;
+  color:var(--dim);text-decoration:none;
+  transition:color 0.2s;
+}
+.nav-back:hover{color:var(--blue);}
+@keyframes blink{0%,100%{opacity:1;}50%{opacity:0.3;}}
+
+/* HERO */
+.hero{
+  padding:3.5rem 5% 2rem;
+  text-align:center;
+  position:relative;z-index:1;
+}
+.hero-badge{
+  display:inline-flex;align-items:center;gap:0.6rem;
+  background:rgba(0,255,136,0.06);
+  border:1px solid rgba(0,255,136,0.25);
+  border-radius:2px;
+  padding:0.45rem 1.1rem;
+  font-family:'DM Mono',monospace;
+  font-size:0.58rem;letter-spacing:0.2em;
+  color:var(--green);
+  margin-bottom:1.8rem;
+}
+.badge-dot{
+  width:6px;height:6px;border-radius:50%;
+  background:var(--green);
+  box-shadow:0 0 6px var(--green);
+  animation:blink 1.5s ease-in-out infinite;
+}
+.hero-title{
+  font-family:'Bebas Neue',sans-serif;
+  font-size:clamp(3rem,8vw,5.5rem);
+  letter-spacing:0.06em;
+  color:var(--white);
+  line-height:0.95;
+  margin-bottom:1rem;
+}
+.hero-title span{color:var(--blue);}
+.hero-sub{
+  font-size:0.95rem;color:var(--muted);
+  max-width:540px;margin:0 auto;
+  line-height:1.9;
+}
+
+/* PROGRESS */
+.progress-wrap{
+  max-width:680px;margin:2.5rem auto 0;
+  padding:0 5%;position:relative;z-index:1;
+}
+.progress-steps{
+  display:flex;align-items:center;
+  justify-content:space-between;
+  position:relative;
+}
+.progress-steps::before{
+  content:'';position:absolute;
+  top:16px;left:0;right:0;
+  height:1px;background:var(--edge);z-index:0;
+}
+.progress-fill{
+  position:absolute;top:16px;left:0;
+  height:1px;background:var(--blue);
+  z-index:1;transition:width 0.5s ease;
+}
+.ps{
+  display:flex;flex-direction:column;
+  align-items:center;gap:0.5rem;
+  position:relative;z-index:2;
+}
+.ps-circle{
+  width:32px;height:32px;
+  background:var(--surface);
+  border:1px solid var(--edge);
+  display:flex;align-items:center;justify-content:center;
+  font-family:'DM Mono',monospace;
+  font-size:0.65rem;font-weight:500;
+  color:var(--dim);
+  transition:all 0.3s;
+}
+.ps.active .ps-circle{
+  background:var(--blue);
+  border-color:var(--blue);
+  color:var(--white);
+  box-shadow:0 0 20px rgba(0,102,255,0.4);
+}
+.ps.done .ps-circle{
+  background:rgba(0,255,136,0.1);
+  border-color:rgba(0,255,136,0.4);
+  color:var(--green);
+}
+.ps-label{
+  font-family:'DM Mono',monospace;
+  font-size:0.5rem;letter-spacing:0.1em;
+  color:var(--dim);text-align:center;
+  white-space:nowrap;
+}
+.ps.active .ps-label{color:var(--blue);}
+.ps.done .ps-label{color:rgba(0,255,136,0.6);}
+
+/* WIZARD */
+.wizard{
+  max-width:680px;margin:2.5rem auto 0;
+  padding:0 5% 6rem;
+  position:relative;z-index:1;
+}
+.step{display:none;}
+.step.active{display:block;}
+
+/* STEP CARDS */
+.step-card{
+  background:var(--panel);
+  border:1px solid var(--edge);
+  margin-bottom:1.5rem;
+  position:relative;overflow:hidden;
+}
+.step-card::before,.step-card::after{
+  content:'';position:absolute;
+  width:8px;height:8px;
+  border-color:var(--blue);
+  border-style:solid;
+}
+.step-card::before{top:-1px;left:-1px;border-width:1px 0 0 1px;}
+.step-card::after{bottom:-1px;right:-1px;border-width:0 1px 1px 0;}
+.step-card-header{
+  background:rgba(0,102,255,0.05);
+  border-bottom:1px solid var(--edge);
+  padding:1.2rem 1.8rem;
+  display:flex;align-items:center;gap:1rem;
+}
+.sch-num{
+  font-family:'DM Mono',monospace;
+  font-size:0.58rem;letter-spacing:0.15em;
+  color:var(--blue);
+}
+.sch-title{
+  font-family:'Bebas Neue',sans-serif;
+  font-size:1.1rem;letter-spacing:0.08em;
+  color:var(--white);
+}
+.step-card-body{padding:1.8rem;}
+
+/* PRODUCT GRID */
+.product-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem;}
+.product-option{
+  background:rgba(255,255,255,0.02);
+  border:1px solid var(--edge);
+  padding:1.4rem;cursor:pointer;
+  transition:all 0.2s;position:relative;
+}
+.product-option:hover{
+  border-color:rgba(0,102,255,0.35);
+  background:rgba(0,102,255,0.04);
+}
+.product-option.selected{
+  border-color:var(--blue);
+  background:rgba(0,102,255,0.08);
+  box-shadow:0 0 24px rgba(0,102,255,0.15);
+}
+.product-option.selected::after{
+  content:'✓';
+  position:absolute;top:0.7rem;right:0.8rem;
+  width:18px;height:18px;
+  background:var(--blue);
+  display:grid;place-items:center;
+  font-size:0.6rem;color:white;
+}
+.po-tag{
+  font-family:'DM Mono',monospace;
+  font-size:0.5rem;letter-spacing:0.15em;
+  margin-bottom:0.5rem;
+}
+.po-name{
+  font-family:'Bebas Neue',sans-serif;
+  font-size:1.1rem;letter-spacing:0.05em;
+  color:var(--white);margin-bottom:0.4rem;
+}
+.po-price{font-size:0.82rem;color:var(--muted);margin-bottom:0.25rem;}
+.po-comm{
+  font-family:'DM Mono',monospace;
+  font-size:0.58rem;letter-spacing:0.08em;
+}
+.po-desc{font-size:0.78rem;color:var(--dim);margin-top:0.5rem;line-height:1.7;}
+.po-docs{
+  margin-top:0.8rem;padding-top:0.8rem;
+  border-top:1px solid var(--edge);
+}
+.po-doc-item{
+  font-size:0.72rem;color:var(--dim);
+  padding:0.2rem 0;
+  display:flex;gap:0.4rem;
+}
+.po-doc-item::before{content:'→';color:var(--blue);flex-shrink:0;}
+
+/* SPONSOR BOX */
+.sponsor-display{
+  background:rgba(0,255,136,0.04);
+  border:1px solid rgba(0,255,136,0.25);
+  padding:1.4rem;margin-top:1.2rem;
+  display:none;position:relative;
+}
+.sponsor-display::before{
+  content:'';position:absolute;
+  top:-1px;left:-1px;
+  width:8px;height:8px;
+  border-top:1px solid var(--green);
+  border-left:1px solid var(--green);
+}
+.sponsor-display.visible{display:block;}
+.sd-label{
+  font-family:'DM Mono',monospace;
+  font-size:0.52rem;letter-spacing:0.2em;
+  color:var(--green);margin-bottom:0.7rem;
+}
+.sd-id{
+  font-family:'Bebas Neue',sans-serif;
+  font-size:2.2rem;letter-spacing:0.1em;
+  color:var(--green);
+}
+.sd-note{font-size:0.8rem;color:var(--muted);margin-top:0.4rem;line-height:1.7;}
+
+/* PAYMENT GRID */
+.payment-grid{display:grid;grid-template-columns:1fr 1fr;gap:0.8rem;}
+.payment-option{
+  background:rgba(255,255,255,0.02);
+  border:1px solid var(--edge);
+  padding:1.1rem;cursor:pointer;
+  transition:all 0.2s;
+}
+.payment-option:hover{border-color:rgba(0,102,255,0.3);}
+.payment-option.selected{
+  border-color:var(--blue);
+  background:rgba(0,102,255,0.06);
+}
+.pay-name{
+  font-weight:600;color:var(--white);
+  font-size:0.88rem;margin-bottom:0.3rem;
+}
+.pay-desc{font-size:0.76rem;color:var(--dim);line-height:1.6;}
+
+.extra-docs-box{
+  background:rgba(245,158,11,0.04);
+  border:1px solid rgba(245,158,11,0.2);
+  padding:1rem;margin-top:1rem;
+  display:none;
+}
+.extra-docs-box.visible{display:block;}
+.edb-label{
+  font-family:'DM Mono',monospace;
+  font-size:0.5rem;letter-spacing:0.15em;
+  color:var(--amber);margin-bottom:0.5rem;
+}
+.edb-item{
+  font-size:0.8rem;color:var(--muted);
+  padding:0.3rem 0;
+  display:flex;gap:0.5rem;align-items:flex-start;
+}
+.edb-item::before{
+  content:'⚠';color:var(--amber);
+  flex-shrink:0;font-size:0.65rem;margin-top:2px;
+}
+
+/* FORM */
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem;}
+.form-group{display:flex;flex-direction:column;gap:0.4rem;}
+.form-group.full{grid-column:1/-1;}
+.form-label{
+  font-family:'DM Mono',monospace;
+  font-size:0.52rem;letter-spacing:0.15em;
+  color:var(--blue);
+}
+.form-input,.form-select,.form-textarea{
+  background:rgba(255,255,255,0.03);
+  border:1px solid var(--edge);
+  padding:0.8rem 1rem;
+  color:var(--white);
+  font-family:'Archivo',sans-serif;
+  font-size:0.9rem;
+  width:100%;
+  transition:border-color 0.2s;
+  outline:none;
+  border-radius:0;
+}
+.form-input:focus,.form-select:focus,.form-textarea:focus{
+  border-color:rgba(0,102,255,0.5);
+  background:rgba(0,102,255,0.04);
+}
+.form-input::placeholder,.form-textarea::placeholder{color:var(--dim);}
+.form-select option{background:var(--panel);}
+.form-textarea{resize:vertical;min-height:80px;}
+
+/* FILE UPLOAD */
+.file-upload{
+  border:1px dashed rgba(255,255,255,0.12);
+  padding:1.5rem;text-align:center;
+  cursor:pointer;transition:all 0.2s;
+}
+.file-upload:hover{
+  border-color:rgba(0,102,255,0.4);
+  background:rgba(0,102,255,0.03);
+}
+.file-upload.has-file{
+  border-color:rgba(0,255,136,0.4);
+  background:rgba(0,255,136,0.03);
+}
+.fu-icon{font-size:1.4rem;margin-bottom:0.5rem;}
+.fu-text{font-size:0.83rem;color:var(--muted);}
+.fu-sub{
+  font-family:'DM Mono',monospace;
+  font-size:0.52rem;letter-spacing:0.08em;
+  color:var(--dim);margin-top:0.3rem;
+}
+.fu-status{
+  font-size:0.78rem;color:var(--green);
+  margin-top:0.4rem;display:none;
+}
+.file-upload.has-file .fu-status{display:block;}
+.file-input-hidden{display:none;}
+
+/* CHECKLIST */
+.checklist{display:flex;flex-direction:column;gap:0.5rem;margin-top:0.8rem;}
+.check-item{
+  display:flex;align-items:flex-start;gap:0.8rem;
+  padding:0.8rem;
+  background:rgba(255,255,255,0.02);
+  border:1px solid var(--edge);
+}
+.check-item.extra{border-color:rgba(245,158,11,0.18);}
+.ci-icon{
+  width:20px;height:20px;
+  background:rgba(0,255,136,0.1);
+  border:1px solid rgba(0,255,136,0.25);
+  display:flex;align-items:center;justify-content:center;
+  color:var(--green);font-size:0.65rem;
+  flex-shrink:0;margin-top:1px;
+}
+.check-item.extra .ci-icon{
+  background:rgba(245,158,11,0.08);
+  border-color:rgba(245,158,11,0.25);
+  color:var(--amber);
+}
+.ci-text{font-size:0.85rem;color:var(--muted);line-height:1.6;}
+.ci-text strong{color:var(--white);}
+
+/* SUMMARY */
+.summary-grid{display:grid;grid-template-columns:1fr 1fr;gap:0.8rem;margin-bottom:1.5rem;}
+.sum-item{
+  background:rgba(255,255,255,0.02);
+  border:1px solid var(--edge);
+  padding:0.9rem 1rem;
+}
+.sum-label{
+  font-family:'DM Mono',monospace;
+  font-size:0.48rem;letter-spacing:0.15em;
+  color:var(--dim);margin-bottom:0.3rem;
+}
+.sum-value{font-size:0.88rem;color:var(--white);font-weight:500;}
+
+.sponsor-final{
+  background:rgba(0,255,136,0.04);
+  border:1px solid rgba(0,255,136,0.3);
+  padding:1.4rem;margin-bottom:1.5rem;
+  position:relative;
+}
+.sponsor-final::before{
+  content:'';position:absolute;
+  top:-1px;left:-1px;
+  width:10px;height:10px;
+  border-top:1px solid var(--green);
+  border-left:1px solid var(--green);
+}
+.sf-label{
+  font-family:'DM Mono',monospace;
+  font-size:0.52rem;letter-spacing:0.2em;
+  color:var(--green);margin-bottom:0.5rem;
+}
+.sf-id{
+  font-family:'Bebas Neue',sans-serif;
+  font-size:2.4rem;letter-spacing:0.1em;
+  color:var(--green);
+}
+.sf-warning{font-size:0.8rem;color:var(--muted);margin-top:0.5rem;line-height:1.7;}
+.sf-warning strong{color:var(--amber);}
+
+/* TIMELINE */
+.timeline{display:flex;flex-direction:column;gap:0;}
+.tl-item{
+  display:flex;align-items:flex-start;gap:1rem;
+  padding:0.9rem 0;
+  border-bottom:1px solid var(--edge);
+}
+.tl-item:last-child{border-bottom:none;}
+.tl-dot{
+  width:26px;height:26px;
+  flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;
+  font-size:0.6rem;font-weight:700;
+  font-family:'DM Mono',monospace;
+  margin-top:1px;
+}
+.tl-dot.g{
+  background:rgba(0,255,136,0.1);
+  border:1px solid rgba(0,255,136,0.3);
+  color:var(--green);
+}
+.tl-dot.a{
+  background:rgba(245,158,11,0.08);
+  border:1px solid rgba(245,158,11,0.2);
+  color:var(--amber);
+}
+.tl-title{font-weight:600;color:var(--white);font-size:0.88rem;margin-bottom:0.15rem;}
+.tl-desc{font-size:0.8rem;color:var(--dim);line-height:1.6;}
+
+/* DIVIDER */
+.divider{
+  height:1px;
+  background:var(--edge);
+  margin:1.5rem 0;
+}
+
+/* SECTION LABEL */
+.section-label{
+  font-family:'DM Mono',monospace;
+  font-size:0.52rem;letter-spacing:0.2em;
+  color:var(--blue);margin-bottom:1rem;
+}
+
+/* BUTTONS */
+.btn-row{
+  display:flex;gap:1rem;
+  margin-top:2rem;
+  justify-content:flex-end;
+}
+.btn-back{
+  background:transparent;
+  border:1px solid var(--edge);
+  color:var(--dim);
+  font-family:'DM Mono',monospace;
+  font-size:0.65rem;font-weight:500;
+  letter-spacing:0.15em;
+  text-transform:uppercase;
+  padding:0.85rem 1.6rem;
+  cursor:pointer;
+  transition:all 0.2s;
+}
+.btn-back:hover{border-color:rgba(255,255,255,0.2);color:var(--white);}
+.btn-next{
+  background:var(--blue);
+  color:var(--white);
+  font-family:'DM Mono',monospace;
+  font-size:0.68rem;font-weight:500;
+  letter-spacing:0.15em;
+  text-transform:uppercase;
+  padding:0.85rem 2rem;
+  border:1px solid var(--blue);
+  cursor:pointer;
+  box-shadow:0 0 24px rgba(0,102,255,0.3);
+  transition:all 0.3s;
+  display:flex;align-items:center;gap:0.6rem;
+}
+.btn-next:hover{
+  background:var(--blue2);
+  box-shadow:0 0 40px rgba(0,102,255,0.5);
+  transform:translateY(-1px);
+}
+.btn-next:disabled{
+  opacity:0.4;cursor:not-allowed;
+  transform:none;box-shadow:none;
+}
+.btn-submit{
+  background:rgba(0,255,136,0.08);
+  border:1px solid rgba(0,255,136,0.35);
+  color:var(--green);
+  font-family:'DM Mono',monospace;
+  font-size:0.75rem;font-weight:500;
+  letter-spacing:0.18em;
+  text-transform:uppercase;
+  padding:1rem 2.5rem;
+  cursor:pointer;
+  box-shadow:0 0 24px rgba(0,255,136,0.1);
+  transition:all 0.3s;
+  width:100%;margin-top:1.5rem;
+}
+.btn-submit:hover{
+  background:rgba(0,255,136,0.14);
+  box-shadow:0 0 40px rgba(0,255,136,0.2);
+  transform:translateY(-1px);
+}
+
+/* CONSENT BOX */
+.consent-box{
+  background:rgba(255,255,255,0.02);
+  border:1px solid var(--edge);
+  padding:1rem;
+}
+.consent-label{
+  display:flex;align-items:flex-start;gap:0.8rem;
+  cursor:pointer;
+}
+.consent-label input[type="checkbox"]{
+  margin-top:3px;accent-color:var(--blue);
+  width:15px;height:15px;flex-shrink:0;
+}
+.consent-label span{
+  font-size:0.8rem;color:var(--muted);line-height:1.7;
+}
+.consent-label a{color:var(--blue);text-decoration:none;}
+.consent-label a:hover{text-decoration:underline;}
+
+/* SUCCESS */
+.success-state{
+  display:none;text-align:center;padding:4rem 1.5rem;
+}
+.success-state.visible{display:block;}
+.ss-mark{
+  width:60px;height:60px;
+  background:rgba(0,255,136,0.1);
+  border:1px solid rgba(0,255,136,0.3);
+  display:flex;align-items:center;justify-content:center;
+  font-size:1.4rem;margin:0 auto 2rem;
+}
+.ss-title{
+  font-family:'Bebas Neue',sans-serif;
+  font-size:clamp(2rem,6vw,3.5rem);
+  letter-spacing:0.06em;
+  color:var(--white);
+  margin-bottom:1rem;
+}
+.ss-title span{color:var(--green);}
+.ss-body{
+  font-size:0.92rem;color:var(--muted);
+  line-height:1.9;max-width:480px;margin:0 auto;
+}
+
+/* INCOME DISCLOSURE STRIP */
+.disclosure-strip{
+  background:var(--surface);
+  border-top:1px solid var(--edge);
+  padding:1.8rem 5%;
+  position:relative;z-index:1;
+}
+.disclosure-inner{
+  max-width:900px;margin:0 auto;
+  display:flex;align-items:flex-start;gap:1.5rem;flex-wrap:wrap;
+}
+.disclosure-tag{
+  font-family:'DM Mono',monospace;
+  font-size:0.5rem;letter-spacing:0.18em;
+  color:rgba(0,255,136,0.5);
+  flex-shrink:0;padding-top:2px;white-space:nowrap;
+}
+.disclosure-text{
+  font-family:'DM Mono',monospace;
+  font-size:0.55rem;letter-spacing:0.04em;
+  color:var(--dim);line-height:1.9;flex:1;
+}
+.disclosure-text a{color:rgba(0,102,255,0.5);text-decoration:none;}
+
+/* FOOTER */
+footer{
+  padding:1.8rem 5%;
+  border-top:1px solid var(--edge);
+  display:flex;justify-content:space-between;
+  align-items:center;flex-wrap:wrap;gap:1rem;
+  position:relative;z-index:1;
+}
+.footer-brand{
+  font-family:'Bebas Neue',sans-serif;
+  font-size:1rem;letter-spacing:0.15em;color:var(--muted);
+}
+.footer-links{display:flex;gap:1.5rem;flex-wrap:wrap;}
+.footer-links a{
+  font-family:'DM Mono',monospace;
+  font-size:0.52rem;letter-spacing:0.1em;
+  color:var(--dim);text-decoration:none;
+  transition:color 0.2s;
+}
+.footer-links a:hover{color:var(--blue);}
+.footer-copy{
+  font-family:'DM Mono',monospace;
+  font-size:0.5rem;letter-spacing:0.08em;color:var(--dim);
+}
+
+@media(max-width:640px){
+  .product-grid,.payment-grid,.form-grid,.summary-grid{grid-template-columns:1fr;}
+  .form-group.full{grid-column:1;}
+  .btn-row{flex-direction:column;}
+  .btn-next,.btn-back{width:100%;justify-content:center;}
+  .ps-label{display:none;}
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-brand">
+    <div class="nav-mark"></div>
+    <span class="nav-name">APEX NETWORK</span>
+    <div class="nav-dot"></div>
+  </div>
+  <a href="apex-offer.html" class="nav-back">← Back to offer</a>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-badge">
+    <span class="badge-dot"></span>
+    APPLICATION APPROVED — COMPLETE REGISTRATION
+  </div>
+  <h1 class="hero-title">Operator<br><span>Registration</span></h1>
+  <p class="hero-sub">Fill this in once. We compile your complete verified package — ready to submit to the distribution network with your Sponsor ID pre-confirmed.</p>
+</div>
+
+<!-- PROGRESS -->
+<div class="progress-wrap">
+  <div class="progress-steps" id="progressSteps">
+    <div class="ps active" data-step="1">
+      <div class="ps-circle">01</div>
+      <div class="ps-label">Package</div>
+    </div>
+    <div class="ps" data-step="2">
+      <div class="ps-circle">02</div>
+      <div class="ps-label">Payment</div>
+    </div>
+    <div class="ps" data-step="3">
+      <div class="ps-circle">03</div>
+      <div class="ps-label">Details</div>
+    </div>
+    <div class="ps" data-step="4">
+      <div class="ps-circle">04</div>
+      <div class="ps-label">Documents</div>
+    </div>
+    <div class="ps" data-step="5">
+      <div class="ps-circle">05</div>
+      <div class="ps-label">Confirm</div>
+    </div>
+    <div class="progress-fill" id="progressFill" style="width:0%"></div>
+  </div>
+</div>
+
+<!-- WIZARD -->
+<div class="wizard">
+
+  <!-- ═══ STEP 1 — PACKAGE SELECTION ═══ -->
+  <div class="step active" id="step1">
+    <div class="step-card">
+      <div class="step-card-header">
+        <span class="sch-num">// 01</span>
+        <span class="sch-title">Choose Your Operator Package</span>
+      </div>
+      <div class="step-card-body">
+        <p style="font-size:0.86rem;color:var(--muted);margin-bottom:1.5rem;line-height:1.9;">Select the package you're activating. All prices in <strong style="color:var(--white);">AUD including GST</strong> as of 2025. Shipping additional. Ukon prices vary (converted from SGD at time of purchase).</p>
+
+        <div class="product-grid">
+
+          <div class="product-option" data-product="k8_single" data-investment="$6,787" data-commission="~$365 AUD" data-sponsor="29000059770" data-rank="1A" onclick="selectProduct(this)">
+            <div class="po-tag" style="color:var(--muted);">// OPERATOR ENTRY</div>
+            <div class="po-name">Entry — K8 Single</div>
+            <div class="po-price">$6,787 AUD (inc. GST)</div>
+            <div class="po-comm" style="color:var(--amber);">~$365 commission/sale at 1A rank</div>
+            <div class="po-desc">One K8 water ioniser. Single distributor ID. Entry point into the infrastructure. + shipping.</div>
+            <div class="po-docs">
+              <div class="po-doc-item">1× Product Order Form (Distributor)</div>
+              <div class="po-doc-item">Return Policy + Policies &amp; Procedures</div>
+              <div class="po-doc-item">Photo ID — front + back</div>
+            </div>
+          </div>
+
+          <div class="product-option" data-product="trifecta" data-investment="~$11,682" data-commission="~$1,322 AUD" data-sponsor="29000059770" data-rank="2A" onclick="selectProduct(this)">
+            <div class="po-tag" style="color:var(--blue);">// OPERATOR PRO — RECOMMENDED</div>
+            <div class="po-name">Pro — Trifecta</div>
+            <div class="po-price">~$11,682 AUD (inc. GST)</div>
+            <div class="po-comm" style="color:var(--green);">~$1,322 commission/sale at 2A rank</div>
+            <div class="po-desc">K8 + Anespa DX + Ukon. Activates at 2A rank. 33 sales to 6A vs 101 at Entry. Best commission-to-investment ratio.</div>
+            <div class="po-docs">
+              <div class="po-doc-item">3× Product Order Forms (one per product)</div>
+              <div class="po-doc-item">Return Policy + Policies &amp; Procedures</div>
+              <div class="po-doc-item">Photo ID — front + back</div>
+              <div class="po-doc-item">Note: Ukon — upfront payment only</div>
+            </div>
+          </div>
+
+          <div class="product-option" data-product="quad" data-investment="~$18,469" data-commission="~$2,595 AUD" data-sponsor="29000059770" data-rank="3A" onclick="selectProduct(this)">
+            <div class="po-tag" style="color:rgba(0,102,255,0.7);">// OPERATOR ELITE — FASTEST RANK</div>
+            <div class="po-name">Elite — Quad</div>
+            <div class="po-price">~$18,469 AUD (inc. GST)</div>
+            <div class="po-comm" style="color:var(--green);">~$2,595 commission/sale at 3A rank</div>
+            <div class="po-desc">2× K8 + Anespa DX + Ukon. Activates at 3A. 25 sales to 6A. Second K8 used as loaner/demo unit.</div>
+            <div class="po-docs">
+              <div class="po-doc-item">4× Product Order Forms (one per product)</div>
+              <div class="po-doc-item">Return Policy + Policies &amp; Procedures</div>
+              <div class="po-doc-item">Photo ID — front + back</div>
+              <div class="po-doc-item">Note: Ukon — upfront payment only</div>
+            </div>
+          </div>
+
+          <div class="product-option" data-product="emguarde" data-investment="$2,475" data-commission="~$225 AUD" data-sponsor="29000059769" data-rank="1A" onclick="selectProduct(this)">
+            <div class="po-tag" style="color:var(--dim);">// ENTRY OPTION</div>
+            <div class="po-name">emGuarde Single</div>
+            <div class="po-price">$2,475 AUD (inc. GST)</div>
+            <div class="po-comm" style="color:var(--muted);">~$225 commission/sale at 1A rank</div>
+            <div class="po-desc">EMF protection device. Single distributor ID. Alternative entry point into the network.</div>
+            <div class="po-docs">
+              <div class="po-doc-item">1× Product Order Form (Distributor)</div>
+              <div class="po-doc-item">Return Policy + Policies &amp; Procedures</div>
+              <div class="po-doc-item">Photo ID — front + back</div>
+            </div>
+          </div>
+
+        </div>
+
+        <div class="sponsor-display" id="sponsorDisplay">
+          <div class="sd-label">// SPONSOR ID — PRE-CONFIRMED FOR THIS ORDER</div>
+          <div class="sd-id" id="sponsorIdDisplay">—</div>
+          <div class="sd-note" id="sponsorNote">This ID goes in the Sponsor ID field on your Enagic order form. We verify and pre-confirm this before anything is submitted.</div>
+        </div>
+
+      </div>
+    </div>
+    <div class="btn-row">
+      <button class="btn-next" id="nextBtn1" onclick="goToStep(2)" disabled>SELECT A PACKAGE ABOVE</button>
+    </div>
+  </div>
+
+  <!-- ═══ STEP 2 — PAYMENT METHOD ═══ -->
+  <div class="step" id="step2">
+    <div class="step-card">
+      <div class="step-card-header">
+        <span class="sch-num">// 02</span>
+        <span class="sch-title">Payment Method</span>
+      </div>
+      <div class="step-card-body">
+        <p style="font-size:0.86rem;color:var(--muted);margin-bottom:1.5rem;line-height:1.9;">Your payment method determines which additional documents are required. Select the one that applies to your order.</p>
+
+        <div class="payment-grid">
+          <div class="payment-option" data-payment="bank" onclick="selectPayment(this)">
+            <div class="pay-name">Bank Transfer (EFT)</div>
+            <div class="pay-desc">Pay the full amount directly to the network. Simplest option. No additional forms.</div>
+          </div>
+          <div class="payment-option" data-payment="card" onclick="selectPayment(this)">
+            <div class="pay-name">Credit / Debit Card</div>
+            <div class="pay-desc">Card details on the form. Must include copy of card front & back with submission.</div>
+          </div>
+          <div class="payment-option" data-payment="epayment_dd" onclick="selectPayment(this)">
+            <div class="pay-name">E-Payment (Direct Debit)</div>
+            <div class="pay-desc">Monthly repayments from bank account. Ships after deposit. Additional forms required.</div>
+          </div>
+          <div class="payment-option" data-payment="epayment_cc" onclick="selectPayment(this)">
+            <div class="pay-name">E-Payment (Credit Card)</div>
+            <div class="pay-desc">Monthly repayments to card. Ships after deposit. Additional forms required.</div>
+          </div>
+          <div class="payment-option" data-payment="payright" onclick="selectPayment(this)">
+            <div class="pay-name">PayRight Plus Finance</div>
+            <div class="pay-desc">Personal loan via finance partner. 18–60 month terms. Approval in minutes.</div>
+          </div>
+          <div class="payment-option" data-payment="humm90" onclick="selectPayment(this)">
+            <div class="pay-name">Humm90</div>
+            <div class="pay-desc">Buy now pay later via Humm90 Mastercard. Authorisation form required.</div>
+          </div>
+        </div>
+
+        <div class="extra-docs-box" id="extraDocsBox">
+          <div class="edb-label">// ADDITIONAL DOCUMENTS REQUIRED FOR YOUR PAYMENT METHOD</div>
+          <div id="extraDocsList"></div>
+        </div>
+      </div>
+    </div>
+    <div class="btn-row">
+      <button class="btn-back" onclick="goToStep(1)">← BACK</button>
+      <button class="btn-next" id="nextBtn2" onclick="goToStep(3)" disabled>CONTINUE</button>
+    </div>
+  </div>
+
+  <!-- ═══ STEP 3 — PERSONAL DETAILS ═══ -->
+  <div class="step" id="step3">
+    <div class="step-card">
+      <div class="step-card-header">
+        <span class="sch-num">// 03</span>
+        <span class="sch-title">Operator Details</span>
+      </div>
+      <div class="step-card-body">
+        <p style="font-size:0.86rem;color:var(--muted);margin-bottom:1.5rem;line-height:1.9;">These details go on the Enagic order form. Use your <strong style="color:var(--white);">full legal name exactly as it appears on photo ID</strong>. One person per application.</p>
+
+        <div class="form-grid">
+          <div class="form-group">
+            <label class="form-label">// First Name (Legal)</label>
+            <input type="text" class="form-input" id="firstName" placeholder="Legal first name" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label">// Last Name (Legal)</label>
+            <input type="text" class="form-input" id="lastName" placeholder="Legal last name" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label">// Date of Birth</label>
+            <input type="text" class="form-input" id="dob" placeholder="DD/MM/YYYY" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label">// Driver's Licence or Passport No.</label>
+            <input type="text" class="form-input" id="idNumber" placeholder="Licence or passport number" required>
+          </div>
+          <div class="form-group full">
+            <label class="form-label">// Residential Address</label>
+            <input type="text" class="form-input" id="address" placeholder="Full street address" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label">// Suburb / City</label>
+            <input type="text" class="form-input" id="suburb" placeholder="Suburb or city" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label">// State &amp; Postcode</label>
+            <input type="text" class="form-input" id="statePostcode" placeholder="e.g. QLD 4000" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label">// Mobile Number</label>
+            <input type="tel" class="form-input" id="mobile" placeholder="+61 4XX XXX XXX" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label">// Email Address</label>
+            <input type="email" class="form-input" id="email" placeholder="your@email.com" required>
+          </div>
+
+          <div class="form-group full" style="margin-top:0.5rem;">
+            <div class="divider"></div>
+            <div class="section-label">// BANK DETAILS — FOR COMMISSION PAYMENTS</div>
+          </div>
+
+          <div class="form-group full">
+            <label class="form-label">// Bank Name</label>
+            <input type="text" class="form-input" id="bankName" placeholder="e.g. Commonwealth Bank, ANZ, Westpac" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label">// Account Name</label>
+            <input type="text" class="form-input" id="accountName" placeholder="Name on account" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label">// BSB</label>
+            <input type="text" class="form-input" id="bsb" placeholder="XXX-XXX" required>
+          </div>
+          <div class="form-group full">
+            <label class="form-label">// Account Number</label>
+            <input type="text" class="form-input" id="accountNumber" placeholder="Your account number" required>
+          </div>
+
+          <div class="form-group full" style="margin-top:0.5rem;">
+            <div class="divider"></div>
+            <div class="section-label">// DELIVERY</div>
+          </div>
+
+          <div class="form-group full">
+            <label class="form-label">// How would you like to receive your machine?</label>
+            <select class="form-select" id="delivery" required>
+              <option value="">Select delivery option</option>
+              <option value="shipped_residential">Ship to my residential address above</option>
+              <option value="shipped_other">Ship to a different address</option>
+              <option value="pickup">Pick up from Enagic HQ (Macquarie Park, Sydney)</option>
+            </select>
+          </div>
+          <div class="form-group full" id="altAddressGroup" style="display:none;">
+            <label class="form-label">// Alternative Shipping Address</label>
+            <input type="text" class="form-input" id="altAddress" placeholder="Full alternative shipping address">
+          </div>
+
+          <div class="form-group full">
+            <label class="form-label">// Notes (Optional)</label>
+            <textarea class="form-textarea" id="notes" placeholder="Any questions, special circumstances, or notes..."></textarea>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="btn-row">
+      <button class="btn-back" onclick="goToStep(2)">← BACK</button>
+      <button class="btn-next" onclick="validateStep3()">CONTINUE</button>
+    </div>
+  </div>
+
+  <!-- ═══ STEP 4 — DOCUMENT UPLOADS ═══ -->
+  <div class="step" id="step4">
+    <div class="step-card">
+      <div class="step-card-header">
+        <span class="sch-num">// 04</span>
+        <span class="sch-title">Upload Documents</span>
+      </div>
+      <div class="step-card-body">
+        <p style="font-size:0.86rem;color:var(--muted);margin-bottom:1.5rem;line-height:1.9;">Enagic Australia requires copies of photo ID with every distributor registration. Files are private and used only for your application.</p>
+
+        <div class="form-grid">
+          <div class="form-group">
+            <label class="form-label">// Photo ID — Front</label>
+            <div class="file-upload" id="idFrontUpload" onclick="triggerUpload('idFront')">
+              <div class="fu-icon">📄</div>
+              <div class="fu-text">Driver's licence or passport — front</div>
+              <div class="fu-sub">JPG, PNG or PDF · Max 5MB</div>
+              <div class="fu-status" id="idFrontStatus">✓ Uploaded</div>
+            </div>
+            <input type="file" class="file-input-hidden" id="idFront" accept=".jpg,.jpeg,.png,.pdf" onchange="fileUploaded('idFront','idFrontUpload','idFrontStatus')">
+          </div>
+          <div class="form-group">
+            <label class="form-label">// Photo ID — Back</label>
+            <div class="file-upload" id="idBackUpload" onclick="triggerUpload('idBack')">
+              <div class="fu-icon">📄</div>
+              <div class="fu-text">Driver's licence or passport — back</div>
+              <div class="fu-sub">JPG, PNG or PDF · Max 5MB</div>
+              <div class="fu-status" id="idBackStatus">✓ Uploaded</div>
+            </div>
+            <input type="file" class="file-input-hidden" id="idBack" accept=".jpg,.jpeg,.png,.pdf" onchange="fileUploaded('idBack','idBackUpload','idBackStatus')">
+          </div>
+        </div>
+
+        <div id="extraUploadSection" style="margin-top:1.5rem;"></div>
+
+        <div class="divider"></div>
+
+        <div class="section-label">// COMPLETE DOCUMENT CHECKLIST FOR YOUR ORDER</div>
+        <div class="checklist" id="documentChecklist"></div>
+
+      </div>
+    </div>
+    <div class="btn-row">
+      <button class="btn-back" onclick="goToStep(3)">← BACK</button>
+      <button class="btn-next" onclick="goToStep(5)">REVIEW & CONFIRM</button>
+    </div>
+  </div>
+
+  <!-- ═══ STEP 5 — CONFIRM & SUBMIT ═══ -->
+  <div class="step" id="step5">
+
+    <div class="step-card">
+      <div class="step-card-header">
+        <span class="sch-num">// 05</span>
+        <span class="sch-title">Review &amp; Submit</span>
+      </div>
+      <div class="step-card-body">
+        <p style="font-size:0.86rem;color:var(--muted);margin-bottom:1.5rem;line-height:1.9;">Review everything below before submitting. Once received, we verify your Sponsor ID, compile your complete package, and contact you within a few hours to confirm next steps.</p>
+
+        <div class="summary-grid" id="summaryGrid"></div>
+
+        <div class="sponsor-final">
+          <div class="sf-label">// SPONSOR ID — LOCKED FOR THIS ORDER</div>
+          <div class="sf-id" id="finalSponsorId">—</div>
+          <div class="sf-warning">This ID appears in the "Sponsor Name / Sponsor ID" field on your Enagic order form. <strong>⚠ Placement cannot be changed after Enagic processes the form.</strong> We verify this before submitting anything on your behalf.</div>
+        </div>
+
+        <div class="section-label">// WHAT HAPPENS AFTER YOU SUBMIT</div>
+        <div class="timeline">
+          <div class="tl-item">
+            <div class="tl-dot g">✓</div>
+            <div class="tl-body">
+              <div class="tl-title">Immediately — confirmation email sent to you</div>
+              <div class="tl-desc">Summary of everything you submitted. Keep this for your records.</div>
+            </div>
+          </div>
+          <div class="tl-item">
+            <div class="tl-dot a">~</div>
+            <div class="tl-body">
+              <div class="tl-title">Within a few hours — we review your package</div>
+              <div class="tl-desc">We verify your Sponsor ID, confirm all documents are correct, and compile your Enagic submission package.</div>
+            </div>
+          </div>
+          <div class="tl-item">
+            <div class="tl-dot a">~</div>
+            <div class="tl-body">
+              <div class="tl-title">We contact you to confirm payment</div>
+              <div class="tl-desc">You arrange payment directly with Enagic Australia via bank transfer or card. We do not handle your payment.</div>
+            </div>
+          </div>
+          <div class="tl-item">
+            <div class="tl-dot a">~</div>
+            <div class="tl-body">
+              <div class="tl-title">Days 1–10 — Enagic processes your order</div>
+              <div class="tl-desc">Your distributor account is created. You receive your personal Distributor ID from Enagic by email.</div>
+            </div>
+          </div>
+          <div class="tl-item">
+            <div class="tl-dot g">✓</div>
+            <div class="tl-body">
+              <div class="tl-title">Days 5–14 — Machine ships to you</div>
+              <div class="tl-desc">Delivered to your address. You're an active operator. Your Apex Network hub access activates.</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="divider"></div>
+
+        <div class="consent-box">
+          <label class="consent-label">
+            <input type="checkbox" id="consentCheck">
+            <span>I confirm the details above are accurate and match my photo ID exactly. I understand that Apex Network will review my submission before anything is sent to Enagic Australia, and that I will arrange payment directly with Enagic. I have read the <a href="apex-terms.html">Terms of Service</a>, <a href="apex-privacy.html">Privacy Policy</a>, and <a href="apex-disclosure.html">Income Disclosure</a>.</span>
+          </label>
+        </div>
+
+        <button class="btn-submit" id="submitBtn" onclick="submitRegistration()">
+          SUBMIT OPERATOR REGISTRATION →
+        </button>
+
+      </div>
+    </div>
+
+    <div class="btn-row" style="justify-content:flex-start;">
+      <button class="btn-back" onclick="goToStep(4)">← BACK</button>
+    </div>
+
+  </div>
+
+  <!-- SUCCESS STATE -->
+  <div class="success-state" id="successState">
+    <div class="ss-mark">✓</div>
+    <div class="ss-title">Registration<br><span>Received.</span></div>
+    <div class="ss-body">
+      <p style="margin-bottom:1rem;">Your package has been received. Check your email — a full summary has been sent to you.</p>
+      <p style="margin-bottom:1rem;">We'll verify your Sponsor ID and compile your Enagic submission within a few hours. You'll receive a follow-up with next steps on arranging payment directly with Enagic Australia.</p>
+      <p style="color:var(--dim);font-size:0.85rem;">Questions? Email <a href="mailto:support@apexnetwork.com.au" style="color:var(--blue);">support@apexnetwork.com.au</a></p>
+    </div>
+  </div>
+
+</div>
+
+<!-- INCOME DISCLOSURE -->
+<div class="disclosure-strip">
+  <div class="disclosure-inner">
+    <div class="disclosure-tag">// INCOME DISCLOSURE</div>
+    <div class="disclosure-text">Results are not typical. Commission figures shown are based on Enagic's published compensation structure at each rank and are subject to change without notice. Investment amounts are approximate and may vary. Apex Network is an independent distributor network and is not affiliated with or endorsed by Enagic International. Past performance is not indicative of future results. <a href="apex-disclosure.html">Full income disclosure statement →</a></div>
+  </div>
+</div>
+
+<footer>
+  <div class="footer-brand">APEX NETWORK</div>
+  <div class="footer-links">
+    <a href="apex-privacy.html">Privacy Policy</a>
+    <a href="apex-terms.html">Terms of Service</a>
+    <a href="apex-disclosure.html">Income Disclosure</a>
+  </div>
+  <div class="footer-copy">© 2025 Apex Network. Independent distributor network.</div>
+</footer>
+
+<script>
+// ═══════════════════════════════════
+// STATE
+// ═══════════════════════════════════
+const state = {
+  currentStep: 1,
+  product: null,
+  productName: null,
+  investment: null,
+  commission: null,
+  sponsorId: null,
+  rank: null,
+  payment: null,
+  firstName:'', lastName:'', dob:'', idNumber:'',
+  address:'', suburb:'', statePostcode:'', mobile:'', email:'',
+  bankName:'', accountName:'', bsb:'', accountNumber:'',
+  delivery:'', altAddress:'', notes:'',
+  idFrontFile: null, idBackFile: null,
+  cardFile: null, proofAddressFile: null
+};
+
+const extraDocs = {
+  bank: [],
+  card: ['Copy of credit/debit card — front AND back (enlarged so card number is clearly readable)'],
+  epayment_dd: [
+    'E-Payment Agreement Form (download from Enagic Australia website)',
+    'Secondary proof of address (utility bill or bank statement — within 90 days)',
+    'Direct Debit Services Agreement & Request Form'
+  ],
+  epayment_cc: [
+    'E-Payment Agreement Form (download from Enagic Australia website)',
+    'Secondary proof of address (utility bill or bank statement — within 90 days)',
+    'Copy of nominated credit/debit card — front and back'
+  ],
+  payright: ['PayRight Plus loan application (via their portal — ~5 min, instant approval)'],
+  humm90: ['Humm90 Authorisation to Pay Form (download from Enagic Australia website)']
+};
+
+// ═══════════════════════════════════
+// NAVIGATION
+// ═══════════════════════════════════
+function goToStep(step) {
+  document.getElementById('step' + state.currentStep).classList.remove('active');
+  document.querySelectorAll('.ps').forEach(ps => {
+    const s = parseInt(ps.dataset.step);
+    ps.classList.remove('active','done');
+    if(s < step) ps.classList.add('done');
+    if(s === step) ps.classList.add('active');
+  });
+  document.getElementById('progressFill').style.width = (((step - 1) / 4) * 100) + '%';
+  state.currentStep = step;
+  document.getElementById('step' + step).classList.add('active');
+  if(step === 4) buildDocChecklist();
+  if(step === 5) buildSummary();
+  window.scrollTo({top: 0, behavior: 'smooth'});
+}
+
+// ═══════════════════════════════════
+// STEP 1 — PRODUCT
+// ═══════════════════════════════════
+function selectProduct(el) {
+  document.querySelectorAll('.product-option').forEach(p => p.classList.remove('selected'));
+  el.classList.add('selected');
+  state.product    = el.dataset.product;
+  state.productName = el.querySelector('.po-name').textContent;
+  state.investment = el.dataset.investment;
+  state.commission = el.dataset.commission;
+  state.sponsorId  = el.dataset.sponsor;
+  state.rank       = el.dataset.rank;
+
+  document.getElementById('sponsorIdDisplay').textContent = state.sponsorId;
+  document.getElementById('sponsorNote').textContent = state.product === 'emguarde'
+    ? 'emGuarde Sponsor ID — position 1. If purchasing a second emGuarde, use 29000059768.'
+    : 'This Sponsor ID goes in the Sponsor ID field on your Enagic order form. We verify and pre-confirm before submission.';
+  document.getElementById('sponsorDisplay').classList.add('visible');
+
+  const btn = document.getElementById('nextBtn1');
+  btn.textContent = 'CONTINUE WITH ' + state.productName.toUpperCase().split('—')[1].trim();
+  btn.disabled = false;
+}
+
+// ═══════════════════════════════════
+// STEP 2 — PAYMENT
+// ═══════════════════════════════════
+function selectPayment(el) {
+  document.querySelectorAll('.payment-option').forEach(p => p.classList.remove('selected'));
+  el.classList.add('selected');
+  state.payment = el.dataset.payment;
+
+  const extra = extraDocs[state.payment] || [];
+  const box   = document.getElementById('extraDocsBox');
+  const list  = document.getElementById('extraDocsList');
+
+  if(extra.length > 0) {
+    list.innerHTML = extra.map(d => `<div class="edb-item">${d}</div>`).join('');
+    box.classList.add('visible');
+  } else {
+    box.classList.remove('visible');
+  }
+
+  document.getElementById('nextBtn2').disabled = false;
+}
+
+// ═══════════════════════════════════
+// STEP 3 — VALIDATE
+// ═══════════════════════════════════
+function validateStep3() {
+  const required = ['firstName','lastName','dob','idNumber','address','suburb',
+                    'statePostcode','mobile','email','bankName','accountName',
+                    'bsb','accountNumber','delivery'];
+  const missing = [];
+
+  required.forEach(id => {
+    const val = document.getElementById(id).value.trim();
+    if(!val) missing.push(id);
+    else state[id] = val;
+  });
+
+  if(document.getElementById('delivery').value === 'shipped_other') {
+    const alt = document.getElementById('altAddress').value.trim();
+    if(!alt) missing.push('altAddress');
+    else state.altAddress = alt;
+  }
+
+  state.notes = document.getElementById('notes').value.trim();
+
+  if(missing.length > 0) {
+    missing.forEach(id => {
+      const el = document.getElementById(id);
+      if(el) {
+        el.style.borderColor = 'rgba(239,68,68,0.6)';
+        setTimeout(() => el.style.borderColor = '', 2500);
+      }
+    });
+    return;
+  }
+
+  buildExtraUploads();
+  goToStep(4);
+}
+
+document.getElementById('delivery').addEventListener('change', function() {
+  document.getElementById('altAddressGroup').style.display =
+    this.value === 'shipped_other' ? 'block' : 'none';
+});
+
+// ═══════════════════════════════════
+// STEP 4 — UPLOADS
+// ═══════════════════════════════════
+function triggerUpload(id) { document.getElementById(id).click(); }
+
+function fileUploaded(inputId, uploadId, statusId) {
+  const file = document.getElementById(inputId).files[0];
+  if(!file) return;
+  state[inputId + 'File'] = file;
+  document.getElementById(uploadId).classList.add('has-file');
+  document.getElementById(statusId).textContent = '✓ ' + file.name;
+}
+
+function buildExtraUploads() {
+  const section = document.getElementById('extraUploadSection');
+  let html = '';
+
+  if(state.payment === 'card') {
+    html += `<div class="form-grid"><div class="form-group full">
+      <label class="form-label">// Card — Front &amp; Back (Single Image)</label>
+      <div class="file-upload" id="cardUpload" onclick="triggerUpload('cardFile')">
+        <div class="fu-icon">💳</div>
+        <div class="fu-text">Upload card image — front + back, one file</div>
+        <div class="fu-sub">Must be enlarged and readable when printed · JPG or PDF</div>
+        <div class="fu-status" id="cardStatus">✓ Uploaded</div>
+      </div>
+      <input type="file" class="file-input-hidden" id="cardFile" accept=".jpg,.jpeg,.png,.pdf" onchange="fileUploaded('cardFile','cardUpload','cardStatus')">
+    </div></div>`;
+  }
+
+  if(state.payment === 'epayment_dd' || state.payment === 'epayment_cc') {
+    html += `<div class="form-grid"><div class="form-group">
+      <label class="form-label">// Secondary Proof of Address</label>
+      <div class="file-upload" id="proofUpload" onclick="triggerUpload('proofAddressFile')">
+        <div class="fu-icon">📋</div>
+        <div class="fu-text">Utility bill or bank statement (within 90 days)</div>
+        <div class="fu-sub">JPG, PNG or PDF</div>
+        <div class="fu-status" id="proofStatus">✓ Uploaded</div>
+      </div>
+      <input type="file" class="file-input-hidden" id="proofAddressFile" accept=".jpg,.jpeg,.png,.pdf" onchange="fileUploaded('proofAddressFile','proofUpload','proofStatus')">
+    </div>`;
+    if(state.payment === 'epayment_cc') {
+      html += `<div class="form-group">
+        <label class="form-label">// Nominated Card — Front &amp; Back</label>
+        <div class="file-upload" id="ccUpload" onclick="triggerUpload('cardFile')">
+          <div class="fu-icon">💳</div>
+          <div class="fu-text">Card to be charged for E-Payment</div>
+          <div class="fu-sub">JPG or PDF</div>
+          <div class="fu-status" id="ccStatus">✓ Uploaded</div>
+        </div>
+        <input type="file" class="file-input-hidden" id="cardFile" accept=".jpg,.jpeg,.png,.pdf" onchange="fileUploaded('cardFile','ccUpload','ccStatus')">
+      </div>`;
+    }
+    html += `</div>`;
+  }
+
+  section.innerHTML = html;
+}
+
+function buildDocChecklist() {
+  const formsNeeded = {
+    k8_single: '1× Product Order Form — Leveluk K8 (Distributor version)',
+    trifecta:  '3× Product Order Forms — K8 + Anespa DX + Ukon (one per product, Distributor version)',
+    quad:      '4× Product Order Forms — 2× K8 + Anespa DX + Ukon (one per product, Distributor version)',
+    emguarde:  '1× Product Order Form — emGuarde (Distributor version)'
+  };
+
+  const baseItems = [
+    { text: formsNeeded[state.product] || 'Product Order Form(s) — Distributor version', req: true },
+    { text: 'Product Return Policy &amp; Collection Statement — signed', req: true },
+    { text: 'Enagic Distributor Policies &amp; Procedures Agreement — signed', req: true },
+    { text: 'Photo ID front + back — <strong>uploading above</strong>', req: true },
+    { text: 'Bank account details — BSB + Account Number (for commission payments)', req: true }
+  ];
+
+  const paymentItems = {
+    card: [{ text: 'Copy of card — front + back — enlarged and clearly readable', req: false }],
+    epayment_dd: [
+      { text: 'E-Payment Agreement Form (Enagic Australia website)', req: false },
+      { text: 'Secondary proof of address — utility bill or bank statement within 90 days', req: false },
+      { text: 'Direct Debit Services Agreement &amp; Request Form', req: false }
+    ],
+    epayment_cc: [
+      { text: 'E-Payment Agreement Form (Enagic Australia website)', req: false },
+      { text: 'Secondary proof of address — utility bill or bank statement within 90 days', req: false },
+      { text: 'Nominated card — front + back', req: false }
+    ],
+    payright: [{ text: 'PayRight Plus loan application — via their portal', req: false }],
+    humm90:   [{ text: 'Humm90 Authorisation to Pay Form (Enagic Australia website)', req: false }]
+  };
+
+  const allItems = [...baseItems, ...(paymentItems[state.payment] || [])];
+  document.getElementById('documentChecklist').innerHTML = allItems.map(item => `
+    <div class="check-item ${item.req ? 'required' : 'extra'}">
+      <div class="ci-icon">${item.req ? '✓' : '+'}</div>
+      <div class="ci-text">${item.text}</div>
+    </div>
+  `).join('');
+}
+
+// ═══════════════════════════════════
+// STEP 5 — SUMMARY
+// ═══════════════════════════════════
+function buildSummary() {
+  const paymentLabels = {
+    bank: 'Bank Transfer (EFT)',
+    card: 'Credit / Debit Card',
+    epayment_dd: 'E-Payment (Direct Debit)',
+    epayment_cc: 'E-Payment (Credit Card)',
+    payright: 'PayRight Plus Finance',
+    humm90: 'Humm90'
+  };
+
+  const deliveryLabels = {
+    shipped_residential: 'Ship to residential address',
+    shipped_other: 'Ship to alternative address',
+    pickup: 'Pick up from Enagic HQ'
+  };
+
+  const items = [
+    { label: 'Package',           value: state.productName },
+    { label: 'Investment',        value: state.investment + ' AUD' },
+    { label: 'Starting Rank',     value: state.rank },
+    { label: 'Commission / Sale', value: state.commission },
+    { label: 'Payment Method',    value: paymentLabels[state.payment] || state.payment },
+    { label: 'Full Name',         value: state.firstName + ' ' + state.lastName },
+    { label: 'Date of Birth',     value: state.dob },
+    { label: 'ID Number',         value: state.idNumber },
+    { label: 'Address',           value: state.address + ', ' + state.suburb + ' ' + state.statePostcode },
+    { label: 'Mobile',            value: state.mobile },
+    { label: 'Email',             value: state.email },
+    { label: 'Bank',              value: state.bankName + ' — BSB ' + state.bsb },
+    { label: 'Delivery',          value: deliveryLabels[state.delivery] || state.delivery }
+  ];
+
+  document.getElementById('summaryGrid').innerHTML = items.map(i => `
+    <div class="sum-item">
+      <div class="sum-label">// ${i.label.toUpperCase()}</div>
+      <div class="sum-value">${i.value || '—'}</div>
+    </div>
+  `).join('');
+
+  document.getElementById('finalSponsorId').textContent = state.sponsorId;
+}
+
+// ═══════════════════════════════════
+// SUBMIT
+// ═══════════════════════════════════
+async function submitRegistration() {
+  if(!document.getElementById('consentCheck').checked) {
+    document.querySelector('.consent-box').style.borderColor = 'rgba(239,68,68,0.5)';
+    setTimeout(() => document.querySelector('.consent-box').style.borderColor = '', 2500);
+    return;
+  }
+
+  const btn = document.getElementById('submitBtn');
+  btn.textContent = 'SUBMITTING...';
+  btn.disabled = true;
+
+  const payload = {
+    // Product
+    product:      state.product,
+    productName:  state.productName,
+    investment:   state.investment,
+    commission:   state.commission,
+    sponsorId:    state.sponsorId,
+    startingRank: state.rank,
+    payment:      state.payment,
+    extraDocs:    extraDocs[state.payment] || [],
+    // Personal
+    firstName:    state.firstName,
+    lastName:     state.lastName,
+    dob:          state.dob,
+    idNumber:     state.idNumber,
+    address:      state.address,
+    suburb:       state.suburb,
+    statePostcode:state.statePostcode,
+    mobile:       state.mobile,
+    email:        state.email,
+    // Bank
+    bankName:     state.bankName,
+    accountName:  state.accountName,
+    bsb:          state.bsb,
+    accountNumber:state.accountNumber,
+    // Delivery
+    delivery:     state.delivery,
+    altAddress:   state.altAddress || '',
+    notes:        state.notes,
+    source:       'apex-join-registration',
+    submittedAt:  new Date().toISOString()
+  };
+
+  try {
+    await fetch('/.netlify/functions/apply', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        ...payload,
+        phone:            state.mobile,
+        investmentReady:  'Yes — registering now',
+        incomeGoal:       'Active operator',
+        situation:        'Joining as operator',
+        tier:             state.productName,
+        tag:              'SS-CONVERTED'
+      })
+    });
+  } catch(err) {
+    console.error('Submit error:', err);
+  }
+
+  showSuccess();
+}
+
+function showSuccess() {
+  document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
+  document.getElementById('successState').classList.add('visible');
+  document.querySelector('.progress-wrap').style.display = 'none';
+  window.scrollTo({top: 0, behavior: 'smooth'});
+}
+</script>
+</body>
+</html>
