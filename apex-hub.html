@@ -1,0 +1,831 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Apex Network — Command Centre</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Mono:wght@300;400;500&family=Archivo:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --black:#050505;--surface:#0a0a0a;--panel:#111111;--panel2:#161616;
+  --edge:rgba(255,255,255,0.07);--edge2:rgba(255,255,255,0.14);
+  --blue:#0066ff;--blue2:#0044cc;
+  --white:#f0f0f0;--muted:rgba(240,240,240,0.55);--dim:rgba(240,240,240,0.28);
+  --green:#00ff88;--amber:#f59e0b;--red:#ef4444;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{font-size:16px;scroll-behavior:smooth;}
+body{background:var(--black);color:var(--white);font-family:'Archivo',sans-serif;overflow-x:hidden;cursor:crosshair;min-height:100vh;}
+
+/* NOISE + GRID */
+body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(rgba(0,102,255,0.04) 1px,transparent 1px),linear-gradient(90deg,rgba(0,102,255,0.04) 1px,transparent 1px);background-size:80px 80px;pointer-events:none;z-index:0;}
+body::after{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");pointer-events:none;z-index:9999;opacity:0.4;}
+
+/* GATE */
+#gate{position:fixed;inset:0;background:var(--black);z-index:10000;display:flex;align-items:center;justify-content:center;}
+.gate-inner{text-align:center;padding:2rem;}
+.gate-logo{font-family:'Bebas Neue',sans-serif;font-size:2.2rem;letter-spacing:0.12em;margin-bottom:0.4rem;}
+.gate-logo span{color:var(--blue);}
+.gate-sub{font-family:'DM Mono',monospace;font-size:0.58rem;letter-spacing:0.2em;color:var(--dim);margin-bottom:2.5rem;}
+.gate-label{font-family:'DM Mono',monospace;font-size:0.55rem;letter-spacing:0.18em;color:var(--blue);margin-bottom:0.7rem;}
+.gate-input{
+  background:rgba(255,255,255,0.03);
+  border:1px solid var(--edge2);
+  color:var(--white);
+  font-family:'DM Mono',monospace;
+  font-size:1.2rem;letter-spacing:0.3em;text-align:center;
+  width:220px;padding:0.9rem 1rem;
+  outline:none;display:block;margin:0 auto 1rem;
+  text-transform:uppercase;
+}
+.gate-input:focus{border-color:var(--blue);background:rgba(0,102,255,0.04);}
+.gate-btn{
+  background:var(--blue);color:var(--white);
+  font-family:'DM Mono',monospace;font-size:0.65rem;
+  letter-spacing:0.15em;text-transform:uppercase;
+  padding:0.8rem 2rem;border:none;cursor:pointer;
+  width:220px;display:block;margin:0 auto;
+  transition:background 0.2s;
+}
+.gate-btn:hover{background:var(--blue2);}
+.gate-error{font-family:'DM Mono',monospace;font-size:0.55rem;letter-spacing:0.1em;color:var(--red);margin-top:0.6rem;display:none;}
+.gate-hint{font-family:'DM Mono',monospace;font-size:0.5rem;letter-spacing:0.08em;color:var(--dim);margin-top:1.5rem;}
+
+/* NAV */
+nav{position:sticky;top:0;z-index:500;background:rgba(5,5,5,0.97);backdrop-filter:blur(20px);border-bottom:1px solid var(--edge);padding:0 5%;height:60px;display:flex;justify-content:space-between;align-items:center;position:relative;z-index:1;}
+.nav-brand{display:flex;align-items:center;gap:0.8rem;}
+.nav-logo-mark{width:22px;height:22px;flex-shrink:0;}
+.nav-name{font-family:'Bebas Neue',sans-serif;font-size:1.2rem;letter-spacing:0.12em;}
+.nav-name span{color:var(--blue);}
+.nav-divider{width:1px;height:18px;background:var(--edge2);}
+.nav-tag{font-family:'DM Mono',monospace;font-size:0.55rem;letter-spacing:0.2em;color:var(--dim);}
+.nav-right{display:flex;align-items:center;gap:1.2rem;}
+.nav-status{display:flex;align-items:center;gap:0.5rem;font-family:'DM Mono',monospace;font-size:0.55rem;letter-spacing:0.1em;color:var(--muted);}
+.status-dot{width:6px;height:6px;border-radius:50%;background:var(--green);box-shadow:0 0 8px var(--green);animation:blink 2s ease-in-out infinite;}
+@keyframes blink{0%,100%{opacity:1;}50%{opacity:0.25;}}
+#navClock{font-family:'DM Mono',monospace;font-size:0.55rem;letter-spacing:0.1em;color:var(--dim);}
+
+/* HERO */
+.hero{padding:4rem 5% 3.5rem;position:relative;z-index:1;}
+.hero-eyebrow{font-family:'DM Mono',monospace;font-size:0.6rem;letter-spacing:0.25em;color:var(--blue);margin-bottom:1rem;display:flex;align-items:center;gap:0.8rem;}
+.hero-eyebrow::before{content:'';width:20px;height:1px;background:var(--blue);}
+h1.hero-title{font-family:'Bebas Neue',sans-serif;font-size:clamp(3.5rem,9vw,6.5rem);letter-spacing:0.04em;line-height:0.92;margin-bottom:1.2rem;}
+h1.hero-title span{color:var(--blue);}
+.hero-sub{font-size:0.95rem;color:var(--muted);max-width:560px;line-height:1.9;margin-bottom:2.5rem;}
+
+/* STAT TILES */
+.stat-tiles{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--edge);border:1px solid var(--edge);max-width:860px;margin-bottom:2.5rem;}
+.stat-tile{background:var(--panel);padding:1.2rem 1.4rem;}
+.st-val{font-family:'Bebas Neue',sans-serif;font-size:2rem;letter-spacing:0.04em;color:var(--white);display:block;line-height:1;}
+.st-val.blue{color:var(--blue);}
+.st-val.green{color:var(--green);}
+.st-val.amber{color:var(--amber);}
+.st-label{font-family:'DM Mono',monospace;font-size:0.5rem;letter-spacing:0.15em;color:var(--dim);display:block;margin-top:0.3rem;text-transform:uppercase;}
+
+/* QUICK ACTIONS */
+.quick-actions{display:flex;flex-wrap:wrap;gap:0.7rem;margin-bottom:0;}
+.qa-btn{font-family:'DM Mono',monospace;font-size:0.62rem;letter-spacing:0.12em;text-transform:uppercase;padding:0.65rem 1.3rem;text-decoration:none;border:1px solid;transition:all 0.2s;display:inline-flex;align-items:center;gap:0.5rem;}
+.qa-primary{background:var(--blue);border-color:var(--blue);color:var(--white);}
+.qa-primary:hover{background:var(--blue2);border-color:var(--blue2);}
+.qa-secondary{background:transparent;border-color:var(--edge2);color:var(--muted);}
+.qa-secondary:hover{border-color:var(--blue);color:var(--white);}
+.qa-green{background:rgba(0,255,136,0.06);border-color:rgba(0,255,136,0.25);color:var(--green);}
+.qa-green:hover{background:rgba(0,255,136,0.1);border-color:rgba(0,255,136,0.5);}
+
+/* SECTION SHARED */
+.section{padding:3.5rem 5%;position:relative;z-index:1;}
+.section-alt{background:rgba(10,10,10,0.7);}
+.section-header{margin-bottom:2rem;}
+.sec-eyebrow{font-family:'DM Mono',monospace;font-size:0.55rem;letter-spacing:0.22em;color:var(--blue);margin-bottom:0.5rem;text-transform:uppercase;}
+.sec-title{font-family:'Bebas Neue',sans-serif;font-size:clamp(1.8rem,4vw,2.8rem);letter-spacing:0.04em;color:var(--white);margin-bottom:0.4rem;}
+.sec-sub{font-size:0.9rem;color:var(--muted);line-height:1.8;max-width:600px;}
+
+/* REVENUE PATH */
+.path-flow{overflow-x:auto;padding-bottom:0.5rem;}
+.path-steps{display:flex;gap:0;min-width:900px;}
+.path-step{flex:1;border-right:1px solid var(--edge);position:relative;text-decoration:none;display:block;transition:background 0.2s;}
+.path-step:last-child{border-right:none;}
+.path-step:hover{background:rgba(0,102,255,0.04);}
+.path-step.live{background:rgba(0,102,255,0.03);}
+.path-step.pending{background:rgba(245,158,11,0.02);}
+.path-step.todo{opacity:0.55;}
+.ps-inner{padding:1rem 0.9rem;}
+.ps-num{font-family:'DM Mono',monospace;font-size:0.48rem;letter-spacing:0.15em;color:var(--dim);margin-bottom:0.3rem;}
+.ps-name{font-family:'Bebas Neue',sans-serif;font-size:0.85rem;letter-spacing:0.06em;color:var(--white);margin-bottom:0.2rem;line-height:1;}
+.ps-file{font-family:'DM Mono',monospace;font-size:0.46rem;letter-spacing:0.06em;color:var(--blue);margin-bottom:0.4rem;}
+.ps-badge{display:inline-block;font-family:'DM Mono',monospace;font-size:0.42rem;letter-spacing:0.1em;padding:0.15rem 0.4rem;border:1px solid;}
+.ps-badge.live{color:var(--green);border-color:rgba(0,255,136,0.3);background:rgba(0,255,136,0.06);}
+.ps-badge.pending{color:var(--amber);border-color:rgba(245,158,11,0.3);background:rgba(245,158,11,0.06);}
+.ps-badge.todo{color:var(--dim);border-color:var(--edge);background:transparent;}
+.path-arrow{display:flex;align-items:center;justify-content:center;padding:0 0.4rem;color:rgba(0,102,255,0.3);font-size:0.65rem;flex-shrink:0;align-self:stretch;}
+
+/* PAGE CARDS */
+.cards-4{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;}
+.cards-3{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;}
+.cards-2{display:grid;grid-template-columns:repeat(2,1fr);gap:1rem;}
+
+.page-card{
+  background:var(--panel);border:1px solid var(--edge);
+  padding:1.4rem;text-decoration:none;display:flex;flex-direction:column;gap:0.7rem;
+  transition:all 0.25s;position:relative;overflow:hidden;
+}
+.page-card::before,.page-card::after{content:'';position:absolute;width:6px;height:6px;border-color:var(--blue);border-style:solid;opacity:0;transition:opacity 0.25s;}
+.page-card::before{top:-1px;left:-1px;border-width:1px 0 0 1px;}
+.page-card::after{bottom:-1px;right:-1px;border-width:0 1px 1px 0;}
+.page-card:hover{border-color:rgba(0,102,255,0.3);background:rgba(0,102,255,0.04);}
+.page-card:hover::before,.page-card:hover::after{opacity:1;}
+.page-card.dimmed{opacity:0.5;}
+.page-card.dimmed:hover{opacity:0.8;}
+.pc-badge{font-family:'DM Mono',monospace;font-size:0.48rem;letter-spacing:0.12em;padding:0.15rem 0.5rem;border:1px solid;display:inline-block;align-self:flex-start;}
+.pc-badge.live{color:var(--green);border-color:rgba(0,255,136,0.3);background:rgba(0,255,136,0.06);}
+.pc-badge.next{color:var(--amber);border-color:rgba(245,158,11,0.3);background:rgba(245,158,11,0.06);}
+.pc-badge.todo{color:var(--dim);border-color:var(--edge);}
+.pc-badge.funnel{color:var(--blue);border-color:rgba(0,102,255,0.3);background:rgba(0,102,255,0.06);}
+.pc-badge.legal{color:var(--muted);border-color:var(--edge2);}
+.pc-title{font-family:'Bebas Neue',sans-serif;font-size:1.05rem;letter-spacing:0.05em;color:var(--white);}
+.pc-desc{font-size:0.8rem;color:var(--muted);line-height:1.7;flex:1;}
+.pc-file{font-family:'DM Mono',monospace;font-size:0.5rem;letter-spacing:0.08em;color:var(--blue);margin-top:auto;}
+
+/* BUILD BLOCKERS */
+.blocker-list{display:flex;flex-direction:column;gap:0.5rem;max-width:860px;}
+.blocker-item{display:flex;align-items:flex-start;gap:1rem;padding:1.1rem 1.3rem;background:var(--panel2);border:1px solid var(--edge);transition:border-color 0.2s;}
+.blocker-item:hover{border-color:var(--edge2);}
+.blocker-item.resolved{opacity:0.45;}
+.bi-num{font-family:'DM Mono',monospace;font-size:0.6rem;font-weight:500;width:28px;height:28px;border:1px solid;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;}
+.bi-num.critical{color:var(--red);border-color:rgba(239,68,68,0.3);}
+.bi-num.done{color:var(--green);border-color:rgba(0,255,136,0.3);}
+.bi-num.next{color:var(--amber);border-color:rgba(245,158,11,0.3);}
+.bi-body{flex:1;}
+.bi-title{font-size:0.92rem;font-weight:600;color:var(--white);margin-bottom:0.2rem;}
+.bi-detail{font-size:0.8rem;color:var(--muted);line-height:1.7;}
+.bi-detail code{font-family:'DM Mono',monospace;font-size:0.75rem;color:var(--blue);background:rgba(0,102,255,0.08);padding:0.1rem 0.3rem;}
+.bi-tag{font-family:'DM Mono',monospace;font-size:0.5rem;letter-spacing:0.12em;padding:0.2rem 0.5rem;border:1px solid;flex-shrink:0;align-self:flex-start;margin-top:2px;}
+.bi-tag.critical{color:var(--red);border-color:rgba(239,68,68,0.3);}
+.bi-tag.done{color:var(--green);border-color:rgba(0,255,136,0.3);}
+.bi-tag.next{color:var(--amber);border-color:rgba(245,158,11,0.3);}
+
+/* COMMISSION CHEAT SHEET */
+.comm-sheet{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--edge);border:1px solid var(--edge);max-width:860px;}
+.cs-tier{background:var(--panel);padding:1.3rem;}
+.cs-tier-label{font-family:'DM Mono',monospace;font-size:0.48rem;letter-spacing:0.15em;color:var(--dim);margin-bottom:0.5rem;text-transform:uppercase;}
+.cs-tier-name{font-family:'Bebas Neue',sans-serif;font-size:1rem;letter-spacing:0.05em;color:var(--white);margin-bottom:0.8rem;line-height:1;}
+.cs-row{display:flex;justify-content:space-between;align-items:baseline;padding:0.25rem 0;border-bottom:1px solid var(--edge);}
+.cs-row:last-child{border-bottom:none;}
+.cs-key{font-family:'DM Mono',monospace;font-size:0.5rem;letter-spacing:0.08em;color:var(--dim);}
+.cs-val{font-family:'DM Mono',monospace;font-size:0.6rem;font-weight:500;}
+.cs-val.green{color:var(--green);}
+.cs-val.amber{color:var(--amber);}
+.cs-val.blue{color:var(--blue);}
+.cs-val.white{color:var(--white);}
+
+/* SPONSOR IDS */
+.sponsor-block{background:rgba(0,255,136,0.03);border:1px solid rgba(0,255,136,0.2);padding:1.5rem;max-width:860px;position:relative;}
+.sponsor-block::before{content:'';position:absolute;top:-1px;left:-1px;width:8px;height:8px;border-top:1px solid var(--green);border-left:1px solid var(--green);}
+.sb-label{font-family:'DM Mono',monospace;font-size:0.52rem;letter-spacing:0.2em;color:var(--green);margin-bottom:1rem;}
+.sb-ids{display:flex;gap:2rem;flex-wrap:wrap;}
+.sb-id-item{display:flex;flex-direction:column;gap:0.3rem;}
+.sb-id-key{font-family:'DM Mono',monospace;font-size:0.5rem;letter-spacing:0.12em;color:var(--dim);}
+.sb-id-val{font-family:'Bebas Neue',sans-serif;font-size:1.8rem;letter-spacing:0.08em;color:var(--green);}
+.sb-warn{font-family:'DM Mono',monospace;font-size:0.52rem;letter-spacing:0.06em;color:rgba(245,158,11,0.7);margin-top:1rem;line-height:1.7;}
+
+/* ENAGIC CONTACT */
+.contact-row{display:flex;gap:1rem;flex-wrap:wrap;max-width:860px;}
+.contact-item{background:var(--panel);border:1px solid var(--edge);padding:1rem 1.3rem;flex:1;min-width:180px;}
+.ci-label{font-family:'DM Mono',monospace;font-size:0.5rem;letter-spacing:0.15em;color:var(--blue);margin-bottom:0.3rem;}
+.ci-val{font-size:0.88rem;color:var(--white);font-weight:500;}
+
+/* BUILD STATUS LIST */
+.build-list{display:flex;flex-direction:column;gap:0.4rem;max-width:860px;}
+.bl-item{display:flex;align-items:center;gap:0.8rem;padding:0.85rem 1rem;background:var(--panel);border:1px solid var(--edge);}
+.bl-icon{width:22px;height:22px;display:flex;align-items:center;justify-content:center;font-family:'DM Mono',monospace;font-size:0.6rem;flex-shrink:0;border:1px solid;}
+.bl-icon.done{color:var(--green);border-color:rgba(0,255,136,0.3);background:rgba(0,255,136,0.06);}
+.bl-icon.next{color:var(--amber);border-color:rgba(245,158,11,0.3);background:rgba(245,158,11,0.05);}
+.bl-icon.todo{color:var(--dim);border-color:var(--edge);}
+.bl-text{font-size:0.85rem;color:var(--muted);flex:1;}
+.bl-text strong{color:var(--white);}
+.bl-phase{font-family:'DM Mono',monospace;font-size:0.48rem;letter-spacing:0.1em;color:var(--dim);flex-shrink:0;}
+
+/* PHASE DIVIDER */
+.phase-label{font-family:'DM Mono',monospace;font-size:0.52rem;letter-spacing:0.2em;color:var(--dim);padding:0.5rem 0 0.3rem;text-transform:uppercase;}
+
+/* INCOME DISCLOSURE STRIP */
+.disclosure-strip{background:var(--surface);border-top:1px solid var(--edge);padding:1.5rem 5%;position:relative;z-index:1;}
+.disclosure-inner{max-width:900px;margin:0 auto;display:flex;align-items:flex-start;gap:1.5rem;flex-wrap:wrap;}
+.disclosure-tag{font-family:'DM Mono',monospace;font-size:0.48rem;letter-spacing:0.18em;color:rgba(0,255,136,0.5);flex-shrink:0;padding-top:2px;white-space:nowrap;}
+.disclosure-text{font-family:'DM Mono',monospace;font-size:0.52rem;letter-spacing:0.03em;color:var(--dim);line-height:1.9;flex:1;}
+
+/* FOOTER */
+footer{padding:1.8rem 5%;border-top:1px solid var(--edge);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem;position:relative;z-index:1;}
+.footer-brand{font-family:'Bebas Neue',sans-serif;font-size:1rem;letter-spacing:0.12em;}
+.footer-brand span{color:var(--blue);}
+.footer-links{display:flex;gap:1.5rem;flex-wrap:wrap;}
+.footer-links a{font-family:'DM Mono',monospace;font-size:0.5rem;letter-spacing:0.1em;color:var(--dim);text-decoration:none;transition:color 0.2s;}
+.footer-links a:hover{color:var(--blue);}
+.footer-copy{font-family:'DM Mono',monospace;font-size:0.48rem;letter-spacing:0.08em;color:var(--dim);}
+
+/* SCROLL REVEAL */
+.reveal{opacity:0;transform:translateY(20px);transition:opacity 0.6s ease,transform 0.6s ease;}
+.reveal.visible{opacity:1;transform:translateY(0);}
+.rd1{transition-delay:0.08s;}.rd2{transition-delay:0.16s;}.rd3{transition-delay:0.24s;}.rd4{transition-delay:0.32s;}
+
+@media(max-width:960px){.cards-4{grid-template-columns:1fr 1fr;}.comm-sheet{grid-template-columns:1fr 1fr;}.stat-tiles{grid-template-columns:1fr 1fr;}}
+@media(max-width:640px){.cards-4,.cards-3,.cards-2,.comm-sheet,.stat-tiles{grid-template-columns:1fr;}.sb-ids{flex-direction:column;}.contact-row{flex-direction:column;}}
+</style>
+</head>
+<body>
+
+<!-- GATE -->
+<div id="gate">
+  <div class="gate-inner">
+    <div class="gate-logo">APEX<span>NETWORK</span></div>
+    <div class="gate-sub">// COMMAND CENTRE — RESTRICTED ACCESS</div>
+    <div class="gate-label">// ENTER ACCESS CODE</div>
+    <input class="gate-input" type="password" id="gateInput" placeholder="••••••••" maxlength="20" autocomplete="off">
+    <button class="gate-btn" onclick="checkGate()">ACCESS →</button>
+    <div class="gate-error" id="gateError">// INVALID CODE — TRY AGAIN</div>
+    <div class="gate-hint">Hint: your dog's name + the year. All caps.</div>
+  </div>
+</div>
+
+<nav>
+  <div class="nav-brand">
+    <svg class="nav-logo-mark" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <polygon points="16,2 30,28 2,28" fill="none" stroke="#0066ff" stroke-width="1.5"/>
+      <polygon points="16,8 26,26 6,26" fill="rgba(0,102,255,0.08)" stroke="rgba(0,102,255,0.3)" stroke-width="1"/>
+      <circle cx="16" cy="16" r="2" fill="#0066ff"/>
+    </svg>
+    <span class="nav-name">APEX<span>NETWORK</span></span>
+    <div class="nav-divider"></div>
+    <span class="nav-tag">COMMAND CENTRE</span>
+  </div>
+  <div class="nav-right">
+    <div class="nav-status">
+      <div class="status-dot"></div>
+      ALL SYSTEMS LIVE
+    </div>
+    <div id="navClock"></div>
+  </div>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-eyebrow">CHAIRMAN DASHBOARD</div>
+  <h1 class="hero-title">APEX<br><span>COMMAND</span><br>CENTRE</h1>
+  <p class="hero-sub">Every page. Every system. Every blocker. Every number. Your entire Apex Network operation in one place.</p>
+
+  <div class="stat-tiles reveal">
+    <div class="stat-tile">
+      <span class="st-val blue">11</span>
+      <span class="st-label">Live Pages</span>
+    </div>
+    <div class="stat-tile">
+      <span class="st-val green">LIVE</span>
+      <span class="st-label">Revenue Path</span>
+    </div>
+    <div class="stat-tile">
+      <span class="st-val amber">$10,309</span>
+      <span class="st-label">Monthly Target</span>
+    </div>
+    <div class="stat-tile">
+      <span class="st-val">$123k+</span>
+      <span class="st-label">Annual Projection</span>
+    </div>
+  </div>
+
+  <div class="quick-actions reveal rd1">
+    <a href="apex-index.html" class="qa-btn qa-primary">▶ LAUNCH FUNNEL</a>
+    <a href="apex-agent-os.html" class="qa-btn qa-secondary">⬡ AGENT OS</a>
+    <a href="apex-apply.html" class="qa-btn qa-secondary">◈ APPLICATION</a>
+    <a href="apex-join.html" class="qa-btn qa-secondary">+ REGISTER OPERATOR</a>
+    <a href="apex-tracker.html" class="qa-btn qa-secondary">▣ BUILD TRACKER</a>
+    <a href="mailto:info@enagic-australia.com" class="qa-btn qa-green">✉ ENAGIC AU</a>
+  </div>
+</div>
+
+<!-- REVENUE PATH -->
+<div class="section section-alt">
+  <div class="section-header reveal">
+    <div class="sec-eyebrow">// END-TO-END</div>
+    <div class="sec-title">Revenue Path</div>
+    <div class="sec-sub">The complete 14-step operator pipeline — from cold video to commission in your account.</div>
+  </div>
+
+  <div class="path-flow reveal">
+    <div class="path-steps">
+      <a href="https://tiktok.com" target="_blank" class="path-step pending">
+        <div class="ps-inner">
+          <div class="ps-num">01</div>
+          <div class="ps-name">VIDEO</div>
+          <div class="ps-file">TikTok / Instagram</div>
+          <div class="ps-badge pending">PENDING</div>
+        </div>
+      </a>
+      <a href="apex-index.html" class="path-step live">
+        <div class="ps-inner">
+          <div class="ps-num">02</div>
+          <div class="ps-name">OPT-IN</div>
+          <div class="ps-file">apex-index.html</div>
+          <div class="ps-badge live">LIVE</div>
+        </div>
+      </a>
+      <a href="#" class="path-step pending">
+        <div class="ps-inner">
+          <div class="ps-num">03</div>
+          <div class="ps-name">AC TAG</div>
+          <div class="ps-file">SS-NEW → ActiveCampaign</div>
+          <div class="ps-badge pending">NEEDS SETUP</div>
+        </div>
+      </a>
+      <a href="apex-page2.html" class="path-step live">
+        <div class="ps-inner">
+          <div class="ps-num">04</div>
+          <div class="ps-name">PLATFORM STORY</div>
+          <div class="ps-file">apex-page2.html</div>
+          <div class="ps-badge live">LIVE</div>
+        </div>
+      </a>
+      <a href="#" class="path-step pending">
+        <div class="ps-inner">
+          <div class="ps-num">05</div>
+          <div class="ps-name">EMAIL SEQ</div>
+          <div class="ps-file">7-day AC automation</div>
+          <div class="ps-badge pending">NEEDS SETUP</div>
+        </div>
+      </a>
+      <a href="apex-apply.html" class="path-step live">
+        <div class="ps-inner">
+          <div class="ps-num">06</div>
+          <div class="ps-name">APPLICATION</div>
+          <div class="ps-file">apex-apply.html</div>
+          <div class="ps-badge live">LIVE</div>
+        </div>
+      </a>
+      <a href="#" class="path-step pending">
+        <div class="ps-inner">
+          <div class="ps-num">07</div>
+          <div class="ps-name">LEAD SCORE</div>
+          <div class="ps-file">apply.js → HOT/WARM/COLD</div>
+          <div class="ps-badge pending">NEEDS AC</div>
+        </div>
+      </a>
+      <a href="apex-offer.html" class="path-step live">
+        <div class="ps-inner">
+          <div class="ps-num">08</div>
+          <div class="ps-name">OFFER</div>
+          <div class="ps-file">apex-offer.html</div>
+          <div class="ps-badge live">LIVE</div>
+        </div>
+      </a>
+      <a href="apex-join.html" class="path-step live">
+        <div class="ps-inner">
+          <div class="ps-num">09</div>
+          <div class="ps-name">REGISTRATION</div>
+          <div class="ps-file">apex-join.html</div>
+          <div class="ps-badge live">LIVE</div>
+        </div>
+      </a>
+      <a href="mailto:info@enagic-australia.com" class="path-step todo">
+        <div class="ps-inner">
+          <div class="ps-num">10</div>
+          <div class="ps-name">ENAGIC AU</div>
+          <div class="ps-file">Manual submit by Isaac</div>
+          <div class="ps-badge todo">MANUAL</div>
+        </div>
+      </a>
+      <a href="#" class="path-step todo">
+        <div class="ps-inner">
+          <div class="ps-num">11</div>
+          <div class="ps-name">ENAGIC PROCESS</div>
+          <div class="ps-file">7–10 business days</div>
+          <div class="ps-badge todo">ENAGIC</div>
+        </div>
+      </a>
+      <a href="#" class="path-step todo">
+        <div class="ps-inner">
+          <div class="ps-num">12</div>
+          <div class="ps-name">COMMISSION</div>
+          <div class="ps-file">$365–$2,595 AUD</div>
+          <div class="ps-badge live">LIVE</div>
+        </div>
+      </a>
+      <a href="#" class="path-step todo">
+        <div class="ps-inner">
+          <div class="ps-num">13</div>
+          <div class="ps-name">ONBOARDING</div>
+          <div class="ps-file">30-day AC sequence</div>
+          <div class="ps-badge pending">NEEDS SETUP</div>
+        </div>
+      </a>
+      <a href="#" class="path-step todo">
+        <div class="ps-inner">
+          <div class="ps-num">14</div>
+          <div class="ps-name">OVERRIDE</div>
+          <div class="ps-file">Operator sales → Isaac $$$</div>
+          <div class="ps-badge todo">SCALES</div>
+        </div>
+      </a>
+    </div>
+  </div>
+</div>
+
+<!-- ALL PAGES -->
+<div class="section">
+  <div class="section-header reveal">
+    <div class="sec-eyebrow">// FUNNEL</div>
+    <div class="sec-title">Live Funnel Pages</div>
+  </div>
+  <div class="cards-4 reveal">
+    <a href="apex-index.html" class="page-card">
+      <div class="pc-badge funnel">FUNNEL — STEP 1</div>
+      <div class="pc-badge live">LIVE</div>
+      <div class="pc-title">Front Door Opt-In</div>
+      <div class="pc-desc">Cold traffic landing. Ticker, contrast grid, commission tiers. Name + email → subscribe.js → SS-NEW.</div>
+      <div class="pc-file">apex-index.html →</div>
+    </a>
+    <a href="apex-page2.html" class="page-card">
+      <div class="pc-badge funnel">FUNNEL — STEP 2</div>
+      <div class="pc-badge live">LIVE</div>
+      <div class="pc-title">Platform Story</div>
+      <div class="pc-desc">Franchise comparison. McDonald's vs Apex. 8 system components. Data breakdown → apex-apply.</div>
+      <div class="pc-file">apex-page2.html →</div>
+    </a>
+    <a href="apex-apply.html" class="page-card">
+      <div class="pc-badge funnel">FUNNEL — STEP 3</div>
+      <div class="pc-badge live">LIVE</div>
+      <div class="pc-title">Operator Application</div>
+      <div class="pc-desc">7-question profile. HOT/WARM/COLD auto-scoring. Submits → apply.js → tags applied → apex-offer.</div>
+      <div class="pc-file">apex-apply.html →</div>
+    </a>
+    <a href="apex-offer.html" class="page-card">
+      <div class="pc-badge funnel">FUNNEL — STEP 4</div>
+      <div class="pc-badge live">LIVE</div>
+      <div class="pc-title">Tier Selection</div>
+      <div class="pc-desc">Full Enagic disclosure. 3 tier cards with real AUD prices. Income math. CTA → apex-join.</div>
+      <div class="pc-file">apex-offer.html →</div>
+    </a>
+  </div>
+  <div class="cards-2 reveal" style="margin-top:1rem;">
+    <a href="apex-join.html" class="page-card">
+      <div class="pc-badge funnel">FUNNEL — STEP 5</div>
+      <div class="pc-badge live">LIVE</div>
+      <div class="pc-title">Registration Wizard</div>
+      <div class="pc-desc">5-step wizard. Package → Payment → Details → Documents → Confirm. All 4 tiers. Sponsor IDs hardcoded. Submits to apply.js with SS-CONVERTED.</div>
+      <div class="pc-file">apex-join.html →</div>
+    </a>
+    <a href="apex-hub.html" class="page-card">
+      <div class="pc-badge funnel">OPERATOR HUB</div>
+      <div class="pc-badge live">LIVE — YOU ARE HERE</div>
+      <div class="pc-title">Command Centre</div>
+      <div class="pc-desc">Private operator hub. All pages, pipeline status, build blockers, commission cheat sheet, Enagic contact, quick actions. Passcode gated.</div>
+      <div class="pc-file">apex-hub.html →</div>
+    </a>
+  </div>
+</div>
+
+<div class="section section-alt">
+  <div class="section-header reveal">
+    <div class="sec-eyebrow">// LEGAL</div>
+    <div class="sec-title">Legal Pages</div>
+  </div>
+  <div class="cards-3 reveal">
+    <a href="apex-terms.html" class="page-card">
+      <div class="pc-badge legal">LEGAL</div>
+      <div class="pc-badge live">LIVE</div>
+      <div class="pc-title">Terms of Service</div>
+      <div class="pc-desc">11 sections. Independent distributor network structure. Operator conduct rules. No health claims policy. QLD governing law.</div>
+      <div class="pc-file">apex-terms.html →</div>
+    </a>
+    <a href="apex-privacy.html" class="page-card">
+      <div class="pc-badge legal">LEGAL</div>
+      <div class="pc-badge live">LIVE</div>
+      <div class="pc-title">Privacy Policy</div>
+      <div class="pc-desc">Australian Privacy Act 1988 compliant. Third party table: Enagic AU / AC / Netlify. Full rights matrix with OAIC reference.</div>
+      <div class="pc-file">apex-privacy.html →</div>
+    </a>
+    <a href="apex-disclosure.html" class="page-card">
+      <div class="pc-badge legal">LEGAL</div>
+      <div class="pc-badge live">LIVE</div>
+      <div class="pc-title">Income Disclosure</div>
+      <div class="pc-desc">Full commission table all 4 tiers. Break-even analysis. Month 1 realistic ($0 typical). Network math deconstruction. Full legal disclaimer block.</div>
+      <div class="pc-file">apex-disclosure.html →</div>
+    </a>
+  </div>
+</div>
+
+<div class="section">
+  <div class="section-header reveal">
+    <div class="sec-eyebrow">// TOOLS — BUILD NEXT</div>
+    <div class="sec-title">Operator Tools</div>
+  </div>
+  <div class="cards-3 reveal">
+    <a href="apex-agent-os.html" class="page-card dimmed">
+      <div class="pc-badge next">BUILD NEXT</div>
+      <div class="pc-title">Agent OS</div>
+      <div class="pc-desc">AI business agent. 8 modules: Morning Briefing, Master Agent, Pipeline, Traffic, Conversion, Ops, Growth, Script Generator. Claude-powered.</div>
+      <div class="pc-file">apex-agent-os.html → NOT YET BUILT</div>
+    </a>
+    <a href="apex-tracker.html" class="page-card dimmed">
+      <div class="pc-badge next">BUILD NEXT</div>
+      <div class="pc-title">Build Tracker</div>
+      <div class="pc-desc">Phase-by-phase progress tracker. Apex Network branded. All tasks, blockers, and completion status in one visual dashboard.</div>
+      <div class="pc-file">apex-tracker.html → NOT YET BUILT</div>
+    </a>
+    <a href="agent-os.html" class="page-card">
+      <div class="pc-badge todo">LEGACY SS</div>
+      <div class="pc-badge live">LIVE</div>
+      <div class="pc-title">SS Agent OS</div>
+      <div class="pc-desc">Original Silent Syndicate AI agent. Still functional. Use until apex-agent-os.html is built. 8 modules, Claude-powered.</div>
+      <div class="pc-file">agent-os.html →</div>
+    </a>
+  </div>
+</div>
+
+<!-- CRITICAL BLOCKERS -->
+<div class="section section-alt">
+  <div class="section-header reveal">
+    <div class="sec-eyebrow">// ACTION REQUIRED</div>
+    <div class="sec-title">Critical Blockers</div>
+    <div class="sec-sub">These must be resolved before the revenue path is fully automated. Everything else is built.</div>
+  </div>
+
+  <div class="blocker-list">
+    <div class="blocker-item reveal">
+      <div class="bi-num critical">1</div>
+      <div class="bi-body">
+        <div class="bi-title">ActiveCampaign environment variables — blocks ALL lead capture</div>
+        <div class="bi-detail">Go to <strong>app.netlify.com → silent-syndicate → Site configuration → Environment variables</strong>. Add:<br>
+        <code>AC_BASE_URL</code> = <code>https://silentsyndicatebiz52734.api-us1.com</code><br>
+        <code>AC_API_KEY</code> = from AC Settings → Developer → copy API key<br>
+        <code>OWNER_EMAIL</code> = your email address<br>
+        Then: Deploys → Trigger deploy → Deploy site.</div>
+      </div>
+      <div class="bi-tag critical">CRITICAL</div>
+    </div>
+    <div class="blocker-item reveal rd1">
+      <div class="bi-num critical">2</div>
+      <div class="bi-body">
+        <div class="bi-title">AC tags not created — blocks all lead tagging and automation</div>
+        <div class="bi-detail">Go to <strong>ActiveCampaign → Lists → Tags → Create tag</strong> for each:<br>
+        <code>SS-NEW</code> &nbsp; <code>SS-WARM</code> &nbsp; <code>SS-HOT</code> &nbsp; <code>SS-APPLIED</code> &nbsp; <code>SS-CONVERTED</code> &nbsp; <code>SS-DISTRIBUTOR</code></div>
+      </div>
+      <div class="bi-tag critical">CRITICAL</div>
+    </div>
+    <div class="blocker-item reveal rd2">
+      <div class="bi-num next">3</div>
+      <div class="bi-body">
+        <div class="bi-title">7-day email sequence not loaded into AC — blocks lead nurture</div>
+        <div class="bi-detail">Open <code>email-sequence.html</code> in browser. Copy each of the 7 emails into an AC automation named <strong>"Apex Welcome Sequence"</strong>. Trigger: SS-NEW tag applied. Day 0 → Day 1 → Day 2 → Day 3 → Day 4 → Day 5 → Day 7.</div>
+      </div>
+      <div class="bi-tag next">HIGH PRIORITY</div>
+    </div>
+    <div class="blocker-item reveal">
+      <div class="bi-num next">4</div>
+      <div class="bi-body">
+        <div class="bi-title">HeyGen not set up — blocks all content and traffic</div>
+        <div class="bi-detail">Go to <strong>heygen.com</strong> → Creator plan $29 USD/month. Upload headshot photo → create AI avatar → generate first video. Use the script in the master context doc. Post to TikTok and Instagram immediately.</div>
+      </div>
+      <div class="bi-tag next">HIGH PRIORITY</div>
+    </div>
+    <div class="blocker-item reveal rd1">
+      <div class="bi-num next">5</div>
+      <div class="bi-body">
+        <div class="bi-title">TikTok + Instagram accounts not live — blocks all organic traffic</div>
+        <div class="bi-detail">Create TikTok business account + Instagram business account. Both bio links: <code>silent-syndicate.netlify.app</code> (until <code>apexnetwork.com.au</code> is purchased). Posting schedule: TikTok 7pm AEST / Instagram 6pm AEST daily.</div>
+      </div>
+      <div class="bi-tag next">HIGH PRIORITY</div>
+    </div>
+  </div>
+</div>
+
+<!-- COMMISSION CHEAT SHEET -->
+<div class="section">
+  <div class="section-header reveal">
+    <div class="sec-eyebrow">// QUICK REFERENCE</div>
+    <div class="sec-title">Commission Cheat Sheet</div>
+    <div class="sec-sub">All four tiers. Real AUD numbers. Memorise these.</div>
+  </div>
+
+  <div class="comm-sheet reveal">
+    <div class="cs-tier">
+      <div class="cs-tier-label">// TIER 1</div>
+      <div class="cs-tier-name">OPERATOR ENTRY<br>K8 SINGLE</div>
+      <div class="cs-row"><span class="cs-key">Investment</span><span class="cs-val white">$6,787</span></div>
+      <div class="cs-row"><span class="cs-key">Rank</span><span class="cs-val white">1A</span></div>
+      <div class="cs-row"><span class="cs-key">Commission/sale</span><span class="cs-val amber">~$365</span></div>
+      <div class="cs-row"><span class="cs-key">Break-even</span><span class="cs-val amber">~19 sales</span></div>
+      <div class="cs-row"><span class="cs-key">Sponsor ID</span><span class="cs-val blue">29000059770</span></div>
+    </div>
+    <div class="cs-tier">
+      <div class="cs-tier-label">// TIER 2</div>
+      <div class="cs-tier-name">OPERATOR PRO<br>TRIFECTA</div>
+      <div class="cs-row"><span class="cs-key">Investment</span><span class="cs-val white">~$11,682</span></div>
+      <div class="cs-row"><span class="cs-key">Rank</span><span class="cs-val white">2A</span></div>
+      <div class="cs-row"><span class="cs-key">Commission/sale</span><span class="cs-val green">~$1,322</span></div>
+      <div class="cs-row"><span class="cs-key">Break-even</span><span class="cs-val green">~9 sales</span></div>
+      <div class="cs-row"><span class="cs-key">Sponsor ID</span><span class="cs-val blue">29000059770</span></div>
+    </div>
+    <div class="cs-tier">
+      <div class="cs-tier-label">// TIER 3</div>
+      <div class="cs-tier-name">OPERATOR ELITE<br>QUAD</div>
+      <div class="cs-row"><span class="cs-key">Investment</span><span class="cs-val white">~$18,469</span></div>
+      <div class="cs-row"><span class="cs-key">Rank</span><span class="cs-val white">3A</span></div>
+      <div class="cs-row"><span class="cs-key">Commission/sale</span><span class="cs-val green">~$2,595</span></div>
+      <div class="cs-row"><span class="cs-key">Break-even</span><span class="cs-val green">~7 sales</span></div>
+      <div class="cs-row"><span class="cs-key">Sponsor ID</span><span class="cs-val blue">29000059770</span></div>
+    </div>
+    <div class="cs-tier">
+      <div class="cs-tier-label">// TIER 4</div>
+      <div class="cs-tier-name">ENTRY OPTION<br>emGUARDE</div>
+      <div class="cs-row"><span class="cs-key">Investment</span><span class="cs-val white">$2,475</span></div>
+      <div class="cs-row"><span class="cs-key">Rank</span><span class="cs-val white">1A</span></div>
+      <div class="cs-row"><span class="cs-key">Commission/sale</span><span class="cs-val amber">~$225</span></div>
+      <div class="cs-row"><span class="cs-key">Break-even</span><span class="cs-val amber">~11 sales</span></div>
+      <div class="cs-row"><span class="cs-key">Sponsor ID</span><span class="cs-val blue">29000059769</span></div>
+    </div>
+  </div>
+
+  <div class="sponsor-block reveal" style="margin-top:1.5rem;">
+    <div class="sb-label">// SPONSOR IDS — HARDCODED. NEVER CHANGE. VERIFY BEFORE EVERY SUBMISSION.</div>
+    <div class="sb-ids">
+      <div class="sb-id-item">
+        <div class="sb-id-key">K8 / TRIFECTA / QUAD</div>
+        <div class="sb-id-val">29000059770</div>
+      </div>
+      <div class="sb-id-item">
+        <div class="sb-id-key">emGUARDE — POSITION 1</div>
+        <div class="sb-id-val">29000059769</div>
+      </div>
+      <div class="sb-id-item">
+        <div class="sb-id-key">emGUARDE — POSITION 2</div>
+        <div class="sb-id-val">29000059768</div>
+      </div>
+    </div>
+    <div class="sb-warn">⚠ Sponsor ID placement cannot be changed after Enagic processes the order. Check every registration before submitting.</div>
+  </div>
+</div>
+
+<!-- ENAGIC CONTACT + NETWORK MATH -->
+<div class="section section-alt">
+  <div class="section-header reveal">
+    <div class="sec-eyebrow">// OPERATIONS</div>
+    <div class="sec-title">Enagic AU + Network Math</div>
+  </div>
+
+  <div class="contact-row reveal">
+    <div class="contact-item">
+      <div class="ci-label">// ENAGIC AU EMAIL</div>
+      <div class="ci-val"><a href="mailto:info@enagic-australia.com" style="color:var(--blue);text-decoration:none;">info@enagic-australia.com</a></div>
+    </div>
+    <div class="contact-item">
+      <div class="ci-label">// ENAGIC AU PHONE</div>
+      <div class="ci-val">+61 2 9878 1200</div>
+    </div>
+    <div class="contact-item">
+      <div class="ci-label">// BUSINESS HOURS</div>
+      <div class="ci-val">Mon–Fri 9am–5pm AEST</div>
+    </div>
+    <div class="contact-item">
+      <div class="ci-label">// PROCESSING TIME</div>
+      <div class="ci-val">7–10 business days</div>
+    </div>
+    <div class="contact-item">
+      <div class="ci-label">// COMMISSION PAYMENT</div>
+      <div class="ci-val">~10 days after approval</div>
+    </div>
+  </div>
+
+  <div class="comm-sheet reveal" style="margin-top:1.5rem;grid-template-columns:repeat(4,1fr);">
+    <div class="cs-tier">
+      <div class="cs-tier-label">// CHAIRMAN DIRECT (2/mo)</div>
+      <div class="cs-tier-name">DIRECT COMM</div>
+      <div class="cs-row"><span class="cs-key">Monthly</span><span class="cs-val green">~$2,644</span></div>
+      <div class="cs-row"><span class="cs-key">Annual</span><span class="cs-val green">~$31,728</span></div>
+    </div>
+    <div class="cs-tier">
+      <div class="cs-tier-label">// OVERRIDE (7 ops × 3 sales)</div>
+      <div class="cs-tier-name">OVERRIDE INCOME</div>
+      <div class="cs-row"><span class="cs-key">Monthly</span><span class="cs-val green">~$7,665</span></div>
+      <div class="cs-row"><span class="cs-key">Annual</span><span class="cs-val green">~$91,980</span></div>
+    </div>
+    <div class="cs-tier">
+      <div class="cs-tier-label">// CONSERVATIVE TOTAL</div>
+      <div class="cs-tier-name">7-OP NETWORK</div>
+      <div class="cs-row"><span class="cs-key">Monthly</span><span class="cs-val green">~$10,309</span></div>
+      <div class="cs-row"><span class="cs-key">Annual</span><span class="cs-val green">~$123,708</span></div>
+    </div>
+    <div class="cs-tier">
+      <div class="cs-tier-label">// WITH TIER 2 SUB-NETWORK</div>
+      <div class="cs-tier-name">SCALED NETWORK</div>
+      <div class="cs-row"><span class="cs-key">Monthly</span><span class="cs-val green">~$21,649</span></div>
+      <div class="cs-row"><span class="cs-key">Annual</span><span class="cs-val green">~$260k</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- FULL BUILD STATUS -->
+<div class="section">
+  <div class="section-header reveal">
+    <div class="sec-eyebrow">// PROGRESS</div>
+    <div class="sec-title">Full Build Status</div>
+  </div>
+
+  <div class="build-list">
+    <div class="phase-label">// PHASE 1 — FUNNEL (COMPLETE)</div>
+    <div class="bl-item reveal"><div class="bl-icon done">✓</div><div class="bl-text"><strong>apex-index.html</strong> — Front door opt-in, design system, subscribe.js</div><div class="bl-phase">LIVE</div></div>
+    <div class="bl-item reveal rd1"><div class="bl-icon done">✓</div><div class="bl-text"><strong>apex-page2.html</strong> — Platform story, franchise comparison</div><div class="bl-phase">LIVE</div></div>
+    <div class="bl-item reveal rd2"><div class="bl-icon done">✓</div><div class="bl-text"><strong>apex-apply.html</strong> — 7-question application, HOT/WARM/COLD scoring</div><div class="bl-phase">LIVE</div></div>
+    <div class="bl-item reveal rd3"><div class="bl-icon done">✓</div><div class="bl-text"><strong>apex-offer.html</strong> — 3-tier cards, income math, real AUD numbers</div><div class="bl-phase">LIVE</div></div>
+    <div class="bl-item reveal"><div class="bl-icon done">✓</div><div class="bl-text"><strong>apex-join.html</strong> — 5-step registration wizard, all sponsor IDs, Enagic docs logic</div><div class="bl-phase">LIVE</div></div>
+
+    <div class="phase-label" style="margin-top:0.8rem;">// PHASE 1 — LEGAL (COMPLETE)</div>
+    <div class="bl-item reveal"><div class="bl-icon done">✓</div><div class="bl-text"><strong>apex-terms.html</strong> — Terms of Service, 11 sections, QLD law</div><div class="bl-phase">LIVE</div></div>
+    <div class="bl-item reveal rd1"><div class="bl-icon done">✓</div><div class="bl-text"><strong>apex-privacy.html</strong> — Privacy Policy, Australian Privacy Act 1988</div><div class="bl-phase">LIVE</div></div>
+    <div class="bl-item reveal rd2"><div class="bl-icon done">✓</div><div class="bl-text"><strong>apex-disclosure.html</strong> — Income Disclosure, full commission table, break-even</div><div class="bl-phase">LIVE</div></div>
+    <div class="bl-item reveal rd3"><div class="bl-icon done">✓</div><div class="bl-text"><strong>apex-hub.html</strong> — Command centre, all pages, pipeline, blockers (you are here)</div><div class="bl-phase">LIVE</div></div>
+
+    <div class="phase-label" style="margin-top:0.8rem;">// PHASE 1 — TOOLS (IN PROGRESS)</div>
+    <div class="bl-item reveal"><div class="bl-icon next">→</div><div class="bl-text"><strong>apex-agent-os.html</strong> — AI business agent, 8 modules, Apex branding, Claude-powered</div><div class="bl-phase">BUILD NEXT</div></div>
+    <div class="bl-item reveal rd1"><div class="bl-icon next">→</div><div class="bl-text"><strong>apex-tracker.html</strong> — Build progress tracker, Apex branded</div><div class="bl-phase">BUILD NEXT</div></div>
+    <div class="bl-item reveal rd2"><div class="bl-icon next">→</div><div class="bl-text"><strong>Email sequences</strong> — Update email-sequence.html + onboarding emails to Apex framing, load into AC</div><div class="bl-phase">BUILD NEXT</div></div>
+
+    <div class="phase-label" style="margin-top:0.8rem;">// PHASE 2 — AUTOMATION</div>
+    <div class="bl-item reveal"><div class="bl-icon todo">○</div><div class="bl-text"><strong>n8n on Railway</strong> — Autonomous agent system, morning briefing, HOT lead alerts (~$5/month)</div><div class="bl-phase">PHASE 2</div></div>
+    <div class="bl-item reveal rd1"><div class="bl-icon todo">○</div><div class="bl-text"><strong>Bland.ai voice agent</strong> — HOT lead follow-up call automation</div><div class="bl-phase">PHASE 2</div></div>
+    <div class="bl-item reveal rd2"><div class="bl-icon todo">○</div><div class="bl-text"><strong>Self-improving content loop</strong> — Performance data → new scripts auto-generated</div><div class="bl-phase">PHASE 2</div></div>
+    <div class="bl-item reveal rd3"><div class="bl-icon todo">○</div><div class="bl-text"><strong>Custom domain</strong> — apexnetwork.com.au or theapexnetwork.com.au</div><div class="bl-phase">PHASE 2</div></div>
+    <div class="bl-item reveal"><div class="bl-icon todo">○</div><div class="bl-text"><strong>Operator leaderboard</strong> — Network performance dashboard</div><div class="bl-phase">PHASE 3</div></div>
+    <div class="bl-item reveal rd1"><div class="bl-icon todo">○</div><div class="bl-text"><strong>Telegram community</strong> — Private operator network</div><div class="bl-phase">PHASE 3</div></div>
+    <div class="bl-item reveal rd2"><div class="bl-icon todo">○</div><div class="bl-text"><strong>Product Two</strong> — Second commission product, platform-agnostic slot</div><div class="bl-phase">PHASE 3</div></div>
+  </div>
+</div>
+
+<div class="disclosure-strip">
+  <div class="disclosure-inner">
+    <div class="disclosure-tag">// INCOME DISCLOSURE</div>
+    <div class="disclosure-text">Results are not typical. All commission figures, network projections, and income examples are based on Enagic's published compensation structure at specified ranks and are subject to change. Income requires active product sales. The majority of Enagic distributors earn little or no income. Apex Network is an independent distributor network not affiliated with or endorsed by Enagic International. <a href="apex-disclosure.html" style="color:rgba(0,102,255,0.5);">Full income disclosure →</a></div>
+  </div>
+</div>
+
+<footer>
+  <div class="footer-brand">APEX<span>NETWORK</span></div>
+  <div class="footer-links">
+    <a href="apex-index.html">Front Door</a>
+    <a href="apex-privacy.html">Privacy</a>
+    <a href="apex-terms.html">Terms</a>
+    <a href="apex-disclosure.html">Disclosure</a>
+    <a href="agent-os.html">Legacy Agent OS</a>
+  </div>
+  <div class="footer-copy" id="footerCopy">© 2025 Apex Network</div>
+</footer>
+
+<script>
+// GATE
+const ACCESS_CODE = 'DIESEL2025';
+
+function checkGate() {
+  const val = document.getElementById('gateInput').value.trim().toUpperCase();
+  if(val === ACCESS_CODE) {
+    sessionStorage.setItem('apex_hub_auth', '1');
+    document.getElementById('gate').style.display = 'none';
+    initPage();
+  } else {
+    const err = document.getElementById('gateError');
+    err.style.display = 'block';
+    document.getElementById('gateInput').value = '';
+    document.getElementById('gateInput').focus();
+    setTimeout(() => err.style.display = 'none', 3000);
+  }
+}
+
+document.getElementById('gateInput').addEventListener('keydown', e => {
+  if(e.key === 'Enter') checkGate();
+});
+
+// Check session
+if(sessionStorage.getItem('apex_hub_auth') === '1') {
+  document.getElementById('gate').style.display = 'none';
+  initPage();
+}
+
+function initPage() {
+  // Clock
+  function updateClock() {
+    const now = new Date();
+    const opts = {hour:'2-digit',minute:'2-digit',second:'2-digit',hour12:false,timeZone:'Australia/Brisbane'};
+    document.getElementById('navClock').textContent = now.toLocaleTimeString('en-AU', opts) + ' AEST';
+    document.getElementById('footerCopy').textContent = '© ' + now.getFullYear() + ' Apex Network — Independent distributor network';
+  }
+  updateClock();
+  setInterval(updateClock, 1000);
+
+  // Scroll reveal
+  const obs = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if(e.isIntersecting) { e.target.classList.add('visible'); obs.unobserve(e.target); }
+    });
+  }, {threshold: 0.06});
+  document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+}
+</script>
+</body>
+</html>
