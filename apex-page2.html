@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Apex Network — The System</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Mono:wght@300;400;500&family=Archivo:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --black:#050505;--surface:#0a0a0a;--panel:#111111;--panel2:#161616;
+  --edge:rgba(255,255,255,0.07);--edge2:rgba(255,255,255,0.14);
+  --blue:#0066ff;--blue2:#0044cc;
+  --white:#f0f0f0;--muted:rgba(240,240,240,0.55);--dim:rgba(240,240,240,0.28);
+  --green:#00ff88;--amber:#f59e0b;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{font-size:16px;scroll-behavior:smooth;}
+body{background:var(--black);color:var(--white);font-family:'Archivo',sans-serif;overflow-x:hidden;cursor:crosshair;min-height:100vh;}
+body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(rgba(0,102,255,0.04) 1px,transparent 1px),linear-gradient(90deg,rgba(0,102,255,0.04) 1px,transparent 1px);background-size:80px 80px;pointer-events:none;z-index:0;}
+body::after{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");pointer-events:none;z-index:9999;opacity:0.4;}
+
+nav{position:sticky;top:0;z-index:500;background:rgba(5,5,5,0.97);backdrop-filter:blur(20px);border-bottom:1px solid var(--edge);padding:0 5%;height:60px;display:flex;justify-content:space-between;align-items:center;}
+.nav-brand{display:flex;align-items:center;gap:0.8rem;}
+.nav-mark{width:22px;height:22px;}
+.nav-name{font-family:'Bebas Neue',sans-serif;font-size:1.2rem;letter-spacing:0.12em;}
+.nav-name span{color:var(--blue);}
+.nav-step{font-family:'DM Mono',monospace;font-size:0.52rem;letter-spacing:0.2em;color:var(--dim);}
+
+.section{padding:4rem 5%;position:relative;z-index:1;border-bottom:1px solid var(--edge);}
+.section-alt{background:rgba(10,10,10,0.6);}
+.inner{max-width:860px;margin:0 auto;}
+.eyebrow{font-family:'DM Mono',monospace;font-size:0.52rem;letter-spacing:0.22em;color:var(--blue);margin-bottom:0.5rem;text-transform:uppercase;}
+.sec-title{font-family:'Bebas Neue',sans-serif;font-size:clamp(2rem,5vw,3.5rem);letter-spacing:0.04em;line-height:0.95;margin-bottom:1.2rem;}
+.sec-title span{color:var(--blue);}
+.body-text{font-size:0.95rem;color:var(--muted);line-height:1.9;margin-bottom:1.5rem;}
+.body-text strong{color:var(--white);}
+
+/* HERO */
+.hero{padding:5rem 5% 4rem;position:relative;z-index:1;border-bottom:1px solid var(--edge);}
+.hi{max-width:860px;margin:0 auto;}
+.hero-eyebrow{font-family:'DM Mono',monospace;font-size:0.6rem;letter-spacing:0.25em;color:var(--green);margin-bottom:0.8rem;display:flex;align-items:center;gap:0.8rem;}
+.hero-eyebrow::before{content:'';width:20px;height:1px;background:var(--green);}
+.hero-title{font-family:'Bebas Neue',sans-serif;font-size:clamp(3rem,8vw,6rem);letter-spacing:0.03em;line-height:0.9;margin-bottom:1.2rem;}
+.hero-title span{color:var(--blue);}
+.hero-sub{font-size:1rem;color:var(--muted);max-width:620px;line-height:1.9;}
+
+/* MECHANISM */
+.mechanism{display:flex;flex-direction:column;gap:1px;background:var(--edge);border:1px solid var(--edge);}
+.mech-item{background:var(--panel);padding:1.4rem 1.6rem;display:flex;gap:1.2rem;align-items:flex-start;}
+.mech-num{font-family:'Bebas Neue',sans-serif;font-size:2.5rem;color:rgba(0,102,255,0.3);line-height:1;flex-shrink:0;width:3rem;}
+.mech-body{}
+.mech-title{font-family:'Bebas Neue',sans-serif;font-size:1.1rem;letter-spacing:0.05em;color:var(--white);margin-bottom:0.3rem;}
+.mech-desc{font-size:0.85rem;color:var(--muted);line-height:1.8;}
+
+/* COMMISSION TABLE */
+.comm-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--edge);border:1px solid var(--edge);}
+@media(max-width:720px){.comm-grid{grid-template-columns:repeat(2,1fr);}}
+.ct{background:var(--panel);padding:1.3rem;}
+.ct-label{font-family:'DM Mono',monospace;font-size:0.48rem;letter-spacing:0.15em;color:var(--dim);margin-bottom:0.4rem;text-transform:uppercase;}
+.ct-name{font-family:'Bebas Neue',sans-serif;font-size:1rem;letter-spacing:0.05em;color:var(--white);margin-bottom:0.8rem;}
+.ct-row{display:flex;justify-content:space-between;padding:0.25rem 0;border-bottom:1px solid var(--edge);}
+.ct-row:last-child{border-bottom:none;}
+.ct-key{font-family:'DM Mono',monospace;font-size:0.48rem;letter-spacing:0.08em;color:var(--dim);}
+.ct-val{font-family:'DM Mono',monospace;font-size:0.56rem;font-weight:500;}
+.ct-val.g{color:var(--green);}
+.ct-val.b{color:var(--blue);}
+.ct-val.a{color:var(--amber);}
+
+/* CALLOUT */
+.callout{border:1px solid rgba(0,102,255,0.3);background:rgba(0,102,255,0.04);padding:1.5rem 1.8rem;position:relative;margin:2rem 0;}
+.callout::before{content:'';position:absolute;top:-1px;left:-1px;width:10px;height:10px;border-top:2px solid var(--blue);border-left:2px solid var(--blue);}
+.callout::after{content:'';position:absolute;bottom:-1px;right:-1px;width:10px;height:10px;border-bottom:2px solid var(--blue);border-right:2px solid var(--blue);}
+.callout-label{font-family:'DM Mono',monospace;font-size:0.5rem;letter-spacing:0.2em;color:var(--blue);margin-bottom:0.5rem;}
+.callout-text{font-size:1rem;color:var(--white);line-height:1.8;}
+.callout-text strong{color:var(--green);}
+
+/* CTA */
+.cta-section{padding:4rem 5%;text-align:center;position:relative;z-index:1;}
+.cta-inner{max-width:600px;margin:0 auto;}
+.cta-eyebrow{font-family:'DM Mono',monospace;font-size:0.52rem;letter-spacing:0.22em;color:var(--blue);margin-bottom:0.5rem;}
+.cta-title{font-family:'Bebas Neue',sans-serif;font-size:clamp(2.5rem,6vw,4rem);letter-spacing:0.04em;margin-bottom:1rem;}
+.cta-sub{font-size:0.9rem;color:var(--muted);line-height:1.8;margin-bottom:2rem;}
+.cta-btn{display:inline-block;font-family:'DM Mono',monospace;font-size:0.7rem;letter-spacing:0.15em;text-transform:uppercase;padding:1rem 2.5rem;background:var(--blue);color:var(--white);text-decoration:none;border:none;cursor:pointer;transition:background 0.2s;}
+.cta-btn:hover{background:var(--blue2);}
+.cta-note{font-family:'DM Mono',monospace;font-size:0.5rem;letter-spacing:0.1em;color:var(--dim);margin-top:1rem;}
+
+footer{border-top:1px solid var(--edge);padding:2rem 5%;position:relative;z-index:1;}
+.footer-disclaimer{font-size:0.72rem;color:var(--dim);line-height:1.9;max-width:860px;margin:0 auto 1rem;}
+.footer-links{display:flex;gap:1.5rem;flex-wrap:wrap;max-width:860px;margin:0 auto;}
+.footer-links a{font-family:'DM Mono',monospace;font-size:0.5rem;letter-spacing:0.12em;color:var(--dim);text-decoration:none;text-transform:uppercase;transition:color 0.2s;}
+.footer-links a:hover{color:var(--muted);}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-brand">
+    <svg class="nav-mark" viewBox="0 0 24 24" fill="none">
+      <polygon points="12,2 22,20 2,20" stroke="#0066ff" stroke-width="1.5" fill="none"/>
+      <line x1="12" y1="8" x2="12" y2="14" stroke="#0066ff" stroke-width="1.5"/>
+      <circle cx="12" cy="17" r="1" fill="#0066ff"/>
+    </svg>
+    <span class="nav-name">APEX <span>NETWORK</span></span>
+  </div>
+  <div class="nav-step">STEP 02 / 04 — THE SYSTEM</div>
+</nav>
+
+<div class="hero">
+  <div class="hi">
+    <div class="hero-eyebrow">You're in the system</div>
+    <div class="hero-title">THE <span>APEX</span><br>SYSTEM</div>
+    <p class="hero-sub">You've registered your interest. Here's the full mechanism — how Apex Network generates commissions, why it works, and what operator access looks like.</p>
+  </div>
+</div>
+
+<div class="section">
+  <div class="inner">
+    <div class="eyebrow">// The Mechanism</div>
+    <div class="sec-title">HOW APEX <span>GENERATES</span> COMMISSIONS</div>
+    <p class="body-text">Apex Network sits on top of Enagic's 50-year authorised distribution framework. Enagic manufactures high-performance water ionisation systems retailing at $2,475–$18,469. They pay direct commissions to authorised distributors — up to $2,595 per sale, deposited 7–14 business days post-registration. <strong>We are those distributors. Our operators are the field.</strong></p>
+    <div class="mechanism">
+      <div class="mech-item">
+        <div class="mech-num">01</div>
+        <div class="mech-body">
+          <div class="mech-title">AI Content System Drives Traffic</div>
+          <div class="mech-desc">HeyGen AI avatar generates your video content from scripts. CapCut edits it. Later schedules it across TikTok and Instagram. The content runs the transparency formula: Problem → Mechanism → Proof → CTA. No filming. No editing. Content goes out daily.</div>
+        </div>
+      </div>
+      <div class="mech-item">
+        <div class="mech-num">02</div>
+        <div class="mech-body">
+          <div class="mech-title">Funnel Qualifies and Captures Leads</div>
+          <div class="mech-desc">Traffic hits the Apex front door. Warm leads opt in and enter the nurture sequence. Hot leads apply directly. The funnel scores applicants (HOT/WARM/COLD) and routes them accordingly — no manual sorting required.</div>
+        </div>
+      </div>
+      <div class="mech-item">
+        <div class="mech-num">03</div>
+        <div class="mech-body">
+          <div class="mech-title">Operator Converts the Qualified Lead</div>
+          <div class="mech-desc">You handle the final conversation with pre-qualified, investment-ready prospects. Close the sale. The buyer registers directly through apex-join.html — their Sponsor ID is pre-confirmed to your distributor number. Enagic processes the paperwork and pays the commission.</div>
+        </div>
+      </div>
+      <div class="mech-item">
+        <div class="mech-num">04</div>
+        <div class="mech-body">
+          <div class="mech-title">Network Commissions Compound Monthly</div>
+          <div class="mech-desc">Every operator you recruit also earns commissions — and you earn override commissions on their sales. 7 active operators each making 3 sales per month = $9,625+ combined income from direct sales and overrides. The network floor grows every month.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="section section-alt">
+  <div class="inner">
+    <div class="eyebrow">// Commission Structure</div>
+    <div class="sec-title">WHAT OPERATORS <span>EARN</span></div>
+    <p class="body-text">All commissions are paid directly by Enagic Australia. The tier you register at determines your starting commission per sale and your rank in the Enagic compensation structure.</p>
+    <div class="comm-grid">
+      <div class="ct">
+        <div class="ct-label">Entry Tier</div>
+        <div class="ct-name">emGuarde</div>
+        <div class="ct-row"><span class="ct-key">Investment</span><span class="ct-val a">~$2,475</span></div>
+        <div class="ct-row"><span class="ct-key">Commission</span><span class="ct-val g">~$225/sale</span></div>
+        <div class="ct-row"><span class="ct-key">Rank</span><span class="ct-val b">1A</span></div>
+        <div class="ct-row"><span class="ct-key">Break-even</span><span class="ct-val">~11 sales</span></div>
+      </div>
+      <div class="ct">
+        <div class="ct-label">Pro Tier</div>
+        <div class="ct-name">K8 Single</div>
+        <div class="ct-row"><span class="ct-key">Investment</span><span class="ct-val a">~$6,787</span></div>
+        <div class="ct-row"><span class="ct-key">Commission</span><span class="ct-val g">~$365/sale</span></div>
+        <div class="ct-row"><span class="ct-key">Rank</span><span class="ct-val b">1A</span></div>
+        <div class="ct-row"><span class="ct-key">Break-even</span><span class="ct-val">~19 sales</span></div>
+      </div>
+      <div class="ct">
+        <div class="ct-label">Elite Tier</div>
+        <div class="ct-name">Trifecta</div>
+        <div class="ct-row"><span class="ct-key">Investment</span><span class="ct-val a">~$11,682</span></div>
+        <div class="ct-row"><span class="ct-key">Commission</span><span class="ct-val g">~$1,322/sale</span></div>
+        <div class="ct-row"><span class="ct-key">Rank</span><span class="ct-val b">2A</span></div>
+        <div class="ct-row"><span class="ct-key">Break-even</span><span class="ct-val">~9 sales</span></div>
+      </div>
+      <div class="ct">
+        <div class="ct-label">Commander Tier</div>
+        <div class="ct-name">Quad</div>
+        <div class="ct-row"><span class="ct-key">Investment</span><span class="ct-val a">~$18,469</span></div>
+        <div class="ct-row"><span class="ct-key">Commission</span><span class="ct-val g">~$2,595/sale</span></div>
+        <div class="ct-row"><span class="ct-key">Rank</span><span class="ct-val b">3A</span></div>
+        <div class="ct-row"><span class="ct-key">Break-even</span><span class="ct-val">~7 sales</span></div>
+      </div>
+    </div>
+    <div class="callout">
+      <div class="callout-label">// Network Math</div>
+      <p class="callout-text">7 active operators, each closing 3 sales/month at Elite tier = <strong>$27,762/month</strong> in combined direct + override commissions. This is the Phase 1 target. Not guaranteed — requires active operators and consistent sales effort.</p>
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <div class="inner">
+    <div class="eyebrow">// Why This Works</div>
+    <div class="sec-title">THE UNFAIR <span>ADVANTAGES</span></div>
+    <p class="body-text">Most distribution networks fail because the product is weak, the margin is thin, or the operator is left alone with no system. Apex Network is built to solve all three.</p>
+    <p class="body-text"><strong>The product:</strong> Enagic water ionisers are real, premium, 50-year-old technology. Customers buy for health reasons and keep the product for years. There is no recurring subscription to cancel and no inventory to hold. The distributor is not selling to their friends — they're generating inbound interest through content.</p>
+    <p class="body-text"><strong>The margin:</strong> $225–$2,595 per sale on a single transaction. No revenue sharing, no percentage cuts, no hidden deductions. The commission is the revenue. High-ticket, single-transaction, direct-to-bank.</p>
+    <p class="body-text"><strong>The system:</strong> AI content generation means operators don't need to be on camera, skilled in editing, or experienced in social media. The transparency formula drives inbound curiosity at scale. The Apex funnel handles qualification. The operator handles conversion.</p>
+  </div>
+</div>
+
+<div class="cta-section">
+  <div class="cta-inner">
+    <div class="cta-eyebrow">// Step 03 / 04</div>
+    <div class="cta-title">APPLY FOR OPERATOR ACCESS</div>
+    <p class="cta-sub">We review every application. Tell us about your situation, your income goal, and your investment readiness. Takes 3 minutes.</p>
+    <a href="apex-apply.html" class="cta-btn">SUBMIT MY APPLICATION →</a>
+    <p class="cta-note">Applications reviewed within 24 hours. Investment-ready applicants are directed straight to the registration page.</p>
+  </div>
+</div>
+
+<footer>
+  <p class="footer-disclaimer">Results are not typical. Commission figures shown are based on Enagic's published compensation structure at each rank and are subject to change without notice. Investment amounts are approximate and may vary. Apex Network is an independent distributor network and is not affiliated with or endorsed by Enagic International. Past performance is not indicative of future results. <a href="apex-disclosure.html" style="color:rgba(0,102,255,0.6);">Full income disclosure →</a></p>
+  <div class="footer-links">
+    <a href="apex-terms.html">Terms of Use</a>
+    <a href="apex-privacy.html">Privacy Policy</a>
+    <a href="apex-disclosure.html">Income Disclosure</a>
+  </div>
+</footer>
+
+</body>
+</html>

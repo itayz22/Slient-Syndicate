@@ -16,25 +16,25 @@
 
 [[redirects]]
   from = "/hub"
-  to = "/hub.html"
+  to = "/apex-hub.html"
   status = 200
 
 [[redirects]]
   from = "/apply"
-  to = "/page3-apply.html"
+  to = "/apex-apply.html"
   status = 200
 
 [[redirects]]
   from = "/offer"
-  to = "/page4-offer.html"
+  to = "/apex-offer.html"
   status = 200
 
 [[redirects]]
   from = "/join"
-  to = "/distributors.html"
+  to = "/apex-join.html"
   status = 200
 
 [[redirects]]
-  from = "/dashboard"
-  to = "/aios-dashboard.html"
+  from = "/start"
+  to = "/apex-index.html"
   status = 200

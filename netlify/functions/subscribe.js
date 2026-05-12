@@ -43,7 +43,7 @@ exports.handler = async (event, context) => {
       headers: corsHeaders(),
       body: JSON.stringify({
         success: true,
-        redirect: '/page2-manifesto.html'
+        redirect: '/apex-page2.html'
       })
     };
 
@@ -53,7 +53,7 @@ exports.handler = async (event, context) => {
     return {
       statusCode: 200,
       headers: corsHeaders(),
-      body: JSON.stringify({ success: true, redirect: '/page2-manifesto.html', warning: err.message })
+      body: JSON.stringify({ success: true, redirect: '/apex-page2.html', warning: err.message })
     };
   }
 };

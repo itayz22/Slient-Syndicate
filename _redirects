@@ -1,8 +1,8 @@
-/hub              /hub.html           200
-/apply            /page3-apply.html   200
-/offer            /page4-offer.html   200
-/join             /distributors.html  200
-/dashboard        /aios-dashboard.html 200
+/hub              /apex-hub.html       200
+/apply            /apex-apply.html     200
+/offer            /apex-offer.html     200
+/join             /apex-join.html      200
+/start            /apex-index.html     200
 /api/subscribe    /.netlify/functions/subscribe  200
 /api/apply        /.netlify/functions/apply  200
 /api/score        /.netlify/functions/score  200

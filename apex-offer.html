@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Apex Network — Operator Access Approved</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Mono:wght@300;400;500&family=Archivo:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --black:#050505;--surface:#0a0a0a;--panel:#111111;--panel2:#161616;
+  --edge:rgba(255,255,255,0.07);--edge2:rgba(255,255,255,0.14);
+  --blue:#0066ff;--blue2:#0044cc;
+  --white:#f0f0f0;--muted:rgba(240,240,240,0.55);--dim:rgba(240,240,240,0.28);
+  --green:#00ff88;--amber:#f59e0b;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{font-size:16px;scroll-behavior:smooth;}
+body{background:var(--black);color:var(--white);font-family:'Archivo',sans-serif;overflow-x:hidden;cursor:crosshair;min-height:100vh;}
+body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(rgba(0,102,255,0.04) 1px,transparent 1px),linear-gradient(90deg,rgba(0,102,255,0.04) 1px,transparent 1px);background-size:80px 80px;pointer-events:none;z-index:0;}
+body::after{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");pointer-events:none;z-index:9999;opacity:0.4;}
+
+nav{position:sticky;top:0;z-index:500;background:rgba(5,5,5,0.97);backdrop-filter:blur(20px);border-bottom:1px solid var(--edge);padding:0 5%;height:60px;display:flex;justify-content:space-between;align-items:center;}
+.nav-brand{display:flex;align-items:center;gap:0.8rem;}
+.nav-mark{width:22px;height:22px;}
+.nav-name{font-family:'Bebas Neue',sans-serif;font-size:1.2rem;letter-spacing:0.12em;}
+.nav-name span{color:var(--blue);}
+.nav-back{font-family:'DM Mono',monospace;font-size:0.52rem;letter-spacing:0.12em;color:var(--muted);text-decoration:none;transition:color 0.2s;}
+.nav-back:hover{color:var(--white);}
+.nav-step{font-family:'DM Mono',monospace;font-size:0.52rem;letter-spacing:0.2em;color:var(--dim);}
+
+/* APPROVED BANNER */
+.approved-bar{background:rgba(0,255,136,0.06);border-bottom:1px solid rgba(0,255,136,0.2);padding:0.8rem 5%;text-align:center;font-family:'DM Mono',monospace;font-size:0.58rem;letter-spacing:0.18em;color:var(--green);position:relative;z-index:1;}
+
+/* HERO */
+.hero{padding:4rem 5% 3.5rem;position:relative;z-index:1;border-bottom:1px solid var(--edge);}
+.hi{max-width:860px;}
+.hero-eyebrow{font-family:'DM Mono',monospace;font-size:0.6rem;letter-spacing:0.25em;color:var(--green);margin-bottom:0.8rem;display:flex;align-items:center;gap:0.8rem;}
+.hero-eyebrow::before{content:'';width:20px;height:1px;background:var(--green);}
+.hero-title{font-family:'Bebas Neue',sans-serif;font-size:clamp(3rem,7vw,5.5rem);letter-spacing:0.04em;line-height:0.92;margin-bottom:1rem;}
+.hero-title span{color:var(--blue);}
+.hero-sub{font-size:0.95rem;color:var(--muted);max-width:580px;line-height:1.9;}
+
+/* WHAT YOU GET */
+.section{padding:3.5rem 5%;position:relative;z-index:1;border-bottom:1px solid var(--edge);}
+.section-alt{background:rgba(10,10,10,0.6);}
+.inner{max-width:860px;}
+.eyebrow{font-family:'DM Mono',monospace;font-size:0.52rem;letter-spacing:0.22em;color:var(--blue);margin-bottom:0.5rem;text-transform:uppercase;}
+.sec-title{font-family:'Bebas Neue',sans-serif;font-size:clamp(1.8rem,4vw,2.8rem);letter-spacing:0.04em;margin-bottom:1.5rem;}
+.sec-title span{color:var(--blue);}
+
+/* TIER CARDS */
+.tier-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--edge);border:1px solid var(--edge);}
+@media(max-width:760px){.tier-grid{grid-template-columns:repeat(2,1fr);}}
+.tc{background:var(--panel);padding:1.4rem;}
+.tc.hot{background:rgba(0,102,255,0.06);border-top:2px solid var(--blue);}
+.tc-tier{font-family:'DM Mono',monospace;font-size:0.48rem;letter-spacing:0.15em;color:var(--dim);margin-bottom:0.3rem;text-transform:uppercase;}
+.tc-name{font-family:'Bebas Neue',sans-serif;font-size:1.1rem;letter-spacing:0.05em;color:var(--white);margin-bottom:1rem;}
+.tc-comm{font-family:'Bebas Neue',sans-serif;font-size:1.8rem;letter-spacing:0.04em;color:var(--green);line-height:1;margin-bottom:0.2rem;}
+.tc-comm-label{font-family:'DM Mono',monospace;font-size:0.45rem;letter-spacing:0.1em;color:var(--dim);margin-bottom:1rem;}
+.tc-row{display:flex;justify-content:space-between;padding:0.3rem 0;border-bottom:1px solid var(--edge);}
+.tc-row:last-child{border-bottom:none;}
+.tc-key{font-family:'DM Mono',monospace;font-size:0.48rem;letter-spacing:0.08em;color:var(--dim);}
+.tc-val{font-family:'DM Mono',monospace;font-size:0.55rem;font-weight:500;color:var(--muted);}
+.tc-val.blue{color:var(--blue);}
+.tc-badge{display:inline-block;font-family:'DM Mono',monospace;font-size:0.42rem;letter-spacing:0.1em;padding:0.2rem 0.5rem;border:1px solid rgba(0,102,255,0.4);color:var(--blue);background:rgba(0,102,255,0.08);margin-bottom:0.8rem;}
+
+/* WHAT'S INCLUDED */
+.includes-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem;}
+@media(max-width:600px){.includes-grid{grid-template-columns:1fr;}}
+.inc-item{padding:1.2rem 1.4rem;background:var(--panel);border:1px solid var(--edge);display:flex;gap:1rem;align-items:flex-start;}
+.inc-mark{font-family:'DM Mono',monospace;font-size:0.7rem;color:var(--green);flex-shrink:0;padding-top:2px;}
+.inc-body{}
+.inc-title{font-size:0.9rem;font-weight:600;color:var(--white);margin-bottom:0.2rem;}
+.inc-desc{font-size:0.8rem;color:var(--muted);line-height:1.7;}
+
+/* SPONSOR IDS */
+.sponsor-block{background:rgba(0,255,136,0.03);border:1px solid rgba(0,255,136,0.2);padding:1.5rem 1.8rem;position:relative;margin-bottom:2rem;}
+.sponsor-block::before{content:'';position:absolute;top:-1px;left:-1px;width:10px;height:10px;border-top:1px solid var(--green);border-left:1px solid var(--green);}
+.sb-label{font-family:'DM Mono',monospace;font-size:0.52rem;letter-spacing:0.2em;color:var(--green);margin-bottom:1rem;text-transform:uppercase;}
+.sb-ids{display:flex;gap:2.5rem;flex-wrap:wrap;}
+.sb-id{display:flex;flex-direction:column;gap:0.2rem;}
+.sb-id-key{font-family:'DM Mono',monospace;font-size:0.48rem;letter-spacing:0.12em;color:var(--dim);}
+.sb-id-val{font-family:'Bebas Neue',sans-serif;font-size:1.8rem;letter-spacing:0.08em;color:var(--green);}
+.sb-warn{font-family:'DM Mono',monospace;font-size:0.5rem;letter-spacing:0.06em;color:rgba(245,158,11,0.7);margin-top:1rem;line-height:1.7;}
+
+/* CTA */
+.cta-section{padding:4rem 5%;text-align:center;position:relative;z-index:1;}
+.cta-inner{max-width:600px;margin:0 auto;}
+.cta-eyebrow{font-family:'DM Mono',monospace;font-size:0.52rem;letter-spacing:0.22em;color:var(--blue);margin-bottom:0.5rem;}
+.cta-title{font-family:'Bebas Neue',sans-serif;font-size:clamp(2.5rem,6vw,4rem);letter-spacing:0.04em;margin-bottom:1rem;}
+.cta-sub{font-size:0.9rem;color:var(--muted);line-height:1.8;margin-bottom:2rem;}
+.cta-btn{display:inline-block;font-family:'DM Mono',monospace;font-size:0.7rem;letter-spacing:0.15em;text-transform:uppercase;padding:1rem 2.5rem;background:var(--blue);color:var(--white);text-decoration:none;transition:background 0.2s;}
+.cta-btn:hover{background:var(--blue2);}
+.cta-note{font-family:'DM Mono',monospace;font-size:0.5rem;letter-spacing:0.1em;color:var(--dim);margin-top:0.8rem;}
+
+footer{border-top:1px solid var(--edge);padding:2rem 5%;position:relative;z-index:1;}
+.footer-disclaimer{font-size:0.72rem;color:var(--dim);line-height:1.9;max-width:860px;margin-bottom:1rem;}
+.footer-links{display:flex;gap:1.5rem;flex-wrap:wrap;}
+.footer-links a{font-family:'DM Mono',monospace;font-size:0.5rem;letter-spacing:0.12em;color:var(--dim);text-decoration:none;text-transform:uppercase;}
+.footer-links a:hover{color:var(--muted);}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-brand">
+    <svg class="nav-mark" viewBox="0 0 24 24" fill="none">
+      <polygon points="12,2 22,20 2,20" stroke="#0066ff" stroke-width="1.5" fill="none"/>
+      <line x1="12" y1="8" x2="12" y2="14" stroke="#0066ff" stroke-width="1.5"/>
+      <circle cx="12" cy="17" r="1" fill="#0066ff"/>
+    </svg>
+    <span class="nav-name">APEX <span>NETWORK</span></span>
+  </div>
+  <div style="display:flex;align-items:center;gap:1.5rem;">
+    <a href="apex-apply.html" class="nav-back">← Back to apply</a>
+    <span class="nav-step">STEP 04 / 04 — REGISTER</span>
+  </div>
+</nav>
+
+<div class="approved-bar">✦ APPLICATION REVIEWED — OPERATOR ACCESS APPROVED ✦</div>
+
+<div class="hero">
+  <div class="hi">
+    <div class="hero-eyebrow">Access Approved</div>
+    <div class="hero-title">YOUR <span>OPERATOR</span><br>OFFER</div>
+    <p class="hero-sub">Your application has been reviewed and your investment readiness has been confirmed. Here's exactly what operator access looks like — commission structure, what's included, and how to register today.</p>
+  </div>
+</div>
+
+<div class="section">
+  <div class="inner">
+    <div class="eyebrow">// Choose Your Entry Tier</div>
+    <div class="sec-title">COMMISSION <span>STRUCTURE</span></div>
+    <div class="tier-grid">
+      <div class="tc">
+        <div class="tc-tier">Entry Tier</div>
+        <div class="tc-name">emGuarde</div>
+        <div class="tc-comm">~$225</div>
+        <div class="tc-comm-label">per direct sale</div>
+        <div class="tc-row"><span class="tc-key">Investment</span><span class="tc-val">~$2,475</span></div>
+        <div class="tc-row"><span class="tc-key">Rank</span><span class="tc-val blue">1A</span></div>
+        <div class="tc-row"><span class="tc-key">Points/sale</span><span class="tc-val">1pt</span></div>
+        <div class="tc-row"><span class="tc-key">Break-even</span><span class="tc-val">~11 sales</span></div>
+      </div>
+      <div class="tc">
+        <div class="tc-tier">Pro Tier</div>
+        <div class="tc-name">K8 Single</div>
+        <div class="tc-comm">~$365</div>
+        <div class="tc-comm-label">per direct sale</div>
+        <div class="tc-row"><span class="tc-key">Investment</span><span class="tc-val">~$6,787</span></div>
+        <div class="tc-row"><span class="tc-key">Rank</span><span class="tc-val blue">1A</span></div>
+        <div class="tc-row"><span class="tc-key">Points/sale</span><span class="tc-val">2pt</span></div>
+        <div class="tc-row"><span class="tc-key">Break-even</span><span class="tc-val">~19 sales</span></div>
+      </div>
+      <div class="tc hot">
+        <div class="tc-badge">RECOMMENDED</div>
+        <div class="tc-tier">Elite Tier</div>
+        <div class="tc-name">Trifecta</div>
+        <div class="tc-comm">~$1,322</div>
+        <div class="tc-comm-label">per direct sale</div>
+        <div class="tc-row"><span class="tc-key">Investment</span><span class="tc-val">~$11,682</span></div>
+        <div class="tc-row"><span class="tc-key">Rank</span><span class="tc-val blue">2A</span></div>
+        <div class="tc-row"><span class="tc-key">Points/sale</span><span class="tc-val">4pt</span></div>
+        <div class="tc-row"><span class="tc-key">Break-even</span><span class="tc-val">~9 sales</span></div>
+      </div>
+      <div class="tc">
+        <div class="tc-tier">Commander Tier</div>
+        <div class="tc-name">Quad</div>
+        <div class="tc-comm">~$2,595</div>
+        <div class="tc-comm-label">per direct sale</div>
+        <div class="tc-row"><span class="tc-key">Investment</span><span class="tc-val">~$18,469</span></div>
+        <div class="tc-row"><span class="tc-key">Rank</span><span class="tc-val blue">3A</span></div>
+        <div class="tc-row"><span class="tc-key">Points/sale</span><span class="tc-val">6pt</span></div>
+        <div class="tc-row"><span class="tc-key">Break-even</span><span class="tc-val">~7 sales</span></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="section section-alt">
+  <div class="inner">
+    <div class="eyebrow">// What's Included</div>
+    <div class="sec-title">OPERATOR <span>PACKAGE</span></div>
+    <div class="includes-grid">
+      <div class="inc-item">
+        <span class="inc-mark">✦</span>
+        <div class="inc-body">
+          <div class="inc-title">Enagic Distributor Registration</div>
+          <div class="inc-desc">Your Sponsor ID is pre-confirmed. We supply all registration paperwork. Enagic Australia processes and activates your account within 24–72 hours.</div>
+        </div>
+      </div>
+      <div class="inc-item">
+        <span class="inc-mark">✦</span>
+        <div class="inc-body">
+          <div class="inc-title">AI Content System Access</div>
+          <div class="inc-desc">HeyGen avatar setup, script library, CapCut workflow, Later scheduling guide. Full content system documentation for TikTok and Instagram.</div>
+        </div>
+      </div>
+      <div class="inc-item">
+        <span class="inc-mark">✦</span>
+        <div class="inc-body">
+          <div class="inc-title">Apex Network Funnel</div>
+          <div class="inc-desc">Your leads flow through the Apex funnel — front door, opt-in, application, offer page. All conversion infrastructure is built and running.</div>
+        </div>
+      </div>
+      <div class="inc-item">
+        <span class="inc-mark">✦</span>
+        <div class="inc-body">
+          <div class="inc-title">Commission Paid Direct by Enagic</div>
+          <div class="inc-desc">No middleman. Enagic Australia deposits your commission directly — 7–14 business days after registration paperwork is processed.</div>
+        </div>
+      </div>
+      <div class="inc-item">
+        <span class="inc-mark">✦</span>
+        <div class="inc-body">
+          <div class="inc-title">Override Commissions on Your Network</div>
+          <div class="inc-desc">Every operator you recruit earns commissions under your Sponsor ID. You receive override commissions on every sale they make — compounding monthly.</div>
+        </div>
+      </div>
+      <div class="inc-item">
+        <span class="inc-mark">✦</span>
+        <div class="inc-body">
+          <div class="inc-title">Operator Support</div>
+          <div class="inc-desc">Direct support from Apex Network for registration, content setup, and conversion process. Email: support@apexnetwork.com.au.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <div class="inner">
+    <div class="eyebrow">// Sponsor IDs — Pre-Confirmed</div>
+    <div class="sec-title">YOUR PLACEMENT IS <span>SECURED</span></div>
+    <div class="sponsor-block">
+      <div class="sb-label">// Apex Network Sponsor IDs — These are hardcoded. Do not change.</div>
+      <div class="sb-ids">
+        <div class="sb-id">
+          <span class="sb-id-key">K8 / Trifecta / Quad</span>
+          <span class="sb-id-val">29000059770</span>
+        </div>
+        <div class="sb-id">
+          <span class="sb-id-key">emGuarde (Position 1)</span>
+          <span class="sb-id-val">29000059769</span>
+        </div>
+        <div class="sb-id">
+          <span class="sb-id-key">emGuarde (Position 2)</span>
+          <span class="sb-id-val">29000059768</span>
+        </div>
+      </div>
+      <p class="sb-warn">Your Sponsor ID is confirmed and locked when you complete registration. Placement in the network cannot be changed after submission. If you are purchasing a second emGuarde unit, use Sponsor ID 29000059768.</p>
+    </div>
+    <p style="font-size:0.85rem;color:var(--muted);line-height:1.9;">The registration wizard will guide you through all required Enagic documentation. Have your passport or driver's licence and bank account details ready. The entire process takes approximately 20 minutes.</p>
+  </div>
+</div>
+
+<div class="cta-section">
+  <div class="cta-inner">
+    <div class="cta-eyebrow">// Step 04 / 04 — Register Now</div>
+    <div class="cta-title">COMPLETE YOUR REGISTRATION</div>
+    <p class="cta-sub">The 5-step operator registration wizard takes approximately 20 minutes. Your Sponsor ID is pre-confirmed. Have ID and bank details ready.</p>
+    <a href="apex-join.html" class="cta-btn">BEGIN OPERATOR REGISTRATION →</a>
+    <p class="cta-note">By proceeding you confirm you have read the <a href="apex-disclosure.html" style="color:rgba(0,102,255,0.7);">income disclosure statement</a> and <a href="apex-terms.html" style="color:rgba(0,102,255,0.7);">terms of use</a>.</p>
+  </div>
+</div>
+
+<footer>
+  <p class="footer-disclaimer">Results are not typical. Commission figures shown are based on Enagic's published compensation structure at each rank and are subject to change without notice. Investment amounts are approximate and may vary. Income requires active product sales. The majority of Enagic distributors earn little or no income. Apex Network is an independent operator network not affiliated with or endorsed by Enagic International. Past performance is not indicative of future results. <a href="apex-disclosure.html" style="color:rgba(0,102,255,0.6);">Full income disclosure →</a></p>
+  <div class="footer-links">
+    <a href="apex-terms.html">Terms of Use</a>
+    <a href="apex-privacy.html">Privacy Policy</a>
+    <a href="apex-disclosure.html">Income Disclosure</a>
+    <a href="apex-join.html">Register</a>
+  </div>
+</footer>
+
+</body>
+</html>
