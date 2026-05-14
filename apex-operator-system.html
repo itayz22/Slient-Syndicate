@@ -1,0 +1,748 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Apex Network — Operator System</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;900&family=DM+Mono:wght@300;400;500&family=Archivo:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --blue:#00d4ff;--blue2:#00aacc;--blue-dim:rgba(0,212,255,0.12);--blue-glow:rgba(0,212,255,0.25);
+  --black:#04040a;--deep:#060610;--surface:#0a0a15;--panel:#0e0e1c;--panel2:#12121f;
+  --edge:rgba(0,212,255,0.08);--edge2:rgba(0,212,255,0.18);
+  --white:#f0f4ff;--muted:rgba(240,244,255,0.55);--dim:rgba(240,244,255,0.28);
+  --green:#00ff88;--amber:#f59e0b;--red:#ef4444;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{font-size:16px;scroll-behavior:smooth;}
+body{background:var(--black);color:var(--white);font-family:'Archivo',sans-serif;overflow-x:hidden;cursor:none;min-height:100vh;}
+
+/* CURSOR */
+#cursor{position:fixed;width:10px;height:10px;background:var(--blue);border-radius:50%;pointer-events:none;z-index:99999;transform:translate(-50%,-50%);transition:transform 0.08s,width 0.15s,height 0.15s,opacity 0.15s;mix-blend-mode:screen;}
+#cursor-ring{position:fixed;width:32px;height:32px;border:1px solid rgba(0,212,255,0.4);border-radius:50%;pointer-events:none;z-index:99998;transform:translate(-50%,-50%);transition:transform 0.18s,width 0.2s,height 0.2s,opacity 0.2s;mix-blend-mode:screen;}
+body:hover #cursor{opacity:1;}
+
+/* CANVAS */
+#particle-canvas{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:0.55;}
+
+/* NOISE */
+body::after{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");pointer-events:none;z-index:9999;opacity:0.45;}
+
+/* PASSCODE GATE */
+#gate{position:fixed;inset:0;z-index:10000;background:var(--black);display:flex;align-items:center;justify-content:center;flex-direction:column;gap:1.5rem;}
+.gate-logo{font-family:'Orbitron',sans-serif;font-size:1rem;letter-spacing:0.3em;color:var(--blue);margin-bottom:1rem;}
+.gate-title{font-family:'Orbitron',sans-serif;font-size:clamp(1.8rem,4vw,2.8rem);font-weight:700;letter-spacing:0.08em;text-align:center;}
+.gate-sub{font-family:'DM Mono',monospace;font-size:0.6rem;letter-spacing:0.2em;color:var(--muted);text-align:center;}
+.gate-input{background:var(--surface);border:1px solid var(--edge2);color:var(--white);font-family:'DM Mono',monospace;font-size:1rem;letter-spacing:0.3em;padding:0.9rem 1.4rem;outline:none;text-align:center;width:220px;transition:border-color 0.2s;}
+.gate-input:focus{border-color:var(--blue);}
+.gate-input.error{border-color:var(--red);animation:shake 0.3s;}
+@keyframes shake{0%,100%{transform:translateX(0);}25%{transform:translateX(-6px);}75%{transform:translateX(6px)};}
+.gate-btn{background:var(--blue);color:var(--black);font-family:'DM Mono',monospace;font-size:0.65rem;letter-spacing:0.2em;padding:0.8rem 2rem;border:none;cursor:none;font-weight:500;transition:background 0.2s;width:220px;}
+.gate-btn:hover{background:var(--blue2);}
+.gate-err{font-family:'DM Mono',monospace;font-size:0.55rem;letter-spacing:0.12em;color:var(--red);height:1em;}
+
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:500;background:rgba(4,4,10,0.92);backdrop-filter:blur(24px);border-bottom:1px solid var(--edge);padding:0 5%;height:64px;display:flex;justify-content:space-between;align-items:center;transition:height 0.3s,border-color 0.3s;}
+nav.shrunk{height:52px;border-color:var(--edge2);}
+.nav-brand{display:flex;align-items:center;gap:0.9rem;}
+.nav-mark{width:22px;height:22px;}
+.nav-name{font-family:'Orbitron',sans-serif;font-size:0.85rem;font-weight:700;letter-spacing:0.18em;}
+.nav-name span{color:var(--blue);}
+.nav-right{display:flex;align-items:center;gap:1.5rem;}
+.nav-tag{font-family:'DM Mono',monospace;font-size:0.5rem;letter-spacing:0.18em;color:var(--blue);background:var(--blue-dim);padding:0.3rem 0.7rem;border:1px solid var(--edge2);}
+.nav-link{font-family:'DM Mono',monospace;font-size:0.52rem;letter-spacing:0.12em;color:var(--muted);text-decoration:none;transition:color 0.2s;}
+.nav-link:hover{color:var(--white);}
+
+/* SCROLL REVEAL */
+.rv{opacity:0;transform:translateY(44px);transition:opacity 0.7s cubic-bezier(0.16,1,0.3,1),transform 0.7s cubic-bezier(0.16,1,0.3,1);}
+.rv.visible{opacity:1;transform:translateY(0);}
+
+/* LAYOUT */
+.page-wrap{position:relative;z-index:1;padding-top:64px;}
+
+/* HERO */
+.hero{padding:5rem 5% 4rem;border-bottom:1px solid var(--edge);}
+.hero-inner{max-width:900px;}
+.hero-tag{font-family:'DM Mono',monospace;font-size:0.58rem;letter-spacing:0.28em;color:var(--blue);margin-bottom:1rem;display:flex;align-items:center;gap:0.8rem;}
+.hero-tag::before{content:'';width:24px;height:1px;background:var(--blue);}
+.hero-title{font-family:'Orbitron',sans-serif;font-size:clamp(2.8rem,7vw,5.5rem);font-weight:900;letter-spacing:0.04em;line-height:0.88;margin-bottom:1.2rem;}
+.hero-title .hl{color:var(--blue);}
+.hero-sub{font-size:0.95rem;color:var(--muted);line-height:1.9;max-width:600px;margin-bottom:2rem;}
+.sponsor-display{display:inline-flex;align-items:center;gap:1rem;background:var(--blue-dim);border:1px solid var(--edge2);padding:0.7rem 1.2rem;}
+.sponsor-label{font-family:'DM Mono',monospace;font-size:0.5rem;letter-spacing:0.18em;color:var(--muted);}
+.sponsor-id{font-family:'DM Mono',monospace;font-size:0.95rem;font-weight:500;color:var(--blue);letter-spacing:0.12em;}
+
+/* QUICK LINKS */
+.quick-links{padding:2.5rem 5%;border-bottom:1px solid var(--edge);background:var(--surface);}
+.ql-label{font-family:'DM Mono',monospace;font-size:0.5rem;letter-spacing:0.22em;color:var(--blue);margin-bottom:1rem;}
+.ql-grid{display:flex;flex-wrap:wrap;gap:0.6rem;}
+.ql-btn{font-family:'DM Mono',monospace;font-size:0.52rem;letter-spacing:0.12em;color:var(--muted);background:var(--panel);border:1px solid var(--edge2);padding:0.45rem 0.9rem;text-decoration:none;transition:all 0.2s;}
+.ql-btn:hover{color:var(--blue);border-color:var(--blue);background:var(--blue-dim);}
+.ql-btn.primary{color:var(--blue);border-color:var(--blue);background:var(--blue-dim);}
+
+/* SECTION GENERIC */
+.section{padding:4rem 5%;border-bottom:1px solid var(--edge);}
+.section-inner{max-width:900px;}
+.section-eyebrow{font-family:'DM Mono',monospace;font-size:0.52rem;letter-spacing:0.25em;color:var(--blue);margin-bottom:0.7rem;display:flex;align-items:center;gap:0.7rem;}
+.section-eyebrow::before{content:'';width:16px;height:1px;background:var(--blue);}
+.section-title{font-family:'Orbitron',sans-serif;font-size:clamp(1.8rem,4vw,3rem);font-weight:700;letter-spacing:0.06em;line-height:0.95;margin-bottom:0.6rem;}
+.section-title .hl{color:var(--blue);}
+.section-desc{font-size:0.9rem;color:var(--muted);line-height:1.9;max-width:620px;margin-bottom:2rem;}
+
+/* WEEK 1 CHECKLIST */
+.checklist{display:flex;flex-direction:column;gap:1px;background:var(--edge);}
+.check-item{background:var(--panel);display:flex;align-items:flex-start;gap:1rem;padding:1rem 1.2rem;cursor:none;transition:background 0.15s;user-select:none;}
+.check-item:hover{background:var(--panel2);}
+.check-item.done{opacity:0.6;}
+.check-item.done .check-body{text-decoration:line-through;color:var(--muted);}
+.check-box{width:18px;height:18px;border:1px solid var(--edge2);flex-shrink:0;margin-top:2px;display:flex;align-items:center;justify-content:center;transition:all 0.15s;}
+.check-item.done .check-box{background:var(--blue);border-color:var(--blue);color:var(--black);}
+.check-box-tick{font-size:0.65rem;font-weight:700;display:none;}
+.check-item.done .check-box-tick{display:block;}
+.check-num{font-family:'DM Mono',monospace;font-size:0.52rem;color:var(--blue);flex-shrink:0;padding-top:3px;min-width:2.2rem;}
+.check-body{}
+.check-title{font-size:0.88rem;font-weight:600;margin-bottom:0.15rem;}
+.check-desc{font-size:0.78rem;color:var(--muted);line-height:1.7;}
+.check-progress{display:flex;align-items:center;gap:1rem;margin-top:1.5rem;}
+.cp-bar-wrap{flex:1;height:3px;background:var(--edge2);}
+.cp-bar{height:100%;background:var(--blue);transition:width 0.4s;}
+.cp-label{font-family:'DM Mono',monospace;font-size:0.52rem;letter-spacing:0.12em;color:var(--blue);}
+
+/* CONTENT FORMULA */
+.content-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:1px;background:var(--edge);margin-bottom:1.5rem;}
+.content-card{background:var(--panel);padding:1.4rem;}
+.cc-num{font-family:'DM Mono',monospace;font-size:0.55rem;color:var(--blue);margin-bottom:0.5rem;}
+.cc-title{font-family:'Orbitron',sans-serif;font-size:0.75rem;font-weight:600;letter-spacing:0.1em;margin-bottom:0.5rem;}
+.cc-desc{font-size:0.8rem;color:var(--muted);line-height:1.7;}
+.cc-example{font-family:'DM Mono',monospace;font-size:0.62rem;color:var(--blue);background:var(--blue-dim);padding:0.4rem 0.6rem;margin-top:0.7rem;border-left:2px solid var(--blue);}
+
+.formula-box{background:var(--panel);border:1px solid var(--edge2);padding:1.5rem;margin-bottom:1.5rem;}
+.fb-label{font-family:'DM Mono',monospace;font-size:0.5rem;letter-spacing:0.18em;color:var(--blue);margin-bottom:0.8rem;}
+.fb-formula{font-family:'DM Mono',monospace;font-size:0.88rem;color:var(--white);line-height:2;}
+.fb-formula span{color:var(--blue);}
+
+/* PIPELINE — HOT LEAD */
+.pipeline-steps{display:flex;flex-direction:column;gap:1px;background:var(--edge);}
+.pipe-step{background:var(--panel);padding:1.2rem 1.4rem;display:flex;gap:1.2rem;align-items:flex-start;}
+.pipe-num{font-family:'DM Mono',monospace;font-size:0.6rem;color:var(--blue);flex-shrink:0;min-width:2rem;padding-top:2px;}
+.pipe-body{}
+.pipe-title{font-size:0.88rem;font-weight:600;margin-bottom:0.25rem;}
+.pipe-desc{font-size:0.8rem;color:var(--muted);line-height:1.7;}
+.pipe-timing{display:inline-block;font-family:'DM Mono',monospace;font-size:0.48rem;letter-spacing:0.12em;color:var(--amber);background:rgba(245,158,11,0.1);padding:0.2rem 0.5rem;border:1px solid rgba(245,158,11,0.2);margin-top:0.4rem;}
+.pipe-action{display:inline-block;font-family:'DM Mono',monospace;font-size:0.48rem;letter-spacing:0.12em;color:var(--blue);background:var(--blue-dim);padding:0.2rem 0.5rem;border:1px solid var(--edge2);margin-top:0.4rem;margin-left:0.4rem;}
+
+.script-box{background:var(--deep);border:1px solid var(--edge2);border-left:3px solid var(--blue);padding:1.2rem 1.4rem;margin-top:1.5rem;}
+.script-label{font-family:'DM Mono',monospace;font-size:0.48rem;letter-spacing:0.18em;color:var(--blue);margin-bottom:0.7rem;}
+.script-text{font-size:0.85rem;color:var(--muted);line-height:1.9;}
+.script-text strong{color:var(--white);}
+.script-text .var{color:var(--blue);font-style:italic;}
+
+/* COMMISSION TABLE */
+.comm-table{width:100%;border-collapse:collapse;background:var(--panel);border:1px solid var(--edge);}
+.comm-table th{font-family:'DM Mono',monospace;font-size:0.5rem;letter-spacing:0.16em;color:var(--blue);text-align:left;padding:0.8rem 1rem;border-bottom:1px solid var(--edge2);background:var(--surface);}
+.comm-table td{font-size:0.83rem;color:var(--muted);padding:0.9rem 1rem;border-bottom:1px solid var(--edge);}
+.comm-table tr:last-child td{border-bottom:none;}
+.comm-table td:first-child{color:var(--white);font-weight:500;}
+.comm-table td.highlight{color:var(--blue);font-family:'DM Mono',monospace;font-weight:500;}
+.comm-table tr.rec td{background:rgba(0,212,255,0.04);}
+.rec-badge{display:inline-block;font-family:'DM Mono',monospace;font-size:0.42rem;letter-spacing:0.12em;color:var(--black);background:var(--blue);padding:0.15rem 0.4rem;margin-left:0.5rem;vertical-align:middle;}
+.comm-note{font-family:'DM Mono',monospace;font-size:0.52rem;letter-spacing:0.06em;color:var(--dim);margin-top:0.8rem;line-height:1.7;}
+
+/* RECRUITING */
+.recruit-steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1px;background:var(--edge);}
+.recruit-card{background:var(--panel);padding:1.4rem;}
+.rc-step{font-family:'DM Mono',monospace;font-size:0.52rem;color:var(--blue);margin-bottom:0.4rem;}
+.rc-title{font-size:0.88rem;font-weight:600;margin-bottom:0.4rem;}
+.rc-desc{font-size:0.8rem;color:var(--muted);line-height:1.7;}
+
+.cta-bar{background:var(--surface);border:1px solid var(--edge2);padding:2rem;text-align:center;margin-top:2rem;}
+.cta-bar-title{font-family:'Orbitron',sans-serif;font-size:1.1rem;font-weight:700;letter-spacing:0.1em;margin-bottom:0.5rem;}
+.cta-bar-sub{font-size:0.83rem;color:var(--muted);margin-bottom:1.5rem;}
+.cta-bar-btns{display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;}
+.btn-primary{font-family:'DM Mono',monospace;font-size:0.6rem;letter-spacing:0.15em;text-transform:uppercase;padding:0.85rem 2rem;background:var(--blue);color:var(--black);text-decoration:none;transition:background 0.2s;font-weight:500;}
+.btn-primary:hover{background:var(--blue2);}
+.btn-ghost{font-family:'DM Mono',monospace;font-size:0.6rem;letter-spacing:0.15em;text-transform:uppercase;padding:0.85rem 2rem;background:transparent;color:var(--blue);border:1px solid var(--edge2);text-decoration:none;transition:all 0.2s;}
+.btn-ghost:hover{border-color:var(--blue);background:var(--blue-dim);}
+
+/* INFO PANEL */
+.info-panel{background:var(--deep);border:1px solid var(--edge2);padding:1.2rem 1.4rem;margin-bottom:1.5rem;display:flex;gap:1rem;align-items:flex-start;}
+.ip-icon{font-family:'DM Mono',monospace;font-size:0.65rem;color:var(--blue);flex-shrink:0;padding-top:2px;}
+.ip-text{font-size:0.83rem;color:var(--muted);line-height:1.8;}
+.ip-text strong{color:var(--white);}
+.ip-text a{color:var(--blue);text-decoration:none;}
+
+/* FOOTER */
+footer{border-top:1px solid var(--edge);padding:2rem 5%;position:relative;z-index:1;}
+.footer-disc{font-size:0.7rem;color:var(--dim);line-height:1.9;max-width:800px;margin-bottom:1rem;}
+.footer-disc a{color:rgba(0,212,255,0.5);text-decoration:none;}
+.footer-links{display:flex;gap:1.5rem;flex-wrap:wrap;}
+.footer-links a{font-family:'DM Mono',monospace;font-size:0.48rem;letter-spacing:0.12em;color:var(--dim);text-decoration:none;text-transform:uppercase;}
+.footer-links a:hover{color:var(--muted);}
+
+@media(max-width:600px){
+  .ql-grid{gap:0.4rem;}
+  .content-grid{grid-template-columns:1fr;}
+  .recruit-steps{grid-template-columns:1fr;}
+  .cta-bar-btns{flex-direction:column;align-items:center;}
+}
+</style>
+</head>
+<body>
+
+<!-- CURSOR -->
+<div id="cursor"></div>
+<div id="cursor-ring"></div>
+
+<!-- CANVAS -->
+<canvas id="particle-canvas"></canvas>
+
+<!-- PASSCODE GATE -->
+<div id="gate">
+  <div class="gate-logo">▲ APEX NETWORK</div>
+  <div class="gate-title">OPERATOR<br>SYSTEM ACCESS</div>
+  <div class="gate-sub">AUTHORISED OPERATORS ONLY</div>
+  <input class="gate-input" id="gateInput" type="password" placeholder="ENTER PASSCODE" maxlength="16" autocomplete="off" spellcheck="false">
+  <button class="gate-btn" onclick="checkGate()">ENTER →</button>
+  <div class="gate-err" id="gateErr"></div>
+</div>
+
+<!-- NAV -->
+<nav id="nav">
+  <div class="nav-brand">
+    <svg class="nav-mark" viewBox="0 0 24 24" fill="none">
+      <polygon points="12,2 22,20 2,20" stroke="#00d4ff" stroke-width="1.5" fill="none"/>
+      <line x1="12" y1="8" x2="12" y2="14" stroke="#00d4ff" stroke-width="1.5"/>
+      <circle cx="12" cy="17" r="1" fill="#00d4ff"/>
+    </svg>
+    <span class="nav-name">APEX <span>NETWORK</span></span>
+  </div>
+  <div class="nav-right">
+    <span class="nav-tag">OPERATOR SYSTEM</span>
+    <a href="apex-hub.html" class="nav-link">← Hub</a>
+  </div>
+</nav>
+
+<div class="page-wrap" id="pageWrap" style="display:none;">
+
+  <!-- HERO -->
+  <div class="hero">
+    <div class="hero-inner rv">
+      <div class="hero-tag">OPERATOR ACTIVATION GUIDE</div>
+      <div class="hero-title">THE<br><span class="hl">OPERATOR</span><br>SYSTEM</div>
+      <p class="hero-sub">Everything you need to activate, build, and scale your Apex Network operation. Work through this once. Refer back often.</p>
+      <div class="sponsor-display" id="sponsorDisplay" style="display:none;">
+        <span class="sponsor-label">YOUR SPONSOR ID</span>
+        <span class="sponsor-id" id="sponsorIdVal">—</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- QUICK LINKS -->
+  <div class="quick-links">
+    <div class="ql-label">// QUICK LINKS</div>
+    <div class="ql-grid">
+      <a href="apex-index.html" class="ql-btn">Opt-in Page</a>
+      <a href="apex-page2.html" class="ql-btn">Bridge Page</a>
+      <a href="apex-apply.html" class="ql-btn">Application</a>
+      <a href="apex-offer.html" class="ql-btn primary">Offer Page</a>
+      <a href="apex-join.html" class="ql-btn primary">Join / Register</a>
+      <a href="apex-agent-os.html" class="ql-btn">Agent OS</a>
+      <a href="apex-tracker.html" class="ql-btn">Build Tracker</a>
+      <a href="apex-hub.html" class="ql-btn">Operator Hub</a>
+      <a href="apex-disclosure.html" class="ql-btn">Income Disclosure</a>
+    </div>
+  </div>
+
+  <!-- WEEK 1 CHECKLIST -->
+  <div class="section">
+    <div class="section-inner">
+      <div class="rv">
+        <div class="section-eyebrow">01 — ACTIVATION</div>
+        <div class="section-title">WEEK <span class="hl">ONE</span><br>CHECKLIST</div>
+        <p class="section-desc">Complete these 10 tasks in your first 7 days. Each one is load-bearing. Don't skip.</p>
+      </div>
+      <div class="check-progress rv" id="checkProgress">
+        <div class="cp-bar-wrap"><div class="cp-bar" id="cpBar" style="width:0%"></div></div>
+        <span class="cp-label" id="cpLabel">0 / 10 COMPLETE</span>
+      </div>
+      <div class="checklist rv" id="checklist">
+        <div class="check-item" data-id="w1-register" onclick="toggleCheck(this)">
+          <div class="check-box"><span class="check-box-tick">✓</span></div>
+          <span class="check-num">01</span>
+          <div class="check-body">
+            <div class="check-title">Complete Enagic Registration</div>
+            <div class="check-desc">Sign up through your sponsor link at apex-join.html. Choose your entry tier. Payment processed by Enagic directly.</div>
+          </div>
+        </div>
+        <div class="check-item" data-id="w1-enagic-account" onclick="toggleCheck(this)">
+          <div class="check-box"><span class="check-box-tick">✓</span></div>
+          <span class="check-num">02</span>
+          <div class="check-body">
+            <div class="check-title">Set Up Enagic Back Office</div>
+            <div class="check-desc">Log in at enagic.com/myenagic. Note your Distributor ID — you'll need it for every downstream registration.</div>
+          </div>
+        </div>
+        <div class="check-item" data-id="w1-sponsor-id" onclick="toggleCheck(this)">
+          <div class="check-box"><span class="check-box-tick">✓</span></div>
+          <span class="check-num">03</span>
+          <div class="check-body">
+            <div class="check-title">Get Your Distributor IDs (8A, 8B, 8C)</div>
+            <div class="check-desc">You'll receive 3 IDs from Enagic based on your entry tier. These go on your version of apex-offer.html and apex-join.html.</div>
+          </div>
+        </div>
+        <div class="check-item" data-id="w1-funnel-clone" onclick="toggleCheck(this)">
+          <div class="check-box"><span class="check-box-tick">✓</span></div>
+          <span class="check-num">04</span>
+          <div class="check-body">
+            <div class="check-title">Fork and Deploy Your Funnel</div>
+            <div class="check-desc">Fork the Apex Network repo on GitHub. Replace sponsor IDs in apex-offer.html and apex-join.html with yours. Deploy to Netlify.</div>
+          </div>
+        </div>
+        <div class="check-item" data-id="w1-ac-setup" onclick="toggleCheck(this)">
+          <div class="check-box"><span class="check-box-tick">✓</span></div>
+          <span class="check-num">05</span>
+          <div class="check-body">
+            <div class="check-title">Wire ActiveCampaign</div>
+            <div class="check-desc">Add AC_BASE_URL and AC_API_KEY to Netlify environment variables. Create the 6 tags: SS-NEW, SS-WARM, SS-HOT, SS-APPLIED, SS-CONVERTED, SS-DISTRIBUTOR.</div>
+          </div>
+        </div>
+        <div class="check-item" data-id="w1-first-video" onclick="toggleCheck(this)">
+          <div class="check-box"><span class="check-box-tick">✓</span></div>
+          <span class="check-num">06</span>
+          <div class="check-body">
+            <div class="check-title">Record First Content Piece</div>
+            <div class="check-desc">Use Pillar 1 (Pain → Possibility) script. 60–90 seconds. You on camera or HeyGen avatar. Post to TikTok or Reels. Don't overthink it.</div>
+          </div>
+        </div>
+        <div class="check-item" data-id="w1-social-link" onclick="toggleCheck(this)">
+          <div class="check-box"><span class="check-box-tick">✓</span></div>
+          <span class="check-num">07</span>
+          <div class="check-body">
+            <div class="check-title">Set Bio Link to Opt-in Page</div>
+            <div class="check-desc">TikTok bio → your apex-index.html URL. Instagram bio same. This is how cold traffic enters the funnel.</div>
+          </div>
+        </div>
+        <div class="check-item" data-id="w1-agent-os" onclick="toggleCheck(this)">
+          <div class="check-box"><span class="check-box-tick">✓</span></div>
+          <span class="check-num">08</span>
+          <div class="check-body">
+            <div class="check-title">Run First Morning Briefing</div>
+            <div class="check-desc">Open apex-agent-os.html. Enter your API key. Run the Morning Briefing module. Set your one daily target.</div>
+          </div>
+        </div>
+        <div class="check-item" data-id="w1-first-lead" onclick="toggleCheck(this)">
+          <div class="check-box"><span class="check-box-tick">✓</span></div>
+          <span class="check-num">09</span>
+          <div class="check-body">
+            <div class="check-title">Send to First 10 Warm Contacts</div>
+            <div class="check-desc">Message 10 people directly. Send them your apex-index.html link. Use the warm contact script in Section 4 of this guide.</div>
+          </div>
+        </div>
+        <div class="check-item" data-id="w1-tracker" onclick="toggleCheck(this)">
+          <div class="check-box"><span class="check-box-tick">✓</span></div>
+          <span class="check-num">10</span>
+          <div class="check-body">
+            <div class="check-title">Log First Week in Build Tracker</div>
+            <div class="check-desc">Open apex-tracker.html. Mark everything you've completed. Add session notes. Check your NEXT ACTION.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CONTENT FORMULA -->
+  <div class="section">
+    <div class="section-inner">
+      <div class="rv">
+        <div class="section-eyebrow">02 — CONTENT ENGINE</div>
+        <div class="section-title">THE 5-PILLAR<br><span class="hl">CONTENT</span> FORMULA</div>
+        <p class="section-desc">Rotate through these 5 pillars. Post once daily. Each piece drives to your opt-in link. One great video can generate 10+ leads.</p>
+      </div>
+
+      <div class="formula-box rv">
+        <div class="fb-label">// THE FRAME</div>
+        <div class="fb-formula">
+          <span>Hook</span> (3 sec) → <span>Problem</span> (10 sec) → <span>System</span> (20 sec) → <span>Proof</span> (15 sec) → <span>CTA</span> (5 sec)<br>
+          Total: <span>60–90 seconds.</span> Never longer.
+        </div>
+      </div>
+
+      <div class="content-grid rv">
+        <div class="content-card">
+          <div class="cc-num">PILLAR 01</div>
+          <div class="cc-title">PAIN → POSSIBILITY</div>
+          <div class="cc-desc">Start with the problem (underpaid, trapped, no exit). Pivot to the system that changed it.</div>
+          <div class="cc-example">"I used to [problem]. Then I found a system that pays $225–$2,595 per sale..."</div>
+        </div>
+        <div class="content-card">
+          <div class="cc-num">PILLAR 02</div>
+          <div class="cc-title">THE MECHANISM</div>
+          <div class="cc-desc">Explain HOW it works. Enagic model, tiered commissions, no ceiling. No hype — just the structure.</div>
+          <div class="cc-example">"Here's exactly how I get paid $1,322 from a single customer..."</div>
+        </div>
+        <div class="content-card">
+          <div class="cc-num">PILLAR 03</div>
+          <div class="cc-title">THE NUMBERS</div>
+          <div class="cc-desc">Show the math. 3 sales/month at different tiers. What that means annually. Let the numbers speak.</div>
+          <div class="cc-example">"3 K8 Pro sales per month = $3,966. That's $47,592/year from 3 customers..."</div>
+        </div>
+        <div class="content-card">
+          <div class="cc-num">PILLAR 04</div>
+          <div class="cc-title">WHO THIS IS FOR</div>
+          <div class="cc-desc">Velvet rope. Name the person: wants income replacement, has $2.5K–$18K to invest, coachable.</div>
+          <div class="cc-example">"This is NOT for everyone. If you want to earn $500 for referring a friend, this isn't it..."</div>
+        </div>
+        <div class="content-card">
+          <div class="cc-num">PILLAR 05</div>
+          <div class="cc-title">DAY IN THE LIFE</div>
+          <div class="cc-desc">Show your actual routine. Morning briefing, content creation, lead pipeline. Aspirational reality.</div>
+          <div class="cc-example">"My Monday: check AC dashboard, 1 new HOT lead, post 1 video, done by noon..."</div>
+        </div>
+      </div>
+
+      <div class="info-panel rv">
+        <div class="ip-icon">▲</div>
+        <div class="ip-text"><strong>Use Agent OS for scripts.</strong> Open <a href="apex-agent-os.html">apex-agent-os.html</a>, go to Script Generator, enter your pillar number + niche. The AI writes a complete 90-second script in your voice. Paste into HeyGen or record yourself.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- HOT LEAD PROCESS -->
+  <div class="section">
+    <div class="section-inner">
+      <div class="rv">
+        <div class="section-eyebrow">03 — CONVERSION</div>
+        <div class="section-title">FIRST <span class="hl">HOT LEAD</span><br>PROCESS</div>
+        <p class="section-desc">A HOT lead is someone who selected "Yes — I'm ready to invest" on the application. They are directed to apex-offer.html. Here's the exact process.</p>
+      </div>
+
+      <div class="pipeline-steps rv">
+        <div class="pipe-step">
+          <span class="pipe-num">01</span>
+          <div class="pipe-body">
+            <div class="pipe-title">Lead Submits Application</div>
+            <div class="pipe-desc">They fill in apex-apply.html. Your Netlify function scores them. HOT = directed to apex-offer.html immediately. You receive an email notification (once OWNER_EMAIL env var is set).</div>
+            <span class="pipe-timing">TRIGGER: IMMEDIATE</span>
+          </div>
+        </div>
+        <div class="pipe-step">
+          <span class="pipe-num">02</span>
+          <div class="pipe-body">
+            <div class="pipe-title">Check ActiveCampaign Dashboard</div>
+            <div class="pipe-desc">HOT applicants are tagged SS-HOT in your AC account. Review their details: name, email, phone, tier selection, income goal, and why they joined.</div>
+            <span class="pipe-timing">DO THIS WITHIN 1 HOUR</span>
+          </div>
+        </div>
+        <div class="pipe-step">
+          <span class="pipe-num">03</span>
+          <div class="pipe-body">
+            <div class="pipe-title">Send First Contact Message</div>
+            <div class="pipe-desc">Text or DM first. Do not call cold. Reference their application. Confirm they've seen the offer page. Use the script below.</div>
+            <span class="pipe-timing">WITHIN 2 HOURS OF APPLICATION</span>
+            <span class="pipe-action">USE SCRIPT →</span>
+          </div>
+        </div>
+        <div class="pipe-step">
+          <span class="pipe-num">04</span>
+          <div class="pipe-body">
+            <div class="pipe-title">Send Them to apex-join.html</div>
+            <div class="pipe-desc">If they've reviewed the offer and are ready, direct them straight to apex-join.html with your Sponsor ID pre-filled in the URL: apex-join.html?sponsorid=YOUR_ID</div>
+            <span class="pipe-timing">ONLY AFTER THEY CONFIRM READINESS</span>
+          </div>
+        </div>
+        <div class="pipe-step">
+          <span class="pipe-num">05</span>
+          <div class="pipe-body">
+            <div class="pipe-title">They Register Through Enagic</div>
+            <div class="pipe-desc">They complete registration on Enagic's site. Payment goes to Enagic. Commission deposited to your account within Enagic's payout schedule. Tag them SS-CONVERTED in AC.</div>
+            <span class="pipe-timing">ENAGIC PROCESSES IN 1–3 BUSINESS DAYS</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="script-box rv">
+        <div class="script-label">// FIRST CONTACT SCRIPT (TEXT / DM)</div>
+        <div class="script-text">
+          Hey <span class="var">[First Name]</span> — just saw your application come through.<br><br>
+          <strong>Appreciate you taking the time.</strong> Looks like you're looking at the <span class="var">[tier they selected]</span> — good call, that's the one most operators start with.<br><br>
+          Have you had a chance to go through the full offer page yet? Just want to make sure you've seen everything before we talk numbers.<br><br>
+          If you're ready to move — I can send you the direct registration link now. Otherwise happy to answer any questions first. What do you need?
+        </div>
+      </div>
+
+      <div class="script-box rv" style="margin-top:1rem;">
+        <div class="script-label">// WARM CONTACT OUTREACH SCRIPT</div>
+        <div class="script-text">
+          Hey <span class="var">[Name]</span> — I've been building something for the past few months and it's starting to produce results. It's a distribution network built on Enagic — they've been paying commissions for 50+ years.<br><br>
+          <strong>Not asking you to do anything</strong> — just thought you might want to look at how it works. It's literally just a 5-minute read.<br><br>
+          Here's the breakdown: <span class="var">[your apex-index.html URL]</span><br><br>
+          If it's not for you, no stress. But if the numbers make sense I'm happy to walk you through it.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- COMMISSION REFERENCE -->
+  <div class="section">
+    <div class="section-inner">
+      <div class="rv">
+        <div class="section-eyebrow">04 — COMPENSATION</div>
+        <div class="section-title">COMMISSION<br><span class="hl">REFERENCE</span></div>
+        <p class="section-desc">Enagic pays direct commissions to you on every sale. Below is the structure by entry tier. These are Enagic published figures.</p>
+      </div>
+
+      <table class="comm-table rv">
+        <thead>
+          <tr>
+            <th>PACKAGE</th>
+            <th>ENTRY INVESTMENT</th>
+            <th>DIRECT COMMISSION</th>
+            <th>3 SALES/MO</th>
+            <th>ANNUAL (3/MO)</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>emGuarde Entry</td>
+            <td class="highlight">~$2,475</td>
+            <td class="highlight">$225</td>
+            <td>$675/mo</td>
+            <td>$8,100/yr</td>
+          </tr>
+          <tr>
+            <td>K8 Pro</td>
+            <td class="highlight">~$6,787</td>
+            <td class="highlight">$1,322</td>
+            <td>$3,966/mo</td>
+            <td>$47,592/yr</td>
+          </tr>
+          <tr class="rec">
+            <td>Trifecta Elite <span class="rec-badge">RECOMMENDED</span></td>
+            <td class="highlight">~$11,682</td>
+            <td class="highlight">$2,023</td>
+            <td>$6,069/mo</td>
+            <td>$72,828/yr</td>
+          </tr>
+          <tr>
+            <td>Quad Commander</td>
+            <td class="highlight">~$18,469</td>
+            <td class="highlight">$2,595</td>
+            <td>$7,785/mo</td>
+            <td>$93,420/yr</td>
+          </tr>
+        </tbody>
+      </table>
+      <p class="comm-note rv">Commission amounts are based on Enagic's published 8-point compensation structure. Actual earnings depend on sales volume. Most distributors earn little or no income. See <a href="apex-disclosure.html" style="color:rgba(0,212,255,0.6);">income disclosure</a> for full context.</p>
+
+      <div class="info-panel rv" style="margin-top:1.5rem;">
+        <div class="ip-icon">▲</div>
+        <div class="ip-text"><strong>Override commissions apply when you recruit operators.</strong> Every distributor in your downline who sells generates an additional commission back to you — based on how many points up the chain you sit. This is the compounding element. The higher your entry tier, the higher your override point value.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- RECRUITING FIRST OPERATOR -->
+  <div class="section">
+    <div class="section-inner">
+      <div class="rv">
+        <div class="section-eyebrow">05 — NETWORK</div>
+        <div class="section-title">RECRUITING YOUR<br><span class="hl">FIRST OPERATOR</span></div>
+        <p class="section-desc">Your first recruit is the most important. They prove the system works to you — and to everyone watching. Follow this process exactly.</p>
+      </div>
+
+      <div class="recruit-steps rv">
+        <div class="recruit-card">
+          <div class="rc-step">STEP 01</div>
+          <div class="rc-title">Identify the Right Person</div>
+          <div class="rc-desc">Someone with capital available, who wants income replacement, and is coachable. Not someone looking for a "side hustle." They need to be serious about building.</div>
+        </div>
+        <div class="recruit-card">
+          <div class="rc-step">STEP 02</div>
+          <div class="rc-title">Send Them Into the Funnel</div>
+          <div class="rc-desc">Your apex-index.html → apex-page2.html → apex-apply.html sequence does the selling. Don't present manually. Let the funnel qualify them. Your job is to answer questions after they've read it.</div>
+        </div>
+        <div class="recruit-card">
+          <div class="rc-step">STEP 03</div>
+          <div class="rc-title">Follow Up on Application</div>
+          <div class="rc-desc">If they score HOT, use the First Contact script. Walk them through apex-offer.html on a screen share if needed. Address objections with facts — not pressure.</div>
+        </div>
+        <div class="recruit-card">
+          <div class="rc-step">STEP 04</div>
+          <div class="rc-title">Get Them Registered</div>
+          <div class="rc-desc">Send apex-join.html?sponsorid=YOUR_ID. They register through Enagic using your Distributor ID. Once registered they're in your downline.</div>
+        </div>
+        <div class="recruit-card">
+          <div class="rc-step">STEP 05</div>
+          <div class="rc-title">Onboard Them With This Page</div>
+          <div class="rc-desc">Fork the repo. Replace sponsor IDs with theirs. Point them at their own Operator System page. Their Week 1 checklist starts now. You are their upline — support them through it.</div>
+        </div>
+        <div class="recruit-card">
+          <div class="rc-step">STEP 06</div>
+          <div class="rc-title">Plug Into Agent OS</div>
+          <div class="rc-desc">Show them apex-agent-os.html. Walk them through the Morning Briefing and Script Generator modules. The system builds their content engine from day one.</div>
+        </div>
+      </div>
+
+      <div class="cta-bar rv">
+        <div class="cta-bar-title">READY TO BUILD YOUR NETWORK?</div>
+        <div class="cta-bar-sub">Your funnel is live. Your system is ready. Your first operator is one conversation away.</div>
+        <div class="cta-bar-btns">
+          <a href="apex-agent-os.html" class="btn-primary">OPEN AGENT OS →</a>
+          <a href="apex-apply.html" class="btn-ghost">VIEW APPLICATION FORM</a>
+          <a href="apex-tracker.html" class="btn-ghost">CHECK BUILD TRACKER</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <p class="footer-disc">Results are not typical. Commission figures are based on Enagic's published compensation structure and are subject to change. Income requires active product sales. The majority of Enagic distributors earn little or no income. Apex Network is an independent distributor network not affiliated with or endorsed by Enagic International. <a href="apex-disclosure.html">Full income disclosure →</a></p>
+    <div class="footer-links">
+      <a href="apex-terms.html">Terms of Use</a>
+      <a href="apex-privacy.html">Privacy Policy</a>
+      <a href="apex-disclosure.html">Income Disclosure</a>
+      <a href="apex-hub.html">Operator Hub</a>
+    </div>
+  </footer>
+
+</div><!-- /page-wrap -->
+
+<script>
+// PASSCODE
+(function(){
+  if(sessionStorage.getItem('apex_auth')==='1'){
+    document.getElementById('gate').style.display='none';
+    document.getElementById('pageWrap').style.display='block';
+    initPage();
+  }
+  document.getElementById('gateInput').addEventListener('keydown',function(e){if(e.key==='Enter')checkGate();});
+})();
+
+function checkGate(){
+  const v=document.getElementById('gateInput').value.toUpperCase().trim();
+  const inp=document.getElementById('gateInput');
+  const err=document.getElementById('gateErr');
+  if(v==='DIESEL2025'){
+    sessionStorage.setItem('apex_auth','1');
+    document.getElementById('gate').style.display='none';
+    document.getElementById('pageWrap').style.display='block';
+    initPage();
+  } else {
+    inp.classList.add('error');
+    err.textContent='ACCESS DENIED — INCORRECT PASSCODE';
+    setTimeout(()=>{inp.classList.remove('error');inp.value='';err.textContent='';},1500);
+  }
+}
+
+function initPage(){
+  initCursor();
+  initParticles();
+  initScrollReveal();
+  initNav();
+  initSponsorId();
+  loadChecklistState();
+}
+
+// SPONSOR ID from URL
+function initSponsorId(){
+  const params=new URLSearchParams(window.location.search);
+  const sid=params.get('sponsorid');
+  if(sid&&sid.trim()){
+    document.getElementById('sponsorIdVal').textContent=sid.trim();
+    document.getElementById('sponsorDisplay').style.display='inline-flex';
+  }
+}
+
+// CHECKLIST
+const CHECKLIST_KEY='apex_operator_w1';
+function loadChecklistState(){
+  let saved=[];
+  try{saved=JSON.parse(localStorage.getItem(CHECKLIST_KEY)||'[]');}catch(e){}
+  const items=document.querySelectorAll('.check-item');
+  items.forEach(item=>{
+    if(saved.includes(item.dataset.id)){
+      item.classList.add('done');
+    }
+  });
+  updateCheckProgress();
+}
+function toggleCheck(el){
+  el.classList.toggle('done');
+  saveChecklistState();
+  updateCheckProgress();
+}
+function saveChecklistState(){
+  const done=[...document.querySelectorAll('.check-item.done')].map(el=>el.dataset.id);
+  localStorage.setItem(CHECKLIST_KEY,JSON.stringify(done));
+}
+function updateCheckProgress(){
+  const all=document.querySelectorAll('.check-item').length;
+  const done=document.querySelectorAll('.check-item.done').length;
+  const pct=Math.round(done/all*100);
+  document.getElementById('cpBar').style.width=pct+'%';
+  document.getElementById('cpLabel').textContent=done+' / '+all+' COMPLETE';
+}
+
+// CURSOR
+function initCursor(){
+  const cur=document.getElementById('cursor');
+  const ring=document.getElementById('cursor-ring');
+  let mx=0,my=0,rx=0,ry=0;
+  document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;cur.style.left=mx+'px';cur.style.top=my+'px';});
+  function animRing(){rx+=(mx-rx)*0.12;ry+=(my-ry)*0.12;ring.style.left=rx+'px';ring.style.top=ry+'px';requestAnimationFrame(animRing);}
+  animRing();
+  document.querySelectorAll('a,button,[onclick]').forEach(el=>{
+    el.addEventListener('mouseenter',()=>{cur.style.width='16px';cur.style.height='16px';ring.style.width='44px';ring.style.height='44px';});
+    el.addEventListener('mouseleave',()=>{cur.style.width='10px';cur.style.height='10px';ring.style.width='32px';ring.style.height='32px';});
+  });
+}
+
+// PARTICLES
+function initParticles(){
+  const canvas=document.getElementById('particle-canvas');
+  const ctx=canvas.getContext('2d');
+  let W,H,particles=[];
+  function resize(){W=canvas.width=window.innerWidth;H=canvas.height=window.innerHeight;}
+  resize();
+  window.addEventListener('resize',resize);
+  for(let i=0;i<55;i++){
+    particles.push({x:Math.random()*1920,y:Math.random()*1080,vx:(Math.random()-0.5)*0.22,vy:(Math.random()-0.5)*0.22,r:Math.random()*1.4+0.3,a:Math.random()*0.5+0.1});
+  }
+  function draw(){
+    ctx.clearRect(0,0,W,H);
+    particles.forEach(p=>{
+      p.x+=p.vx;p.y+=p.vy;
+      if(p.x<0)p.x=W;if(p.x>W)p.x=0;
+      if(p.y<0)p.y=H;if(p.y>H)p.y=0;
+      ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
+      ctx.fillStyle=`rgba(0,212,255,${p.a})`;ctx.fill();
+    });
+    particles.forEach((p,i)=>{
+      for(let j=i+1;j<particles.length;j++){
+        const q=particles[j];
+        const d=Math.hypot(p.x-q.x,p.y-q.y);
+        if(d<120){
+          ctx.beginPath();ctx.moveTo(p.x,p.y);ctx.lineTo(q.x,q.y);
+          ctx.strokeStyle=`rgba(0,212,255,${0.07*(1-d/120)})`;ctx.lineWidth=0.6;ctx.stroke();
+        }
+      }
+    });
+    requestAnimationFrame(draw);
+  }
+  draw();
+}
+
+// SCROLL REVEAL
+function initScrollReveal(){
+  const obs=new IntersectionObserver(entries=>{entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('visible');});},{threshold:0.1});
+  document.querySelectorAll('.rv').forEach(el=>obs.observe(el));
+}
+
+// NAV SHRINK
+function initNav(){
+  const nav=document.getElementById('nav');
+  window.addEventListener('scroll',()=>{nav.classList.toggle('shrunk',window.scrollY>60);});
+}
+</script>
+</body>
+</html>
