@@ -1448,24 +1448,16 @@ async function submitRegistration() {
   };
 
   try {
-    await fetch('/.netlify/functions/apply', {
+    await fetch('/.netlify/functions/register', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        ...payload,
-        phone:            state.mobile,
-        investmentReady:  'Yes — registering now',
-        incomeGoal:       'Active operator',
-        situation:        'Joining as operator',
-        tier:             state.productName,
-        tag:              'SS-CONVERTED'
-      })
+      body: JSON.stringify(payload)
     });
   } catch(err) {
     console.error('Submit error:', err);
   }
 
-  showSuccess();
+  window.location.href = '/apex-thank-you.html';
 }
 
 function showSuccess() {

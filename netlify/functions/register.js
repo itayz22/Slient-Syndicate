@@ -225,7 +225,7 @@ EXTRA DOCUMENTS (if applicable)
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━
 ${(b.extraDocs || []).length > 0 ? 'Your payment method requires these additional documents:\n' + b.extraDocs.join('\n') : 'No additional documents required for your payment method.'}
 
-Questions? Reply to this email or contact us at hello@silentsyndicate.com.au
+Questions? Reply to this email or contact us at ${process.env.OWNER_EMAIL || 'hello@apexnetwork.com.au'}
 
 — Apex Network Chairman
 `;
@@ -243,7 +243,7 @@ async function sendEmail(to, subject, text) {
       method: 'POST',
       headers: { 'Api-Token': process.env.AC_API_KEY, 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        email: { subject, fromEmail: process.env.OWNER_EMAIL || 'hello@silentsyndicate.com.au', fromName: 'Apex Network', to, body: text.replace(/\n/g,'<br>'), bodyText: text }
+        email: { subject, fromEmail: process.env.OWNER_EMAIL || 'hello@apexnetwork.com.au', fromName: 'Apex Network', to, body: text.replace(/\n/g,'<br>'), bodyText: text }
       })
     });
   } catch(e) {

@@ -113,7 +113,7 @@ function scoreLead(data) {
 
 function getRedirectUrl(score) {
   if (score === 'HOT') return '/apex-offer.html';
-  if (score === 'WARM') return '/apex-page2.html';
+  if (score === 'WARM') return '/apex-offer.html';
   return '/apex-index.html';
 }
 

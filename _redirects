@@ -5,5 +5,6 @@
 /start            /apex-index.html     200
 /api/subscribe    /.netlify/functions/subscribe  200
 /api/apply        /.netlify/functions/apply  200
+/api/register     /.netlify/functions/register  200
 /api/score        /.netlify/functions/score  200
 /api/webhook      /.netlify/functions/webhook  200

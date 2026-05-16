@@ -229,10 +229,10 @@ h1.hero-title span{color:var(--blue);}
   <div class="quick-links-wrap">
     <div class="ql-label">Quick Links — All Live Pages</div>
     <div class="ql-row">
-      <a href="apex-front-door.html" class="ql-link" target="_blank">Front Door</a>
-      <a href="apex-vsl.html" class="ql-link" target="_blank">VSL</a>
-      <a href="apex-optin.html" class="ql-link" target="_blank">Opt-In</a>
-      <a href="apex-bridge.html" class="ql-link" target="_blank">Bridge</a>
+      <a href="apex-index.html" class="ql-link" target="_blank">Front Door</a>
+      <a href="apex-page2.html" class="ql-link" target="_blank">Platform Story</a>
+      <a href="apex-offer.html" class="ql-link" target="_blank">Offer</a>
+      <a href="apex-content-calendar.html" class="ql-link tool" target="_blank">📅 Calendar</a>
       <a href="apex-apply.html" class="ql-link" target="_blank">Application</a>
       <a href="apex-thank-you.html" class="ql-link" target="_blank">Thank You</a>
       <a href="apex-join.html" class="ql-link" target="_blank">Register</a>
@@ -354,7 +354,7 @@ const SECTIONS = [
       { id: 'content-heygen',    label: 'Sign up HeyGen Creator plan ($29 USD/mo)',                        badge: null },
       { id: 'content-tiktok',    label: 'Create TikTok business account',                                  badge: null },
       { id: 'content-instagram', label: 'Create Instagram business account',                               badge: null },
-      { id: 'content-bio-links', label: 'Set bio links on TikTok + Instagram → apex-front-door.html',     badge: null },
+      { id: 'content-bio-links', label: 'Set bio links on TikTok + Instagram → apex-index.html',         badge: null },
       { id: 'content-avatar',    label: 'Create AI avatar in HeyGen (upload 3-5min video sample)',         badge: null },
       { id: 'content-capcut',    label: 'Set up CapCut for video editing + captions',                      badge: null },
       { id: 'content-first-vid', label: 'Generate first video (Problem / Mechanism / Proof / CTA)',        badge: null },
@@ -418,7 +418,7 @@ const PRIORITY = [
 const TASK_DESCS = {
   'infra-env-vars':    'Netlify → Site settings → Environment variables. Add three vars: AC_BASE_URL (your ActiveCampaign URL, e.g. https://youraccountname.activehosted.com), AC_API_KEY (from AC → Settings → Developer), OWNER_EMAIL (your email). All 3 required for form submissions to capture leads.',
   'infra-redeploy':    'After setting all 3 env vars: Netlify → Deploys → Trigger deploy → Deploy site. Functions only read new env vars after a fresh deploy.',
-  'ac-tag-new':        'ActiveCampaign → Contacts → Tags → Add a tag. Exact name: SS-NEW (case-sensitive). This tag fires on every opt-in form submission from apex-optin.html.',
+  'ac-tag-new':        'ActiveCampaign → Contacts → Tags → Add a tag. Exact name: SS-NEW (case-sensitive). This tag fires on every opt-in form submission from apex-index.html.',
   'ac-tag-warm':       'ActiveCampaign → Contacts → Tags → Add a tag. Exact name: SS-WARM. Used when a lead engages with content or views the bridge page.',
   'ac-tag-hot':        'ActiveCampaign → Contacts → Tags → Add a tag. Exact name: SS-HOT. Fires when a lead submits the application form on apex-apply.html.',
   'ac-tag-applied':    'ActiveCampaign → Contacts → Tags → Add a tag. Exact name: SS-APPLIED. Applied and contacted but not yet converted.',
@@ -426,16 +426,16 @@ const TASK_DESCS = {
   'ac-tag-distributor':'ActiveCampaign → Contacts → Tags → Add a tag. Exact name: SS-DISTRIBUTOR. Set manually after Enagic AU confirms the registration is processed.',
   'ac-automation':     'ActiveCampaign → Automations → New automation. Name it "Apex Welcome Sequence". Set trigger: Contact tag is added → SS-NEW. Add 7 email send steps with 1-day delays between each.',
   'ac-email-load':     'Load all 7 email templates into the "Apex Welcome Sequence" automation. Use email-sequence.html (once built) as your copy reference.',
-  'ac-test':           'Submit a test email on apex-optin.html. Confirm: contact appears in AC with SS-NEW tag, welcome automation fires, you receive owner notification email.',
+  'ac-test':           'Submit a test email on apex-index.html. Confirm: contact appears in AC with SS-NEW tag, welcome automation fires, you receive owner notification email.',
   'content-heygen':    'Go to heygen.com. Sign up for the Creator plan ($29 USD/mo). You need this to generate AI avatar videos for TikTok and Instagram.',
   'content-tiktok':    'Create a TikTok account. Switch to Business account (Settings → Manage account → Switch to business). Username should align with the Apex Network brand.',
   'content-instagram': 'Create an Instagram account. Switch to Business account (Settings → Account → Switch to professional account). Keep username consistent with TikTok.',
-  'content-bio-links': 'On both TikTok and Instagram, add your Netlify URL (apex-front-door.html) to the bio link. This is the entire traffic → funnel entry point.',
+  'content-bio-links': 'On both TikTok and Instagram, add your Netlify URL (silent-syndicate.netlify.app/apex-index.html) to the bio link. This is the entire traffic → funnel entry point.',
   'content-avatar':    'In HeyGen: Avatar Studio → Create new avatar. Upload a 3–5 minute video of yourself talking to camera. Processing takes 24 hours. This becomes the face of all content.',
   'content-capcut':    'Download CapCut (desktop at capcut.com or mobile). Use it to add captions, B-roll, background music, and split-screen elements to HeyGen videos.',
   'content-first-vid': 'In HeyGen: create your first video using the Problem → Mechanism → Proof → CTA format. Keep it under 90 seconds. Script it in Agent OS → Module 8 (Script Generator).',
   'content-later':     'Set up Later (later.com) — connect both your TikTok and Instagram business accounts. Use it to schedule posts and analyse performance.',
-  'content-publish':   'Publish your first piece of content. Keep it hook-heavy, curiosity-driven, no income claims. Check that the bio link goes to apex-front-door.html.',
+  'content-publish':   'Publish your first piece of content. Keep it hook-heavy, curiosity-driven, no income claims. Check that the bio link goes to apex-index.html.',
   'tool-emails':       'Build email-sequence.html — Apex Network branded page showing all 7 nurture email templates. Same design system. Same passcode gate.',
   'tool-onboarding':   'Build operator-onboarding-emails.html — the post-registration onboarding sequence for new operators. Steps, checklist, what to expect.',
   'enagic-email':      'Send intro email to Enagic AU at info@enagic-australia.com. Introduce yourself, confirm your distributor status, ask about registration processing times and required docs.',
