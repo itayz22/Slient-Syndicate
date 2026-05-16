@@ -1,0 +1,979 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Apex Network — Operator System</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=DM+Mono:wght@300;400;500&family=Archivo:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --black:#04040a;--deep:#060610;--surface:#0a0a15;--panel:#0e0e1c;--panel2:#12121f;
+  --edge:rgba(0,212,255,0.07);--edge2:rgba(0,212,255,0.14);
+  --blue:#00d4ff;--blue2:#0099cc;
+  --white:#f0f0f8;--muted:rgba(240,240,248,0.52);--dim:rgba(240,240,248,0.22);
+  --green:#00ff88;--amber:#f59e0b;--red:#ef4444;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{font-size:16px;scroll-behavior:smooth;}
+body{background:var(--black);color:var(--white);font-family:'Archivo',sans-serif;overflow-x:hidden;cursor:crosshair;min-height:100vh;}
+
+body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(rgba(0,212,255,0.04) 1px,transparent 1px),linear-gradient(90deg,rgba(0,212,255,0.04) 1px,transparent 1px);background-size:80px 80px;pointer-events:none;z-index:0;}
+body::after{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");pointer-events:none;z-index:9999;opacity:0.4;}
+
+/* GATE */
+#gate{position:fixed;inset:0;background:var(--black);z-index:10000;display:flex;align-items:center;justify-content:center;}
+.gate-inner{text-align:center;padding:2rem;}
+.gate-logo{font-family:'Orbitron',sans-serif;font-size:2.2rem;font-weight:900;letter-spacing:0.22em;margin-bottom:0.4rem;}
+.gate-logo span{color:var(--blue);}
+.gate-sub{font-family:'DM Mono',monospace;font-size:0.58rem;letter-spacing:0.2em;color:var(--dim);margin-bottom:2.5rem;}
+.gate-label{font-family:'DM Mono',monospace;font-size:0.55rem;letter-spacing:0.18em;color:var(--blue);margin-bottom:0.7rem;}
+.gate-input{background:rgba(255,255,255,0.03);border:1px solid var(--edge2);color:var(--white);font-family:'DM Mono',monospace;font-size:1.2rem;letter-spacing:0.3em;text-align:center;width:220px;padding:0.9rem 1rem;outline:none;display:block;margin:0 auto 1rem;text-transform:uppercase;}
+.gate-input:focus{border-color:var(--blue);background:rgba(0,212,255,0.04);}
+.gate-btn{background:var(--blue);color:var(--white);font-family:'DM Mono',monospace;font-size:0.65rem;letter-spacing:0.15em;text-transform:uppercase;padding:0.8rem 2rem;border:none;cursor:pointer;width:220px;display:block;margin:0 auto;transition:background 0.2s;}
+.gate-btn:hover{background:var(--blue2);}
+.gate-error{font-family:'DM Mono',monospace;font-size:0.55rem;letter-spacing:0.1em;color:var(--red);margin-top:0.6rem;display:none;}
+.gate-hint{font-family:'DM Mono',monospace;font-size:0.5rem;letter-spacing:0.08em;color:var(--dim);margin-top:1.5rem;}
+
+/* NAV */
+nav{position:sticky;top:0;z-index:500;background:rgba(5,5,5,0.97);backdrop-filter:blur(20px);border-bottom:1px solid var(--edge);padding:0 5%;height:60px;display:flex;justify-content:space-between;align-items:center;position:relative;z-index:1;}
+.nav-brand{display:flex;align-items:center;gap:0.8rem;}
+.nav-mark{width:22px;height:22px;flex-shrink:0;}
+.nav-name{font-family:'Orbitron',sans-serif;font-size:1.2rem;font-weight:900;letter-spacing:0.22em;}
+.nav-name span{color:var(--blue);}
+.nav-divider{width:1px;height:18px;background:var(--edge2);}
+.nav-tag{font-family:'DM Mono',monospace;font-size:0.55rem;letter-spacing:0.2em;color:var(--dim);}
+.nav-right{display:flex;align-items:center;gap:1.2rem;}
+.nav-status{display:flex;align-items:center;gap:0.5rem;font-family:'DM Mono',monospace;font-size:0.55rem;letter-spacing:0.1em;color:var(--muted);}
+.status-dot{width:6px;height:6px;border-radius:50%;background:var(--green);box-shadow:0 0 8px var(--green);animation:blink 2s ease-in-out infinite;}
+@keyframes blink{0%,100%{opacity:1;}50%{opacity:0.25;}}
+#navClock{font-family:'DM Mono',monospace;font-size:0.55rem;letter-spacing:0.1em;color:var(--dim);}
+
+/* HERO */
+.hero{padding:4rem 5% 3rem;position:relative;z-index:1;}
+.hero-eyebrow{font-family:'DM Mono',monospace;font-size:0.6rem;letter-spacing:0.25em;color:var(--blue);margin-bottom:1rem;display:flex;align-items:center;gap:0.8rem;}
+.hero-eyebrow::before{content:'';width:20px;height:1px;background:var(--blue);}
+h1.hero-title{font-family:'Orbitron',sans-serif;font-size:clamp(3.5rem,9vw,6.5rem);letter-spacing:0.04em;line-height:0.92;margin-bottom:1.2rem;}
+h1.hero-title span{color:var(--blue);}
+.hero-sub{font-size:0.95rem;color:var(--muted);max-width:560px;line-height:1.9;margin-bottom:2.5rem;}
+.operator-id-badge{display:inline-flex;align-items:center;gap:0.6rem;background:rgba(0,255,136,0.05);border:1px solid rgba(0,255,136,0.2);padding:0.5rem 1rem;font-family:'DM Mono',monospace;font-size:0.58rem;letter-spacing:0.15em;color:var(--green);margin-bottom:2rem;}
+
+/* STAT TILES */
+.stat-tiles{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--edge);border:1px solid var(--edge);max-width:860px;margin-bottom:2.5rem;}
+.stat-tile{background:var(--panel);padding:1.2rem 1.4rem;}
+.st-val{font-family:'Orbitron',sans-serif;font-size:2rem;letter-spacing:0.04em;color:var(--white);display:block;line-height:1;}
+.st-val.blue{color:var(--blue);}.st-val.green{color:var(--green);}.st-val.amber{color:var(--amber);}
+.st-label{font-family:'DM Mono',monospace;font-size:0.5rem;letter-spacing:0.15em;color:var(--dim);display:block;margin-top:0.3rem;text-transform:uppercase;}
+
+/* QUICK LINKS */
+.quick-actions{display:flex;flex-wrap:wrap;gap:0.7rem;margin-bottom:0;}
+.qa-btn{font-family:'DM Mono',monospace;font-size:0.62rem;letter-spacing:0.12em;text-transform:uppercase;padding:0.65rem 1.3rem;text-decoration:none;border:1px solid;transition:all 0.2s;display:inline-flex;align-items:center;gap:0.5rem;}
+.qa-primary{background:var(--blue);border-color:var(--blue);color:var(--white);}
+.qa-primary:hover{background:var(--blue2);border-color:var(--blue2);}
+.qa-secondary{background:transparent;border-color:var(--edge2);color:var(--muted);}
+.qa-secondary:hover{border-color:var(--blue);color:var(--white);}
+.qa-green{background:rgba(0,255,136,0.06);border-color:rgba(0,255,136,0.25);color:var(--green);}
+.qa-green:hover{background:rgba(0,255,136,0.1);border-color:rgba(0,255,136,0.5);}
+
+/* SECTIONS */
+.section{padding:3.5rem 5%;position:relative;z-index:1;}
+.section-alt{background:rgba(255,255,255,0.02);}
+.section-header{margin-bottom:2rem;}
+.sec-eyebrow{font-family:'DM Mono',monospace;font-size:0.55rem;letter-spacing:0.22em;color:var(--blue);margin-bottom:0.5rem;text-transform:uppercase;}
+.sec-title{font-family:'Orbitron',sans-serif;font-size:clamp(1.8rem,4vw,2.8rem);letter-spacing:0.04em;color:var(--white);margin-bottom:0.4rem;}
+.sec-sub{font-size:0.9rem;color:var(--muted);line-height:1.8;max-width:600px;}
+
+/* CHECKLIST PROGRESS */
+.checklist-progress{max-width:860px;margin-bottom:2rem;}
+.cp-bar-wrap{height:4px;background:var(--edge);margin-bottom:0.6rem;}
+.cp-bar{height:4px;background:var(--blue);width:0%;transition:width 0.4s ease;}
+.cp-label{font-family:'DM Mono',monospace;font-size:0.52rem;letter-spacing:0.12em;color:var(--dim);}
+.cp-label span{color:var(--white);}
+
+/* CHECKLIST DAYS */
+.checklist-days{display:flex;flex-direction:column;gap:1.2rem;max-width:860px;}
+.day-block{background:var(--panel);border:1px solid var(--edge);overflow:hidden;}
+.day-header{display:flex;align-items:center;gap:1rem;padding:1rem 1.4rem;border-bottom:1px solid var(--edge);background:rgba(0,212,255,0.04);}
+.day-tag{font-family:'DM Mono',monospace;font-size:0.52rem;letter-spacing:0.15em;color:var(--blue);background:rgba(0,212,255,0.1);border:1px solid rgba(0,212,255,0.2);padding:0.2rem 0.6rem;flex-shrink:0;}
+.day-title{font-family:'Orbitron',sans-serif;font-size:1rem;letter-spacing:0.06em;color:var(--white);flex:1;}
+.day-progress{font-family:'DM Mono',monospace;font-size:0.5rem;letter-spacing:0.1em;color:var(--dim);}
+.day-items{padding:0.8rem 0;}
+.check-row{display:flex;align-items:flex-start;gap:0.9rem;padding:0.65rem 1.4rem;cursor:pointer;transition:background 0.15s;user-select:none;}
+.check-row:hover{background:rgba(255,255,255,0.02);}
+.check-row.done{opacity:0.5;}
+.check-box{width:20px;height:20px;border:1px solid var(--edge2);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:0.6rem;color:var(--green);background:transparent;transition:all 0.2s;margin-top:1px;}
+.check-row.done .check-box{background:rgba(0,255,136,0.1);border-color:rgba(0,255,136,0.35);}
+.check-content{flex:1;}
+.check-title{font-size:0.88rem;font-weight:600;color:var(--white);margin-bottom:0.15rem;line-height:1.4;}
+.check-row.done .check-title{text-decoration:line-through;color:var(--dim);}
+.check-desc{font-size:0.78rem;color:var(--dim);line-height:1.6;}
+.check-tag{font-family:'DM Mono',monospace;font-size:0.48rem;letter-spacing:0.12em;padding:0.15rem 0.45rem;border:1px solid;flex-shrink:0;margin-top:2px;align-self:flex-start;}
+.check-tag.critical{color:var(--red);border-color:rgba(239,68,68,0.3);}
+.check-tag.high{color:var(--amber);border-color:rgba(245,158,11,0.3);}
+.check-tag.action{color:var(--blue);border-color:rgba(0,212,255,0.3);}
+.check-tag.system{color:var(--green);border-color:rgba(0,255,136,0.3);}
+
+/* CONTENT FORMULA */
+.pillars-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:1px;background:var(--edge);border:1px solid var(--edge);max-width:860px;margin-bottom:2rem;}
+.pillar-card{background:var(--panel);padding:1.3rem;}
+.pillar-num{font-family:'DM Mono',monospace;font-size:0.5rem;letter-spacing:0.15em;color:var(--blue);margin-bottom:0.5rem;}
+.pillar-title{font-family:'Orbitron',sans-serif;font-size:0.9rem;letter-spacing:0.05em;color:var(--white);margin-bottom:0.5rem;line-height:1.1;}
+.pillar-hook{font-size:0.75rem;color:var(--muted);font-style:italic;line-height:1.6;}
+
+.script-block{background:var(--panel);border:1px solid var(--edge);max-width:860px;overflow:hidden;margin-bottom:1.5rem;}
+.script-header{background:rgba(0,212,255,0.05);border-bottom:1px solid var(--edge);padding:0.9rem 1.4rem;display:flex;align-items:center;gap:0.8rem;}
+.script-label{font-family:'DM Mono',monospace;font-size:0.52rem;letter-spacing:0.18em;color:var(--blue);}
+.script-body{padding:1.4rem;}
+.script-row{display:flex;gap:1.2rem;padding:0.7rem 0;border-bottom:1px solid var(--edge);}
+.script-row:last-child{border-bottom:none;}
+.script-step{font-family:'DM Mono',monospace;font-size:0.52rem;letter-spacing:0.12em;color:var(--blue);width:60px;flex-shrink:0;padding-top:1px;}
+.script-content{flex:1;}
+.script-name{font-size:0.85rem;font-weight:600;color:var(--white);margin-bottom:0.2rem;}
+.script-detail{font-size:0.78rem;color:var(--dim);line-height:1.7;}
+.script-example{font-size:0.78rem;color:var(--muted);margin-top:0.4rem;padding:0.5rem 0.8rem;background:rgba(255,255,255,0.02);border-left:2px solid var(--blue);font-style:italic;line-height:1.7;}
+
+.schedule-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:1px;background:var(--edge);border:1px solid var(--edge);max-width:860px;}
+.sched-day{background:var(--panel);padding:0.9rem 0.7rem;text-align:center;}
+.sched-day-name{font-family:'DM Mono',monospace;font-size:0.5rem;letter-spacing:0.12em;color:var(--dim);margin-bottom:0.5rem;}
+.sched-time{font-family:'Orbitron',sans-serif;font-size:1.1rem;letter-spacing:0.04em;color:var(--blue);}
+.sched-platform{font-family:'DM Mono',monospace;font-size:0.46rem;letter-spacing:0.08em;color:var(--dim);margin-top:0.3rem;}
+
+/* HOT LEAD PROCESS */
+.lead-flow{display:flex;flex-direction:column;gap:0;max-width:860px;border:1px solid var(--edge);}
+.lead-step{display:flex;gap:1.2rem;padding:1.2rem 1.4rem;border-bottom:1px solid var(--edge);transition:background 0.2s;}
+.lead-step:last-child{border-bottom:none;}
+.lead-step:hover{background:rgba(0,212,255,0.03);}
+.lead-num{font-family:'DM Mono',monospace;font-size:0.6rem;font-weight:500;width:30px;height:30px;border:1px solid rgba(0,212,255,0.3);background:rgba(0,212,255,0.06);display:flex;align-items:center;justify-content:center;flex-shrink:0;color:var(--blue);margin-top:2px;}
+.lead-body{flex:1;}
+.lead-title{font-size:0.92rem;font-weight:600;color:var(--white);margin-bottom:0.3rem;}
+.lead-detail{font-size:0.8rem;color:var(--muted);line-height:1.7;}
+.lead-detail code{font-family:'DM Mono',monospace;font-size:0.76rem;color:var(--blue);background:rgba(0,212,255,0.08);padding:0.1rem 0.35rem;}
+.lead-timing{font-family:'DM Mono',monospace;font-size:0.5rem;letter-spacing:0.12em;padding:0.2rem 0.5rem;border:1px solid rgba(0,255,136,0.3);color:var(--green);flex-shrink:0;align-self:flex-start;margin-top:2px;}
+
+.hot-template{background:rgba(0,212,255,0.04);border:1px solid rgba(0,212,255,0.2);padding:1.4rem;max-width:860px;margin-top:1.5rem;}
+.ht-label{font-family:'DM Mono',monospace;font-size:0.52rem;letter-spacing:0.18em;color:var(--blue);margin-bottom:1rem;}
+.ht-body{font-size:0.85rem;color:var(--muted);line-height:1.9;white-space:pre-line;}
+
+.scoring-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;max-width:860px;margin-bottom:1.5rem;}
+.score-card{padding:1.3rem;border:1px solid;}
+.score-card.hot{background:rgba(239,68,68,0.04);border-color:rgba(239,68,68,0.2);}
+.score-card.warm{background:rgba(245,158,11,0.04);border-color:rgba(245,158,11,0.2);}
+.score-card.cold{background:rgba(255,255,255,0.02);border-color:var(--edge);}
+.score-tag{font-family:'DM Mono',monospace;font-size:0.5rem;letter-spacing:0.15em;margin-bottom:0.6rem;}
+.score-card.hot .score-tag{color:var(--red);}
+.score-card.warm .score-tag{color:var(--amber);}
+.score-card.cold .score-tag{color:var(--dim);}
+.score-title{font-family:'Orbitron',sans-serif;font-size:1.1rem;letter-spacing:0.05em;color:var(--white);margin-bottom:0.6rem;}
+.score-action{font-size:0.78rem;color:var(--muted);line-height:1.7;}
+
+/* COMMISSION REFERENCE */
+.comm-sheet{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--edge);border:1px solid var(--edge);max-width:860px;}
+.cs-tier{background:var(--panel);padding:1.3rem;}
+.cs-tier-label{font-family:'DM Mono',monospace;font-size:0.48rem;letter-spacing:0.15em;color:var(--dim);margin-bottom:0.5rem;text-transform:uppercase;}
+.cs-tier-name{font-family:'Orbitron',sans-serif;font-size:0.95rem;letter-spacing:0.05em;color:var(--white);margin-bottom:0.8rem;line-height:1.1;}
+.cs-row{display:flex;justify-content:space-between;align-items:baseline;padding:0.25rem 0;border-bottom:1px solid var(--edge);}
+.cs-row:last-child{border-bottom:none;}
+.cs-key{font-family:'DM Mono',monospace;font-size:0.5rem;letter-spacing:0.08em;color:var(--dim);}
+.cs-val{font-family:'DM Mono',monospace;font-size:0.6rem;font-weight:500;}
+.cs-val.green{color:var(--green);}.cs-val.amber{color:var(--amber);}.cs-val.blue{color:var(--blue);}.cs-val.white{color:var(--white);}
+
+.network-math{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--edge);border:1px solid var(--edge);max-width:860px;margin-top:1.5rem;}
+.nm-cell{background:var(--panel);padding:1.3rem;}
+.nm-label{font-family:'DM Mono',monospace;font-size:0.48rem;letter-spacing:0.15em;color:var(--dim);margin-bottom:0.3rem;text-transform:uppercase;}
+.nm-val{font-family:'Orbitron',sans-serif;font-size:1.8rem;letter-spacing:0.04em;color:var(--green);}
+.nm-sub{font-family:'DM Mono',monospace;font-size:0.48rem;letter-spacing:0.08em;color:var(--dim);margin-top:0.2rem;}
+
+.sponsor-block{background:rgba(0,255,136,0.03);border:1px solid rgba(0,255,136,0.2);padding:1.5rem;max-width:860px;margin-top:1.5rem;position:relative;}
+.sponsor-block::before{content:'';position:absolute;top:-1px;left:-1px;width:8px;height:8px;border-top:1px solid var(--green);border-left:1px solid var(--green);}
+.sb-label{font-family:'DM Mono',monospace;font-size:0.52rem;letter-spacing:0.2em;color:var(--green);margin-bottom:1rem;}
+.sb-ids{display:flex;gap:2rem;flex-wrap:wrap;}
+.sb-id-item{display:flex;flex-direction:column;gap:0.3rem;}
+.sb-id-key{font-family:'DM Mono',monospace;font-size:0.5rem;letter-spacing:0.12em;color:var(--dim);}
+.sb-id-val{font-family:'Orbitron',sans-serif;font-size:1.8rem;letter-spacing:0.08em;color:var(--green);}
+.sb-warn{font-family:'DM Mono',monospace;font-size:0.52rem;letter-spacing:0.06em;color:rgba(245,158,11,0.7);margin-top:1rem;line-height:1.7;}
+
+/* RECRUIT */
+.recruit-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem;max-width:860px;}
+.recruit-card{background:var(--panel);border:1px solid var(--edge);padding:1.4rem;}
+.rc-eyebrow{font-family:'DM Mono',monospace;font-size:0.5rem;letter-spacing:0.15em;color:var(--blue);margin-bottom:0.6rem;}
+.rc-title{font-family:'Orbitron',sans-serif;font-size:1.1rem;letter-spacing:0.05em;color:var(--white);margin-bottom:0.8rem;}
+.rc-list{display:flex;flex-direction:column;gap:0.4rem;}
+.rc-item{display:flex;gap:0.6rem;font-size:0.82rem;color:var(--muted);line-height:1.6;}
+.rc-item::before{content:'→';color:var(--blue);flex-shrink:0;margin-top:1px;}
+
+.override-math{background:rgba(0,255,136,0.03);border:1px solid rgba(0,255,136,0.2);padding:1.4rem;max-width:860px;margin-top:1.5rem;}
+.om-label{font-family:'DM Mono',monospace;font-size:0.52rem;letter-spacing:0.18em;color:var(--green);margin-bottom:1rem;}
+.om-row{display:flex;justify-content:space-between;align-items:center;padding:0.5rem 0;border-bottom:1px solid rgba(0,255,136,0.08);}
+.om-row:last-child{border-bottom:none;}
+.om-desc{font-size:0.84rem;color:var(--muted);}
+.om-val{font-family:'DM Mono',monospace;font-size:0.72rem;font-weight:500;color:var(--green);}
+
+/* DISCLOSURE + FOOTER */
+.disclosure-strip{background:var(--surface);border-top:1px solid var(--edge);padding:1.5rem 5%;position:relative;z-index:1;}
+.disclosure-inner{max-width:900px;margin:0 auto;display:flex;align-items:flex-start;gap:1.5rem;flex-wrap:wrap;}
+.disclosure-tag{font-family:'DM Mono',monospace;font-size:0.48rem;letter-spacing:0.18em;color:rgba(0,255,136,0.5);flex-shrink:0;padding-top:2px;white-space:nowrap;}
+.disclosure-text{font-family:'DM Mono',monospace;font-size:0.52rem;letter-spacing:0.03em;color:var(--dim);line-height:1.9;flex:1;}
+footer{padding:1.8rem 5%;border-top:1px solid var(--edge);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem;position:relative;z-index:1;}
+.footer-brand{font-family:'Orbitron',sans-serif;font-size:1rem;font-weight:900;letter-spacing:0.22em;}
+.footer-brand span{color:var(--blue);}
+.footer-links{display:flex;gap:1.5rem;flex-wrap:wrap;}
+.footer-links a{font-family:'DM Mono',monospace;font-size:0.5rem;letter-spacing:0.1em;color:var(--dim);text-decoration:none;transition:color 0.2s;}
+.footer-links a:hover{color:var(--blue);}
+.footer-copy{font-family:'DM Mono',monospace;font-size:0.48rem;letter-spacing:0.08em;color:var(--dim);}
+
+/* REVEAL */
+.reveal{opacity:0;transform:translateY(20px);transition:opacity 0.6s ease,transform 0.6s ease;}
+.reveal.visible{opacity:1;transform:translateY(0);}
+.rd1{transition-delay:0.08s;}.rd2{transition-delay:0.16s;}.rd3{transition-delay:0.24s;}
+
+@media(max-width:960px){
+  .pillars-grid{grid-template-columns:1fr 1fr 1fr;}
+  .comm-sheet{grid-template-columns:1fr 1fr;}
+  .stat-tiles{grid-template-columns:1fr 1fr;}
+  .schedule-grid{grid-template-columns:repeat(4,1fr);}
+}
+@media(max-width:640px){
+  .stat-tiles,.comm-sheet,.network-math,.scoring-grid,.recruit-grid,.pillars-grid,.schedule-grid{grid-template-columns:1fr;}
+  .sb-ids{flex-direction:column;}
+}
+</style>
+</head>
+<body>
+
+<!-- GATE -->
+<div id="gate">
+  <div class="gate-inner">
+    <div class="gate-logo">APEX<span>NETWORK</span></div>
+    <div class="gate-sub">// OPERATOR SYSTEM — RESTRICTED ACCESS</div>
+    <div class="gate-label">// ENTER ACCESS CODE</div>
+    <input class="gate-input" type="password" id="gateInput" placeholder="••••••••" maxlength="20" autocomplete="off">
+    <button class="gate-btn" onclick="checkGate()">ACCESS →</button>
+    <div class="gate-error" id="gateError">// INVALID CODE — TRY AGAIN</div>
+    <div class="gate-hint">Hint: your dog's name + the year. All caps.</div>
+  </div>
+</div>
+
+<nav>
+  <div class="nav-brand">
+    <svg class="nav-mark" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <polygon points="16,2 30,28 2,28" fill="none" stroke="#00d4ff" stroke-width="1.5"/>
+      <polygon points="16,8 26,26 6,26" fill="rgba(0,212,255,0.08)" stroke="rgba(0,212,255,0.3)" stroke-width="1"/>
+      <circle cx="16" cy="16" r="2" fill="#00d4ff"/>
+    </svg>
+    <span class="nav-name">APEX<span>NETWORK</span></span>
+    <div class="nav-divider"></div>
+    <span class="nav-tag">OPERATOR SYSTEM</span>
+  </div>
+  <div class="nav-right">
+    <div class="nav-status"><div class="status-dot"></div>ACTIVE OPERATOR</div>
+    <div id="navClock"></div>
+  </div>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-eyebrow">OPERATOR ACTIVATION GUIDE</div>
+  <h1 class="hero-title">OPERATOR<br><span>SYSTEM</span></h1>
+  <div class="operator-id-badge">⬡ SPONSOR ID: <span id="heroSponsorId">LOADING...</span></div>
+  <p class="hero-sub">Day 1 activation through your first sale. Week 1 checklist, content formula, HOT lead process, commission reference, and recruiting your first operator. Follow this in order.</p>
+  <div class="stat-tiles reveal">
+    <div class="stat-tile"><span class="st-val green">$1,322</span><span class="st-label">Pro Commission / Sale</span></div>
+    <div class="stat-tile"><span class="st-val blue">45s</span><span class="st-label">Video Length</span></div>
+    <div class="stat-tile"><span class="st-val amber">7</span><span class="st-label">Day Activation Window</span></div>
+    <div class="stat-tile"><span class="st-val">$10,309</span><span class="st-label">7-Operator Monthly Target</span></div>
+  </div>
+  <div class="quick-actions reveal rd1">
+    <a href="apex-index.html" class="qa-btn qa-primary">▶ YOUR FUNNEL</a>
+    <a href="apex-hub.html" class="qa-btn qa-secondary">⬡ COMMAND CENTRE</a>
+    <a href="apex-agent-os.html" class="qa-btn qa-secondary">◈ AGENT OS</a>
+    <a href="apex-apply.html" class="qa-btn qa-secondary">◇ APPLICATION</a>
+    <a href="mailto:info@enagic-australia.com" class="qa-btn qa-green">✉ ENAGIC AU</a>
+  </div>
+</div>
+
+<!-- ═══ SECTION 1 — WEEK 1 CHECKLIST ═══ -->
+<div class="section section-alt">
+  <div class="section-header reveal">
+    <div class="sec-eyebrow">// ACTIVATION</div>
+    <div class="sec-title">Week 1 Checklist</div>
+    <div class="sec-sub">Your first 7 days determine your first 30. Complete every item. Checks save in your browser so you can pick up where you left off.</div>
+  </div>
+
+  <div class="checklist-progress reveal">
+    <div class="cp-bar-wrap"><div class="cp-bar" id="progressBar"></div></div>
+    <div class="cp-label"><span id="progressText">0</span> of <span id="progressTotal">0</span> tasks complete</div>
+  </div>
+
+  <div class="checklist-days reveal">
+
+    <div class="day-block">
+      <div class="day-header">
+        <div class="day-tag">DAY 1</div>
+        <div class="day-title">Platform Setup</div>
+        <div class="day-progress" id="day1prog">0/4</div>
+      </div>
+      <div class="day-items">
+        <div class="check-row" data-id="d1_heygen" onclick="toggleCheck(this)">
+          <div class="check-box"></div>
+          <div class="check-content">
+            <div class="check-title">Sign up to HeyGen — Creator Plan</div>
+            <div class="check-desc">heygen.com → Creator plan $29 USD/month. Upload a clear headshot photo. Create your AI avatar. This is your content engine. Do not skip this step.</div>
+          </div>
+          <div class="check-tag critical">CRITICAL</div>
+        </div>
+        <div class="check-row" data-id="d1_tiktok" onclick="toggleCheck(this)">
+          <div class="check-box"></div>
+          <div class="check-content">
+            <div class="check-title">Create TikTok Business account</div>
+            <div class="check-desc">Business account. Copy the bio from Instagram. Bio link: your funnel URL. Posting time: 7pm AEST every day.</div>
+          </div>
+          <div class="check-tag critical">CRITICAL</div>
+        </div>
+        <div class="check-row" data-id="d1_instagram" onclick="toggleCheck(this)">
+          <div class="check-box"></div>
+          <div class="check-content">
+            <div class="check-title">Set up Instagram Business profile</div>
+            <div class="check-desc">Switch to Business if needed. Same bio and link as TikTok. Post time: 6pm AEST. Both accounts live before your first video goes out.</div>
+          </div>
+          <div class="check-tag critical">CRITICAL</div>
+        </div>
+        <div class="check-row" data-id="d1_funnel" onclick="toggleCheck(this)">
+          <div class="check-box"></div>
+          <div class="check-content">
+            <div class="check-title">Walk your entire funnel end-to-end</div>
+            <div class="check-desc">Open apex-index.html → opt-in → apex-page2.html → apex-apply.html → apex-offer.html → apex-join.html. Know every screen before sending traffic to it.</div>
+          </div>
+          <div class="check-tag action">ACTION</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="day-block">
+      <div class="day-header">
+        <div class="day-tag">DAY 2–3</div>
+        <div class="day-title">First Video Live</div>
+        <div class="day-progress" id="day2prog">0/4</div>
+      </div>
+      <div class="day-items">
+        <div class="check-row" data-id="d2_script" onclick="toggleCheck(this)">
+          <div class="check-box"></div>
+          <div class="check-content">
+            <div class="check-title">Write your first script — Pillar 1: Franchise Math</div>
+            <div class="check-desc">Hook: "I invested $11k instead of $500k in a franchise. Here's the math." 45 seconds. Use the script formula in Section 2 below. Lead with the number.</div>
+          </div>
+          <div class="check-tag high">HIGH</div>
+        </div>
+        <div class="check-row" data-id="d2_generate" onclick="toggleCheck(this)">
+          <div class="check-box"></div>
+          <div class="check-content">
+            <div class="check-title">Generate video in HeyGen</div>
+            <div class="check-desc">Paste script → select avatar → 9:16 format → auto-captions on → generate. Download the MP4. Watch it before posting. Check audio, lip sync, caption accuracy.</div>
+          </div>
+          <div class="check-tag action">ACTION</div>
+        </div>
+        <div class="check-row" data-id="d2_tiktok" onclick="toggleCheck(this)">
+          <div class="check-box"></div>
+          <div class="check-content">
+            <div class="check-title">Post to TikTok at 7pm AEST</div>
+            <div class="check-desc">Caption: 2–3 lines + CTA ("Full breakdown in bio link"). 3–5 hashtags max. Do not overthink. Post it.</div>
+          </div>
+          <div class="check-tag high">HIGH</div>
+        </div>
+        <div class="check-row" data-id="d2_instagram" onclick="toggleCheck(this)">
+          <div class="check-box"></div>
+          <div class="check-content">
+            <div class="check-title">Post same video to Instagram at 6pm AEST</div>
+            <div class="check-desc">Same video, same caption. Post as Reel. One video per day, both platforms, every day. Consistency beats perfection.</div>
+          </div>
+          <div class="check-tag high">HIGH</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="day-block">
+      <div class="day-header">
+        <div class="day-tag">DAY 4–5</div>
+        <div class="day-title">Build Momentum + System</div>
+        <div class="day-progress" id="day3prog">0/4</div>
+      </div>
+      <div class="day-items">
+        <div class="check-row" data-id="d3_video2" onclick="toggleCheck(this)">
+          <div class="check-box"></div>
+          <div class="check-content">
+            <div class="check-title">Post second video — Pillar 2: System vs Job</div>
+            <div class="check-desc">Hook: "I'm a full-time painter. I built infrastructure that earns while I'm on site." Show the contrast between trading time for money vs commission infrastructure.</div>
+          </div>
+          <div class="check-tag high">HIGH</div>
+        </div>
+        <div class="check-row" data-id="d3_netlify_env" onclick="toggleCheck(this)">
+          <div class="check-box"></div>
+          <div class="check-content">
+            <div class="check-title">Confirm Netlify env vars are live — AC_BASE_URL, AC_API_KEY, OWNER_EMAIL</div>
+            <div class="check-desc">app.netlify.com → your site → Site config → Env vars. All three vars set? Trigger a redeploy. Test the opt-in form on apex-index.html to confirm it fires.</div>
+          </div>
+          <div class="check-tag critical">CRITICAL</div>
+        </div>
+        <div class="check-row" data-id="d3_ac_tags" onclick="toggleCheck(this)">
+          <div class="check-box"></div>
+          <div class="check-content">
+            <div class="check-title">Create all 6 AC tags in ActiveCampaign</div>
+            <div class="check-desc">AC → Lists → Tags → Create: SS-NEW, SS-WARM, SS-HOT, SS-APPLIED, SS-CONVERTED, SS-DISTRIBUTOR. No automation fires until all six tags exist.</div>
+          </div>
+          <div class="check-tag critical">CRITICAL</div>
+        </div>
+        <div class="check-row" data-id="d3_email_seq" onclick="toggleCheck(this)">
+          <div class="check-box"></div>
+          <div class="check-content">
+            <div class="check-title">Load 7-day email sequence into AC automation</div>
+            <div class="check-desc">Open email-sequence.html → copy each email into AC. Create automation "Apex Welcome Sequence". Trigger: SS-NEW tag applied. Day 0 → 1 → 2 → 3 → 4 → 5 → 7.</div>
+          </div>
+          <div class="check-tag system">SYSTEM</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="day-block">
+      <div class="day-header">
+        <div class="day-tag">DAY 6–7</div>
+        <div class="day-title">First Leads + Week 2 Plan</div>
+        <div class="day-progress" id="day4prog">0/4</div>
+      </div>
+      <div class="day-items">
+        <div class="check-row" data-id="d4_video3" onclick="toggleCheck(this)">
+          <div class="check-box"></div>
+          <div class="check-content">
+            <div class="check-title">Post third video — Pillar 3: Platform Thinking</div>
+            <div class="check-desc">Hook: "What $1,322 per automated sale actually means for someone working 50 hours a week." Break down what one sale per week does to your annual income.</div>
+          </div>
+          <div class="check-tag high">HIGH</div>
+        </div>
+        <div class="check-row" data-id="d4_ac_check" onclick="toggleCheck(this)">
+          <div class="check-box"></div>
+          <div class="check-content">
+            <div class="check-title">Check ActiveCampaign for first opt-ins</div>
+            <div class="check-desc">AC → Contacts. Any SS-NEW contacts? Confirm the welcome sequence fired. No contacts yet — check Netlify function logs. Organic traffic takes 3–7 days to build.</div>
+          </div>
+          <div class="check-tag action">ACTION</div>
+        </div>
+        <div class="check-row" data-id="d4_hot_check" onclick="toggleCheck(this)">
+          <div class="check-box"></div>
+          <div class="check-content">
+            <div class="check-title">Check AC for SS-HOT tagged leads</div>
+            <div class="check-desc">AC → Contacts → filter by SS-HOT. Any HOT leads need same-day contact. See Section 3 for the full process. Speed is the competitive advantage.</div>
+          </div>
+          <div class="check-tag system">SYSTEM</div>
+        </div>
+        <div class="check-row" data-id="d4_week2" onclick="toggleCheck(this)">
+          <div class="check-box"></div>
+          <div class="check-content">
+            <div class="check-title">Script Week 2 videos — Pillars 4 and 5</div>
+            <div class="check-desc">Pillar 4: "What month 1 inside Apex Network looks like." Pillar 5: Screen recording of Agent OS running. Queue both in HeyGen. Week 2 is consistency week — don't let momentum drop.</div>
+          </div>
+          <div class="check-tag action">ACTION</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ═══ SECTION 2 — CONTENT FORMULA ═══ -->
+<div class="section">
+  <div class="section-header reveal">
+    <div class="sec-eyebrow">// TRAFFIC ENGINE</div>
+    <div class="sec-title">Content Formula</div>
+    <div class="sec-sub">One video per day. 45 seconds. HeyGen AI avatar. Auto-captions on. Rotate through the 5 pillars. This is the only content system you need.</div>
+  </div>
+
+  <div class="pillars-grid reveal">
+    <div class="pillar-card">
+      <div class="pillar-num">// 01</div>
+      <div class="pillar-title">FRANCHISE MATH</div>
+      <div class="pillar-hook">"Why I chose $11k digital vs $500k physical franchise"</div>
+    </div>
+    <div class="pillar-card">
+      <div class="pillar-num">// 02</div>
+      <div class="pillar-title">SYSTEM VS JOB</div>
+      <div class="pillar-hook">"Built infrastructure that earns while I'm on the tools"</div>
+    </div>
+    <div class="pillar-card">
+      <div class="pillar-num">// 03</div>
+      <div class="pillar-title">PLATFORM THINKING</div>
+      <div class="pillar-hook">"What $1,322 per automated sale actually means"</div>
+    </div>
+    <div class="pillar-card">
+      <div class="pillar-num">// 04</div>
+      <div class="pillar-title">OPERATOR PROOF</div>
+      <div class="pillar-hook">"What month 1 inside Apex Network looks like"</div>
+    </div>
+    <div class="pillar-card">
+      <div class="pillar-num">// 05</div>
+      <div class="pillar-title">SCREEN RECORDING</div>
+      <div class="pillar-hook">"Agent OS working. Pipeline filling. Scripts generating."</div>
+    </div>
+  </div>
+
+  <div class="script-block reveal rd1">
+    <div class="script-header"><div class="script-label">// VIDEO SCRIPT FORMULA — 45 SECONDS</div></div>
+    <div class="script-body">
+      <div class="script-row">
+        <div class="script-step">00–05s</div>
+        <div class="script-content">
+          <div class="script-name">HOOK — Lead with the number or contrast</div>
+          <div class="script-detail">Pattern interrupt first. A number, comparison, or counterintuitive statement. Never introduce yourself before the hook.</div>
+          <div class="script-example">"I invested $11,000 into a distribution network. That single investment generates up to $1,322 every time someone on my team makes a sale."</div>
+        </div>
+      </div>
+      <div class="script-row">
+        <div class="script-step">05–15s</div>
+        <div class="script-content">
+          <div class="script-name">CONTEXT — Who you are and why the contrast matters</div>
+          <div class="script-detail">One sentence. Your day job + what you built on the side. Makes it relatable to the target audience.</div>
+          <div class="script-example">"I'm a full-time painter on the Sunshine Coast. I'm not quitting my job yet — but I built something that runs in parallel."</div>
+        </div>
+      </div>
+      <div class="script-row">
+        <div class="script-step">15–30s</div>
+        <div class="script-content">
+          <div class="script-name">MECHANISM — How the system works in plain terms</div>
+          <div class="script-detail">Two or three sentences. AI content → funnel → application → commission. Platform framing, never MLM language.</div>
+          <div class="script-example">"AI generates the content. The content drives people to a funnel. The funnel filters serious operators. When operators make sales, I earn overrides."</div>
+        </div>
+      </div>
+      <div class="script-row">
+        <div class="script-step">30–40s</div>
+        <div class="script-content">
+          <div class="script-name">FILTER — It's not for everyone</div>
+          <div class="script-detail">Create exclusivity. Removes low-intent leads before they hit the funnel. Makes the right person lean in harder.</div>
+          <div class="script-example">"This requires a real investment and a genuine commitment. If you're looking for a shortcut, this isn't it."</div>
+        </div>
+      </div>
+      <div class="script-row">
+        <div class="script-step">40–45s</div>
+        <div class="script-content">
+          <div class="script-name">CTA — One instruction only</div>
+          <div class="script-detail">Tell them one thing to do. Nothing else.</div>
+          <div class="script-example">"Full breakdown is in the link in my bio."</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="script-block reveal rd2">
+    <div class="script-header"><div class="script-label">// HEYGEN PRODUCTION WORKFLOW</div></div>
+    <div class="script-body">
+      <div class="script-row">
+        <div class="script-step">STEP 1</div>
+        <div class="script-content"><div class="script-name">HeyGen → Video → Instant Avatar → select your avatar → 9:16 template</div><div class="script-detail">Language: English (Australian). Background: dark or neutral.</div></div>
+      </div>
+      <div class="script-row">
+        <div class="script-step">STEP 2</div>
+        <div class="script-content"><div class="script-name">Paste your script — keep under 130 words for 45 seconds</div><div class="script-detail">Add natural pauses with commas. Avoid slang — avatar handles neutral delivery best.</div></div>
+      </div>
+      <div class="script-row">
+        <div class="script-step">STEP 3</div>
+        <div class="script-content"><div class="script-name">Enable auto-captions → Generate</div><div class="script-detail">Captions are non-negotiable. 85% of short-form video is watched without audio. Generation: 2–5 minutes.</div></div>
+      </div>
+      <div class="script-row">
+        <div class="script-step">STEP 4</div>
+        <div class="script-content"><div class="script-name">Preview → download → post</div><div class="script-detail">Watch the full video before posting. Check lip sync, captions, audio. If anything is off — regenerate. It takes 3 minutes. One bad video hurts more than a 3-minute delay.</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="reveal rd3" style="margin-top:1.5rem;">
+    <div class="sec-eyebrow" style="margin-bottom:1rem;">// POSTING SCHEDULE</div>
+    <div class="schedule-grid">
+      <div class="sched-day"><div class="sched-day-name">MON</div><div class="sched-time">7PM</div><div class="sched-platform">TT · IG</div></div>
+      <div class="sched-day"><div class="sched-day-name">TUE</div><div class="sched-time">7PM</div><div class="sched-platform">TT · IG</div></div>
+      <div class="sched-day"><div class="sched-day-name">WED</div><div class="sched-time">7PM</div><div class="sched-platform">TT · IG</div></div>
+      <div class="sched-day"><div class="sched-day-name">THU</div><div class="sched-time">7PM</div><div class="sched-platform">TT · IG</div></div>
+      <div class="sched-day"><div class="sched-day-name">FRI</div><div class="sched-time">7PM</div><div class="sched-platform">TT · IG</div></div>
+      <div class="sched-day"><div class="sched-day-name">SAT</div><div class="sched-time">7PM</div><div class="sched-platform">TT · IG</div></div>
+      <div class="sched-day"><div class="sched-day-name">SUN</div><div class="sched-time">7PM</div><div class="sched-platform">TT · IG</div></div>
+    </div>
+    <p style="font-family:'DM Mono',monospace;font-size:0.52rem;letter-spacing:0.08em;color:var(--dim);margin-top:0.7rem;">TikTok 7pm AEST / Instagram 6pm AEST / 1 video per day / both platforms / rotate 5 pillars on repeat</p>
+  </div>
+</div>
+
+<!-- ═══ SECTION 3 — HOT LEAD PROCESS ═══ -->
+<div class="section section-alt">
+  <div class="section-header reveal">
+    <div class="sec-eyebrow">// PIPELINE</div>
+    <div class="sec-title">First HOT Lead Process</div>
+    <div class="sec-sub">The application form auto-scores leads. HOT means investment-ready, high intent, strong situation fit. When one comes through — speed is everything.</div>
+  </div>
+
+  <div class="scoring-grid reveal">
+    <div class="score-card hot">
+      <div class="score-tag">// HOT — SCORE 70+</div>
+      <div class="score-title">Investment Ready</div>
+      <div class="score-action">Tagged SS-HOT automatically. Same-day contact required. Go straight to Step 1 of the process below. Do not wait.</div>
+    </div>
+    <div class="score-card warm">
+      <div class="score-tag">// WARM — SCORE 40–69</div>
+      <div class="score-title">Interested, Not Ready</div>
+      <div class="score-action">Tagged SS-WARM. Let the 7-day email sequence run. Manual follow-up at Day 7 with a personal message.</div>
+    </div>
+    <div class="score-card cold">
+      <div class="score-tag">// COLD — UNDER 40</div>
+      <div class="score-title">Not A Fit Right Now</div>
+      <div class="score-action">Tagged SS-NEW. Sequence runs automatically. Do not manually follow up. Focus energy on HOT and WARM only.</div>
+    </div>
+  </div>
+
+  <div class="lead-flow reveal rd1">
+    <div class="lead-step">
+      <div class="lead-num">01</div>
+      <div class="lead-body">
+        <div class="lead-title">Check AC for SS-HOT leads — every morning</div>
+        <div class="lead-detail">ActiveCampaign → Contacts → filter by tag <code>SS-HOT</code>. Do this first thing every morning. Any HOT lead that came through overnight needs contact before the day is out.</div>
+      </div>
+      <div class="lead-timing">DAILY</div>
+    </div>
+    <div class="lead-step">
+      <div class="lead-num">02</div>
+      <div class="lead-body">
+        <div class="lead-title">Read their application before you write anything</div>
+        <div class="lead-detail">Click the contact → view their application data in AC. What package are they considering? Income goal? Current situation? This takes 5 minutes and doubles your response quality.</div>
+      </div>
+      <div class="lead-timing">5 MIN</div>
+    </div>
+    <div class="lead-step">
+      <div class="lead-num">03</div>
+      <div class="lead-body">
+        <div class="lead-title">Send the personalised HOT lead email</div>
+        <div class="lead-detail">Use the template below. Fill in their name and one specific reference to their application. Send from your personal email. Subject: <code>Your Apex Network Application — Next Steps</code></div>
+      </div>
+      <div class="lead-timing">SAME DAY</div>
+    </div>
+    <div class="lead-step">
+      <div class="lead-num">04</div>
+      <div class="lead-body">
+        <div class="lead-title">Link directly to the offer and registration pages</div>
+        <div class="lead-detail">Email includes links to <code>apex-offer.html</code> and <code>apex-join.html</code>. Your job is to answer questions and reduce friction. The funnel pages do the explaining — you don't need to.</div>
+      </div>
+      <div class="lead-timing">IN EMAIL</div>
+    </div>
+    <div class="lead-step">
+      <div class="lead-num">05</div>
+      <div class="lead-body">
+        <div class="lead-title">Follow up once if no response in 48 hours</div>
+        <div class="lead-detail">One follow-up. Short: "Just checking you got my last message — happy to answer any questions before you review the offer page." No more than two contacts in the first week.</div>
+      </div>
+      <div class="lead-timing">48 HRS</div>
+    </div>
+    <div class="lead-step">
+      <div class="lead-num">06</div>
+      <div class="lead-body">
+        <div class="lead-title">Registration submitted → compile and send to Enagic AU</div>
+        <div class="lead-detail">You receive a notification email when they complete apex-join.html. Review the package. Check all documents. Submit to Enagic AU: <code>info@enagic-australia.com</code> / <code>+61 2 9878 1200</code>. Processing: 7–10 business days. Commission: ~10 days after approval.</div>
+      </div>
+      <div class="lead-timing">ON SUBMIT</div>
+    </div>
+  </div>
+
+  <div class="hot-template reveal rd2">
+    <div class="ht-label">// HOT LEAD EMAIL TEMPLATE — PERSONALISE BEFORE SENDING</div>
+    <div class="ht-body">Subject: Your Apex Network Application — Next Steps
+
+Hi [First Name],
+
+Thanks for applying — I've reviewed your application and you're a strong fit for the network.
+
+Based on what you shared — [specific reference: e.g. "your goal of $5,000/month within 12 months and your trade background"] — I think you understand exactly what this model does and doesn't require.
+
+The next step is straightforward. Review the full offer page below — it has all four tiers with real AUD prices, break-even analysis, and exactly what happens after you register.
+
+If the numbers work for you, the registration wizard handles everything from there. Your Sponsor ID is pre-confirmed. The package gets compiled and submitted within 24–48 hours.
+
+I'll be across your application the whole way through.
+
+Any questions before you review — reply here and I'll get back to you same day.
+
+Review the offer: [paste apex-offer.html full URL]
+Registration: [paste apex-join.html full URL]
+
+— [Your Name]
+Apex Network</div>
+  </div>
+</div>
+
+<!-- ═══ SECTION 4 — COMMISSION REFERENCE ═══ -->
+<div class="section">
+  <div class="section-header reveal">
+    <div class="sec-eyebrow">// QUICK REFERENCE</div>
+    <div class="sec-title">Commission Reference</div>
+    <div class="sec-sub">Memorise the Pro tier. That's the conversation you'll have most. All prices AUD including GST as of 2025.</div>
+  </div>
+
+  <div class="comm-sheet reveal">
+    <div class="cs-tier">
+      <div class="cs-tier-label">// TIER 1</div>
+      <div class="cs-tier-name">OPERATOR ENTRY<br>K8 SINGLE</div>
+      <div class="cs-row"><span class="cs-key">Investment</span><span class="cs-val white">$6,787</span></div>
+      <div class="cs-row"><span class="cs-key">Rank</span><span class="cs-val white">1A</span></div>
+      <div class="cs-row"><span class="cs-key">Commission/sale</span><span class="cs-val amber">~$365</span></div>
+      <div class="cs-row"><span class="cs-key">Break-even</span><span class="cs-val amber">~19 sales</span></div>
+      <div class="cs-row"><span class="cs-key">Sponsor ID</span><span class="cs-val blue">29000059770</span></div>
+    </div>
+    <div class="cs-tier">
+      <div class="cs-tier-label">// TIER 2 — PRO</div>
+      <div class="cs-tier-name">OPERATOR PRO<br>TRIFECTA</div>
+      <div class="cs-row"><span class="cs-key">Investment</span><span class="cs-val white">~$11,682</span></div>
+      <div class="cs-row"><span class="cs-key">Rank</span><span class="cs-val white">2A</span></div>
+      <div class="cs-row"><span class="cs-key">Commission/sale</span><span class="cs-val green">~$1,322</span></div>
+      <div class="cs-row"><span class="cs-key">Break-even</span><span class="cs-val green">~9 sales</span></div>
+      <div class="cs-row"><span class="cs-key">Sponsor ID</span><span class="cs-val blue">29000059770</span></div>
+    </div>
+    <div class="cs-tier">
+      <div class="cs-tier-label">// TIER 3 — ELITE</div>
+      <div class="cs-tier-name">OPERATOR ELITE<br>QUAD</div>
+      <div class="cs-row"><span class="cs-key">Investment</span><span class="cs-val white">~$18,469</span></div>
+      <div class="cs-row"><span class="cs-key">Rank</span><span class="cs-val white">3A</span></div>
+      <div class="cs-row"><span class="cs-key">Commission/sale</span><span class="cs-val green">~$2,595</span></div>
+      <div class="cs-row"><span class="cs-key">Break-even</span><span class="cs-val green">~7 sales</span></div>
+      <div class="cs-row"><span class="cs-key">Sponsor ID</span><span class="cs-val blue">29000059770</span></div>
+    </div>
+    <div class="cs-tier">
+      <div class="cs-tier-label">// TIER 4</div>
+      <div class="cs-tier-name">ENTRY OPTION<br>emGUARDE</div>
+      <div class="cs-row"><span class="cs-key">Investment</span><span class="cs-val white">$2,475</span></div>
+      <div class="cs-row"><span class="cs-key">Rank</span><span class="cs-val white">1A</span></div>
+      <div class="cs-row"><span class="cs-key">Commission/sale</span><span class="cs-val amber">~$225</span></div>
+      <div class="cs-row"><span class="cs-key">Break-even</span><span class="cs-val amber">~11 sales</span></div>
+      <div class="cs-row"><span class="cs-key">Sponsor ID</span><span class="cs-val blue">29000059769</span></div>
+    </div>
+  </div>
+
+  <div class="network-math reveal rd1">
+    <div class="nm-cell">
+      <div class="nm-label">// DIRECT (2 SALES / MO)</div>
+      <div class="nm-val">$2,644</div>
+      <div class="nm-sub">per month — direct commissions</div>
+    </div>
+    <div class="nm-cell">
+      <div class="nm-label">// OVERRIDE (7 OPS × 3 SALES)</div>
+      <div class="nm-val">$7,665</div>
+      <div class="nm-sub">per month — override income</div>
+    </div>
+    <div class="nm-cell">
+      <div class="nm-label">// CONSERVATIVE TOTAL</div>
+      <div class="nm-val">$10,309</div>
+      <div class="nm-sub">per month — 7-operator network</div>
+    </div>
+  </div>
+
+  <div class="sponsor-block reveal rd2">
+    <div class="sb-label">// SPONSOR IDS — NEVER CHANGE. VERIFY BEFORE EVERY SUBMISSION.</div>
+    <div class="sb-ids">
+      <div class="sb-id-item">
+        <div class="sb-id-key">K8 / TRIFECTA / QUAD</div>
+        <div class="sb-id-val">29000059770</div>
+      </div>
+      <div class="sb-id-item">
+        <div class="sb-id-key">emGUARDE — POSITION 1</div>
+        <div class="sb-id-val">29000059769</div>
+      </div>
+      <div class="sb-id-item">
+        <div class="sb-id-key">emGUARDE — POSITION 2</div>
+        <div class="sb-id-val">29000059768</div>
+      </div>
+    </div>
+    <div class="sb-warn">⚠ Sponsor ID placement cannot be changed after Enagic processes the order. Check every registration before submitting to Enagic AU.</div>
+  </div>
+</div>
+
+<!-- ═══ SECTION 5 — RECRUIT FIRST OPERATOR ═══ -->
+<div class="section section-alt">
+  <div class="section-header reveal">
+    <div class="sec-eyebrow">// NETWORK GROWTH</div>
+    <div class="sec-title">Recruiting Your First Operator</div>
+    <div class="sec-sub">Overrides compound. One Pro operator at 3 sales per month generates ~$1,095/month in overrides — passively. Seven operators at that rate is $7,665/month without you making a single direct sale.</div>
+  </div>
+
+  <div class="recruit-grid reveal">
+    <div class="recruit-card">
+      <div class="rc-eyebrow">// WHO TO LOOK FOR</div>
+      <div class="rc-title">Ideal Operator Profile</div>
+      <div class="rc-list">
+        <div class="rc-item">Trades, FIFO, hospitality — currently trading time for money</div>
+        <div class="rc-item">Has tried side hustles before — understands the concept</div>
+        <div class="rc-item">Already watches business or finance content — financially aware</div>
+        <div class="rc-item">Has $5k–$20k access or willing to finance — serious about investment</div>
+        <div class="rc-item">Wants out of their situation within 3–5 years, not 3–5 months</div>
+        <div class="rc-item">Age 22–40 — any background, any industry</div>
+      </div>
+    </div>
+    <div class="recruit-card">
+      <div class="rc-eyebrow">// DISQUALIFIERS</div>
+      <div class="rc-title">Wrong Fit — Don't Chase</div>
+      <div class="rc-list">
+        <div class="rc-item">Wants a "side hustle" with no investment — not how this works</div>
+        <div class="rc-item">Wants guaranteed income before committing — unrealistic expectation</div>
+        <div class="rc-item">Has debt problems — not a fit right now</div>
+        <div class="rc-item">Wants passive income without the early work — will quit in month one</div>
+        <div class="rc-item">Expects you to run it for them — operators must self-activate</div>
+        <div class="rc-item">Only motivated by the money, not the mechanism — churn risk</div>
+      </div>
+    </div>
+    <div class="recruit-card">
+      <div class="rc-eyebrow">// TRAFFIC STRATEGY</div>
+      <div class="rc-title">Where Operators Come From</div>
+      <div class="rc-list">
+        <div class="rc-item">Organic content — the funnel does the filtering for you</div>
+        <div class="rc-item">DMs from people who engage with your videos</div>
+        <div class="rc-item">Personal network — people who already respect your financial thinking</div>
+        <div class="rc-item">Instagram stories once you have a result to show</div>
+        <div class="rc-item">Facebook/Instagram ads (Phase 2) — once organic is proven</div>
+      </div>
+    </div>
+    <div class="recruit-card">
+      <div class="rc-eyebrow">// QUALIFYING APPROACH</div>
+      <div class="rc-title">The One Filter Question</div>
+      <div class="rc-list">
+        <div class="rc-item">"What are you trying to build, and what's your timeline?"</div>
+        <div class="rc-item">Specific + serious answer = strong fit. Send them to apex-index.html.</div>
+        <div class="rc-item">Vague + impatient answer = wrong fit. Don't chase. The funnel replaces chasing.</div>
+        <div class="rc-item">HOT after application? Follow the HOT lead process in Section 3.</div>
+        <div class="rc-item">The funnel pre-qualifies, pre-educates, and pre-sells. Your job is to close — not explain.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="override-math reveal rd1">
+    <div class="om-label">// OVERRIDE INCOME MATH — WHAT ONE OPERATOR IS WORTH</div>
+    <div class="om-row"><div class="om-desc">1 Pro operator × 1 sale per month</div><div class="om-val">~$365/mo override</div></div>
+    <div class="om-row"><div class="om-desc">1 Pro operator × 3 sales per month</div><div class="om-val">~$1,095/mo override</div></div>
+    <div class="om-row"><div class="om-desc">3 operators × 3 sales per month</div><div class="om-val">~$3,285/mo override</div></div>
+    <div class="om-row"><div class="om-desc">7 operators × 3 sales per month</div><div class="om-val">~$7,665/mo override</div></div>
+    <div class="om-row"><div class="om-desc">7 operators + 2 direct sales = full network</div><div class="om-val">~$10,309/mo total</div></div>
+  </div>
+</div>
+
+<div class="disclosure-strip">
+  <div class="disclosure-inner">
+    <div class="disclosure-tag">// INCOME DISCLOSURE</div>
+    <div class="disclosure-text">Results are not typical. All commission figures, network projections, and income examples are based on Enagic's published compensation structure at specified ranks and are subject to change. Income requires active product sales. The majority of Enagic distributors earn little or no income. Apex Network is an independent distributor network not affiliated with or endorsed by Enagic International. <a href="apex-disclosure.html" style="color:rgba(0,212,255,0.5);">Full income disclosure →</a></div>
+  </div>
+</div>
+
+<footer>
+  <div class="footer-brand">APEX<span>NETWORK</span></div>
+  <div class="footer-links">
+    <a href="apex-hub.html">Command Centre</a>
+    <a href="apex-index.html">Front Door</a>
+    <a href="apex-privacy.html">Privacy</a>
+    <a href="apex-terms.html">Terms</a>
+    <a href="apex-disclosure.html">Disclosure</a>
+  </div>
+  <div class="footer-copy" id="footerCopy">© 2025 Apex Network — Independent distributor network</div>
+</footer>
+
+<script>
+const ACCESS_CODE = 'DIESEL2025';
+const STORAGE_KEY = 'apex_os_checklist';
+
+// GATE
+function checkGate() {
+  const val = document.getElementById('gateInput').value.trim().toUpperCase();
+  if (val === ACCESS_CODE) {
+    sessionStorage.setItem('apex_os_auth', '1');
+    document.getElementById('gate').style.display = 'none';
+    initPage();
+  } else {
+    const err = document.getElementById('gateError');
+    err.style.display = 'block';
+    document.getElementById('gateInput').value = '';
+    document.getElementById('gateInput').focus();
+    setTimeout(() => err.style.display = 'none', 3000);
+  }
+}
+document.getElementById('gateInput').addEventListener('keydown', e => {
+  if (e.key === 'Enter') checkGate();
+});
+if (sessionStorage.getItem('apex_os_auth') === '1') {
+  document.getElementById('gate').style.display = 'none';
+  initPage();
+}
+
+// URL PARAM — SPONSOR ID
+function getSponsorId() {
+  const params = new URLSearchParams(window.location.search);
+  return params.get('sponsorid') || params.get('sponsorId') || '29000059770';
+}
+
+function initPage() {
+  document.getElementById('heroSponsorId').textContent = getSponsorId();
+
+  // Clock
+  function updateClock() {
+    const now = new Date();
+    const opts = {hour:'2-digit',minute:'2-digit',second:'2-digit',hour12:false,timeZone:'Australia/Brisbane'};
+    document.getElementById('navClock').textContent = now.toLocaleTimeString('en-AU', opts) + ' AEST';
+    document.getElementById('footerCopy').textContent = '© ' + now.getFullYear() + ' Apex Network — Independent distributor network';
+  }
+  updateClock();
+  setInterval(updateClock, 1000);
+
+  // Scroll reveal
+  const obs = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) { e.target.classList.add('visible'); obs.unobserve(e.target); }
+    });
+  }, { threshold: 0.06 });
+  document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+
+  loadChecklistState();
+  updateProgress();
+}
+
+// CHECKLIST
+function loadChecklistState() {
+  const saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
+  document.querySelectorAll('.check-row').forEach(row => {
+    if (saved[row.dataset.id]) {
+      row.classList.add('done');
+      row.querySelector('.check-box').textContent = '✓';
+    }
+  });
+}
+
+function toggleCheck(row) {
+  const id = row.dataset.id;
+  const isDone = row.classList.contains('done');
+  const saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
+  if (isDone) {
+    row.classList.remove('done');
+    row.querySelector('.check-box').textContent = '';
+    delete saved[id];
+  } else {
+    row.classList.add('done');
+    row.querySelector('.check-box').textContent = '✓';
+    saved[id] = true;
+  }
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(saved));
+  updateProgress();
+}
+
+function updateProgress() {
+  const all = document.querySelectorAll('.check-row');
+  const done = document.querySelectorAll('.check-row.done');
+  const total = all.length;
+  const count = done.length;
+  document.getElementById('progressBar').style.width = (total > 0 ? Math.round((count / total) * 100) : 0) + '%';
+  document.getElementById('progressText').textContent = count;
+  document.getElementById('progressTotal').textContent = total;
+
+  [
+    {id:'day1prog', prefix:'d1_', count:4},
+    {id:'day2prog', prefix:'d2_', count:4},
+    {id:'day3prog', prefix:'d3_', count:4},
+    {id:'day4prog', prefix:'d4_', count:4}
+  ].forEach(d => {
+    const n = document.querySelectorAll('.check-row[data-id^="' + d.prefix + '"].done').length;
+    document.getElementById(d.id).textContent = n + '/' + d.count;
+  });
+}
+</script>
+</body>
+</html>

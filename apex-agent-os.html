@@ -1,0 +1,1053 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Apex Network — Agent OS</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=DM+Mono:wght@300;400;500&family=Archivo:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --black:#04040a;--deep:#060610;--surface:#0a0a15;--panel:#0e0e1c;--panel2:#12121f;
+  --edge:rgba(0,212,255,0.07);--edge2:rgba(0,212,255,0.14);
+  --blue:#00d4ff;--blue2:#0099cc;
+  --white:#f0f0f8;--muted:rgba(240,240,248,0.52);--dim:rgba(240,240,248,0.22);
+  --green:#00ff88;--amber:#f59e0b;--red:#ef4444;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{font-size:15px;}
+body{background:var(--black);color:var(--white);font-family:'Archivo',sans-serif;overflow:hidden;height:100vh;cursor:crosshair;}
+
+/* NOISE */
+body::before{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");pointer-events:none;z-index:9999;opacity:0.4;}
+/* GRID */
+body::after{content:'';position:fixed;inset:0;background-image:linear-gradient(rgba(0,212,255,0.04) 1px,transparent 1px),linear-gradient(90deg,rgba(0,212,255,0.04) 1px,transparent 1px);background-size:80px 80px;pointer-events:none;z-index:0;}
+
+/* GATE */
+#gate{position:fixed;inset:0;background:var(--black);z-index:10000;display:flex;align-items:center;justify-content:center;}
+.gate-box{text-align:center;padding:2rem;}
+.gate-logo{font-family:'Orbitron',sans-serif;font-size:2rem;letter-spacing:0.12em;margin-bottom:0.3rem;}
+.gate-logo span{color:var(--blue);}
+.gate-sub{font-family:'DM Mono',monospace;font-size:0.55rem;letter-spacing:0.2em;color:var(--dim);margin-bottom:2.5rem;}
+.gate-label{font-family:'DM Mono',monospace;font-size:0.52rem;letter-spacing:0.18em;color:var(--blue);margin-bottom:0.6rem;}
+.gate-input{background:rgba(255,255,255,0.03);border:1px solid var(--edge2);color:var(--white);font-family:'DM Mono',monospace;font-size:1.1rem;letter-spacing:0.3em;text-align:center;width:200px;padding:0.8rem 1rem;outline:none;display:block;margin:0 auto 0.8rem;text-transform:uppercase;}
+.gate-input:focus{border-color:var(--blue);}
+.gate-btn{background:var(--blue);color:var(--white);font-family:'DM Mono',monospace;font-size:0.62rem;letter-spacing:0.15em;text-transform:uppercase;padding:0.75rem 1.8rem;border:none;cursor:pointer;width:200px;display:block;margin:0 auto;transition:background 0.2s;}
+.gate-btn:hover{background:var(--blue2);}
+.gate-err{font-family:'DM Mono',monospace;font-size:0.52rem;letter-spacing:0.1em;color:var(--red);margin-top:0.5rem;display:none;}
+.gate-hint{font-family:'DM Mono',monospace;font-size:0.48rem;letter-spacing:0.08em;color:var(--dim);margin-top:1.2rem;}
+
+/* KEY MODAL */
+#keyModal{position:fixed;inset:0;background:rgba(0,0,0,0.85);z-index:5000;display:none;align-items:center;justify-content:center;}
+#keyModal.show{display:flex;}
+.km-box{background:var(--panel);border:1px solid var(--edge2);padding:2rem;width:440px;max-width:90vw;position:relative;}
+.km-box::before{content:'';position:absolute;top:-1px;left:-1px;width:8px;height:8px;border-top:1px solid var(--blue);border-left:1px solid var(--blue);}
+.km-title{font-family:'Orbitron',sans-serif;font-size:1.4rem;letter-spacing:0.08em;margin-bottom:0.5rem;}
+.km-desc{font-size:0.8rem;color:var(--muted);line-height:1.7;margin-bottom:1.2rem;}
+.km-input{background:rgba(255,255,255,0.03);border:1px solid var(--edge2);color:var(--white);font-family:'DM Mono',monospace;font-size:0.78rem;width:100%;padding:0.75rem 1rem;outline:none;margin-bottom:0.8rem;}
+.km-input:focus{border-color:var(--blue);}
+.km-row{display:flex;gap:0.7rem;}
+.km-save{background:var(--blue);color:var(--white);font-family:'DM Mono',monospace;font-size:0.6rem;letter-spacing:0.15em;text-transform:uppercase;padding:0.7rem 1.4rem;border:none;cursor:pointer;flex:1;transition:background 0.2s;}
+.km-save:hover{background:var(--blue2);}
+.km-cancel{background:transparent;border:1px solid var(--edge2);color:var(--muted);font-family:'DM Mono',monospace;font-size:0.6rem;letter-spacing:0.15em;text-transform:uppercase;padding:0.7rem 1rem;cursor:pointer;transition:all 0.2s;}
+.km-cancel:hover{border-color:var(--edge2);color:var(--white);}
+.km-note{font-family:'DM Mono',monospace;font-size:0.5rem;letter-spacing:0.06em;color:var(--dim);margin-top:0.8rem;line-height:1.7;}
+
+/* APP LAYOUT */
+.app{display:grid;grid-template-columns:240px 1fr;grid-template-rows:56px 1fr;height:100vh;position:relative;z-index:1;}
+
+/* TOPBAR */
+.topbar{grid-column:1/-1;background:rgba(5,5,5,0.97);border-bottom:1px solid var(--edge);display:flex;align-items:center;justify-content:space-between;padding:0 1.2rem;backdrop-filter:blur(20px);position:relative;z-index:100;}
+.tb-brand{display:flex;align-items:center;gap:0.7rem;}
+.tb-mark{width:20px;height:20px;flex-shrink:0;}
+.tb-name{font-family:'Orbitron',sans-serif;font-size:1.05rem;letter-spacing:0.12em;}
+.tb-name span{color:var(--blue);}
+.tb-sep{width:1px;height:16px;background:var(--edge2);}
+.tb-tag{font-family:'DM Mono',monospace;font-size:0.52rem;letter-spacing:0.18em;color:var(--dim);}
+.tb-right{display:flex;align-items:center;gap:1rem;}
+.tb-status{display:flex;align-items:center;gap:0.4rem;font-family:'DM Mono',monospace;font-size:0.52rem;letter-spacing:0.1em;}
+.tb-dot{width:5px;height:5px;border-radius:50%;background:var(--green);box-shadow:0 0 6px var(--green);animation:blink 2s ease-in-out infinite;}
+@keyframes blink{0%,100%{opacity:1;}50%{opacity:0.25;}}
+.tb-status.offline .tb-dot{background:var(--amber);box-shadow:0 0 6px var(--amber);}
+#tbClock{font-family:'DM Mono',monospace;font-size:0.52rem;letter-spacing:0.06em;color:var(--dim);}
+.tb-key-btn{font-family:'DM Mono',monospace;font-size:0.52rem;letter-spacing:0.12em;text-transform:uppercase;padding:0.35rem 0.8rem;border:1px solid var(--edge2);background:transparent;color:var(--muted);cursor:pointer;transition:all 0.2s;}
+.tb-key-btn:hover{border-color:var(--blue);color:var(--white);}
+.tb-key-btn.key-set{border-color:rgba(0,255,136,0.3);color:var(--green);}
+.tb-audit-btn{font-family:'DM Mono',monospace;font-size:0.55rem;letter-spacing:0.12em;text-transform:uppercase;padding:0.38rem 1rem;background:rgba(0,212,255,0.12);border:1px solid rgba(0,212,255,0.3);color:var(--blue);cursor:pointer;transition:all 0.2s;}
+.tb-audit-btn:hover{background:rgba(0,212,255,0.2);border-color:var(--blue);}
+.tb-audit-btn:disabled{opacity:0.4;cursor:not-allowed;}
+
+/* SIDEBAR */
+.sidebar{background:var(--surface);border-right:1px solid var(--edge);overflow-y:auto;padding:1rem 0;}
+.sidebar::-webkit-scrollbar{width:3px;}
+.sidebar::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.08);}
+.nav-section{font-family:'DM Mono',monospace;font-size:0.48rem;letter-spacing:0.22em;color:var(--dim);padding:0.8rem 1.1rem 0.3rem;text-transform:uppercase;margin-top:0.5rem;}
+.nav-section:first-child{margin-top:0;}
+.nav-item{display:flex;align-items:center;gap:0.65rem;padding:0.6rem 1.1rem;cursor:pointer;transition:all 0.15s;border-left:2px solid transparent;color:var(--muted);}
+.nav-item:hover{background:rgba(255,255,255,0.02);color:var(--white);}
+.nav-item.active{background:rgba(0,212,255,0.06);border-left-color:var(--blue);color:var(--white);}
+.ni-num{font-family:'DM Mono',monospace;font-size:0.5rem;letter-spacing:0.1em;color:var(--blue);flex-shrink:0;min-width:20px;}
+.nav-item.active .ni-num{color:var(--blue);}
+.ni-name{font-size:0.78rem;font-weight:500;letter-spacing:0.01em;}
+.ni-badge{margin-left:auto;font-family:'DM Mono',monospace;font-size:0.42rem;letter-spacing:0.08em;padding:0.1rem 0.35rem;border:1px solid;flex-shrink:0;}
+.ni-badge.live{color:var(--green);border-color:rgba(0,255,136,0.25);}
+.ni-badge.hot{color:var(--amber);border-color:rgba(245,158,11,0.25);}
+
+.sidebar-footer{padding:1rem 1.1rem;border-top:1px solid var(--edge);margin-top:auto;}
+.sf-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:0.3rem;}
+.sf-label{font-family:'DM Mono',monospace;font-size:0.48rem;letter-spacing:0.1em;color:var(--dim);}
+.sf-val{font-family:'DM Mono',monospace;font-size:0.5rem;color:var(--muted);}
+
+/* MAIN CONTENT */
+.main{overflow-y:auto;padding:1.5rem;display:flex;flex-direction:column;gap:0;}
+.main::-webkit-scrollbar{width:4px;}
+.main::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.08);}
+
+/* MODULE PANELS */
+.module{display:none;flex-direction:column;gap:1.2rem;}
+.module.active{display:flex;}
+
+/* MODULE HEADER */
+.mod-header{display:flex;align-items:flex-start;gap:1rem;padding-bottom:1.2rem;border-bottom:1px solid var(--edge);}
+.mod-num{font-family:'Orbitron',sans-serif;font-size:2.8rem;letter-spacing:0.04em;color:var(--blue);line-height:1;flex-shrink:0;opacity:0.4;}
+.mod-title-block{}
+.mod-tag{font-family:'DM Mono',monospace;font-size:0.5rem;letter-spacing:0.2em;color:var(--blue);margin-bottom:0.2rem;}
+.mod-title{font-family:'Orbitron',sans-serif;font-size:1.8rem;letter-spacing:0.04em;color:var(--white);line-height:0.95;}
+.mod-desc{font-size:0.82rem;color:var(--muted);line-height:1.8;margin-top:0.4rem;max-width:600px;}
+
+/* INPUT PANELS */
+.input-panel{background:var(--panel);border:1px solid var(--edge);padding:1.2rem;}
+.ip-label{font-family:'DM Mono',monospace;font-size:0.52rem;letter-spacing:0.15em;color:var(--blue);margin-bottom:0.5rem;}
+.ip-textarea{background:rgba(255,255,255,0.03);border:1px solid var(--edge);color:var(--white);font-family:'Archivo',sans-serif;font-size:0.85rem;width:100%;padding:0.75rem 1rem;resize:vertical;min-height:80px;outline:none;transition:border-color 0.2s;}
+.ip-textarea:focus{border-color:rgba(0,212,255,0.4);}
+.ip-textarea::placeholder{color:var(--dim);}
+.ip-select{background:var(--panel2);border:1px solid var(--edge);color:var(--white);font-family:'DM Mono',monospace;font-size:0.72rem;letter-spacing:0.05em;padding:0.65rem 1rem;width:100%;outline:none;cursor:pointer;}
+.ip-select option{background:var(--panel);}
+.ip-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem;}
+.ip-input{background:rgba(255,255,255,0.03);border:1px solid var(--edge);color:var(--white);font-family:'Archivo',sans-serif;font-size:0.85rem;width:100%;padding:0.65rem 1rem;outline:none;transition:border-color 0.2s;}
+.ip-input:focus{border-color:rgba(0,212,255,0.4);}
+.ip-input::placeholder{color:var(--dim);}
+
+/* RUN ROW */
+.run-row{display:flex;gap:0.7rem;align-items:center;}
+.run-btn{background:var(--blue);color:var(--white);font-family:'DM Mono',monospace;font-size:0.62rem;letter-spacing:0.15em;text-transform:uppercase;padding:0.7rem 1.5rem;border:none;cursor:pointer;transition:all 0.2s;display:flex;align-items:center;gap:0.5rem;flex-shrink:0;}
+.run-btn:hover{background:var(--blue2);box-shadow:0 0 20px rgba(0,212,255,0.3);}
+.run-btn:disabled{opacity:0.4;cursor:not-allowed;}
+.clear-btn{background:transparent;border:1px solid var(--edge);color:var(--dim);font-family:'DM Mono',monospace;font-size:0.55rem;letter-spacing:0.12em;text-transform:uppercase;padding:0.7rem 1rem;cursor:pointer;transition:all 0.2s;}
+.clear-btn:hover{border-color:var(--edge2);color:var(--muted);}
+.run-status{font-family:'DM Mono',monospace;font-size:0.52rem;letter-spacing:0.08em;color:var(--dim);}
+
+/* TERMINAL */
+.terminal{background:#030507;border:1px solid var(--edge);font-family:'DM Mono',monospace;font-size:0.72rem;line-height:1.85;padding:1.2rem;min-height:200px;max-height:420px;overflow-y:auto;color:var(--muted);white-space:pre-wrap;word-break:break-word;}
+.terminal::-webkit-scrollbar{width:3px;}
+.terminal::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.08);}
+.term-placeholder{color:var(--dim);font-style:italic;}
+.term-cursor{display:inline-block;width:8px;height:14px;background:var(--blue);vertical-align:text-bottom;animation:cur 0.8s step-end infinite;}
+@keyframes cur{0%,100%{opacity:1;}50%{opacity:0;}}
+
+/* CHAT (module 2) */
+.chat-history{background:#030507;border:1px solid var(--edge);font-family:'DM Mono',monospace;font-size:0.72rem;line-height:1.85;padding:1.2rem;height:320px;overflow-y:auto;display:flex;flex-direction:column;gap:0.8rem;}
+.chat-history::-webkit-scrollbar{width:3px;}
+.chat-history::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.08);}
+.chat-msg-user{color:var(--blue);}
+.chat-msg-user::before{content:'> ';color:rgba(0,212,255,0.5);}
+.chat-msg-ai{color:var(--muted);}
+.chat-input-row{display:flex;gap:0.7rem;}
+.chat-input{background:rgba(255,255,255,0.03);border:1px solid var(--edge);color:var(--white);font-family:'DM Mono',monospace;font-size:0.78rem;flex:1;padding:0.7rem 1rem;outline:none;transition:border-color 0.2s;}
+.chat-input:focus{border-color:rgba(0,212,255,0.4);}
+.chat-send{background:var(--blue);color:var(--white);font-family:'DM Mono',monospace;font-size:0.6rem;letter-spacing:0.12em;text-transform:uppercase;padding:0.7rem 1.2rem;border:none;cursor:pointer;flex-shrink:0;transition:background 0.2s;}
+.chat-send:hover{background:var(--blue2);}
+.chat-send:disabled{opacity:0.4;cursor:not-allowed;}
+
+/* NO KEY BANNER */
+.no-key-banner{background:rgba(245,158,11,0.06);border:1px solid rgba(245,158,11,0.2);padding:0.9rem 1.2rem;display:flex;align-items:center;justify-content:space-between;gap:1rem;}
+.nkb-text{font-family:'DM Mono',monospace;font-size:0.58rem;letter-spacing:0.08em;color:var(--amber);}
+.nkb-btn{background:rgba(245,158,11,0.12);border:1px solid rgba(245,158,11,0.3);color:var(--amber);font-family:'DM Mono',monospace;font-size:0.55rem;letter-spacing:0.12em;text-transform:uppercase;padding:0.4rem 0.9rem;cursor:pointer;flex-shrink:0;transition:all 0.2s;}
+.nkb-btn:hover{background:rgba(245,158,11,0.2);}
+
+/* AUDIT RESULTS */
+#auditPanel{display:none;background:var(--panel);border:1px solid var(--blue);padding:1.5rem;position:fixed;top:70px;right:20px;width:400px;max-height:calc(100vh - 100px);overflow-y:auto;z-index:200;}
+#auditPanel.show{display:block;}
+#auditPanel::-webkit-scrollbar{width:3px;}
+#auditPanel::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.08);}
+.ap-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem;padding-bottom:0.8rem;border-bottom:1px solid var(--edge);}
+.ap-title{font-family:'Orbitron',sans-serif;font-size:1.1rem;letter-spacing:0.06em;color:var(--blue);}
+.ap-close{background:transparent;border:1px solid var(--edge);color:var(--dim);font-family:'DM Mono',monospace;font-size:0.55rem;letter-spacing:0.1em;padding:0.3rem 0.6rem;cursor:pointer;transition:all 0.2s;}
+.ap-close:hover{border-color:var(--edge2);color:var(--muted);}
+.ap-content{font-family:'DM Mono',monospace;font-size:0.65rem;line-height:1.85;color:var(--muted);white-space:pre-wrap;}
+
+@media(max-width:768px){
+  .app{grid-template-columns:1fr;grid-template-rows:56px auto 1fr;}
+  .sidebar{display:none;}
+  .main{padding:1rem;}
+  #auditPanel{width:90vw;right:5vw;}
+}
+</style>
+</head>
+<body>
+
+<!-- GATE -->
+<div id="gate">
+  <div class="gate-box">
+    <div class="gate-logo">APEX<span>NETWORK</span></div>
+    <div class="gate-sub">// AGENT OS — RESTRICTED ACCESS</div>
+    <div class="gate-label">// ACCESS CODE</div>
+    <input class="gate-input" type="password" id="gateInput" placeholder="••••••••" maxlength="20" autocomplete="off">
+    <button class="gate-btn" onclick="checkGate()">ENTER →</button>
+    <div class="gate-err" id="gateErr">// INVALID CODE</div>
+    <div class="gate-hint">Hint: your dog's name + the year. All caps.</div>
+  </div>
+</div>
+
+<!-- API KEY MODAL -->
+<div id="keyModal">
+  <div class="km-box">
+    <div class="km-title">ANTHROPIC API KEY</div>
+    <div class="km-desc">Your key is stored only in this browser session. It is sent directly to <code style="font-family:'DM Mono',monospace;color:var(--blue);font-size:0.78rem;">api.anthropic.com</code> and nowhere else. Get your key at console.anthropic.com.</div>
+    <input class="km-input" type="password" id="keyInput" placeholder="sk-ant-api03-...">
+    <div class="km-row">
+      <button class="km-save" onclick="saveApiKey()">SAVE KEY →</button>
+      <button class="km-cancel" onclick="closeKeyModal()">CANCEL</button>
+    </div>
+    <div class="km-note">// Key stored in sessionStorage — clears when you close the browser tab.<br>// Required model: claude-sonnet-4-6 · Estimated cost per run: $0.01–$0.05</div>
+  </div>
+</div>
+
+<!-- AUDIT PANEL -->
+<div id="auditPanel">
+  <div class="ap-header">
+    <div class="ap-title">FULL BUSINESS AUDIT</div>
+    <button class="ap-close" onclick="closeAudit()">CLOSE ✕</button>
+  </div>
+  <div class="ap-content" id="auditContent"><span class="term-placeholder">// Audit not yet run</span></div>
+</div>
+
+<!-- APP -->
+<div class="app" id="app" style="display:none;">
+
+  <!-- TOPBAR -->
+  <div class="topbar">
+    <div class="tb-brand">
+      <svg class="tb-mark" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <polygon points="16,2 30,28 2,28" fill="none" stroke="#00d4ff" stroke-width="1.5"/>
+        <polygon points="16,8 26,26 6,26" fill="rgba(0,212,255,0.08)" stroke="rgba(0,212,255,0.3)" stroke-width="1"/>
+        <circle cx="16" cy="16" r="2" fill="#00d4ff"/>
+      </svg>
+      <span class="tb-name">APEX<span>NETWORK</span></span>
+      <div class="tb-sep"></div>
+      <span class="tb-tag">AGENT OS</span>
+    </div>
+    <div class="tb-right">
+      <div class="tb-status" id="tbStatus">
+        <div class="tb-dot"></div>
+        <span id="tbStatusText">READY</span>
+      </div>
+      <div id="tbClock"></div>
+      <button class="tb-key-btn" id="keyBtn" onclick="openKeyModal()">API KEY</button>
+      <button class="tb-audit-btn" id="auditBtn" onclick="runFullAudit()">▶ RUN FULL AUDIT</button>
+    </div>
+  </div>
+
+  <!-- SIDEBAR -->
+  <div class="sidebar">
+    <div class="nav-section">// MODULES</div>
+
+    <div class="nav-item active" onclick="showModule(1)" id="nav-1">
+      <span class="ni-num">01</span>
+      <span class="ni-name">MORNING BRIEFING</span>
+      <span class="ni-badge live">AUTO</span>
+    </div>
+    <div class="nav-item" onclick="showModule(2)" id="nav-2">
+      <span class="ni-num">02</span>
+      <span class="ni-name">MASTER AGENT</span>
+    </div>
+    <div class="nav-item" onclick="showModule(3)" id="nav-3">
+      <span class="ni-num">03</span>
+      <span class="ni-name">PIPELINE AGENT</span>
+      <span class="ni-badge hot">LEADS</span>
+    </div>
+    <div class="nav-item" onclick="showModule(4)" id="nav-4">
+      <span class="ni-num">04</span>
+      <span class="ni-name">TRAFFIC AGENT</span>
+    </div>
+    <div class="nav-item" onclick="showModule(5)" id="nav-5">
+      <span class="ni-num">05</span>
+      <span class="ni-name">CONVERSION AGENT</span>
+    </div>
+    <div class="nav-item" onclick="showModule(6)" id="nav-6">
+      <span class="ni-num">06</span>
+      <span class="ni-name">OPERATIONS AGENT</span>
+    </div>
+    <div class="nav-item" onclick="showModule(7)" id="nav-7">
+      <span class="ni-num">07</span>
+      <span class="ni-name">GROWTH AGENT</span>
+    </div>
+    <div class="nav-item" onclick="showModule(8)" id="nav-8">
+      <span class="ni-num">08</span>
+      <span class="ni-name">SCRIPT GENERATOR</span>
+    </div>
+
+    <div class="nav-section" style="margin-top:1.5rem;">// NAVIGATION</div>
+    <div class="nav-item" onclick="window.open('apex-hub.html','_blank')">
+      <span class="ni-num">↗</span>
+      <span class="ni-name">Command Centre</span>
+    </div>
+    <div class="nav-item" onclick="window.open('apex-index.html','_blank')">
+      <span class="ni-num">↗</span>
+      <span class="ni-name">Front Door</span>
+    </div>
+
+    <div style="padding:1.2rem 1.1rem;border-top:1px solid var(--edge);margin-top:1rem;">
+      <div style="display:flex;justify-content:space-between;margin-bottom:0.3rem;">
+        <span style="font-family:'DM Mono',monospace;font-size:0.46rem;letter-spacing:0.1em;color:var(--dim);">MODEL</span>
+        <span style="font-family:'DM Mono',monospace;font-size:0.46rem;color:var(--muted);">claude-sonnet-4-6</span>
+      </div>
+      <div style="display:flex;justify-content:space-between;margin-bottom:0.3rem;">
+        <span style="font-family:'DM Mono',monospace;font-size:0.46rem;letter-spacing:0.1em;color:var(--dim);">MAX TOKENS</span>
+        <span style="font-family:'DM Mono',monospace;font-size:0.46rem;color:var(--muted);">2048</span>
+      </div>
+      <div style="display:flex;justify-content:space-between;">
+        <span style="font-family:'DM Mono',monospace;font-size:0.46rem;letter-spacing:0.1em;color:var(--dim);">API KEY</span>
+        <span style="font-family:'DM Mono',monospace;font-size:0.46rem;" id="sidebarKeyStatus">NOT SET</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- MAIN -->
+  <div class="main" id="main">
+
+    <!-- MODULE 1: MORNING BRIEFING -->
+    <div class="module active" id="module-1">
+      <div class="mod-header">
+        <div class="mod-num">01</div>
+        <div class="mod-title-block">
+          <div class="mod-tag">// INTELLIGENCE</div>
+          <div class="mod-title">MORNING BRIEFING</div>
+          <div class="mod-desc">Generates your daily Apex Network intelligence report — network status, priority actions, content recommendation, blocker review, and key insight for today.</div>
+        </div>
+      </div>
+      <div id="noKeyBanner1" class="no-key-banner" style="display:none;">
+        <span class="nkb-text">// NO API KEY — Agent OS requires an Anthropic API key to run</span>
+        <button class="nkb-btn" onclick="openKeyModal()">SET API KEY →</button>
+      </div>
+      <div class="run-row">
+        <button class="run-btn" onclick="runModule1()">▶ GENERATE BRIEFING</button>
+        <button class="clear-btn" onclick="clearOutput('out-1')">CLEAR</button>
+        <span class="run-status" id="status-1"></span>
+      </div>
+      <div class="terminal" id="out-1"><span class="term-placeholder">// Press RUN to generate today's Apex Network morning briefing</span></div>
+    </div>
+
+    <!-- MODULE 2: MASTER AGENT -->
+    <div class="module" id="module-2">
+      <div class="mod-header">
+        <div class="mod-num">02</div>
+        <div class="mod-title-block">
+          <div class="mod-tag">// DIRECT INTERFACE</div>
+          <div class="mod-title">MASTER AGENT</div>
+          <div class="mod-desc">Direct chat with full Apex Network business context. Ask any question about strategy, operators, commissions, content, or operations. Full memory within session.</div>
+        </div>
+      </div>
+      <div id="noKeyBanner2" class="no-key-banner" style="display:none;">
+        <span class="nkb-text">// NO API KEY — Enter your Anthropic API key to activate</span>
+        <button class="nkb-btn" onclick="openKeyModal()">SET API KEY →</button>
+      </div>
+      <div class="chat-history" id="chatHistory">
+        <div style="font-family:'DM Mono',monospace;font-size:0.65rem;color:var(--dim);font-style:italic;">// Master Agent initialised — full Apex Network context loaded. Ask anything.</div>
+      </div>
+      <div class="chat-input-row">
+        <input class="chat-input" type="text" id="chatInput" placeholder="Ask the Master Agent anything about your business..." onkeydown="if(event.key==='Enter')sendChat()">
+        <button class="chat-send" id="chatSend" onclick="sendChat()">SEND →</button>
+      </div>
+      <div style="display:flex;justify-content:flex-end;margin-top:0.5rem;">
+        <button class="clear-btn" onclick="clearChat()">CLEAR HISTORY</button>
+      </div>
+    </div>
+
+    <!-- MODULE 3: PIPELINE AGENT -->
+    <div class="module" id="module-3">
+      <div class="mod-header">
+        <div class="mod-num">03</div>
+        <div class="mod-title-block">
+          <div class="mod-tag">// LEAD MANAGEMENT</div>
+          <div class="mod-title">PIPELINE AGENT</div>
+          <div class="mod-desc">Analyse any lead and get HOT/WARM/COLD scoring, immediate action recommendation, and a ready-to-send follow-up email.</div>
+        </div>
+      </div>
+      <div class="input-panel">
+        <div class="ip-label">// LEAD DETAILS — describe the lead (name optional, investment readiness, questions asked, how they found you)</div>
+        <textarea class="ip-textarea" id="pipelineInput" placeholder="e.g. Male, late 20s, found me on TikTok. Asked about the investment and said he's currently between jobs. Interested in the Trifecta. Has $12k available. Asked if this is MLM. Hasn't seen the offer page yet." style="min-height:100px;"></textarea>
+      </div>
+      <div class="run-row">
+        <button class="run-btn" onclick="runModule3()">▶ ANALYSE LEAD</button>
+        <button class="clear-btn" onclick="clearOutput('out-3')">CLEAR</button>
+        <span class="run-status" id="status-3"></span>
+      </div>
+      <div class="terminal" id="out-3"><span class="term-placeholder">// Paste lead details above and press RUN to get scoring + follow-up email</span></div>
+    </div>
+
+    <!-- MODULE 4: TRAFFIC AGENT -->
+    <div class="module" id="module-4">
+      <div class="mod-header">
+        <div class="mod-num">04</div>
+        <div class="mod-title-block">
+          <div class="mod-tag">// CONTENT STRATEGY</div>
+          <div class="mod-title">TRAFFIC AGENT</div>
+          <div class="mod-desc">Content performance analysis and hook recommendations. Input your current content situation and get 5 specific hooks + this week's posting schedule.</div>
+        </div>
+      </div>
+      <div class="input-panel" style="display:grid;gap:0.8rem;">
+        <div>
+          <div class="ip-label">// CURRENT CONTENT SITUATION (views, what's working, what's not, platforms active)</div>
+          <textarea class="ip-textarea" id="trafficInput" placeholder="e.g. Just started. No videos posted yet. TikTok account created today. Want to focus on the franchise math angle first. Target: 25-35 year olds who hate their jobs."></textarea>
+        </div>
+        <div>
+          <div class="ip-label">// CONTENT PILLAR FOCUS</div>
+          <select class="ip-select" id="trafficPillar">
+            <option value="all">All 4 pillars (balanced week)</option>
+            <option value="franchise">Franchise Math</option>
+            <option value="system">System vs Job</option>
+            <option value="platform">Platform Thinking</option>
+            <option value="proof">Operator Proof</option>
+          </select>
+        </div>
+      </div>
+      <div class="run-row">
+        <button class="run-btn" onclick="runModule4()">▶ GENERATE HOOKS + SCHEDULE</button>
+        <button class="clear-btn" onclick="clearOutput('out-4')">CLEAR</button>
+        <span class="run-status" id="status-4"></span>
+      </div>
+      <div class="terminal" id="out-4"><span class="term-placeholder">// Describe your content situation and press RUN for hook recommendations</span></div>
+    </div>
+
+    <!-- MODULE 5: CONVERSION AGENT -->
+    <div class="module" id="module-5">
+      <div class="mod-header">
+        <div class="mod-num">05</div>
+        <div class="mod-title-block">
+          <div class="mod-tag">// FUNNEL OPTIMISATION</div>
+          <div class="mod-title">CONVERSION AGENT</div>
+          <div class="mod-desc">Funnel fault detection and fix recommendations. Describe a drop-off, objection pattern, or conversion problem and get a specific diagnosis and copy fixes.</div>
+        </div>
+      </div>
+      <div class="input-panel">
+        <div class="ip-label">// DESCRIBE THE CONVERSION PROBLEM (where leads are dropping, what objections keep coming up, which step is failing)</div>
+        <textarea class="ip-textarea" id="conversionInput" placeholder="e.g. Leads are opting in but not clicking through to the apply page. Or: Getting lots of 'is this MLM?' objections on TikTok comments. Or: HOT leads go cold after seeing the investment on the offer page." style="min-height:100px;"></textarea>
+      </div>
+      <div class="run-row">
+        <button class="run-btn" onclick="runModule5()">▶ DIAGNOSE + FIX</button>
+        <button class="clear-btn" onclick="clearOutput('out-5')">CLEAR</button>
+        <span class="run-status" id="status-5"></span>
+      </div>
+      <div class="terminal" id="out-5"><span class="term-placeholder">// Describe the conversion issue above and press RUN for diagnosis + specific fixes</span></div>
+    </div>
+
+    <!-- MODULE 6: OPERATIONS AGENT -->
+    <div class="module" id="module-6">
+      <div class="mod-header">
+        <div class="mod-num">06</div>
+        <div class="mod-title-block">
+          <div class="mod-tag">// SYSTEM HEALTH</div>
+          <div class="mod-title">OPERATIONS AGENT</div>
+          <div class="mod-desc">Full system health check — all apex- pages, Netlify functions, ActiveCampaign setup, critical blockers, and funnel integrity. Generates a prioritised fix list.</div>
+        </div>
+      </div>
+      <div class="run-row">
+        <button class="run-btn" onclick="runModule6()">▶ RUN SYSTEM CHECK</button>
+        <button class="clear-btn" onclick="clearOutput('out-6')">CLEAR</button>
+        <span class="run-status" id="status-6"></span>
+      </div>
+      <div class="terminal" id="out-6"><span class="term-placeholder">// Press RUN to generate full Apex Network operations health check</span></div>
+    </div>
+
+    <!-- MODULE 7: GROWTH AGENT -->
+    <div class="module" id="module-7">
+      <div class="mod-header">
+        <div class="mod-num">07</div>
+        <div class="mod-title-block">
+          <div class="mod-tag">// SCALING STRATEGY</div>
+          <div class="mod-title">GROWTH AGENT</div>
+          <div class="mod-desc">Revenue forecasting, operator recruitment strategy, and 90-day scaling plan based on your current operator count and sales velocity.</div>
+        </div>
+      </div>
+      <div class="input-panel">
+        <div class="ip-grid">
+          <div>
+            <div class="ip-label">// CURRENT OPERATORS (active)</div>
+            <input class="ip-input" type="number" id="growthOps" placeholder="0" min="0" max="100" value="0">
+          </div>
+          <div>
+            <div class="ip-label">// YOUR SALES THIS MONTH</div>
+            <input class="ip-input" type="number" id="growthSales" placeholder="0" min="0" max="50" value="0">
+          </div>
+          <div>
+            <div class="ip-label">// MONTHS ACTIVE</div>
+            <input class="ip-input" type="number" id="growthMonths" placeholder="0" min="0" max="60" value="0">
+          </div>
+          <div>
+            <div class="ip-label">// PRIMARY TIER</div>
+            <select class="ip-select" id="growthTier">
+              <option value="entry">Operator Entry (K8) — $365/sale</option>
+              <option value="pro" selected>Operator Pro (Trifecta) — $1,322/sale</option>
+              <option value="elite">Operator Elite (Quad) — $2,595/sale</option>
+            </select>
+          </div>
+        </div>
+      </div>
+      <div class="run-row">
+        <button class="run-btn" onclick="runModule7()">▶ GENERATE GROWTH PLAN</button>
+        <button class="clear-btn" onclick="clearOutput('out-7')">CLEAR</button>
+        <span class="run-status" id="status-7"></span>
+      </div>
+      <div class="terminal" id="out-7"><span class="term-placeholder">// Enter your current stats and press RUN for revenue forecast + growth strategy</span></div>
+    </div>
+
+    <!-- MODULE 8: SCRIPT GENERATOR -->
+    <div class="module" id="module-8">
+      <div class="mod-header">
+        <div class="mod-num">08</div>
+        <div class="mod-title-block">
+          <div class="mod-tag">// CONTENT CREATION</div>
+          <div class="mod-title">SCRIPT GENERATOR</div>
+          <div class="mod-desc">Generates 3 complete TikTok/Reel scripts per run. 45 seconds, transparency formula baked in, AI avatar optimised, ready to paste into HeyGen.</div>
+        </div>
+      </div>
+      <div class="input-panel" style="display:grid;gap:0.8rem;">
+        <div>
+          <div class="ip-label">// CONTENT PILLAR</div>
+          <select class="ip-select" id="scriptPillar">
+            <option value="franchise">Franchise Math — The investment comparison angle</option>
+            <option value="system">System vs Job — Infrastructure vs trading time</option>
+            <option value="platform">Platform Thinking — What a distribution network actually is</option>
+            <option value="proof">Operator Proof — Real numbers, real timeline, honest results</option>
+          </select>
+        </div>
+        <div>
+          <div class="ip-label">// SPECIFIC ANGLE OR HOOK IDEA (optional — leave blank for AI to choose best)</div>
+          <textarea class="ip-textarea" id="scriptAngle" placeholder="e.g. Focus on the McDonald's vs digital franchise comparison. Or: Address the MLM objection directly. Or: Show the break-even math visually." style="min-height:60px;"></textarea>
+        </div>
+      </div>
+      <div class="run-row">
+        <button class="run-btn" onclick="runModule8()">▶ GENERATE 3 SCRIPTS</button>
+        <button class="clear-btn" onclick="clearOutput('out-8')">CLEAR</button>
+        <span class="run-status" id="status-8"></span>
+      </div>
+      <div class="terminal" id="out-8"><span class="term-placeholder">// Select pillar and press RUN to generate 3 complete video scripts</span></div>
+    </div>
+
+  </div><!-- /main -->
+</div><!-- /app -->
+
+<script>
+// ═══════════════════════════════════════════════════
+// CONFIG
+// ═══════════════════════════════════════════════════
+const GATE_CODE    = 'DIESEL2025';
+const MODEL        = 'claude-sonnet-4-6';
+const MAX_TOKENS   = 2048;
+const API_KEY_SS   = 'apex_anthropic_key';
+const GATE_SS      = 'apex_gate_auth';
+
+let apiKey = sessionStorage.getItem(API_KEY_SS) || '';
+let isRunning = false;
+let chatHistory = [];
+
+// ═══════════════════════════════════════════════════
+// FULL APEX NETWORK CONTEXT (injected into every call)
+// ═══════════════════════════════════════════════════
+const APEX_CONTEXT = `You are the AI operating system for APEX NETWORK — a proprietary AI-powered distribution network built on Enagic's authorised distributor framework.
+
+BRAND IDENTITY:
+- Name: APEX NETWORK
+- Descriptor: A Proprietary AI-Powered Distribution Network
+- Category: High-Ticket Commission Infrastructure
+- Legal frame: Independent distributor network (Enagic structure)
+- Market frame: Franchise-style operating system
+- NEVER call it MLM, pyramid scheme, or registered franchise
+- ALWAYS call it: distribution network / commission infrastructure / franchise-style operating system
+
+CHAIRMAN: Isaac Taylor, 23, Sunshine Coast/Brisbane QLD Australia
+- Day job: Painter at Premier Brush Works — painting income funds the build
+- Goal: Not in trades by age 30
+- Family: Married. Dog: Diesel.
+- Training: Running, boxing, ocean swims, ice baths — Ironman goal
+- Mindset: Builds at scale — multi-millionaire target, not incremental
+
+SPONSOR IDs — HARDCODED, NEVER CHANGE:
+- K8 / Trifecta / Quad: 29000059770
+- emGuarde position 1: 29000059769
+- emGuarde position 2: 29000059768
+
+COMMISSION STRUCTURE (AUD 2025 inc GST):
+- Operator Entry (K8 single): $6,787 → ~$365/sale at 1A → break-even ~19 sales
+- Operator Pro (Trifecta): ~$11,682 → ~$1,322/sale at 2A → break-even ~9 sales
+- Operator Elite (Quad): ~$18,469 → ~$2,595/sale at 3A → break-even ~7 sales
+- emGuarde single: $2,475 → ~$225/sale at 1A → break-even ~11 sales
+- Trifecta = K8 ($6,787) + Anespa DX ($3,795) + Ukon (~$1,100)
+- Quad = 2×K8 ($13,574) + Anespa DX ($3,795) + Ukon (~$1,100)
+- Note: Ukon cannot go on E-Payment (upfront only)
+
+NETWORK INCOME MATH:
+- Chairman direct (2 sales/mo): ~$2,644/mo
+- Override income (7 operators × 3 sales/mo): ~$7,665/mo
+- Total conservative: ~$10,309/mo = ~$123,708/yr
+- With sub-network tier 2: ~$21,649/mo = ~$260k/yr
+
+LIVE FUNNEL PAGES (all on silent-syndicate.netlify.app):
+- apex-index.html: Front door opt-in → subscribe.js → SS-NEW → apex-page2
+- apex-page2.html: Platform story / franchise comparison → apex-apply
+- apex-apply.html: 7-question application, HOT/WARM/COLD scoring → apply.js → apex-offer
+- apex-offer.html: 3-tier selection, income math → apex-join
+- apex-join.html: 5-step registration wizard → register.js → SS-CONVERTED + SS-DISTRIBUTOR
+- apex-hub.html: Private command centre (passcode: DIESEL2025)
+- apex-terms.html / apex-privacy.html / apex-disclosure.html: Legal pages
+
+TECH STACK:
+- GitHub: github.com/itayz22/Slient-Syndicate (main branch → Netlify auto-deploy)
+- Email CRM: ActiveCampaign
+- AC Tags: SS-NEW, SS-WARM, SS-HOT, SS-APPLIED, SS-CONVERTED, SS-DISTRIBUTOR
+- Netlify functions: subscribe.js / apply.js / register.js
+
+CONTENT SYSTEM:
+- HeyGen (AI avatar, $29 USD/mo) + CapCut (free) + Later (free)
+- 1 video/day — TikTok 7pm AEST / Instagram 6pm AEST
+- Format: 9:16 vertical, 45 seconds, AI avatar, auto-captions
+- Transparency formula: name investment ($6,787–$18,469) + commission ($365–$2,595) + break-even (7–19 sales) + CTA to bio
+- 4 content pillars: Franchise Math / System vs Job / Platform Thinking / Operator Proof
+
+CRITICAL BLOCKERS (currently unresolved — blocks revenue):
+1. AC env vars not set in Netlify (AC_BASE_URL, AC_API_KEY, OWNER_EMAIL) — blocks all lead capture
+2. AC tags not created in AC dashboard — blocks all automation and tagging
+3. 7-day email sequence not loaded into AC — blocks lead nurture
+4. HeyGen not set up — blocks all content and organic traffic
+5. TikTok + Instagram accounts not live — blocks all organic traffic
+
+ENAGIC AUSTRALIA:
+- Email: info@enagic-australia.com | Phone: +61-2-9878-1200
+- Hours: Mon–Fri 9am–5pm AEST
+- Processing time: 7–10 business days after receiving complete application
+- Commission payment: ~10 days after order approval
+
+PHASE 2 PLANNED:
+- n8n on Railway (~$5/mo): autonomous agent system, morning briefing, HOT lead alerts
+- Bland.ai: voice agent for HOT lead follow-up
+- Custom domain: apexnetwork.com.au
+- Self-improving content loop: performance data → new scripts auto-generated
+- Operator leaderboard + Telegram community + Product Two
+
+OUTPUT STYLE: Sharp, direct, data-driven. No filler. Use // SECTION HEADERS and → bullet points. Include specific numbers. Format as terminal output. Think Bloomberg terminal operator who also closes high-ticket sales.`.trim();
+
+// ═══════════════════════════════════════════════════
+// GATE
+// ═══════════════════════════════════════════════════
+function checkGate() {
+  const val = document.getElementById('gateInput').value.trim().toUpperCase();
+  if(val === GATE_CODE) {
+    sessionStorage.setItem(GATE_SS, '1');
+    document.getElementById('gate').style.display = 'none';
+    document.getElementById('app').style.display = 'grid';
+    initApp();
+  } else {
+    const err = document.getElementById('gateErr');
+    err.style.display = 'block';
+    document.getElementById('gateInput').value = '';
+    document.getElementById('gateInput').focus();
+    setTimeout(() => err.style.display = 'none', 3000);
+  }
+}
+document.getElementById('gateInput').addEventListener('keydown', e => { if(e.key === 'Enter') checkGate(); });
+
+if(sessionStorage.getItem(GATE_SS) === '1') {
+  document.getElementById('gate').style.display = 'none';
+  document.getElementById('app').style.display = 'grid';
+  initApp();
+}
+
+function initApp() {
+  updateClock();
+  setInterval(updateClock, 1000);
+  updateKeyStatus();
+  showNoBanners();
+}
+
+// ═══════════════════════════════════════════════════
+// API KEY
+// ═══════════════════════════════════════════════════
+function openKeyModal() {
+  document.getElementById('keyInput').value = apiKey;
+  document.getElementById('keyModal').classList.add('show');
+}
+function closeKeyModal() {
+  document.getElementById('keyModal').classList.remove('show');
+}
+function saveApiKey() {
+  const val = document.getElementById('keyInput').value.trim();
+  if(!val) return;
+  apiKey = val;
+  sessionStorage.setItem(API_KEY_SS, val);
+  closeKeyModal();
+  updateKeyStatus();
+  showNoBanners();
+}
+function updateKeyStatus() {
+  const isSet = !!apiKey;
+  const btn = document.getElementById('keyBtn');
+  const sidebar = document.getElementById('sidebarKeyStatus');
+  if(isSet) {
+    btn.classList.add('key-set');
+    btn.textContent = '✓ KEY SET';
+    sidebar.textContent = '✓ SET';
+    sidebar.style.color = 'var(--green)';
+  } else {
+    btn.classList.remove('key-set');
+    btn.textContent = 'API KEY';
+    sidebar.textContent = 'NOT SET';
+    sidebar.style.color = 'var(--amber)';
+  }
+}
+function showNoBanners() {
+  const show = !apiKey;
+  for(let i = 1; i <= 2; i++) {
+    const b = document.getElementById('noKeyBanner' + i);
+    if(b) b.style.display = show ? 'flex' : 'none';
+  }
+}
+
+// ═══════════════════════════════════════════════════
+// CLOCK
+// ═══════════════════════════════════════════════════
+function updateClock() {
+  const now = new Date();
+  document.getElementById('tbClock').textContent = now.toLocaleTimeString('en-AU', {
+    hour:'2-digit', minute:'2-digit', second:'2-digit',
+    hour12:false, timeZone:'Australia/Brisbane'
+  }) + ' AEST';
+}
+
+// ═══════════════════════════════════════════════════
+// MODULE NAVIGATION
+// ═══════════════════════════════════════════════════
+function showModule(n) {
+  document.querySelectorAll('.module').forEach(m => m.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(ni => ni.classList.remove('active'));
+  document.getElementById('module-' + n).classList.add('active');
+  document.getElementById('nav-' + n).classList.add('active');
+  document.getElementById('main').scrollTop = 0;
+}
+
+// ═══════════════════════════════════════════════════
+// CORE CLAUDE API STREAM
+// ═══════════════════════════════════════════════════
+async function streamClaude(system, messages, outEl, statusEl) {
+  if(!apiKey) { openKeyModal(); return null; }
+
+  setStatus(statusEl, 'RUNNING...');
+  setRunningState(true);
+  outEl.innerHTML = '<span class="term-cursor">█</span>';
+
+  try {
+    const res = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-api-key': apiKey,
+        'anthropic-version': '2023-06-01',
+        'anthropic-dangerous-direct-browser-access': 'true'
+      },
+      body: JSON.stringify({
+        model: MODEL,
+        max_tokens: MAX_TOKENS,
+        stream: true,
+        system: system,
+        messages: messages
+      })
+    });
+
+    if(!res.ok) {
+      let errMsg = `API error ${res.status}`;
+      try { const e = await res.json(); errMsg = e.error?.message || errMsg; } catch(x) {}
+      throw new Error(errMsg);
+    }
+
+    const reader = res.body.getReader();
+    const dec = new TextDecoder();
+    let full = '';
+
+    while(true) {
+      const {done, value} = await reader.read();
+      if(done) break;
+      const chunk = dec.decode(value);
+      for(const line of chunk.split('\n')) {
+        if(!line.startsWith('data: ')) continue;
+        const data = line.slice(6).trim();
+        if(!data || data === '[DONE]') continue;
+        try {
+          const evt = JSON.parse(data);
+          if(evt.type === 'content_block_delta' && evt.delta?.type === 'text_delta' && evt.delta.text) {
+            full += evt.delta.text;
+            outEl.innerHTML = fmtTerminal(full) + '<span class="term-cursor">█</span>';
+            outEl.scrollTop = outEl.scrollHeight;
+          }
+        } catch(x) {}
+      }
+    }
+
+    outEl.innerHTML = fmtTerminal(full);
+    outEl.scrollTop = outEl.scrollHeight;
+    setStatus(statusEl, 'DONE ✓');
+    setTimeout(() => setStatus(statusEl, ''), 4000);
+    return full;
+
+  } catch(err) {
+    outEl.innerHTML = `<span style="color:var(--red);">// ERROR: ${err.message}\n// Check your API key and try again.</span>`;
+    setStatus(statusEl, 'ERROR');
+    setTimeout(() => setStatus(statusEl, ''), 5000);
+    throw err;
+  } finally {
+    setRunningState(false);
+  }
+}
+
+function fmtTerminal(text) {
+  return text
+    .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+    .replace(/(\/\/\s+[A-Z][A-Z0-9\s\-_:]+)/g, '<span style="color:var(--blue);font-weight:500;">$1</span>')
+    .replace(/^(→\s.+)$/gm, '<span style="color:var(--muted);">$1</span>')
+    .replace(/(\$[\d,]+\.?\d*(?:\/mo|\/yr|\/sale|k)?)/g, '<span style="color:var(--green);">$1</span>')
+    .replace(/\b(HOT|CRITICAL|URGENT|PRIORITY)\b/g, '<span style="color:var(--red);">$1</span>')
+    .replace(/\b(WARM|WARNING|PENDING)\b/g, '<span style="color:var(--amber);">$1</span>')
+    .replace(/\b(LIVE|DONE|✓|ACTIVE)\b/g, '<span style="color:var(--green);">$1</span>')
+    .replace(/\n/g, '<br>');
+}
+
+function clearOutput(id) {
+  document.getElementById(id).innerHTML = '<span class="term-placeholder">// Output cleared</span>';
+}
+function setStatus(el, text) { if(el) el.textContent = text ? '// ' + text : ''; }
+function setRunningState(running) {
+  isRunning = running;
+  document.getElementById('auditBtn').disabled = running;
+  document.querySelectorAll('.run-btn').forEach(b => b.disabled = running);
+  document.getElementById('chatSend').disabled = running;
+  const s = document.getElementById('tbStatus');
+  const t = document.getElementById('tbStatusText');
+  if(running) { s.classList.add('offline'); t.textContent = 'RUNNING'; }
+  else { s.classList.remove('offline'); t.textContent = 'READY'; }
+}
+
+// ═══════════════════════════════════════════════════
+// MODULE 1 — MORNING BRIEFING
+// ═══════════════════════════════════════════════════
+async function runModule1() {
+  const out = document.getElementById('out-1');
+  const sys = `${APEX_CONTEXT}\n\nYou are the MORNING BRIEFING module. Generate a sharp, structured daily intelligence report for Isaac Taylor, Chairman of Apex Network. Format with clear // SECTION headers.`;
+  const now = new Date();
+  const dateStr = now.toLocaleDateString('en-AU',{weekday:'long',year:'numeric',month:'long',day:'numeric',timeZone:'Australia/Brisbane'});
+  const timeStr = now.toLocaleTimeString('en-AU',{hour:'2-digit',minute:'2-digit',hour12:false,timeZone:'Australia/Brisbane'});
+  const msg = `Generate today's Apex Network morning briefing for ${dateStr} at ${timeStr} AEST.\n\nInclude these 6 sections:\n1. NETWORK STATUS — what is live and what is not yet operational\n2. CRITICAL BLOCKERS — the 5 unresolved blockers, ordered by revenue impact\n3. TODAY'S PRIORITY ACTIONS — exactly 3 specific actions Isaac should do today, each with time estimate\n4. CONTENT RECOMMENDATION — specific video hook to post today with the exact script opening line\n5. KEY INSIGHT — one strategic observation about the business that would be easy to miss\n6. DAILY TARGET — a single metric to track today (e.g. get AC env var set, post first video, etc)\n\nBe direct and specific. Include real numbers. No generic advice.`;
+  await streamClaude(sys, [{role:'user',content:msg}], out, document.getElementById('status-1'));
+}
+
+// ═══════════════════════════════════════════════════
+// MODULE 2 — MASTER AGENT (chat)
+// ═══════════════════════════════════════════════════
+async function sendChat() {
+  const input = document.getElementById('chatInput');
+  const msg = input.value.trim();
+  if(!msg || isRunning) return;
+  if(!apiKey) { openKeyModal(); return; }
+
+  input.value = '';
+  const hist = document.getElementById('chatHistory');
+
+  const userDiv = document.createElement('div');
+  userDiv.className = 'chat-msg-user';
+  userDiv.textContent = msg;
+  hist.appendChild(userDiv);
+  hist.scrollTop = hist.scrollHeight;
+
+  chatHistory.push({role:'user', content:msg});
+
+  const aiDiv = document.createElement('div');
+  aiDiv.className = 'chat-msg-ai';
+  aiDiv.innerHTML = '<span class="term-cursor">█</span>';
+  hist.appendChild(aiDiv);
+  hist.scrollTop = hist.scrollHeight;
+
+  const sys = `${APEX_CONTEXT}\n\nYou are the MASTER AGENT — Isaac's direct AI business partner with complete knowledge of every aspect of Apex Network. Answer any question with specific, actionable intelligence. Keep responses concise but thorough. Use // headers for multi-section answers.`;
+
+  setRunningState(true);
+  try {
+    const res = await fetch('https://api.anthropic.com/v1/messages', {
+      method:'POST',
+      headers:{'Content-Type':'application/json','x-api-key':apiKey,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},
+      body:JSON.stringify({model:MODEL,max_tokens:MAX_TOKENS,stream:true,system:sys,messages:chatHistory})
+    });
+    if(!res.ok) throw new Error('API error ' + res.status);
+
+    const reader = res.body.getReader();
+    const dec = new TextDecoder();
+    let full = '';
+    while(true) {
+      const {done, value} = await reader.read();
+      if(done) break;
+      for(const line of dec.decode(value).split('\n')) {
+        if(!line.startsWith('data: ')) continue;
+        const data = line.slice(6).trim();
+        if(!data || data === '[DONE]') continue;
+        try {
+          const evt = JSON.parse(data);
+          if(evt.type === 'content_block_delta' && evt.delta?.type === 'text_delta' && evt.delta.text) {
+            full += evt.delta.text;
+            aiDiv.innerHTML = fmtTerminal(full) + '<span class="term-cursor">█</span>';
+            hist.scrollTop = hist.scrollHeight;
+          }
+        } catch(x) {}
+      }
+    }
+    aiDiv.innerHTML = fmtTerminal(full);
+    hist.scrollTop = hist.scrollHeight;
+    chatHistory.push({role:'assistant', content:full});
+  } catch(err) {
+    aiDiv.innerHTML = `<span style="color:var(--red);">// ERROR: ${err.message}</span>`;
+  } finally {
+    setRunningState(false);
+  }
+}
+
+function clearChat() {
+  chatHistory = [];
+  document.getElementById('chatHistory').innerHTML = '<div style="font-family:\'DM Mono\',monospace;font-size:0.65rem;color:var(--dim);font-style:italic;">// Chat history cleared — Master Agent ready</div>';
+}
+
+// ═══════════════════════════════════════════════════
+// MODULE 3 — PIPELINE AGENT
+// ═══════════════════════════════════════════════════
+async function runModule3() {
+  const input = document.getElementById('pipelineInput').value.trim();
+  if(!input) { alert('// Enter lead details first'); return; }
+  const sys = `${APEX_CONTEXT}\n\nYou are the PIPELINE AGENT. You analyse leads for Apex Network and produce scoring, action recommendations, and ready-to-send follow-up messages. Be surgical. Every recommendation must have a specific next action.`;
+  const msg = `Analyse this lead and produce a complete pipeline assessment:\n\nLEAD DETAILS: ${input}\n\nProvide:\n1. LEAD SCORE — HOT / WARM / COLD with percentage confidence and 2-sentence reasoning\n2. IMMEDIATE ACTION — exactly what Isaac should do in the next 24 hours (be specific: which page to send, what to say)\n3. OBJECTION FORECAST — the 2 most likely objections this lead will raise and how to pre-empt them\n4. FOLLOW-UP MESSAGE — write a ready-to-send message (DM or email) Isaac can send right now. Match the lead's energy and investment readiness. For HOT leads: direct to apex-offer.html. For WARM: send the platform story (apex-page2.html). For COLD: address their core hesitation.\n5. CONVERSION PROBABILITY — estimated probability of conversion within 14 days if Isaac executes the recommended action`;
+  await streamClaude(sys, [{role:'user',content:msg}], document.getElementById('out-3'), document.getElementById('status-3'));
+}
+
+// ═══════════════════════════════════════════════════
+// MODULE 4 — TRAFFIC AGENT
+// ═══════════════════════════════════════════════════
+async function runModule4() {
+  const situation = document.getElementById('trafficInput').value.trim() || 'Just starting — no videos posted yet';
+  const pillar = document.getElementById('trafficPillar').value;
+  const sys = `${APEX_CONTEXT}\n\nYou are the TRAFFIC AGENT. You generate high-performing content strategy for Apex Network's AI avatar content system. Every hook must be platform-native, scroll-stopping, and use the transparency formula (name investment + commission + break-even).`;
+  const msg = `Content situation: ${situation}\nSelected pillar focus: ${pillar}\n\nGenerate:\n1. CONTENT DIAGNOSIS — 2-sentence assessment of the current content situation and biggest opportunity\n2. TOP 5 HOOKS — for each hook: pillar tag, the exact opening line (first 3 seconds), why it will stop the scroll, and the transparency data point to include\n3. THIS WEEK'S SCHEDULE — 7-day posting plan (TikTok 7pm AEST / Instagram 6pm AEST) with pillar rotation, specific hook for each day, and estimated effort per video\n4. BANNED PHRASES — 3 phrases or angles to never use based on the current competitive environment`;
+  await streamClaude(sys, [{role:'user',content:msg}], document.getElementById('out-4'), document.getElementById('status-4'));
+}
+
+// ═══════════════════════════════════════════════════
+// MODULE 5 — CONVERSION AGENT
+// ═══════════════════════════════════════════════════
+async function runModule5() {
+  const problem = document.getElementById('conversionInput').value.trim();
+  if(!problem) { alert('// Describe the conversion problem first'); return; }
+  const sys = `${APEX_CONTEXT}\n\nYou are the CONVERSION AGENT. You diagnose funnel failures and produce specific, implementable fixes. You know every page in the Apex Network funnel. Your fixes are copy-level specific — not vague recommendations.`;
+  const msg = `Conversion problem: ${problem}\n\nProvide:\n1. ROOT CAUSE DIAGNOSIS — identify exactly where in the funnel the failure is occurring and why\n2. PAGE-LEVEL FAULT — which specific page (name the file) or step is the primary failure point\n3. THREE SPECIFIC FIXES — for each fix: the exact change (copy, layout, or flow), why it fixes the problem, and how to implement it\n4. QUICK WIN — one thing Isaac can change in the next 60 minutes that will have immediate impact\n5. OBJECTION HANDLER — if this is an objection pattern, write the exact copy response that kills the objection`;
+  await streamClaude(sys, [{role:'user',content:msg}], document.getElementById('out-5'), document.getElementById('status-5'));
+}
+
+// ═══════════════════════════════════════════════════
+// MODULE 6 — OPERATIONS AGENT
+// ═══════════════════════════════════════════════════
+async function runModule6() {
+  const sys = `${APEX_CONTEXT}\n\nYou are the OPERATIONS AGENT. You perform complete system health checks on Apex Network infrastructure and produce a precise, prioritised fix list. Be exact about what is working and what is not.`;
+  const msg = `Perform a complete Apex Network operations health check.\n\nCheck and report status on:\n1. FUNNEL PAGES — status of all 8 apex- pages (apex-index, apex-page2, apex-apply, apex-offer, apex-join, apex-hub, apex-agent-os, apex-tracker)\n2. LEGAL PAGES — status of apex-terms, apex-privacy, apex-disclosure\n3. NETLIFY FUNCTIONS — status of subscribe.js, apply.js, register.js\n4. ACTIVECAMPAIGN — env vars status, tags status, email sequences status\n5. CONTENT SYSTEM — HeyGen, TikTok, Instagram setup status\n6. CRITICAL BLOCKERS — rank all 5 blockers by revenue impact with estimated daily cost of each unresolved blocker\n7. PRIORITISED FIX LIST — exact order to resolve blockers with time estimate for each\n8. SYSTEM HEALTH SCORE — overall rating out of 10 with justification\n\nBe precise. Use real file names and real numbers.`;
+  await streamClaude(sys, [{role:'user',content:msg}], document.getElementById('out-6'), document.getElementById('status-6'));
+}
+
+// ═══════════════════════════════════════════════════
+// MODULE 7 — GROWTH AGENT
+// ═══════════════════════════════════════════════════
+async function runModule7() {
+  const ops    = parseInt(document.getElementById('growthOps').value)    || 0;
+  const sales  = parseInt(document.getElementById('growthSales').value)  || 0;
+  const months = parseInt(document.getElementById('growthMonths').value) || 0;
+  const tierVal= document.getElementById('growthTier').value;
+  const tierMap= {entry:'Operator Entry ($365/sale)',pro:'Operator Pro ($1,322/sale)',elite:'Operator Elite ($2,595/sale)'};
+  const sys = `${APEX_CONTEXT}\n\nYou are the GROWTH AGENT. You build data-driven scaling strategies and revenue forecasts for Apex Network. Use real commission numbers. Be specific and numerical. No vague advice.`;
+  const msg = `Current network status:\n- Active operators in network: ${ops}\n- Isaac's personal sales this month: ${sales}\n- Months the network has been active: ${months}\n- Primary tier: ${tierMap[tierVal]}\n\nGenerate:\n1. CURRENT STATE ASSESSMENT — honest evaluation of where the network is right now\n2. REVENUE FORECAST TABLE — projected monthly and annual revenue at 3 months, 6 months, 12 months based on realistic growth assumptions (show optimistic and conservative scenarios)\n3. 90-DAY GROWTH PLAN — week-by-week priority actions for the next 13 weeks with specific targets\n4. OPERATOR RECRUITMENT TARGETS — how many operators to recruit per month to hit $10,309/mo and $21,649/mo targets\n5. OPERATOR ACTIVATION STRATEGY — specific tactics to keep recruited operators active and making sales (this is the hardest part)\n6. PHASE 2 TRIGGER — exactly what metric or milestone should trigger building out the n8n automation system`;
+  await streamClaude(sys, [{role:'user',content:msg}], document.getElementById('out-7'), document.getElementById('status-7'));
+}
+
+// ═══════════════════════════════════════════════════
+// MODULE 8 — SCRIPT GENERATOR
+// ═══════════════════════════════════════════════════
+async function runModule8() {
+  const pillarRaw  = document.getElementById('scriptPillar').value;
+  const angle      = document.getElementById('scriptAngle').value.trim();
+  const pillarNames= {franchise:'Franchise Math',system:'System vs Job',platform:'Platform Thinking',proof:'Operator Proof'};
+  const pillarName = pillarNames[pillarRaw];
+  const sys = `${APEX_CONTEXT}\n\nYou are the SCRIPT GENERATOR. You write high-converting TikTok and Instagram Reel scripts for Apex Network's AI avatar content system (HeyGen). Every script must follow the transparency formula: name the investment, name the commission, name the break-even. Scripts are 45 seconds max. Written for AI avatar delivery — natural speech rhythm, no camera directions.`;
+  const msg = `Generate 3 complete video scripts for the "${pillarName}" content pillar.${angle ? `\nSpecific angle/focus: ${angle}` : ''}\n\nFor each of the 3 scripts, provide:\n[SCRIPT N]\n[HOOK] — First 3 seconds. Pattern interrupt. Scroll-stopping. Must name a specific number or make a bold claim.\n[BODY] — 35 seconds. The core message. Include the transparency formula (investment amount + commission + break-even). Use the Apex Network framing (distribution network, commission infrastructure — never MLM).\n[CTA] — Last 5 seconds. Direct call to action. End with: "Full breakdown — link in bio."\n[VISUAL NOTE] — One-line direction for what the HeyGen avatar should be doing or what text overlay to show.\n[WHY IT WORKS] — One sentence on why this hook will stop the scroll for the target audience (25–35yo who wants income beyond their job).\n\nMake each of the 3 scripts distinct — different hooks, different angles, different emotional entry points.`;
+  await streamClaude(sys, [{role:'user',content:msg}], document.getElementById('out-8'), document.getElementById('status-8'));
+}
+
+// ═══════════════════════════════════════════════════
+// FULL BUSINESS AUDIT
+// ═══════════════════════════════════════════════════
+async function runFullAudit() {
+  if(!apiKey) { openKeyModal(); return; }
+  if(isRunning) return;
+
+  const panel = document.getElementById('auditPanel');
+  const content = document.getElementById('auditContent');
+  panel.classList.add('show');
+  content.innerHTML = '<span style="color:var(--blue);">// RUNNING FULL BUSINESS AUDIT...</span><br><span class="term-cursor">█</span>';
+
+  const sys = `${APEX_CONTEXT}\n\nYou are running a FULL BUSINESS AUDIT for Apex Network. Produce a comprehensive, structured report covering all aspects of the business. This is the complete picture — nothing omitted.`;
+  const msg = `Run a complete Apex Network business audit as of today.\n\nGenerate a comprehensive report covering:\n1. EXECUTIVE SUMMARY — overall business health score (1–10) and 3-sentence state of the business\n2. FUNNEL STATUS — every page, its status, and any issues\n3. LEAD CAPTURE HEALTH — is the opt-in working? Is AC connected? Are tags being applied?\n4. CONTENT & TRAFFIC — current status, what needs to happen to get first traffic\n5. CRITICAL BLOCKERS — all 5 ranked by daily revenue cost of staying unresolved\n6. COMMISSION INFRASTRUCTURE — Enagic setup, Sponsor IDs confirmed, registration flow operational\n7. PHASE 1 COMPLETION — percentage complete, what remains\n8. TOP 3 PRIORITIES — the three highest-leverage actions Isaac should take this week\n9. 30-DAY FORECAST — if Isaac resolves the blockers today, what does the business look like in 30 days?\n\nBe direct. Use real numbers. No padding.`;
+
+  setRunningState(true);
+  try {
+    const res = await fetch('https://api.anthropic.com/v1/messages', {
+      method:'POST',
+      headers:{'Content-Type':'application/json','x-api-key':apiKey,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},
+      body:JSON.stringify({model:MODEL,max_tokens:2048,stream:true,system:sys,messages:[{role:'user',content:msg}]})
+    });
+    if(!res.ok) throw new Error('API error ' + res.status);
+
+    const reader = res.body.getReader();
+    const dec = new TextDecoder();
+    let full = '';
+    while(true) {
+      const {done, value} = await reader.read();
+      if(done) break;
+      for(const line of dec.decode(value).split('\n')) {
+        if(!line.startsWith('data: ')) continue;
+        const data = line.slice(6).trim();
+        if(!data || data === '[DONE]') continue;
+        try {
+          const evt = JSON.parse(data);
+          if(evt.type === 'content_block_delta' && evt.delta?.type === 'text_delta' && evt.delta.text) {
+            full += evt.delta.text;
+            content.innerHTML = fmtTerminal(full) + '<span class="term-cursor">█</span>';
+            content.scrollTop = content.scrollHeight;
+          }
+        } catch(x) {}
+      }
+    }
+    content.innerHTML = fmtTerminal(full);
+  } catch(err) {
+    content.innerHTML = `<span style="color:var(--red);">// AUDIT ERROR: ${err.message}</span>`;
+  } finally {
+    setRunningState(false);
+  }
+}
+
+function closeAudit() {
+  document.getElementById('auditPanel').classList.remove('show');
+}
+
+// Enter key on chat input
+document.getElementById('chatInput').addEventListener('keydown', e => {
+  if(e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendChat(); }
+});
+</script>
+</body>
+</html>

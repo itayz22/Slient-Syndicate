@@ -1,5 +1,5 @@
 /* ============================================================
-   SILENT SYNDICATE — SHARED FUNNEL UTILITIES
+   APEX NETWORK — SHARED FUNNEL UTILITIES
    ============================================================ */
 
 // Scroll reveal observer

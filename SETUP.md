@@ -1,6 +1,6 @@
-# Silent Syndicate — Setup Guide
+# Apex Network — Setup Guide
 
-Complete setup guide for deploying the Silent Syndicate AI-automated Enagic distribution funnel. Follow each step in order.
+Complete setup guide for deploying the Apex Network AI-automated Enagic distribution funnel. Follow each step in order.
 
 ---
 
@@ -72,7 +72,7 @@ Navigate to **Lists** in ActiveCampaign and create two lists:
 
 | List Name | Purpose |
 |---|---|
-| **Silent Syndicate Leads** | All opt-in subscribers from the funnel |
+| **Apex Network Leads** | All opt-in subscribers from the funnel |
 | **SS Distributors** | Converted operators who joined as distributors |
 
 After creating each list, note the **List ID** — visible in the list's URL or Properties panel. Add these to your `.env` as `AC_LIST_ID` and `AC_DIST_LIST_ID`.

@@ -1,0 +1,1038 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Apex Network — Content Calendar</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=DM+Mono:wght@300;400;500&family=Archivo:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --black:#04040a;--deep:#060610;--surface:#0a0a15;--panel:#0e0e1c;--panel2:#12121f;
+  --edge:rgba(0,212,255,0.07);--edge2:rgba(0,212,255,0.14);
+  --blue:#00d4ff;--blue2:#0099cc;
+  --white:#f0f0f8;--muted:rgba(240,240,248,0.52);--dim:rgba(240,240,248,0.22);
+  --green:#00ff88;--amber:#f59e0b;--red:#ef4444;
+  --p1:#00d4ff;--p2:#00ff88;--p3:#f59e0b;--p4:#c9a84c;--p5:#4fd1c5;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{font-size:16px;scroll-behavior:smooth;}
+body{background:var(--black);color:var(--white);font-family:'Archivo',sans-serif;overflow-x:hidden;cursor:crosshair;min-height:100vh;}
+body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(rgba(0,212,255,0.04) 1px,transparent 1px),linear-gradient(90deg,rgba(0,212,255,0.04) 1px,transparent 1px);background-size:80px 80px;pointer-events:none;z-index:0;}
+body::after{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");pointer-events:none;z-index:9999;opacity:0.4;}
+
+/* GATE */
+#gate{position:fixed;inset:0;background:var(--black);z-index:10000;display:flex;align-items:center;justify-content:center;}
+.gate-inner{text-align:center;padding:2rem;}
+.gate-logo{font-family:'Orbitron',sans-serif;font-size:2.2rem;font-weight:900;letter-spacing:0.22em;margin-bottom:0.4rem;}
+.gate-logo span{color:var(--blue);}
+.gate-sub{font-family:'DM Mono',monospace;font-size:0.58rem;letter-spacing:0.2em;color:var(--dim);margin-bottom:2.5rem;}
+.gate-label{font-family:'DM Mono',monospace;font-size:0.55rem;letter-spacing:0.18em;color:var(--blue);margin-bottom:0.7rem;}
+.gate-input{background:rgba(255,255,255,0.03);border:1px solid var(--edge2);color:var(--white);font-family:'DM Mono',monospace;font-size:1.2rem;letter-spacing:0.3em;text-align:center;width:220px;padding:0.9rem 1rem;outline:none;display:block;margin:0 auto 1rem;text-transform:uppercase;}
+.gate-input:focus{border-color:var(--blue);background:rgba(0,212,255,0.04);}
+.gate-btn{background:var(--blue);color:var(--white);font-family:'DM Mono',monospace;font-size:0.65rem;letter-spacing:0.15em;text-transform:uppercase;padding:0.8rem 2rem;border:none;cursor:pointer;width:220px;display:block;margin:0 auto;transition:background 0.2s;}
+.gate-btn:hover{background:var(--blue2);}
+.gate-error{font-family:'DM Mono',monospace;font-size:0.55rem;letter-spacing:0.1em;color:var(--red);margin-top:0.6rem;display:none;}
+.gate-hint{font-family:'DM Mono',monospace;font-size:0.5rem;letter-spacing:0.08em;color:var(--dim);margin-top:1.5rem;}
+
+/* NAV */
+nav{position:sticky;top:0;z-index:500;background:rgba(5,5,5,0.97);backdrop-filter:blur(20px);border-bottom:1px solid var(--edge);padding:0 5%;height:60px;display:flex;justify-content:space-between;align-items:center;}
+.nav-brand{display:flex;align-items:center;gap:0.8rem;}
+.nav-logo-mark{width:22px;height:22px;flex-shrink:0;}
+.nav-name{font-family:'Orbitron',sans-serif;font-size:1.2rem;font-weight:900;letter-spacing:0.22em;}
+.nav-name span{color:var(--blue);}
+.nav-divider{width:1px;height:18px;background:var(--edge2);}
+.nav-tag{font-family:'DM Mono',monospace;font-size:0.55rem;letter-spacing:0.2em;color:var(--dim);}
+.nav-right{display:flex;align-items:center;gap:1.2rem;}
+#navClock{font-family:'DM Mono',monospace;font-size:0.55rem;letter-spacing:0.1em;color:var(--dim);}
+
+/* SECTION NAV TABS */
+.sec-nav{position:sticky;top:60px;z-index:400;background:rgba(5,5,5,0.97);backdrop-filter:blur(20px);border-bottom:1px solid var(--edge);padding:0 5%;display:flex;gap:0;overflow-x:auto;}
+.sec-nav-btn{font-family:'DM Mono',monospace;font-size:0.55rem;letter-spacing:0.15em;text-transform:uppercase;padding:0.9rem 1.4rem;color:var(--dim);background:none;border:none;border-bottom:2px solid transparent;cursor:pointer;transition:all 0.2s;white-space:nowrap;}
+.sec-nav-btn:hover{color:var(--white);}
+.sec-nav-btn.active{color:var(--blue);border-bottom-color:var(--blue);}
+
+/* HERO */
+.hero{padding:4rem 5% 3.5rem;position:relative;z-index:1;}
+.hero-eyebrow{font-family:'DM Mono',monospace;font-size:0.6rem;letter-spacing:0.25em;color:var(--blue);margin-bottom:1rem;display:flex;align-items:center;gap:0.8rem;}
+.hero-eyebrow::before{content:'';width:20px;height:1px;background:var(--blue);}
+h1.hero-title{font-family:'Orbitron',sans-serif;font-size:clamp(3rem,8vw,6rem);letter-spacing:0.04em;line-height:0.92;margin-bottom:1.2rem;}
+h1.hero-title span{color:var(--blue);}
+.hero-sub{font-size:0.95rem;color:var(--muted);max-width:560px;line-height:1.9;margin-bottom:2rem;}
+
+/* STAT TILES */
+.stat-tiles{display:grid;grid-template-columns:repeat(5,1fr);gap:1px;background:var(--edge);border:1px solid var(--edge);max-width:900px;margin-bottom:2rem;}
+.stat-tile{background:var(--panel);padding:1.1rem 1.2rem;}
+.st-val{font-family:'Orbitron',sans-serif;font-size:1.8rem;letter-spacing:0.04em;display:block;line-height:1;}
+.st-val.blue{color:var(--blue);}
+.st-val.green{color:var(--green);}
+.st-val.amber{color:var(--amber);}
+.st-label{font-family:'DM Mono',monospace;font-size:0.48rem;letter-spacing:0.15em;color:var(--dim);display:block;margin-top:0.3rem;text-transform:uppercase;}
+
+/* SECTION */
+.section{padding:3.5rem 5%;position:relative;z-index:1;}
+.section-alt{background:rgba(10,10,10,0.7);}
+.section-header{margin-bottom:2rem;}
+.sec-eyebrow{font-family:'DM Mono',monospace;font-size:0.55rem;letter-spacing:0.22em;color:var(--blue);margin-bottom:0.5rem;text-transform:uppercase;}
+.sec-title{font-family:'Orbitron',sans-serif;font-size:clamp(1.8rem,4vw,2.8rem);letter-spacing:0.04em;color:var(--white);margin-bottom:0.4rem;}
+.sec-sub{font-size:0.9rem;color:var(--muted);line-height:1.8;max-width:600px;}
+
+/* PILLAR PILLS */
+.pillar-pills{display:flex;gap:0.6rem;flex-wrap:wrap;margin-bottom:2rem;}
+.pill{font-family:'DM Mono',monospace;font-size:0.5rem;letter-spacing:0.12em;padding:0.3rem 0.8rem;border:1px solid;}
+.pill-1{color:var(--p1);border-color:rgba(0,212,255,0.4);background:rgba(0,212,255,0.06);}
+.pill-2{color:var(--p2);border-color:rgba(0,255,136,0.4);background:rgba(0,255,136,0.06);}
+.pill-3{color:var(--p3);border-color:rgba(245,158,11,0.4);background:rgba(245,158,11,0.06);}
+.pill-4{color:var(--p4);border-color:rgba(201,168,76,0.4);background:rgba(201,168,76,0.06);}
+.pill-5{color:var(--p5);border-color:rgba(79,209,197,0.4);background:rgba(79,209,197,0.06);}
+
+/* SCHEDULE GRID */
+.schedule-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem;max-width:860px;}
+.schedule-card{background:var(--panel);border:1px solid var(--edge);padding:1.5rem;}
+.sc-platform{font-family:'DM Mono',monospace;font-size:0.52rem;letter-spacing:0.18em;color:var(--blue);margin-bottom:0.8rem;}
+.sc-time{font-family:'Orbitron',sans-serif;font-size:3.5rem;letter-spacing:0.04em;line-height:1;color:var(--white);margin-bottom:0.4rem;}
+.sc-time span{color:var(--blue);}
+.sc-zone{font-family:'DM Mono',monospace;font-size:0.55rem;letter-spacing:0.15em;color:var(--dim);margin-bottom:1rem;}
+.sc-rules{list-style:none;display:flex;flex-direction:column;gap:0.4rem;}
+.sc-rules li{font-family:'DM Mono',monospace;font-size:0.55rem;letter-spacing:0.05em;color:var(--muted);display:flex;gap:0.6rem;}
+.sc-rules li::before{content:'—';color:var(--blue);flex-shrink:0;}
+
+/* 30-DAY CALENDAR */
+.cal-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:1px;background:var(--edge);border:1px solid var(--edge);}
+.cal-day{background:var(--panel);padding:0.9rem;display:flex;flex-direction:column;gap:0.35rem;cursor:default;transition:background 0.2s;}
+.cal-day:hover{background:var(--panel2);}
+.cd-num{font-family:'DM Mono',monospace;font-size:0.48rem;letter-spacing:0.15em;color:var(--dim);}
+.cd-pillar{font-family:'DM Mono',monospace;font-size:0.46rem;letter-spacing:0.1em;padding:0.15rem 0.4rem;border:1px solid;display:inline-block;align-self:flex-start;}
+.cd-pillar.p1{color:var(--p1);border-color:rgba(0,212,255,0.3);}
+.cd-pillar.p2{color:var(--p2);border-color:rgba(0,255,136,0.3);}
+.cd-pillar.p3{color:var(--p3);border-color:rgba(245,158,11,0.3);}
+.cd-pillar.p4{color:var(--p4);border-color:rgba(201,168,76,0.3);}
+.cd-pillar.p5{color:var(--p5);border-color:rgba(79,209,197,0.3);}
+.cd-hook{font-size:0.75rem;color:var(--muted);line-height:1.4;margin-top:0.2rem;}
+.cd-times{display:flex;gap:0.5rem;margin-top:0.3rem;flex-wrap:wrap;}
+.cd-time-tag{font-family:'DM Mono',monospace;font-size:0.42rem;letter-spacing:0.06em;color:var(--dim);}
+
+/* SCRIPT LIBRARY */
+.pillar-tabs{display:flex;gap:0;border-bottom:1px solid var(--edge);margin-bottom:2rem;overflow-x:auto;}
+.ptab{font-family:'DM Mono',monospace;font-size:0.52rem;letter-spacing:0.12em;text-transform:uppercase;padding:0.75rem 1.2rem;background:none;border:none;border-bottom:2px solid transparent;cursor:pointer;transition:all 0.2s;color:var(--dim);white-space:nowrap;}
+.ptab:hover{color:var(--white);}
+.ptab.active{color:var(--blue);border-bottom-color:var(--blue);}
+.scripts-panel{display:none;}
+.scripts-panel.active{display:flex;flex-direction:column;gap:1.5rem;}
+.script-card{background:var(--panel);border:1px solid var(--edge);padding:1.5rem;position:relative;}
+.script-card::before{content:'';position:absolute;top:0;left:0;width:3px;height:100%;background:var(--blue);}
+.sc-num{font-family:'DM Mono',monospace;font-size:0.48rem;letter-spacing:0.15em;color:var(--dim);margin-bottom:0.6rem;}
+.sc-transparency{font-family:'DM Mono',monospace;font-size:0.5rem;letter-spacing:0.06em;color:var(--amber);margin-bottom:0.8rem;padding:0.4rem 0.7rem;background:rgba(245,158,11,0.06);border:1px solid rgba(245,158,11,0.2);display:inline-block;}
+.sc-part{margin-bottom:1rem;}
+.sc-part-label{font-family:'DM Mono',monospace;font-size:0.48rem;letter-spacing:0.15em;color:var(--blue);margin-bottom:0.4rem;text-transform:uppercase;}
+.sc-part-text{font-size:0.88rem;color:var(--white);line-height:1.7;}
+.sc-part-text em{color:var(--green);font-style:normal;font-weight:600;}
+.sc-cta{font-family:'DM Mono',monospace;font-size:0.75rem;color:var(--blue);padding:0.6rem 1rem;background:rgba(0,212,255,0.06);border:1px solid rgba(0,212,255,0.25);margin-top:0.5rem;display:block;}
+
+/* HEYGEN WORKFLOW */
+.workflow-steps{display:flex;flex-direction:column;gap:1px;background:var(--edge);border:1px solid var(--edge);max-width:860px;}
+.ws-step{background:var(--panel);padding:1.5rem;display:grid;grid-template-columns:60px 1fr auto;gap:1.5rem;align-items:start;}
+.ws-num{font-family:'Orbitron',sans-serif;font-size:2.5rem;letter-spacing:0.04em;color:var(--blue);line-height:1;}
+.ws-body{}
+.ws-title{font-family:'Orbitron',sans-serif;font-size:1.2rem;letter-spacing:0.06em;color:var(--white);margin-bottom:0.5rem;}
+.ws-tool{font-family:'DM Mono',monospace;font-size:0.48rem;letter-spacing:0.12em;color:var(--green);margin-bottom:0.6rem;}
+.ws-steps-inner{display:flex;flex-direction:column;gap:0.35rem;}
+.ws-step-item{font-size:0.83rem;color:var(--muted);line-height:1.6;display:flex;gap:0.6rem;}
+.ws-step-item::before{content:'→';color:var(--blue);flex-shrink:0;}
+.ws-time{font-family:'DM Mono',monospace;font-size:0.55rem;letter-spacing:0.1em;color:var(--amber);padding:0.3rem 0.6rem;border:1px solid rgba(245,158,11,0.3);background:rgba(245,158,11,0.06);white-space:nowrap;align-self:flex-start;}
+.ws-settings{margin-top:0.8rem;padding:0.8rem;background:var(--panel2);border:1px solid var(--edge);}
+.ws-settings-label{font-family:'DM Mono',monospace;font-size:0.46rem;letter-spacing:0.15em;color:var(--dim);margin-bottom:0.5rem;text-transform:uppercase;}
+.ws-setting-row{display:flex;justify-content:space-between;padding:0.2rem 0;border-bottom:1px solid var(--edge);}
+.ws-setting-row:last-child{border:none;}
+.ws-sk{font-family:'DM Mono',monospace;font-size:0.5rem;letter-spacing:0.05em;color:var(--dim);}
+.ws-sv{font-family:'DM Mono',monospace;font-size:0.5rem;letter-spacing:0.05em;color:var(--white);}
+.workflow-total{background:rgba(0,255,136,0.04);border:1px solid rgba(0,255,136,0.2);padding:1.2rem 1.5rem;max-width:860px;margin-top:1rem;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem;}
+.wt-label{font-family:'DM Mono',monospace;font-size:0.55rem;letter-spacing:0.15em;color:var(--green);}
+.wt-val{font-family:'Orbitron',sans-serif;font-size:2rem;color:var(--green);letter-spacing:0.04em;}
+
+/* HOOK BANK */
+.hook-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:1px;background:var(--edge);border:1px solid var(--edge);max-width:860px;}
+.hook-card{background:var(--panel);padding:1.1rem 1.3rem;}
+.hc-num{font-family:'DM Mono',monospace;font-size:0.46rem;letter-spacing:0.15em;color:var(--dim);margin-bottom:0.4rem;}
+.hc-type{font-family:'DM Mono',monospace;font-size:0.44rem;letter-spacing:0.1em;margin-bottom:0.5rem;display:inline-block;padding:0.1rem 0.4rem;border:1px solid;}
+.hc-type.curiosity{color:var(--blue);border-color:rgba(0,212,255,0.3);}
+.hc-type.math{color:var(--green);border-color:rgba(0,255,136,0.3);}
+.hc-type.contrast{color:var(--amber);border-color:rgba(245,158,11,0.3);}
+.hc-type.pattern{color:var(--p5);border-color:rgba(79,209,197,0.3);}
+.hc-line{font-size:0.88rem;color:var(--white);line-height:1.5;}
+
+/* SCROLL REVEAL */
+.reveal{opacity:0;transform:translateY(20px);transition:opacity 0.6s ease,transform 0.6s ease;}
+.reveal.visible{opacity:1;transform:translateY(0);}
+.rd1{transition-delay:0.08s;}.rd2{transition-delay:0.16s;}.rd3{transition-delay:0.24s;}.rd4{transition-delay:0.32s;}
+
+/* INCOME DISCLOSURE */
+.disclosure-strip{background:var(--surface);border-top:1px solid var(--edge);padding:1.5rem 5%;position:relative;z-index:1;}
+.disclosure-inner{max-width:900px;margin:0 auto;display:flex;align-items:flex-start;gap:1.5rem;flex-wrap:wrap;}
+.disclosure-tag{font-family:'DM Mono',monospace;font-size:0.48rem;letter-spacing:0.18em;color:rgba(0,255,136,0.5);flex-shrink:0;padding-top:2px;white-space:nowrap;}
+.disclosure-text{font-family:'DM Mono',monospace;font-size:0.52rem;letter-spacing:0.03em;color:var(--dim);line-height:1.9;flex:1;}
+
+/* FOOTER */
+footer{padding:1.8rem 5%;border-top:1px solid var(--edge);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem;position:relative;z-index:1;}
+.footer-brand{font-family:'Orbitron',sans-serif;font-size:1rem;font-weight:900;letter-spacing:0.22em;}
+.footer-brand span{color:var(--blue);}
+.footer-links{display:flex;gap:1.5rem;flex-wrap:wrap;}
+.footer-links a{font-family:'DM Mono',monospace;font-size:0.5rem;letter-spacing:0.1em;color:var(--dim);text-decoration:none;transition:color 0.2s;}
+.footer-links a:hover{color:var(--blue);}
+.footer-copy{font-family:'DM Mono',monospace;font-size:0.48rem;letter-spacing:0.08em;color:var(--dim);}
+
+@media(max-width:960px){
+  .stat-tiles{grid-template-columns:repeat(3,1fr);}
+  .schedule-grid{grid-template-columns:1fr;}
+  .cal-grid{grid-template-columns:repeat(3,1fr);}
+  .hook-grid{grid-template-columns:1fr;}
+  .ws-step{grid-template-columns:40px 1fr;}.ws-time{grid-column:2;}
+}
+@media(max-width:640px){
+  .stat-tiles{grid-template-columns:1fr 1fr;}
+  .cal-grid{grid-template-columns:repeat(2,1fr);}
+  body{cursor:auto;}
+}
+</style>
+</head>
+<body>
+
+<!-- GATE -->
+<div id="gate">
+  <div class="gate-inner">
+    <div class="gate-logo">APEX<span>NETWORK</span></div>
+    <div class="gate-sub">// CONTENT CALENDAR — RESTRICTED ACCESS</div>
+    <div class="gate-label">// ENTER ACCESS CODE</div>
+    <input class="gate-input" type="password" id="gateInput" placeholder="••••••••" maxlength="20" autocomplete="off">
+    <button class="gate-btn" onclick="checkGate()">ACCESS →</button>
+    <div class="gate-error" id="gateError">// INVALID CODE — TRY AGAIN</div>
+    <div class="gate-hint">Hint: your dog's name + the year. All caps.</div>
+  </div>
+</div>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-brand">
+    <svg class="nav-logo-mark" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <polygon points="16,2 30,28 2,28" fill="none" stroke="#00d4ff" stroke-width="1.5"/>
+      <polygon points="16,8 26,26 6,26" fill="rgba(0,212,255,0.08)" stroke="rgba(0,212,255,0.3)" stroke-width="1"/>
+      <circle cx="16" cy="16" r="2" fill="#00d4ff"/>
+    </svg>
+    <span class="nav-name">APEX<span>NETWORK</span></span>
+    <div class="nav-divider"></div>
+    <span class="nav-tag">CONTENT CALENDAR</span>
+  </div>
+  <div class="nav-right">
+    <div id="navClock"></div>
+  </div>
+</nav>
+
+<!-- SECTION TABS -->
+<div class="sec-nav">
+  <button class="sec-nav-btn active" onclick="scrollTo('schedule')">01 — SCHEDULE</button>
+  <button class="sec-nav-btn" onclick="scrollTo('calendar')">02 — 30-DAY CALENDAR</button>
+  <button class="sec-nav-btn" onclick="scrollTo('scripts')">03 — SCRIPT LIBRARY</button>
+  <button class="sec-nav-btn" onclick="scrollTo('heygen')">04 — HEYGEN WORKFLOW</button>
+  <button class="sec-nav-btn" onclick="scrollTo('hooks')">05 — HOOK BANK</button>
+</div>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-eyebrow">OPERATOR CONTENT SYSTEM</div>
+  <h1 class="hero-title">30-DAY<br><span>CONTENT</span><br>MACHINE</h1>
+  <p class="hero-sub">30 scripts. 5 pillars. One video per day. Every hook engineered to stop the scroll and funnel the right operators into Apex Network.</p>
+
+  <div class="stat-tiles reveal">
+    <div class="stat-tile">
+      <span class="st-val blue">30</span>
+      <span class="st-label">Days of Content</span>
+    </div>
+    <div class="stat-tile">
+      <span class="st-val green">30</span>
+      <span class="st-label">Scripts Ready</span>
+    </div>
+    <div class="stat-tile">
+      <span class="st-val amber">5</span>
+      <span class="st-label">Content Pillars</span>
+    </div>
+    <div class="stat-tile">
+      <span class="st-val">20</span>
+      <span class="st-label">Proven Hooks</span>
+    </div>
+    <div class="stat-tile">
+      <span class="st-val blue">35<span style="font-size:1rem;">min</span></span>
+      <span class="st-label">Per Video</span>
+    </div>
+  </div>
+
+  <div class="pillar-pills reveal rd1">
+    <span class="pill pill-1">01 — FRANCHISE MATH</span>
+    <span class="pill pill-2">02 — SYSTEM VS JOB</span>
+    <span class="pill pill-3">03 — PLATFORM THINKING</span>
+    <span class="pill pill-4">04 — OPERATOR PROOF</span>
+    <span class="pill pill-5">05 — SCREEN RECORDING</span>
+  </div>
+</div>
+
+<!-- SECTION 1: POSTING SCHEDULE -->
+<div class="section section-alt" id="schedule">
+  <div class="section-header reveal">
+    <div class="sec-eyebrow">// 01 — DAILY POSTING</div>
+    <div class="sec-title">Posting Schedule</div>
+    <div class="sec-sub">One video per day minimum. Consistency beats volume. Post at these exact times for maximum AEST algorithm reach.</div>
+  </div>
+
+  <div class="schedule-grid reveal">
+    <div class="schedule-card">
+      <div class="sc-platform">// TIKTOK — DAILY</div>
+      <div class="sc-time">7<span>PM</span></div>
+      <div class="sc-zone">AEST — AUSTRALIA EASTERN</div>
+      <ul class="sc-rules">
+        <li>Post at exactly 7:00pm — not 7:05pm</li>
+        <li>Video length: 45–90 seconds</li>
+        <li>Caption: hook line + 3 hashtags max</li>
+        <li>Reply to every comment within 1 hour</li>
+        <li>First 30 min after posting is critical — stay active</li>
+        <li>Pin best performing video to profile</li>
+        <li>Never delete low performers — algorithm memory</li>
+      </ul>
+    </div>
+    <div class="schedule-card">
+      <div class="sc-platform">// INSTAGRAM — DAILY</div>
+      <div class="sc-time">6<span>PM</span></div>
+      <div class="sc-zone">AEST — AUSTRALIA EASTERN</div>
+      <ul class="sc-rules">
+        <li>Post at exactly 6:00pm — Reels only, no static</li>
+        <li>Same video as TikTok — remove TikTok watermark first</li>
+        <li>Bio link: silent-syndicate.netlify.app/apex-index.html</li>
+        <li>Story CTA 30 min after post: "new video live — link in bio"</li>
+        <li>Caption: longer version — algorithm rewards text</li>
+        <li>Use 5–8 hashtags — niche over broad</li>
+        <li>DM any saves or shares — those are warm leads</li>
+      </ul>
+    </div>
+  </div>
+
+  <div style="margin-top:1.5rem;background:var(--panel);border:1px solid var(--edge);padding:1.5rem;max-width:860px;" class="reveal">
+    <div class="sec-eyebrow" style="margin-bottom:1rem;">// HASHTAG SETS — USE THESE EXACTLY</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
+      <div>
+        <div style="font-family:'DM Mono',monospace;font-size:0.5rem;letter-spacing:0.1em;color:var(--green);margin-bottom:0.5rem;">TIKTOK — 3 MAX</div>
+        <div style="font-family:'DM Mono',monospace;font-size:0.7rem;color:var(--muted);line-height:2;">#passiveincome #commissionincome #apexnetwork</div>
+        <div style="font-family:'DM Mono',monospace;font-size:0.7rem;color:var(--muted);line-height:2;">#financialfreedom #distributornetwork #enagic</div>
+        <div style="font-family:'DM Mono',monospace;font-size:0.7rem;color:var(--muted);line-height:2;">#highticketcommission #operatormindset #residualincome</div>
+      </div>
+      <div>
+        <div style="font-family:'DM Mono',monospace;font-size:0.5rem;letter-spacing:0.1em;color:var(--blue);margin-bottom:0.5rem;">INSTAGRAM — 5–8 TAGS</div>
+        <div style="font-family:'DM Mono',monospace;font-size:0.7rem;color:var(--muted);line-height:2;">#apexnetwork #passiveincome #commissionlife</div>
+        <div style="font-family:'DM Mono',monospace;font-size:0.7rem;color:var(--muted);line-height:2;">#highticketcommission #enagicaustralia #networkmarketing</div>
+        <div style="font-family:'DM Mono',monospace;font-size:0.7rem;color:var(--muted);line-height:2;">#financialindependence #distributornetwork #systemsnotjobs</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SECTION 2: 30-DAY CALENDAR -->
+<div class="section" id="calendar">
+  <div class="section-header reveal">
+    <div class="sec-eyebrow">// 02 — DAY BY DAY</div>
+    <div class="sec-title">30-Day Calendar</div>
+    <div class="sec-sub">Pillar rotation every 5 days. Every hook is engineered. Every post names the investment, the commission, and the break-even.</div>
+  </div>
+
+  <div class="cal-grid reveal">
+    <div class="cal-day"><div class="cd-num">DAY 01</div><div class="cd-pillar p1">FRANCHISE MATH</div><div class="cd-hook">McDonald's costs $1.4M to franchise. Apex costs $6,787. Same concept. Different price.</div><div class="cd-times"><span class="cd-time-tag">TT 7PM</span><span class="cd-time-tag">IG 6PM</span></div></div>
+    <div class="cal-day"><div class="cd-num">DAY 02</div><div class="cd-pillar p2">SYSTEM VS JOB</div><div class="cd-hook">My job pays hourly. My system paid $1,322 on a Thursday. I was on a roof.</div><div class="cd-times"><span class="cd-time-tag">TT 7PM</span><span class="cd-time-tag">IG 6PM</span></div></div>
+    <div class="cal-day"><div class="cd-num">DAY 03</div><div class="cd-pillar p3">PLATFORM THINKING</div><div class="cd-hook">You're not a salesperson. You're an operator. There's a difference.</div><div class="cd-times"><span class="cd-time-tag">TT 7PM</span><span class="cd-time-tag">IG 6PM</span></div></div>
+    <div class="cal-day"><div class="cd-num">DAY 04</div><div class="cd-pillar p4">OPERATOR PROOF</div><div class="cd-hook">Month 1: no sales. Month 2: first $1,322. Month 3: first operator in. Honest timeline.</div><div class="cd-times"><span class="cd-time-tag">TT 7PM</span><span class="cd-time-tag">IG 6PM</span></div></div>
+    <div class="cal-day"><div class="cd-num">DAY 05</div><div class="cd-pillar p5">SCREEN RECORDING</div><div class="cd-hook">Inside the Apex operator hub. Everything we've built. Live walkthrough.</div><div class="cd-times"><span class="cd-time-tag">TT 7PM</span><span class="cd-time-tag">IG 6PM</span></div></div>
+    <div class="cal-day"><div class="cd-num">DAY 06</div><div class="cd-pillar p1">FRANCHISE MATH</div><div class="cd-hook">Investment: $11,682. Commission per sale: $1,322. Break-even: 9 sales. Run the math.</div><div class="cd-times"><span class="cd-time-tag">TT 7PM</span><span class="cd-time-tag">IG 6PM</span></div></div>
+    <div class="cal-day"><div class="cd-num">DAY 07</div><div class="cd-pillar p2">SYSTEM VS JOB</div><div class="cd-hook">My painter van vs my AI-powered distribution network. Both paid me this week.</div><div class="cd-times"><span class="cd-time-tag">TT 7PM</span><span class="cd-time-tag">IG 6PM</span></div></div>
+    <div class="cal-day"><div class="cd-num">DAY 08</div><div class="cd-pillar p3">PLATFORM THINKING</div><div class="cd-hook">The difference between building a job and building a platform. Most people never see it.</div><div class="cd-times"><span class="cd-time-tag">TT 7PM</span><span class="cd-time-tag">IG 6PM</span></div></div>
+    <div class="cal-day"><div class="cd-num">DAY 09</div><div class="cd-pillar p4">OPERATOR PROOF</div><div class="cd-hook">What I told my wife before I invested $11,682. And what happened after.</div><div class="cd-times"><span class="cd-time-tag">TT 7PM</span><span class="cd-time-tag">IG 6PM</span></div></div>
+    <div class="cal-day"><div class="cd-num">DAY 10</div><div class="cd-pillar p5">SCREEN RECORDING</div><div class="cd-hook">Watch the Agent OS generate a sales script in real time. This is what operators get.</div><div class="cd-times"><span class="cd-time-tag">TT 7PM</span><span class="cd-time-tag">IG 6PM</span></div></div>
+    <div class="cal-day"><div class="cd-num">DAY 11</div><div class="cd-pillar p1">FRANCHISE MATH</div><div class="cd-hook">Break-even in 7 sales. Here's what that looks like spread over 30 days.</div><div class="cd-times"><span class="cd-time-tag">TT 7PM</span><span class="cd-time-tag">IG 6PM</span></div></div>
+    <div class="cal-day"><div class="cd-num">DAY 12</div><div class="cd-pillar p2">SYSTEM VS JOB</div><div class="cd-hook">I didn't quit my day job. I built the exit first. That's the sequence.</div><div class="cd-times"><span class="cd-time-tag">TT 7PM</span><span class="cd-time-tag">IG 6PM</span></div></div>
+    <div class="cal-day"><div class="cd-num">DAY 13</div><div class="cd-pillar p3">PLATFORM THINKING</div><div class="cd-hook">Every sale through my network pays me whether I show up or not. Here's the mechanism.</div><div class="cd-times"><span class="cd-time-tag">TT 7PM</span><span class="cd-time-tag">IG 6PM</span></div></div>
+    <div class="cal-day"><div class="cd-num">DAY 14</div><div class="cd-pillar p4">OPERATOR PROOF</div><div class="cd-hook">My first operator joined. Here's exactly what changed about my income that month.</div><div class="cd-times"><span class="cd-time-tag">TT 7PM</span><span class="cd-time-tag">IG 6PM</span></div></div>
+    <div class="cal-day"><div class="cd-num">DAY 15</div><div class="cd-pillar p5">SCREEN RECORDING</div><div class="cd-hook">Live demo: how a lead goes from opt-in to application. Watch the full funnel.</div><div class="cd-times"><span class="cd-time-tag">TT 7PM</span><span class="cd-time-tag">IG 6PM</span></div></div>
+    <div class="cal-day"><div class="cd-num">DAY 16</div><div class="cd-pillar p1">FRANCHISE MATH</div><div class="cd-hook">Network math: 7 operators × 3 sales each. This is the $10,309/month target.</div><div class="cd-times"><span class="cd-time-tag">TT 7PM</span><span class="cd-time-tag">IG 6PM</span></div></div>
+    <div class="cal-day"><div class="cd-num">DAY 17</div><div class="cd-pillar p2">SYSTEM VS JOB</div><div class="cd-hook">Age 23. Full-time painter. Not planning on staying in trades. Here's why.</div><div class="cd-times"><span class="cd-time-tag">TT 7PM</span><span class="cd-time-tag">IG 6PM</span></div></div>
+    <div class="cal-day"><div class="cd-num">DAY 18</div><div class="cd-pillar p3">PLATFORM THINKING</div><div class="cd-hook">The network runs. Operators collect. That's not a slogan — it's the architecture.</div><div class="cd-times"><span class="cd-time-tag">TT 7PM</span><span class="cd-time-tag">IG 6PM</span></div></div>
+    <div class="cal-day"><div class="cd-num">DAY 19</div><div class="cd-pillar p4">OPERATOR PROOF</div><div class="cd-hook">The honest truth about Enagic and why I chose this as my commission vehicle.</div><div class="cd-times"><span class="cd-time-tag">TT 7PM</span><span class="cd-time-tag">IG 6PM</span></div></div>
+    <div class="cal-day"><div class="cd-num">DAY 20</div><div class="cd-pillar p5">SCREEN RECORDING</div><div class="cd-hook">Behind the system: what actually happens in the first 60 seconds after someone opts in.</div><div class="cd-times"><span class="cd-time-tag">TT 7PM</span><span class="cd-time-tag">IG 6PM</span></div></div>
+    <div class="cal-day"><div class="cd-num">DAY 21</div><div class="cd-pillar p1">FRANCHISE MATH</div><div class="cd-hook">emGuarde entry: $2,475. $225 per sale. Different entry point. Same infrastructure play.</div><div class="cd-times"><span class="cd-time-tag">TT 7PM</span><span class="cd-time-tag">IG 6PM</span></div></div>
+    <div class="cal-day"><div class="cd-num">DAY 22</div><div class="cd-pillar p2">SYSTEM VS JOB</div><div class="cd-hook">Stop selling. Start operating. The mindset shift that changes everything about this model.</div><div class="cd-times"><span class="cd-time-tag">TT 7PM</span><span class="cd-time-tag">IG 6PM</span></div></div>
+    <div class="cal-day"><div class="cd-num">DAY 23</div><div class="cd-pillar p3">PLATFORM THINKING</div><div class="cd-hook">This is commission infrastructure. Not a side hustle. Not MLM. Here's the difference.</div><div class="cd-times"><span class="cd-time-tag">TT 7PM</span><span class="cd-time-tag">IG 6PM</span></div></div>
+    <div class="cal-day"><div class="cd-num">DAY 24</div><div class="cd-pillar p4">OPERATOR PROOF</div><div class="cd-hook">What 3 sales this month actually paid out. Real numbers, no rounding.</div><div class="cd-times"><span class="cd-time-tag">TT 7PM</span><span class="cd-time-tag">IG 6PM</span></div></div>
+    <div class="cal-day"><div class="cd-num">DAY 25</div><div class="cd-pillar p5">SCREEN RECORDING</div><div class="cd-hook">Screen recording: inside my ActiveCampaign dashboard. Real leads. Real pipeline.</div><div class="cd-times"><span class="cd-time-tag">TT 7PM</span><span class="cd-time-tag">IG 6PM</span></div></div>
+    <div class="cal-day"><div class="cd-num">DAY 26</div><div class="cd-pillar p1">FRANCHISE MATH</div><div class="cd-hook">Quad tier: $18,469 investment. $2,595 per sale. 7 sales to break-even. The elite entry.</div><div class="cd-times"><span class="cd-time-tag">TT 7PM</span><span class="cd-time-tag">IG 6PM</span></div></div>
+    <div class="cal-day"><div class="cd-num">DAY 27</div><div class="cd-pillar p2">SYSTEM VS JOB</div><div class="cd-hook">My boss doesn't know I'm building a distribution network. He will eventually.</div><div class="cd-times"><span class="cd-time-tag">TT 7PM</span><span class="cd-time-tag">IG 6PM</span></div></div>
+    <div class="cal-day"><div class="cd-num">DAY 28</div><div class="cd-pillar p3">PLATFORM THINKING</div><div class="cd-hook">I don't sell products. I operate an infrastructure. Let me show you what that means in practice.</div><div class="cd-times"><span class="cd-time-tag">TT 7PM</span><span class="cd-time-tag">IG 6PM</span></div></div>
+    <div class="cal-day"><div class="cd-num">DAY 29</div><div class="cd-pillar p4">OPERATOR PROOF</div><div class="cd-hook">First year target: 7 operators, $10,309/month. Here's the exact roadmap I'm running.</div><div class="cd-times"><span class="cd-time-tag">TT 7PM</span><span class="cd-time-tag">IG 6PM</span></div></div>
+    <div class="cal-day"><div class="cd-num">DAY 30</div><div class="cd-pillar p5">SCREEN RECORDING</div><div class="cd-hook">Full funnel walkthrough: front door to registration. Every step. Watch this.</div><div class="cd-times"><span class="cd-time-tag">TT 7PM</span><span class="cd-time-tag">IG 6PM</span></div></div>
+  </div>
+</div>
+
+<!-- SECTION 3: SCRIPT LIBRARY -->
+<div class="section section-alt" id="scripts">
+  <div class="section-header reveal">
+    <div class="sec-eyebrow">// 03 — READY TO USE</div>
+    <div class="sec-title">Script Library</div>
+    <div class="sec-sub">30 scripts. 6 per pillar. Every script names the investment, the commission, and the break-even. Copy. Record. Post.</div>
+  </div>
+
+  <div class="pillar-tabs">
+    <button class="ptab active" onclick="switchPillar(1)">01 — FRANCHISE MATH</button>
+    <button class="ptab" onclick="switchPillar(2)">02 — SYSTEM VS JOB</button>
+    <button class="ptab" onclick="switchPillar(3)">03 — PLATFORM THINKING</button>
+    <button class="ptab" onclick="switchPillar(4)">04 — OPERATOR PROOF</button>
+    <button class="ptab" onclick="switchPillar(5)">05 — SCREEN RECORDING</button>
+  </div>
+
+  <!-- PILLAR 1: FRANCHISE MATH -->
+  <div class="scripts-panel active" id="pillar-1">
+
+    <div class="script-card">
+      <div class="sc-num">// SCRIPT 1.1 — FRANCHISE MATH</div>
+      <div class="sc-transparency">Investment: $6,787 → $11,682 → $18,469 | Commission: $365 → $1,322 → $2,595 | Break-even: 19 → 9 → 7 sales</div>
+      <div class="sc-part"><div class="sc-part-label">// HOOK</div><div class="sc-part-text">McDonald's costs <em>$1.4 million</em> to franchise. Apex Network costs <em>$6,787</em>. Same concept. Completely different price.</div></div>
+      <div class="sc-part"><div class="sc-part-label">// BODY</div><div class="sc-part-text">When you buy a McDonald's franchise, you're paying for proven infrastructure — a system that runs whether you're there or not. Apex Network is the same play. You invest in a commission infrastructure. The system generates leads. Operators close sales. You collect overrides. The entry point is $6,787 for the K8 — that earns you $365 per sale at rank 1A. Step up to the Trifecta at $11,682 and that becomes $1,322 per sale. Most operators break even in under 9 sales. No staff. No premises. No inventory. Just the system.</div></div>
+      <div class="sc-part"><div class="sc-part-label">// CTA</div></div>
+      <span class="sc-cta">Link in bio — full breakdown. Numbers, tiers, how it works. Read it before you apply.</span>
+    </div>
+
+    <div class="script-card">
+      <div class="sc-num">// SCRIPT 1.2 — FRANCHISE MATH</div>
+      <div class="sc-transparency">Investment: $11,682 | Commission: $1,322/sale | Break-even: 9 sales</div>
+      <div class="sc-part"><div class="sc-part-label">// HOOK</div><div class="sc-part-text">I'm going to name the exact number. <em>$11,682</em>. That's what I invested. Here's what I get back per sale.</div></div>
+      <div class="sc-part"><div class="sc-part-label">// BODY</div><div class="sc-part-text">Most people in this space won't tell you what they actually invested. I will. Trifecta package — $11,682 AUD including GST. At rank 2A that pays $1,322 per direct sale. Nine sales and I've returned the full investment. After that, every sale is pure commission. And that's before my operators make any sales — when they do, I earn override income on top. This isn't a job. This is commission infrastructure with a clear entry cost and a clear return path. The math is public. The structure is published. All I did was plug in.</div></div>
+      <div class="sc-part"><div class="sc-part-label">// CTA</div></div>
+      <span class="sc-cta">Full tier breakdown in bio link. See all four entry points and what each one returns.</span>
+    </div>
+
+    <div class="script-card">
+      <div class="sc-num">// SCRIPT 1.3 — FRANCHISE MATH</div>
+      <div class="sc-transparency">Investment: $18,469 | Commission: $2,595/sale | Break-even: 7 sales</div>
+      <div class="sc-part"><div class="sc-part-label">// HOOK</div><div class="sc-part-text">Seven sales. That's all it takes to break even on the highest entry tier. Let me show you why that's not a lot.</div></div>
+      <div class="sc-part"><div class="sc-part-label">// BODY</div><div class="sc-part-text">Quad package: $18,469 investment. At rank 3A you earn $2,595 per direct sale. Seven sales covers the full investment. Spread over 12 months that's less than one sale every 7 weeks. One serious operator in your network adds another layer. Every sale they make earns you an override — without you doing the work. This is how the network compounds. Most people think in terms of salary. Operators think in terms of infrastructure return. Seven sales is the threshold. Everything after is profit.</div></div>
+      <div class="sc-part"><div class="sc-part-label">// CTA</div></div>
+      <span class="sc-cta">Link in bio — full income disclosure. Real numbers, not projections.</span>
+    </div>
+
+    <div class="script-card">
+      <div class="sc-num">// SCRIPT 1.4 — FRANCHISE MATH</div>
+      <div class="sc-transparency">Network math: 7 operators × 3 sales = $10,309/month</div>
+      <div class="sc-part"><div class="sc-part-label">// HOOK</div><div class="sc-part-text">Seven operators. Three sales each per month. <em>$10,309</em>. That's the conservative network math.</div></div>
+      <div class="sc-part"><div class="sc-part-label">// BODY</div><div class="sc-part-text">This isn't a dream number. This is the published Enagic commission structure applied to a real operator network. Seven operators each making three sales per month generates approximately $7,665 in override income for the network head — plus your own direct commissions on top. Total: around $10,309 per month conservative. $123,000-plus per year. The compounding only accelerates when those operators recruit their own networks. This is why the infrastructure play matters. You're not building a sales target — you're building an income engine.</div></div>
+      <div class="sc-part"><div class="sc-part-label">// CTA</div></div>
+      <span class="sc-cta">Full network math breakdown — link in bio. See every number deconstructed.</span>
+    </div>
+
+    <div class="script-card">
+      <div class="sc-num">// SCRIPT 1.5 — FRANCHISE MATH</div>
+      <div class="sc-transparency">Investment: $6,787 | Commission: $365/sale | Break-even: 19 sales</div>
+      <div class="sc-part"><div class="sc-part-label">// HOOK</div><div class="sc-part-text">Most people avoid the conversation about cost. I'm going to have it openly. Because the cost is the whole point.</div></div>
+      <div class="sc-part"><div class="sc-part-label">// BODY</div><div class="sc-part-text">Entry level is $6,787 — the K8 single unit. At 1A rank that pays $365 per direct sale. Nineteen sales to break even. That sounds like a lot until you compare it to starting a business — rent, staff, insurance, inventory — or a franchise at seven figures. This is commission infrastructure at a fraction of traditional business cost. The reason I name the number publicly is because the people scared of the number aren't the operators I'm looking for. The people who hear $6,787 and immediately think ROI — those are the right people.</div></div>
+      <div class="sc-part"><div class="sc-part-label">// CTA</div></div>
+      <span class="sc-cta">If you thought ROI before you thought risk — link in bio. That's who this is for.</span>
+    </div>
+
+    <div class="script-card">
+      <div class="sc-num">// SCRIPT 1.6 — FRANCHISE MATH</div>
+      <div class="sc-transparency">Senior rank: 6A2-5 = $15,000 USD/month for life</div>
+      <div class="sc-part"><div class="sc-part-label">// HOOK</div><div class="sc-part-text">Enagic publishes a rank called 6A2-5. It pays <em>$15,000 USD per month for life</em>. Plus a $100,000 bonus.</div></div>
+      <div class="sc-part"><div class="sc-part-label">// BODY</div><div class="sc-part-text">This isn't a projection I made up. It's in Enagic's published compensation documentation. 6A2-5 requires 100-plus total team sales and five downline operators each reaching 6A rank themselves. It's not quick. It's not easy. But the published numbers are public. $15,000 USD per month for life — for as long as the network keeps selling. Most people never even know these ranks exist because they never think past the first sale. Apex Network is built for the long game. Entry is the beginning of the infrastructure play — not the end.</div></div>
+      <div class="sc-part"><div class="sc-part-label">// CTA</div></div>
+      <span class="sc-cta">Link in bio — see the full commission structure from entry to senior rank.</span>
+    </div>
+
+  </div>
+
+  <!-- PILLAR 2: SYSTEM VS JOB -->
+  <div class="scripts-panel" id="pillar-2">
+
+    <div class="script-card" style="--blue:#00ff88;">
+      <div class="sc-num">// SCRIPT 2.1 — SYSTEM VS JOB</div>
+      <div class="sc-transparency">Investment: $11,682 | Commission: $1,322 | System runs without presence</div>
+      <div class="sc-part"><div class="sc-part-label">// HOOK</div><div class="sc-part-text">My job paid me for the hours I showed up. My system paid me <em>$1,322 on a Thursday</em>. I was on a roof.</div></div>
+      <div class="sc-part"><div class="sc-part-label">// BODY</div><div class="sc-part-text">That's the difference between income and commission infrastructure. A job requires your presence — the moment you stop, the income stops. A system requires your setup — once it's running, it operates independently. The Apex funnel captures leads through content. The AI scores applicants automatically. Operators move through the pipeline without me touching each one. I'm still a full-time painter. I still show up every day. But something else is running alongside it that doesn't need me to clock in. That's what I invested $11,682 to build.</div></div>
+      <div class="sc-part"><div class="sc-part-label">// CTA</div></div>
+      <span class="sc-cta">Link in bio — see the full system. It's built. It's live. Operators are plugging in now.</span>
+    </div>
+
+    <div class="script-card">
+      <div class="sc-num">// SCRIPT 2.2 — SYSTEM VS JOB</div>
+      <div class="sc-transparency">Investment disclosed | System operates independently | Commission scales with network</div>
+      <div class="sc-part"><div class="sc-part-label">// HOOK</div><div class="sc-part-text">A job requires your time. A system requires your setup. One of those scales. One of those doesn't.</div></div>
+      <div class="sc-part"><div class="sc-part-label">// BODY</div><div class="sc-part-text">I spent six years trading time for money as a painter. I'm good at it. But it has a ceiling. The ceiling is how many hours I can physically work. A commission system has no ceiling — it scales with the number of operators in the network and the sales volume they generate. When my first operator made their first sale, I earned an override. I didn't do anything that day except paint a house. That override came from infrastructure I built once and let run. The setup is the work. After that, the system does the job.</div></div>
+      <div class="sc-part"><div class="sc-part-label">// CTA</div></div>
+      <span class="sc-cta">Full system breakdown — link in bio. See what the setup looks like before you decide.</span>
+    </div>
+
+    <div class="script-card">
+      <div class="sc-num">// SCRIPT 2.3 — SYSTEM VS JOB</div>
+      <div class="sc-transparency">Investment: $11,682 | Infrastructure runs 24/7 | Commission: $1,322/sale</div>
+      <div class="sc-part"><div class="sc-part-label">// HOOK</div><div class="sc-part-text">I'm still painting houses. My distribution network ran without me <em>yesterday</em>. Both are true.</div></div>
+      <div class="sc-part"><div class="sc-part-label">// BODY</div><div class="sc-part-text">I'm not pretending I've replaced my income yet. I'm 23 and I'm building the replacement. The Apex Network funnel was live at 6pm last night when I knocked off work. Leads came in through the content I'd already posted. The AI processed applications. My operators got notified. I got home, had dinner, and checked the dashboard. That's not passive — it's infrastructure working on my behalf. The $11,682 I invested bought me a system that operates during hours I can't. That's the trade. Time once for leverage ongoing.</div></div>
+      <div class="sc-part"><div class="sc-part-label">// CTA</div></div>
+      <span class="sc-cta">Link in bio — full platform overview. See what you're actually plugging into.</span>
+    </div>
+
+    <div class="script-card">
+      <div class="sc-num">// SCRIPT 2.4 — SYSTEM VS JOB</div>
+      <div class="sc-transparency">Commission infrastructure vs employment | Leverage vs linear income</div>
+      <div class="sc-part"><div class="sc-part-label">// HOOK</div><div class="sc-part-text">The problem with trading time for money is that it's always one-to-one. One hour. One rate. Every day.</div></div>
+      <div class="sc-part"><div class="sc-part-label">// BODY</div><div class="sc-part-text">Employment is linear. Commission infrastructure is exponential. When I work a job, I earn once for every hour I spend. When an operator in my network makes a sale, I earn an override — for work I'm not doing right now. When that operator recruits another operator who makes a sale, the leverage compounds again. Most people understand this in theory. Few are willing to invest in the setup that makes it real. Apex Network is the setup. The funnel is live. The commissions are published. The structure is Enagic — a 38-year-old company. All I did was build the operator layer on top of proven infrastructure.</div></div>
+      <div class="sc-part"><div class="sc-part-label">// CTA</div></div>
+      <span class="sc-cta">Link in bio — see the full picture before you form an opinion.</span>
+    </div>
+
+    <div class="script-card">
+      <div class="sc-num">// SCRIPT 2.5 — SYSTEM VS JOB</div>
+      <div class="sc-transparency">Age 23 | Painting full-time | Building exit strategy | Not in trades by 30</div>
+      <div class="sc-part"><div class="sc-part-label">// HOOK</div><div class="sc-part-text">Age 23. Full-time painter. <em>Not planning on staying in trades</em>. Here's exactly what I'm building instead.</div></div>
+      <div class="sc-part"><div class="sc-part-label">// BODY</div><div class="sc-part-text">I'm not complaining about my job. I'm good at it and it pays well. But it has an expiry date. My body won't paint houses at 45 the way it does at 23. That's not pessimism — that's honesty. So I started building the exit while the job was still funding it. Apex Network is the exit. A commission infrastructure built on Enagic's published pay structure. As the network grows, the exit gets closer. I'm not waiting for a windfall. I'm engineering a replacement — one operator, one sale, one override at a time. The goal: not in trades by 30.</div></div>
+      <div class="sc-part"><div class="sc-part-label">// CTA</div></div>
+      <span class="sc-cta">If you're building an exit too — link in bio. This might be the infrastructure you need.</span>
+    </div>
+
+    <div class="script-card">
+      <div class="sc-num">// SCRIPT 2.6 — SYSTEM VS JOB</div>
+      <div class="sc-transparency">System vs salary | What stops when you stop working each model</div>
+      <div class="sc-part"><div class="sc-part-label">// HOOK</div><div class="sc-part-text">What happens when you stop working a job? Income stops. What happens when you stop working a system? <em>It keeps running.</em></div></div>
+      <div class="sc-part"><div class="sc-part-label">// BODY</div><div class="sc-part-text">That's the test. Stop working and see what still pays you. A job fails that test instantly. A commission infrastructure — properly built — continues generating income because the system is doing the work, not you. The Apex funnel captures leads 24 hours a day through content I post once. The AI processes applications automatically. Operators run their own sales activity. Overrides flow from network volume. I set this up once. It runs continuously. This is what the investment buys — not just a product, not just a rank, but an income mechanism that operates independently of my hours.</div></div>
+      <div class="sc-part"><div class="sc-part-label">// CTA</div></div>
+      <span class="sc-cta">Link in bio — full system walkthrough. See what you're actually building before you decide.</span>
+    </div>
+
+  </div>
+
+  <!-- PILLAR 3: PLATFORM THINKING -->
+  <div class="scripts-panel" id="pillar-3">
+
+    <div class="script-card">
+      <div class="sc-num">// SCRIPT 3.1 — PLATFORM THINKING</div>
+      <div class="sc-transparency">Operator vs distributor framing | Infrastructure mindset</div>
+      <div class="sc-part"><div class="sc-part-label">// HOOK</div><div class="sc-part-text">You're not a salesperson. You're not a distributor. You're an <em>operator</em>. There's a fundamental difference.</div></div>
+      <div class="sc-part"><div class="sc-part-label">// BODY</div><div class="sc-part-text">A salesperson closes individual deals. A distributor moves product. An operator runs infrastructure that generates deals continuously. When you plug into Apex Network you're not getting a sales job — you're getting access to a built commission system. The funnel is live. The AI scoring is live. The email automation is live. Your job as an operator is to drive traffic into a system that already works. The platform does the processing. You do the positioning. That's why I use the word operator and not salesperson. One is a job description. The other is a business model.</div></div>
+      <div class="sc-part"><div class="sc-part-label">// CTA</div></div>
+      <span class="sc-cta">Link in bio — see the platform before you decide if you're the right operator for it.</span>
+    </div>
+
+    <div class="script-card">
+      <div class="sc-num">// SCRIPT 3.2 — PLATFORM THINKING</div>
+      <div class="sc-transparency">Platform economics | Override structure | Network compounding</div>
+      <div class="sc-part"><div class="sc-part-label">// HOOK</div><div class="sc-part-text">Operators don't work. <em>Platforms work.</em> The operator's job is to build the platform. Then let it run.</div></div>
+      <div class="sc-part"><div class="sc-part-label">// BODY</div><div class="sc-part-text">Think about how Uber works. Uber doesn't drive. Drivers drive. Uber built the platform that connects drivers to riders and takes a cut of every transaction. Apex Network is the same model applied to commission infrastructure. I built the platform — the funnel, the AI, the operator onboarding, the content system. Operators plug in and run their sales activity. Every sale in my network generates override income for me. I'm not the driver. I'm running the platform. That's the shift in thinking that separates operators who build income from those who just earn commissions.</div></div>
+      <div class="sc-part"><div class="sc-part-label">// CTA</div></div>
+      <span class="sc-cta">Link in bio — see what the platform looks like from the inside before you apply.</span>
+    </div>
+
+    <div class="script-card">
+      <div class="sc-num">// SCRIPT 3.3 — PLATFORM THINKING</div>
+      <div class="sc-transparency">Commission infrastructure defined | Not MLM | Enagic structure</div>
+      <div class="sc-part"><div class="sc-part-label">// HOOK</div><div class="sc-part-text">I'm going to explain the difference between commission infrastructure and MLM. Because people confuse them. They're not the same.</div></div>
+      <div class="sc-part"><div class="sc-part-label">// BODY</div><div class="sc-part-text">MLM earns primarily from recruiting. Commission infrastructure earns from product sales. Enagic pays commissions based on K8 and Trifecta and Quad units sold to real customers — people who buy a water ioniser for their home or business. The commission comes from the product transaction, not from recruitment fees. When an operator in my network sells a Trifecta to a customer, Enagic processes the sale, ships the product, and pays the commission chain. I earn an override from that sale because I'm above them in the network structure. Product sold. Commission paid. Customer has a machine. That's the difference.</div></div>
+      <div class="sc-part"><div class="sc-part-label">// CTA</div></div>
+      <span class="sc-cta">Link in bio — full income disclosure. See exactly how the commission structure works.</span>
+    </div>
+
+    <div class="script-card">
+      <div class="sc-num">// SCRIPT 3.4 — PLATFORM THINKING</div>
+      <div class="sc-transparency">Override mechanism | Passive network income | Infrastructure leverage</div>
+      <div class="sc-part"><div class="sc-part-label">// HOOK</div><div class="sc-part-text">Every sale through my network pays me. Not because I closed it — because I built the <em>infrastructure that made it possible</em>.</div></div>
+      <div class="sc-part"><div class="sc-part-label">// BODY</div><div class="sc-part-text">This is what override income means in practice. My operator posts content, drives traffic to the funnel, converts a lead into a registered Enagic customer. Enagic processes the sale. Commission flows through the chain. My operator earns their direct commission. I earn an override — automatically, through the published Enagic structure — because I'm their sponsor. I didn't close that sale. I built the system my operator used to close it. That's leverage. That's what platform thinking means in a commission context. One build. Ongoing return from every sale in the network below me.</div></div>
+      <div class="sc-part"><div class="sc-part-label">// CTA</div></div>
+      <span class="sc-cta">Link in bio — see the full override structure and how operators stack income.</span>
+    </div>
+
+    <div class="script-card">
+      <div class="sc-num">// SCRIPT 3.5 — PLATFORM THINKING</div>
+      <div class="sc-transparency">Apex Network as infrastructure | Not a product company | Commission engine</div>
+      <div class="sc-part"><div class="sc-part-label">// HOOK</div><div class="sc-part-text">Apex Network isn't a product company. It's a <em>commission infrastructure</em>. The product is Enagic's. The infrastructure is ours.</div></div>
+      <div class="sc-part"><div class="sc-part-label">// BODY</div><div class="sc-part-text">Enagic makes the machines. They handle fulfilment, warranty, customer service. Apex Network handles the operator recruitment, the funnel infrastructure, the AI-powered lead processing, the content strategy, and the onboarding system. We built the distribution layer on top of a proven 38-year-old product company. Operators who plug in get access to: a live conversion funnel, AI application scoring, automated email sequences, the Agent OS, and ongoing content scripts. All of that is the Apex infrastructure. The Enagic commission is the revenue engine that pays operators for using it.</div></div>
+      <div class="sc-part"><div class="sc-part-label">// CTA</div></div>
+      <span class="sc-cta">Link in bio — full platform overview. See what you're plugging into before you apply.</span>
+    </div>
+
+    <div class="script-card">
+      <div class="sc-num">// SCRIPT 3.6 — PLATFORM THINKING</div>
+      <div class="sc-transparency">Most people build jobs | Operators build platforms | Mindset difference</div>
+      <div class="sc-part"><div class="sc-part-label">// HOOK</div><div class="sc-part-text">Most people build a job. Operators build a platform. Both take effort. Only one of them compounds.</div></div>
+      <div class="sc-part"><div class="sc-part-label">// BODY</div><div class="sc-part-text">Building a job means optimising how much you earn per hour of work. Building a platform means engineering a system that earns more as it grows — regardless of your hours. I have operators in the Apex Network who are building their own platforms inside mine. Every sale they make compounds my override income. Their growth is my growth. That's platform economics applied to a commission structure. Most people never get here because they stop at the product level — sell something, earn something, done. Platform thinkers ask: how do I build a system where others selling creates income for me? That's Apex Network.</div></div>
+      <div class="sc-part"><div class="sc-part-label">// CTA</div></div>
+      <span class="sc-cta">Link in bio — if this is how you already think, you're the right operator. Apply.</span>
+    </div>
+
+  </div>
+
+  <!-- PILLAR 4: OPERATOR PROOF -->
+  <div class="scripts-panel" id="pillar-4">
+
+    <div class="script-card">
+      <div class="sc-num">// SCRIPT 4.1 — OPERATOR PROOF</div>
+      <div class="sc-transparency">Real timeline | Month by month | No false promises</div>
+      <div class="sc-part"><div class="sc-part-label">// HOOK</div><div class="sc-part-text">Honest timeline. Month 1: no sales. Month 2: first <em>$1,322</em>. Month 3: first operator in. This is what real looks like.</div></div>
+      <div class="sc-part"><div class="sc-part-label">// BODY</div><div class="sc-part-text">I'm not going to pretend month one was a success. It wasn't. Month one was learning the content formula, posting consistently, and getting the funnel dialled in. Month two I made my first direct sale — $1,322 into my account from Enagic. Month three my first operator joined the network. Overrides began. The compounding started. I'm telling you this because the people who expect instant results aren't the operators I want. The people who see a 90-day build timeline and think "that's reasonable" — those are exactly who I'm building this for. The infrastructure is already built. The timeline is real.</div></div>
+      <div class="sc-part"><div class="sc-part-label">// CTA</div></div>
+      <span class="sc-cta">Link in bio — full income disclosure plus how to apply as an operator.</span>
+    </div>
+
+    <div class="script-card">
+      <div class="sc-num">// SCRIPT 4.2 — OPERATOR PROOF</div>
+      <div class="sc-transparency">Investment: $11,682 | Why I chose Trifecta | Decision process</div>
+      <div class="sc-part"><div class="sc-part-label">// HOOK</div><div class="sc-part-text">I'm going to tell you exactly what I told my wife before I invested <em>$11,682</em> into this. Because she asked the right questions.</div></div>
+      <div class="sc-part"><div class="sc-part-label">// BODY</div><div class="sc-part-text">She asked: what happens if it doesn't work? I said: I have a product — a Kangen water machine — that I can resell or keep. The floor is not zero. She asked: how do you make money? I explained the Enagic commission structure — $1,322 per direct sale at 2A rank. She asked: how long to break even? I said: nine sales. She asked: is Enagic real? I showed her the 38-year trading history and the Australian operation. She said: alright. I invested the next day. That conversation is the due diligence process. Every question she asked is one you should ask. I can answer all of them. That's what the full breakdown is for.</div></div>
+      <div class="sc-part"><div class="sc-part-label">// CTA</div></div>
+      <span class="sc-cta">Link in bio — full breakdown. Ask every question you have before you decide.</span>
+    </div>
+
+    <div class="script-card">
+      <div class="sc-num">// SCRIPT 4.3 — OPERATOR PROOF</div>
+      <div class="sc-transparency">Override income | First override received | Network proof of concept</div>
+      <div class="sc-part"><div class="sc-part-label">// HOOK</div><div class="sc-part-text">The day I got my first override commission — money from a sale I didn't make — I understood why the infrastructure matters.</div></div>
+      <div class="sc-part"><div class="sc-part-label">// BODY</div><div class="sc-part-text">My first operator made a K8 sale. Enagic processed it. Commission went to them. Override went to me. I hadn't spoken to that customer. I hadn't closed that sale. I'd built the system my operator used to generate that lead, and the override came through the published Enagic structure automatically. That's when the model stopped being theoretical. The override wasn't huge — but the mechanism was proven. Infrastructure working. Operator selling. Override flowing. At scale — seven operators, three sales each per month — that mechanism generates $7,665 in overrides alone. Month after month. That's what the first override was proof of.</div></div>
+      <div class="sc-part"><div class="sc-part-label">// CTA</div></div>
+      <span class="sc-cta">Link in bio — see the full override structure and what joining Apex as an operator means.</span>
+    </div>
+
+    <div class="script-card">
+      <div class="sc-num">// SCRIPT 4.4 — OPERATOR PROOF</div>
+      <div class="sc-transparency">Real operator activity | Real override numbers | Transparent results</div>
+      <div class="sc-part"><div class="sc-part-label">// HOOK</div><div class="sc-part-text">My operator made three sales this month. Here's exactly what that paid me. No rounding. No approximation.</div></div>
+      <div class="sc-part"><div class="sc-part-label">// BODY</div><div class="sc-part-text">Three K8 sales through my operator network. At the published override rate that generates approximately $1,095 in override income to me — from three sales I didn't make. That's on top of any direct sales I make myself. Now extrapolate: seven operators averaging three sales each per month. $7,665 in overrides. Every month. That's not a forecast — it's published Enagic commission rates applied to real network volume. I share these numbers publicly because transparency is the point. If the math doesn't work for you, don't join. If it does, link in bio.</div></div>
+      <div class="sc-part"><div class="sc-part-label">// CTA</div></div>
+      <span class="sc-cta">Link in bio — income disclosure has every number. Read it before applying.</span>
+    </div>
+
+    <div class="script-card">
+      <div class="sc-num">// SCRIPT 4.5 — OPERATOR PROOF</div>
+      <div class="sc-transparency">Why Enagic | Product legitimacy | 38-year history | Australian operation</div>
+      <div class="sc-part"><div class="sc-part-label">// HOOK</div><div class="sc-part-text">Why did I choose Enagic as the commission vehicle? I'll give you the honest answer — not the sales answer.</div></div>
+      <div class="sc-part"><div class="sc-part-label">// BODY</div><div class="sc-part-text">I needed three things: a real product, a published commission structure, and an established company that wasn't going anywhere. Enagic: 38 years in business. Operations in over 100 countries including Australia. Physical product — Kangen water ionisers — with a customer base that reorders consumables. Published compensation plan in writing. Australian business number, physical Australian office, phone number that answers. I checked all of that before I invested. Apex Network is the distribution infrastructure I built on top of that foundation. The vehicle is Enagic. The operator system is Apex. Both are real. Both are documented. Link in bio.</div></div>
+      <div class="sc-part"><div class="sc-part-label">// CTA</div></div>
+      <span class="sc-cta">Link in bio — full disclosure including Enagic contact details and income documentation.</span>
+    </div>
+
+    <div class="script-card">
+      <div class="sc-num">// SCRIPT 4.6 — OPERATOR PROOF</div>
+      <div class="sc-transparency">Year 1 roadmap | Revenue targets | 7-operator network goal</div>
+      <div class="sc-part"><div class="sc-part-label">// HOOK</div><div class="sc-part-text">First year target: 7 operators, $10,309 per month. Here is the exact roadmap I'm running to get there.</div></div>
+      <div class="sc-part"><div class="sc-part-label">// BODY</div><div class="sc-part-text">Months 1–2: first direct sale. $1,322. Proof of concept confirmed. Months 3–4: first operator joins. Override income begins. Month 6: three to five operators active — $5,000 to $8,000 per month target. Month 12: seven-plus operators — $10,000 to $25,000 per month target. Year 2: fifteen-plus operators plus a second commission product. This isn't a guarantee — it's the published math applied to a realistic recruitment timeline. I'm sharing the roadmap because operators who join early get positioned at the front of a growing network. The infrastructure is already built. Operator positions are open now.</div></div>
+      <div class="sc-part"><div class="sc-part-label">// CTA</div></div>
+      <span class="sc-cta">Link in bio — apply now. Early operators build the deepest network positions.</span>
+    </div>
+
+  </div>
+
+  <!-- PILLAR 5: SCREEN RECORDING -->
+  <div class="scripts-panel" id="pillar-5">
+
+    <div class="script-card">
+      <div class="sc-num">// SCRIPT 5.1 — SCREEN RECORDING</div>
+      <div class="sc-transparency">Agent OS demo | AI-powered tools | What operators get access to</div>
+      <div class="sc-part"><div class="sc-part-label">// HOOK</div><div class="sc-part-text">Let me show you the Agent OS working in real time. This is what every Apex operator gets access to.</div></div>
+      <div class="sc-part"><div class="sc-part-label">// BODY (SCREEN RECORD WHAT YOU DO)</div><div class="sc-part-text">Open Agent OS at apex-agent-os.html. Navigate to the Script Generator module. Type: "generate a 60-second TikTok script for Franchise Math pillar." Show the output live. Then navigate to the Morning Briefing module. Show the pipeline snapshot. Then to the Traffic module. Show content scheduling view. Narrate as you go: "This is the morning briefing — every day I open this and get my pipeline status, my content queue, and my lead score breakdown." End on the main dashboard. "Everything operators need to run the system in one place. Already built. Already live."</div></div>
+      <div class="sc-part"><div class="sc-part-label">// CTA</div></div>
+      <span class="sc-cta">Link in bio — full platform walkthrough. See everything before you apply.</span>
+    </div>
+
+    <div class="script-card">
+      <div class="sc-num">// SCRIPT 5.2 — SCREEN RECORDING</div>
+      <div class="sc-transparency">Operator hub demo | Private tools | Command centre walkthrough</div>
+      <div class="sc-part"><div class="sc-part-label">// HOOK</div><div class="sc-part-text">Inside the Apex operator hub. This is the private command centre every operator gets access to. Let me show you around.</div></div>
+      <div class="sc-part"><div class="sc-part-label">// BODY (SCREEN RECORD WHAT YOU DO)</div><div class="sc-part-text">Open apex-hub.html. Enter passcode (blur this on screen). Walk through the revenue path flow — show all 14 steps. Click through to live pages. Show the commission cheat sheet section — "here are the real numbers, published Enagic rates." Show the quick action buttons — "these go directly to the funnel, the application, the registration wizard." Show the critical blockers section. "This is where we track what's been built and what still needs to happen." End with: "Every operator gets access to this hub. One view of the entire business operation."</div></div>
+      <div class="sc-part"><div class="sc-part-label">// CTA</div></div>
+      <span class="sc-cta">Link in bio — see the front-facing platform. Apply to see what's inside.</span>
+    </div>
+
+    <div class="script-card">
+      <div class="sc-num">// SCRIPT 5.3 — SCREEN RECORDING</div>
+      <div class="sc-transparency">Funnel walkthrough | Lead journey | From opt-in to registration</div>
+      <div class="sc-part"><div class="sc-part-label">// HOOK</div><div class="sc-part-text">Watch a lead go from the front door to the registration page. I'm going to run through the entire funnel live.</div></div>
+      <div class="sc-part"><div class="sc-part-label">// BODY (SCREEN RECORD WHAT YOU DO)</div><div class="sc-part-text">Open apex-index.html. Narrate: "This is the front door. Cold traffic lands here." Show the opt-in form. Fill in dummy details. Narrate: "When someone opts in, they're tagged in ActiveCampaign and redirect to page 2." Open apex-page2.html. Walk through franchise comparison section. "This is where the system does the education — franchise comparison, network math, platform breakdown." Open apex-apply.html. Show the 7-question application. "This scores HOT WARM COLD automatically." Open apex-offer.html. Show the three tier cards with real prices. "Investment, commission, break-even — all transparent." Open apex-join.html. Show the 5-step wizard. "Sponsor IDs are hardcoded. Registration goes direct to Enagic AU."</div></div>
+      <div class="sc-part"><div class="sc-part-label">// CTA</div></div>
+      <span class="sc-cta">Link in bio — run through the funnel yourself. It's live right now.</span>
+    </div>
+
+    <div class="script-card">
+      <div class="sc-num">// SCRIPT 5.4 — SCREEN RECORDING</div>
+      <div class="sc-transparency">Application scoring demo | HOT WARM COLD | AI processing</div>
+      <div class="sc-part"><div class="sc-part-label">// HOOK</div><div class="sc-part-text">Live demo: how the application scoring works. Every applicant gets automatically scored <em>HOT, WARM, or COLD</em> before I see them.</div></div>
+      <div class="sc-part"><div class="sc-part-label">// BODY (SCREEN RECORD WHAT YOU DO)</div><div class="sc-part-text">Open apex-apply.html. Walk through each of the 7 questions. "Question one: investment capacity. Question two: timeline. Question three: income motivation." Answer each question as a HOT applicant — serious, ready, capital available. Submit. Show the redirect to apex-offer.html. "HOT applicants go straight to the offer page." Go back. Re-run as a COLD applicant. "Someone who says they have no capital and aren't ready." Submit. Show different redirect behavior. "COLD leads go into the nurture sequence, not the offer page. The system filters for me. I only spend time on HOT leads."</div></div>
+      <div class="sc-part"><div class="sc-part-label">// CTA</div></div>
+      <span class="sc-cta">Link in bio — see how the full system works. Apply if you're ready.</span>
+    </div>
+
+    <div class="script-card">
+      <div class="sc-num">// SCRIPT 5.5 — SCREEN RECORDING</div>
+      <div class="sc-transparency">AC dashboard | Real leads | Pipeline visibility | Lead tags</div>
+      <div class="sc-part"><div class="sc-part-label">// HOOK</div><div class="sc-part-text">Screen recording: my ActiveCampaign dashboard. Real leads. Real tags. This is what the pipeline looks like live.</div></div>
+      <div class="sc-part"><div class="sc-part-label">// BODY (SCREEN RECORD WHAT YOU DO)</div><div class="sc-part-text">Open ActiveCampaign dashboard. Navigate to Contacts. Filter by SS-HOT tag. "These are HOT leads — applicants who scored highest on the application. Ready to move." Filter by SS-NEW. "These are opt-ins who just entered the funnel — they're in the 7-day email sequence." Show a contact record. "Every contact has their full application data, their score, and their tag history." Navigate to Automations. Show the welcome sequence. "This runs automatically from the moment someone opts in. Seven emails. Zero manual input." Navigate to Deals if set up. "This is where HOT leads move to closed." Narrate total: "This is what automated lead management looks like in practice."</div></div>
+      <div class="sc-part"><div class="sc-part-label">// CTA</div></div>
+      <span class="sc-cta">Link in bio — this infrastructure is what operators plug into. Apply now.</span>
+    </div>
+
+    <div class="script-card">
+      <div class="sc-num">// SCRIPT 5.6 — SCREEN RECORDING</div>
+      <div class="sc-transparency">Behind the system | Netlify functions | subscribe.js flow | Technical layer</div>
+      <div class="sc-part"><div class="sc-part-label">// HOOK</div><div class="sc-part-text">Behind the system: what actually happens in the 3 seconds after someone submits their name and email on the front door.</div></div>
+      <div class="sc-part"><div class="sc-part-label">// BODY (SCREEN RECORD WHAT YOU DO)</div><div class="sc-part-text">Open apex-index.html. Point to the opt-in form. "Name and email submitted here." Open Netlify dashboard. Navigate to Functions. "The subscribe.js function fires instantly — sends the contact to ActiveCampaign, tags them SS-NEW, triggers the welcome sequence." Open ActiveCampaign. Show a fresh contact arriving. "Real-time. Automated. No manual steps." Navigate to Automations. Show the sequence triggering. "Seven-day sequence starts automatically. Day 0 welcome. Day 1 system overview. Day 2 the math. Day 3 operator proof. Day 4 platform thinking. Day 5 application invite. Day 7 deadline close." Narrate: "From opt-in to nurtured lead in 3 seconds. That's what the infrastructure does."</div></div>
+      <div class="sc-part"><div class="sc-part-label">// CTA</div></div>
+      <span class="sc-cta">Link in bio — the system is live. Operators plug in and let it work for them.</span>
+    </div>
+
+  </div>
+</div>
+
+<!-- SECTION 4: HEYGEN WORKFLOW -->
+<div class="section" id="heygen">
+  <div class="section-header reveal">
+    <div class="sec-eyebrow">// 04 — PRODUCTION SYSTEM</div>
+    <div class="sec-title">HeyGen Workflow</div>
+    <div class="sec-sub">Script to posted video in 35 minutes. Run this exact workflow every day. No deviation.</div>
+  </div>
+
+  <div class="workflow-steps reveal">
+    <div class="ws-step">
+      <div class="ws-num">01</div>
+      <div class="ws-body">
+        <div class="ws-title">PICK YOUR SCRIPT</div>
+        <div class="ws-tool">// TOOL: THIS PAGE — SCRIPT LIBRARY</div>
+        <div class="ws-steps-inner">
+          <div class="ws-step-item">Check today's day on the 30-day calendar above</div>
+          <div class="ws-step-item">Open the Script Library tab for that day's pillar</div>
+          <div class="ws-step-item">Select the script that matches the hook for that day</div>
+          <div class="ws-step-item">Copy the Hook + Body + CTA into a notes document</div>
+          <div class="ws-step-item">Read aloud once — edit any word that feels unnatural to your voice</div>
+          <div class="ws-step-item">Target length: 60–90 seconds when read at normal pace</div>
+        </div>
+        <div class="ws-settings">
+          <div class="ws-settings-label">// SCRIPT PREP RULES</div>
+          <div class="ws-setting-row"><span class="ws-sk">Investment named?</span><span class="ws-sv">YES — every script</span></div>
+          <div class="ws-setting-row"><span class="ws-sk">Commission named?</span><span class="ws-sv">YES — every script</span></div>
+          <div class="ws-setting-row"><span class="ws-sk">Break-even named?</span><span class="ws-sv">YES — every script</span></div>
+          <div class="ws-setting-row"><span class="ws-sk">CTA included?</span><span class="ws-sv">YES — link in bio</span></div>
+        </div>
+      </div>
+      <div class="ws-time">5 MIN</div>
+    </div>
+
+    <div class="ws-step">
+      <div class="ws-num">02</div>
+      <div class="ws-body">
+        <div class="ws-title">GENERATE IN HEYGEN</div>
+        <div class="ws-tool">// TOOL: HEYGEN.COM — CREATOR PLAN $29 USD/MO</div>
+        <div class="ws-steps-inner">
+          <div class="ws-step-item">Log in to HeyGen. Go to Create Video → AI Avatar</div>
+          <div class="ws-step-item">Select your uploaded avatar (set up once — reuse every video)</div>
+          <div class="ws-step-item">Paste your script into the script box</div>
+          <div class="ws-step-item">Select voice: your cloned voice or closest natural male AU English</div>
+          <div class="ws-step-item">Background: solid dark (matches Apex aesthetic) or remove background</div>
+          <div class="ws-step-item">Click Generate. Wait 3–5 minutes for processing</div>
+          <div class="ws-step-item">Download the MP4 at highest quality</div>
+        </div>
+        <div class="ws-settings">
+          <div class="ws-settings-label">// HEYGEN SETTINGS</div>
+          <div class="ws-setting-row"><span class="ws-sk">Video format</span><span class="ws-sv">9:16 vertical</span></div>
+          <div class="ws-setting-row"><span class="ws-sk">Resolution</span><span class="ws-sv">1080 × 1920</span></div>
+          <div class="ws-setting-row"><span class="ws-sk">Voice speed</span><span class="ws-sv">1.0x — natural pace</span></div>
+          <div class="ws-setting-row"><span class="ws-sk">Background</span><span class="ws-sv">Dark / remove BG</span></div>
+          <div class="ws-setting-row"><span class="ws-sk">Avatar position</span><span class="ws-sv">Centre frame</span></div>
+        </div>
+      </div>
+      <div class="ws-time">10 MIN</div>
+    </div>
+
+    <div class="ws-step">
+      <div class="ws-num">03</div>
+      <div class="ws-body">
+        <div class="ws-title">EDIT IN CAPCUT</div>
+        <div class="ws-tool">// TOOL: CAPCUT — FREE</div>
+        <div class="ws-steps-inner">
+          <div class="ws-step-item">Import the HeyGen MP4 into CapCut</div>
+          <div class="ws-step-item">Auto-captions: Text → Auto Captions → Generate. Review for errors</div>
+          <div class="ws-step-item">Caption style: bold white text, black outline, centre bottom — no animations</div>
+          <div class="ws-step-item">Background music: low volume (10–15%), instrumental, neutral energy</div>
+          <div class="ws-step-item">Trim any dead air at start and end (within 0.5 seconds)</div>
+          <div class="ws-step-item">Check aspect ratio is 9:16 — crop if needed</div>
+          <div class="ws-step-item">Export at 1080p. Do NOT export with TikTok watermark</div>
+        </div>
+        <div class="ws-settings">
+          <div class="ws-settings-label">// CAPCUT EXPORT SETTINGS</div>
+          <div class="ws-setting-row"><span class="ws-sk">Resolution</span><span class="ws-sv">1080p</span></div>
+          <div class="ws-setting-row"><span class="ws-sk">Frame rate</span><span class="ws-sv">30fps</span></div>
+          <div class="ws-setting-row"><span class="ws-sk">Format</span><span class="ws-sv">MP4</span></div>
+          <div class="ws-setting-row"><span class="ws-sk">Watermark</span><span class="ws-sv">OFF</span></div>
+          <div class="ws-setting-row"><span class="ws-sk">Caption burn-in</span><span class="ws-sv">YES</span></div>
+        </div>
+      </div>
+      <div class="ws-time">10 MIN</div>
+    </div>
+
+    <div class="ws-step">
+      <div class="ws-num">04</div>
+      <div class="ws-body">
+        <div class="ws-title">SCHEDULE IN LATER</div>
+        <div class="ws-tool">// TOOL: LATER.COM — FREE PLAN</div>
+        <div class="ws-steps-inner">
+          <div class="ws-step-item">Log in to Later. Connect TikTok + Instagram accounts</div>
+          <div class="ws-step-item">Upload the CapCut export MP4</div>
+          <div class="ws-step-item">Write TikTok caption: hook line + 3 hashtags (see schedule section)</div>
+          <div class="ws-step-item">Write Instagram caption: longer version + 5–8 hashtags</div>
+          <div class="ws-step-item">Schedule TikTok post: today at 7:00pm AEST</div>
+          <div class="ws-step-item">Schedule Instagram Reel: today at 6:00pm AEST</div>
+          <div class="ws-step-item">Confirm both are queued. Done.</div>
+        </div>
+        <div class="ws-settings">
+          <div class="ws-settings-label">// POSTING TIMES</div>
+          <div class="ws-setting-row"><span class="ws-sk">TikTok</span><span class="ws-sv">7:00pm AEST daily</span></div>
+          <div class="ws-setting-row"><span class="ws-sk">Instagram Reel</span><span class="ws-sv">6:00pm AEST daily</span></div>
+          <div class="ws-setting-row"><span class="ws-sk">Instagram Story</span><span class="ws-sv">6:30pm — "new video live"</span></div>
+        </div>
+      </div>
+      <div class="ws-time">5 MIN</div>
+    </div>
+
+    <div class="ws-step">
+      <div class="ws-num">05</div>
+      <div class="ws-body">
+        <div class="ws-title">ENGAGE AFTER POSTING</div>
+        <div class="ws-tool">// TOOL: TIKTOK APP + INSTAGRAM APP</div>
+        <div class="ws-steps-inner">
+          <div class="ws-step-item">At 6pm: Instagram posts. Check immediately. Like your own post.</div>
+          <div class="ws-step-item">At 7pm: TikTok posts. Watch for first comments. Reply to every one within 60 min</div>
+          <div class="ws-step-item">Anyone who saves or shares: DM them — "thanks for sharing, happy to answer any questions"</div>
+          <div class="ws-step-item">Anyone who asks about the opportunity: direct them to bio link</div>
+          <div class="ws-step-item">Do NOT post the funnel link in comments — TikTok suppresses it</div>
+          <div class="ws-step-item">First 30 minutes engagement is the algorithm signal — be active</div>
+          <div class="ws-step-item">Check analytics next morning: views, watch time, bio link clicks</div>
+        </div>
+        <div class="ws-settings">
+          <div class="ws-settings-label">// PERFORMANCE BENCHMARKS</div>
+          <div class="ws-setting-row"><span class="ws-sk">Good watch time</span><span class="ws-sv">Over 60% average</span></div>
+          <div class="ws-setting-row"><span class="ws-sk">Strong CTR</span><span class="ws-sv">Over 1.5% to bio</span></div>
+          <div class="ws-setting-row"><span class="ws-sk">Scale signal</span><span class="ws-sv">3+ saves in first hour</span></div>
+          <div class="ws-setting-row"><span class="ws-sk">Kill signal</span><span class="ws-sv">Under 20% watch time</span></div>
+        </div>
+      </div>
+      <div class="ws-time">5 MIN</div>
+    </div>
+  </div>
+
+  <div class="workflow-total reveal">
+    <div>
+      <div class="wt-label">// TOTAL DAILY TIME INVESTMENT</div>
+      <div style="font-family:'DM Mono',monospace;font-size:0.6rem;letter-spacing:0.08em;color:var(--muted);margin-top:0.3rem;">Script → HeyGen → CapCut → Later → Engage</div>
+    </div>
+    <div class="wt-val">35 MIN / DAY</div>
+  </div>
+</div>
+
+<!-- SECTION 5: HOOK BANK -->
+<div class="section section-alt" id="hooks">
+  <div class="section-header reveal">
+    <div class="sec-eyebrow">// 05 — SCROLL STOPPERS</div>
+    <div class="sec-title">Hook Bank</div>
+    <div class="sec-sub">20 proven opening lines. The first 2 seconds determine everything. Use these verbatim or adapt the structure.</div>
+  </div>
+
+  <div class="hook-grid reveal">
+    <div class="hook-card">
+      <div class="hc-num">HOOK 01</div>
+      <span class="hc-type curiosity">CURIOSITY</span>
+      <div class="hc-line">"I'm going to show you something that changed how I think about income. It took me 60 seconds to explain and 6 months to understand."</div>
+    </div>
+    <div class="hook-card">
+      <div class="hc-num">HOOK 02</div>
+      <span class="hc-type math">MATH</span>
+      <div class="hc-line">"Investment: $11,682. Commission per sale: $1,322. Break-even: nine sales. I'm going to walk you through exactly what that means."</div>
+    </div>
+    <div class="hook-card">
+      <div class="hc-num">HOOK 03</div>
+      <span class="hc-type contrast">CONTRAST</span>
+      <div class="hc-line">"McDonald's costs $1.4 million to franchise. Apex Network costs $6,787. Same infrastructure concept. Completely different entry price."</div>
+    </div>
+    <div class="hook-card">
+      <div class="hc-num">HOOK 04</div>
+      <span class="hc-type pattern">PATTERN INTERRUPT</span>
+      <div class="hc-line">"Stop scrolling. Before you keep going — this took me 30 seconds to say and I need you to actually hear it."</div>
+    </div>
+    <div class="hook-card">
+      <div class="hc-num">HOOK 05</div>
+      <span class="hc-type curiosity">CURIOSITY</span>
+      <div class="hc-line">"Nobody talks about this part of the commission math. The part that actually makes it work long-term. Let me show you."</div>
+    </div>
+    <div class="hook-card">
+      <div class="hc-num">HOOK 06</div>
+      <span class="hc-type math">MATH</span>
+      <div class="hc-line">"Seven operators. Three sales each per month. $10,309 a month. That's the conservative network math. I'll walk through every number."</div>
+    </div>
+    <div class="hook-card">
+      <div class="hc-num">HOOK 07</div>
+      <span class="hc-type contrast">CONTRAST</span>
+      <div class="hc-line">"My job pays me by the hour. My system paid $1,322 on a Thursday. I was on a roof at the time."</div>
+    </div>
+    <div class="hook-card">
+      <div class="hc-num">HOOK 08</div>
+      <span class="hc-type pattern">PATTERN INTERRUPT</span>
+      <div class="hc-line">"I'm going to be completely transparent about exactly what I invested and exactly what I got back. No rounding."</div>
+    </div>
+    <div class="hook-card">
+      <div class="hc-num">HOOK 09</div>
+      <span class="hc-type curiosity">CURIOSITY</span>
+      <div class="hc-line">"I was sceptical. Then I ran the numbers myself. Then I ran them again. Here's what I found."</div>
+    </div>
+    <div class="hook-card">
+      <div class="hc-num">HOOK 10</div>
+      <span class="hc-type math">MATH</span>
+      <div class="hc-line">"One sale. $2,595. That's what I earn at the Quad level per direct sale. Seven of those covers my full investment."</div>
+    </div>
+    <div class="hook-card">
+      <div class="hc-num">HOOK 11</div>
+      <span class="hc-type contrast">CONTRAST</span>
+      <div class="hc-line">"A job requires you to be present. A system requires you to build it once. Only one of those options compounds."</div>
+    </div>
+    <div class="hook-card">
+      <div class="hc-num">HOOK 12</div>
+      <span class="hc-type pattern">PATTERN INTERRUPT</span>
+      <div class="hc-line">"23 years old. Full-time painter. I'm not staying in trades. This is what I'm building instead."</div>
+    </div>
+    <div class="hook-card">
+      <div class="hc-num">HOOK 13</div>
+      <span class="hc-type curiosity">CURIOSITY</span>
+      <div class="hc-line">"Here's what they don't tell you about passive income. The part that actually requires work — and what doesn't."</div>
+    </div>
+    <div class="hook-card">
+      <div class="hc-num">HOOK 14</div>
+      <span class="hc-type math">MATH</span>
+      <div class="hc-line">"Run the numbers with me: three operators, three sales each, $1,322 per sale. That's $11,898 in overrides per month."</div>
+    </div>
+    <div class="hook-card">
+      <div class="hc-num">HOOK 15</div>
+      <span class="hc-type contrast">CONTRAST</span>
+      <div class="hc-line">"I'm a painter. I also run a proprietary AI-powered distribution network. Both paid me this week."</div>
+    </div>
+    <div class="hook-card">
+      <div class="hc-num">HOOK 16</div>
+      <span class="hc-type pattern">PATTERN INTERRUPT</span>
+      <div class="hc-line">"This isn't a job offer. It's not a sales role. It's an infrastructure play. Let me explain the difference."</div>
+    </div>
+    <div class="hook-card">
+      <div class="hc-num">HOOK 17</div>
+      <span class="hc-type curiosity">CURIOSITY</span>
+      <div class="hc-line">"This number stopped me when I first saw it. $15,000 USD per month. For life. Published by Enagic at senior rank."</div>
+    </div>
+    <div class="hook-card">
+      <div class="hc-num">HOOK 18</div>
+      <span class="hc-type math">MATH</span>
+      <div class="hc-line">"Break-even: seven sales at the Quad tier. Nineteen at the K8. I'll show you why seven sales isn't as hard as it sounds."</div>
+    </div>
+    <div class="hook-card">
+      <div class="hc-num">HOOK 19</div>
+      <span class="hc-type contrast">CONTRAST</span>
+      <div class="hc-line">"Most people build a job. Operators build a platform. Both require effort. Only one of them earns while you sleep."</div>
+    </div>
+    <div class="hook-card">
+      <div class="hc-num">HOOK 20</div>
+      <span class="hc-type pattern">PATTERN INTERRUPT</span>
+      <div class="hc-line">"Let me show you the difference between income and commission infrastructure. Because most people never learn this distinction."</div>
+    </div>
+  </div>
+</div>
+
+<!-- INCOME DISCLOSURE -->
+<div class="disclosure-strip">
+  <div class="disclosure-inner">
+    <div class="disclosure-tag">// INCOME DISCLOSURE</div>
+    <div class="disclosure-text">Results are not typical. All commission figures, network projections, and income examples are based on Enagic's published compensation structure at specified ranks and are subject to change. Income requires active product sales. The majority of Enagic distributors earn little or no income. Apex Network is an independent distributor network not affiliated with or endorsed by Enagic International. <a href="apex-disclosure.html" style="color:rgba(0,212,255,0.5);">Full income disclosure →</a></div>
+  </div>
+</div>
+
+<footer>
+  <div class="footer-brand">APEX<span>NETWORK</span></div>
+  <div class="footer-links">
+    <a href="apex-hub.html">Command Centre</a>
+    <a href="apex-index.html">Front Door</a>
+    <a href="apex-agent-os.html">Agent OS</a>
+    <a href="apex-tracker.html">Build Tracker</a>
+    <a href="apex-disclosure.html">Disclosure</a>
+  </div>
+  <div class="footer-copy" id="footerCopy">© 2025 Apex Network — Independent distributor network</div>
+</footer>
+
+<script>
+const ACCESS_CODE = 'DIESEL2025';
+
+function checkGate() {
+  const val = document.getElementById('gateInput').value.trim().toUpperCase();
+  if(val === ACCESS_CODE) {
+    sessionStorage.setItem('apex_cal_auth','1');
+    document.getElementById('gate').style.display='none';
+    initPage();
+  } else {
+    const err = document.getElementById('gateError');
+    err.style.display='block';
+    document.getElementById('gateInput').value='';
+    document.getElementById('gateInput').focus();
+    setTimeout(()=>err.style.display='none',3000);
+  }
+}
+document.getElementById('gateInput').addEventListener('keydown',e=>{if(e.key==='Enter')checkGate();});
+if(sessionStorage.getItem('apex_cal_auth')==='1'){
+  document.getElementById('gate').style.display='none';
+  initPage();
+}
+
+function initPage(){
+  // Clock
+  function updateClock(){
+    const now=new Date();
+    const opts={hour:'2-digit',minute:'2-digit',second:'2-digit',hour12:false,timeZone:'Australia/Brisbane'};
+    document.getElementById('navClock').textContent=now.toLocaleTimeString('en-AU',opts)+' AEST';
+    document.getElementById('footerCopy').textContent='© '+now.getFullYear()+' Apex Network — Independent distributor network';
+  }
+  updateClock();setInterval(updateClock,1000);
+
+  // Scroll reveal
+  const obs=new IntersectionObserver(entries=>{
+    entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('visible');obs.unobserve(e.target);}});
+  },{threshold:0.05});
+  document.querySelectorAll('.reveal').forEach(el=>obs.observe(el));
+
+  // Section nav highlight
+  const sections=['schedule','calendar','scripts','heygen','hooks'];
+  const btns=document.querySelectorAll('.sec-nav-btn');
+  const secObs=new IntersectionObserver(entries=>{
+    entries.forEach(e=>{
+      if(e.isIntersecting){
+        const idx=sections.indexOf(e.target.id);
+        if(idx>=0){btns.forEach((b,i)=>b.classList.toggle('active',i===idx));}
+      }
+    });
+  },{threshold:0.3});
+  sections.forEach(id=>{const el=document.getElementById(id);if(el)secObs.observe(el);});
+}
+
+function scrollTo(id){
+  const el=document.getElementById(id);
+  if(el){
+    const offset=120;
+    const top=el.getBoundingClientRect().top+window.scrollY-offset;
+    window.scrollTo({top,behavior:'smooth'});
+    const btns=document.querySelectorAll('.sec-nav-btn');
+    const sections=['schedule','calendar','scripts','heygen','hooks'];
+    const idx=sections.indexOf(id);
+    btns.forEach((b,i)=>b.classList.toggle('active',i===idx));
+  }
+}
+
+function switchPillar(n){
+  document.querySelectorAll('.scripts-panel').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.ptab').forEach(t=>t.classList.remove('active'));
+  document.getElementById('pillar-'+n).classList.add('active');
+  document.querySelectorAll('.ptab')[n-1].classList.add('active');
+}
+</script>
+</body>
+</html>

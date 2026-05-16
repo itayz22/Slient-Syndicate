@@ -1,7 +1,7 @@
 {
   "name": "silent-syndicate",
   "version": "1.0.0",
-  "description": "Silent Syndicate - AI-powered Enagic distributor funnel system",
+  "description": "Apex Network - AI-powered Enagic distributor funnel system",
   "main": "server.js",
   "scripts": {
     "start": "node server.js",

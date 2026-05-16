@@ -84,7 +84,7 @@ exports.handler = async (event, context) => {
       body: JSON.stringify({
         success: true,
         score: 'WARM',
-        redirect: '/page4-offer.html',
+        redirect: '/apex-offer.html',
         warning: err.message
       })
     };
@@ -112,14 +112,14 @@ function scoreLead(data) {
 }
 
 function getRedirectUrl(score) {
-  if (score === 'HOT') return '/page4-offer.html';
-  if (score === 'WARM') return '/page2-manifesto.html';
-  return '/index.html';
+  if (score === 'HOT') return '/apex-offer.html';
+  if (score === 'WARM') return '/apex-offer.html';
+  return '/apex-index.html';
 }
 
 function formatNoteContent(data, score) {
   return `
-=== SILENT SYNDICATE APPLICATION ===
+=== APEX NETWORK APPLICATION ===
 Score: ${score}
 Submitted: ${new Date().toISOString()}
 

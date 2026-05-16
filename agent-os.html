@@ -787,9 +787,9 @@ The Master Agent will:
         </div>
         <div class="pb">
           <div class="terminal" id="masterTerminal" style="max-height:500px;">
-<span class="tl"><span class="tl-time">SYSTEM</span><span class="tl-agent system">MASTER</span><span class="tl-msg">Silent Syndicate AI Agent online. Powered by Claude Sonnet.</span></span>
+<span class="tl"><span class="tl-time">SYSTEM</span><span class="tl-agent system">MASTER</span><span class="tl-msg">Apex Network AI Agent online. Powered by Claude Sonnet.</span></span>
 <span class="tl"><span class="tl-time">SYSTEM</span><span class="tl-agent system">MASTER</span><span class="tl-msg">Connected to: Netlify Functions, ActiveCampaign API</span></span>
-<span class="tl"><span class="tl-time">READY</span><span class="tl-agent master">ORCHESTR</span><span class="tl-msg success">Ask me anything about your business. I have full context of Silent Syndicate — the funnel, the Enagic model, your IDs, your pipeline, your strategy.</span></span>
+<span class="tl"><span class="tl-time">READY</span><span class="tl-agent master">ORCHESTR</span><span class="tl-msg success">Ask me anything about your business. I have full context of Apex Network — the funnel, the Enagic model, your IDs, your pipeline, your strategy.</span></span>
 <span class="tl"><span class="tl-time">READY</span><span class="tl-agent master">ORCHESTR</span><span class="tl-msg">Try: "Analyse my funnel and tell me the biggest leak" or "Write 5 new hooks for the objection pillar" or "What should I fix first?"</span></span>
           </div>
           <div class="agent-input-row">
@@ -992,10 +992,10 @@ The Master Agent will:
 // CORE STATE
 // ═══════════════════════════════════════════════════════════════
 const SS = {
-  context: `You are the AI business agent for Silent Syndicate — an AI-powered Enagic water ioniser distributor network based in Queensland, Australia.
+  context: `You are the AI business agent for Apex Network — an AI-powered Enagic water ioniser distributor network based in Queensland, Australia.
 
 BUSINESS CONTEXT:
-- Silent Syndicate is an authorised Enagic distributor network run by the Chairman/founder
+- Apex Network is an authorised Enagic distributor network run by the Chairman/founder
 - Enagic manufactures Kangen water ionisation machines
 - Commission structure: K8 single ~$365 AUD per sale at 1A rank, up to $2,595 at 3A rank
 - Products: K8 ($6,787 AUD), Anespa DX ($3,795), emGuarde ($2,475), Ukon (~$1,100)
@@ -1167,7 +1167,7 @@ async function runPipelineAgent() {
   analysis.textContent = '⟳ Agent thinking...';
 
   const metrics = SS.metrics;
-  const prompt = `Analyse this Silent Syndicate pipeline data and give me specific actions:
+  const prompt = `Analyse this Apex Network pipeline data and give me specific actions:
 
 Pipeline data:
 - Total opt-ins: ${metrics.optins}
@@ -1233,7 +1233,7 @@ Be specific. Give actual numbers. Flag any red flags.`;
 async function contactLead(name, type) {
   log('PIPELINE', `Generating follow-up email for ${name}...`);
   const prompt = type === 'hot'
-    ? `Write a short, direct follow-up email to a HOT lead who applied to join Silent Syndicate 48 hours ago but hasn't completed registration. They scored 94/100. Be direct. Reference their application. Include the join page link: https://silent-syndicate.netlify.app/join.html. Subject line + body. Keep it under 100 words.`
+    ? `Write a short, direct follow-up email to a HOT lead who applied to join Apex Network 48 hours ago but hasn't completed registration. They scored 94/100. Be direct. Reference their application. Include the join page link: https://silent-syndicate.netlify.app/join.html. Subject line + body. Keep it under 100 words.`
     : `Write a warm nurture email to a lead who has opened 4 of 5 emails in the sequence and is on Day 5. They're interested but haven't applied yet. Soft push toward the application page: https://silent-syndicate.netlify.app/page3-apply.html. Subject line + body. Under 80 words.`;
 
   try {
@@ -1253,7 +1253,7 @@ async function runTrafficAgent() {
   const analysis = document.getElementById('trafficAnalysis');
   analysis.textContent = '⟳ Agent thinking...';
 
-  const prompt = `Analyse the Silent Syndicate traffic situation and give me a strategic content recommendation.
+  const prompt = `Analyse the Apex Network traffic situation and give me a strategic content recommendation.
 
 Context:
 - Using HeyGen AI faceless video content
@@ -1295,7 +1295,7 @@ async function runConversionAgent() {
   const applyRate = m.optins > 0 ? ((m.applied/m.optins)*100).toFixed(1) : 'unknown';
   const joinRate = m.applied > 0 ? ((m.joined/m.applied)*100).toFixed(1) : 'unknown';
 
-  const prompt = `Audit the Silent Syndicate conversion funnel and identify faults.
+  const prompt = `Audit the Apex Network conversion funnel and identify faults.
 
 Current funnel metrics:
 - Visitors → Opt-in rate: ${optinRate}%
@@ -1333,7 +1333,7 @@ async function runGrowthAgent() {
   const analysis = document.getElementById('growthAnalysis');
   analysis.textContent = '⟳ Agent thinking...';
 
-  const prompt = `You are the Growth Agent for Silent Syndicate. Analyse the business and identify the single highest-leverage growth opportunities right now.
+  const prompt = `You are the Growth Agent for Apex Network. Analyse the business and identify the single highest-leverage growth opportunities right now.
 
 Business status:
 - Funnel is live at silent-syndicate.netlify.app
@@ -1443,7 +1443,7 @@ async function generateScripts() {
     objection: 'Address the most common objection head-on. Use the transparency formula — agree with the concern first, then reframe with real data.'
   };
 
-  const prompt = `Generate 3 unique ${length}-second TikTok video scripts for Silent Syndicate.
+  const prompt = `Generate 3 unique ${length}-second TikTok video scripts for Apex Network.
 
 Pillar: ${pillar.toUpperCase()}
 Pillar guide: ${pillarGuides[pillar]}
@@ -1562,7 +1562,7 @@ async function generateBriefing() {
   const now = new Date().toLocaleDateString('en-AU', { weekday:'long', day:'numeric', month:'long' });
   const m = SS.metrics;
 
-  const prompt = `Generate the Silent Syndicate daily intelligence briefing for ${now}.
+  const prompt = `Generate the Apex Network daily intelligence briefing for ${now}.
 
 Live metrics:
 - Opt-ins today: ${m.optins}
@@ -1583,7 +1583,7 @@ Keep it tight. Under 300 words. Chairman reads this in 60 seconds and knows exac
 
   try {
     const response = await callClaude(prompt);
-    const header = `SILENT SYNDICATE — DAILY BRIEFING\n${now.toUpperCase()}\n${'━'.repeat(40)}\n\n`;
+    const header = `APEX NETWORK — DAILY BRIEFING\n${now.toUpperCase()}\n${'━'.repeat(40)}\n\n`;
     box.textContent = header + response;
     status.textContent = 'LIVE';
     status.className = 'ph-badge live';
@@ -1683,7 +1683,7 @@ async function pullACData() {
 window.addEventListener('load', async () => {
   log('SYSTEM', 'Syndicate OS booting...', '');
   await new Promise(r => setTimeout(r, 200));
-  log('SYSTEM', 'Loading context: Silent Syndicate business profile', '');
+  log('SYSTEM', 'Loading context: Apex Network business profile', '');
   await new Promise(r => setTimeout(r, 200));
   log('MASTER', 'Master Orchestrator online', 'success');
   log('TRAFFIC', 'Traffic Agent standing by', 'success');

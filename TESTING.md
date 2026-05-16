@@ -1,6 +1,6 @@
-# Silent Syndicate — Testing Guide
+# Apex Network — Testing Guide
 
-Complete testing procedures for the Silent Syndicate AI funnel. Run these tests before every deployment and after any code change.
+Complete testing procedures for the Apex Network AI funnel. Run these tests before every deployment and after any code change.
 
 ---
 
